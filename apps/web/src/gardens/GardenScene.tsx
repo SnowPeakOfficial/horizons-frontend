@@ -138,7 +138,7 @@ export function GardenScene({ config, children }: GardenSceneProps) {
       {config.key === 'test_garden' && (
         <>
           {/* Fence perimeter around the garden */}
-          <FencePerimeter size={60} spacing={10} inset={0} scale={0.6} yOffset={0.2} />
+          <FencePerimeter size={60} spacing={10} inset={0} scale={0.6} yOffset={0} />
         </>
       )}
       
