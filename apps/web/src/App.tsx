@@ -33,14 +33,14 @@ function App() {
         left: 20,
         zIndex: 100,
         background: 'rgba(30, 30, 30, 0.85)',
-        padding: '20px',
-        borderRadius: '12px',
+        padding: '6px',
+        borderRadius: '6px',
         boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
         backdropFilter: 'blur(10px)'
       }}>
         <h2 style={{ 
-          margin: '0 0 15px 0', 
-          fontSize: '18px', 
+          margin: '0 0 4px 0', 
+          fontSize: '11px', 
           fontWeight: 600,
           color: '#FFFFFF'
         }}>
@@ -63,12 +63,12 @@ function App() {
               style={{
                 display: 'block',
                 width: '100%',
-                padding: '12px',
-                margin: '8px 0',
+                padding: '6px',
+                margin: '4px 0',
                 border: isSelected 
                   ? `2px solid ${accentColor}` 
                   : '2px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '8px',
+                borderRadius: '6px',
                 background: isSelected 
                   ? 'rgba(255, 255, 255, 0.1)' 
                   : 'rgba(255, 255, 255, 0.05)',
@@ -94,13 +94,14 @@ function App() {
             >
               <div style={{ 
                 fontWeight: 600, 
-                marginBottom: '4px',
-                color: '#FFFFFF'
+                marginBottom: '2px',
+                color: '#FFFFFF',
+                fontSize: '12px'
               }}>
                 {garden.displayName}
               </div>
               <div style={{ 
-                fontSize: '12px', 
+                fontSize: '10px', 
                 color: '#A0A0A0'
               }}>
                 {garden.tierAccess}
@@ -117,15 +118,15 @@ function App() {
         right: 20,
         zIndex: 100,
         background: 'rgba(30, 30, 30, 0.85)',
-        padding: '20px',
-        borderRadius: '12px',
+        padding: '6px',
+        borderRadius: '6px',
         boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
         backdropFilter: 'blur(10px)',
-        minWidth: '200px'
+        minWidth: '130px'
       }}>
         <h2 style={{ 
-          margin: '0 0 15px 0', 
-          fontSize: '18px', 
+          margin: '0 0 4px 0', 
+          fontSize: '11px', 
           fontWeight: 600,
           color: '#FFFFFF'
         }}>
@@ -139,12 +140,12 @@ function App() {
             style={{
               display: 'block',
               width: '100%',
-              padding: '12px',
-              margin: '8px 0',
+              padding: '6px',
+              margin: '4px 0',
               border: placingFlowerType === flowerDef.id 
                 ? `2px solid ${flowerDef.color}` 
                 : '2px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '8px',
+              borderRadius: '6px',
               background: placingFlowerType === flowerDef.id 
                 ? 'rgba(255, 255, 255, 0.15)' 
                 : 'rgba(255, 255, 255, 0.05)',
@@ -168,13 +169,14 @@ function App() {
           >
             <div style={{ 
               fontWeight: 600, 
-              marginBottom: '4px',
-              color: '#FFFFFF'
+              marginBottom: '2px',
+              color: '#FFFFFF',
+              fontSize: '12px'
             }}>
               {flowerDef.name}
             </div>
             <div style={{ 
-              fontSize: '11px', 
+              fontSize: '9px', 
               color: '#A0A0A0',
               fontStyle: 'italic'
             }}>
@@ -184,13 +186,13 @@ function App() {
         ))}
         
         <div style={{
-          marginTop: '15px',
-          padding: '10px',
+          marginTop: '6px',
+          padding: '6px',
           background: 'rgba(255, 255, 255, 0.05)',
-          borderRadius: '6px',
-          fontSize: '12px',
+          borderRadius: '4px',
+          fontSize: '10px',
           color: '#B0B0B0',
-          lineHeight: '1.4'
+          lineHeight: '1.3'
         }}>
           {placingFlowerType 
             ? '👆 Click garden to place flower' 
@@ -198,45 +200,6 @@ function App() {
         </div>
       </div>
 
-      {/* Garden Info (Bottom Left - Simple) */}
-      {!selectedFlower && (
-        <div style={{
-          position: 'absolute',
-          bottom: 20,
-          left: 20,
-          zIndex: 100,
-          background: 'rgba(30, 30, 30, 0.85)',
-          padding: '15px 20px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
-          backdropFilter: 'blur(10px)',
-          maxWidth: '300px'
-        }}>
-          <h3 style={{ 
-            margin: '0 0 8px 0', 
-            fontSize: '16px',
-            color: '#FFFFFF'
-          }}>
-            {currentGarden.displayName}
-          </h3>
-          <p style={{ 
-            margin: '0', 
-            fontSize: '14px', 
-            color: '#E0E0E0', 
-            lineHeight: '1.4' 
-          }}>
-            {currentGarden.description}
-          </p>
-          <p style={{ 
-            margin: '10px 0 0 0', 
-            fontSize: '12px', 
-            color: '#A0A0A0', 
-            lineHeight: '1.4' 
-          }}>
-            {flowers.length} flower{flowers.length !== 1 ? 's' : ''} planted
-          </p>
-        </div>
-      )}
 
       {/* Romantic Greeting Card Panel - Right Side */}
       {selectedFlower && (

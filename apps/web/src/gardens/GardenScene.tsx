@@ -144,6 +144,9 @@ export function GardenScene({ config, children }: GardenSceneProps) {
           {/* Big Trees as focal points */}
           <BigTreeAccents />
           
+          {/* Curved rock path */}
+          <RockPath />
+          
           {/* Garden decorations - bench, rocks, bushes */}
           <GardenDecorations />
           
@@ -245,9 +248,9 @@ function BigTreeAccents() {
   return (
     <primitive 
       object={tree} 
-      position={[-20, 8, -20]} 
+      position={[-20, 10, -20]} 
       rotation={[0, Math.PI / 2, 0]}
-      scale={8}
+      scale={10}
       castShadow
       receiveShadow
     />
@@ -255,60 +258,145 @@ function BigTreeAccents() {
 }
 
 /**
- * Garden decorations for test garden - bench and rocks
+ * Curved rock path - stepping stones across the garden
+ */
+function RockPath() {
+  const rockPath = useGLTF('/models/environment/Rock Path Round Small.glb');
+  
+  // Create curved path coordinates - arc from left to right, bending toward tree
+  const pathStones = useMemo(() => {
+    const stones = [];
+    const numStones = 25; // Increased to 25 to fill gaps
+    
+    for (let i = 0; i < numStones; i++) {
+      const t = i / (numStones - 1); // 0 to 1
+      
+      // Arc path from left [-25, 0] to right [25, 0], bending toward tree at [-20, -20]
+      const x = -25 + (50 * t); // Move from -25 to 25 (left to right)
+      
+      // Parabolic arc: peaks at middle (t=0.5), bends toward negative Z (tree direction)
+      // Arc amplitude of -15 means it curves backward toward the tree
+      const z = -15 * (1 - Math.pow(2 * t - 1, 2)); // Parabola: 0 at ends, -15 at middle
+      
+      // Vary rotation for natural look - deterministic based on index
+      const rotation = (i * 0.7) % (Math.PI * 2);
+      
+      stones.push({ x, z, rotation });
+    }
+    
+    return stones;
+  }, []);
+  
+  return (
+    <group>
+      {pathStones.map((stone, index) => (
+        <primitive
+          key={index}
+          object={rockPath.scene.clone()}
+          position={[stone.x, 0.6, stone.z]}
+          rotation={[0, stone.rotation, 0]}
+          scale={2.5}
+          castShadow
+          receiveShadow
+        />
+      ))}
+    </group>
+  );
+}
+
+/**
+ * Garden decorations for test garden - bench, rocks, and bushes
  */
 function GardenDecorations() {
   const bench = useGLTF('/models/environment/Bench.glb');
   const multipleRocks = useGLTF('/models/environment/MultipleRocks.glb');
   const rocks = useGLTF('/models/environment/Rocks.glb');
+  const bush = useGLTF('/models/environment/Bush with Flowers.glb');
+  
+  // Clone and lighten bush materials - subtle brightness increase
+  const createLighterBush = () => {
+    const clonedBush = bush.scene.clone();
+    clonedBush.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        child.material = child.material.clone();
+        // Subtle brightness increase
+        if (child.material.color) {
+          child.material.color.multiplyScalar(1.15); // 15% brighter (reduced from 40%)
+        }
+        // Subtle emissive for lightness
+        if (child.material.emissive) {
+          child.material.emissive.setRGB(0.05, 0.05, 0.03); // Reduced emissive
+        }
+      }
+    });
+    return clonedBush;
+  };
   
   return (
     <group>
-      {/* Bench to the right of tree - smaller and moved to avoid clipping */}
+      {/* Bench closer to tree - on terrain */}
       <primitive 
         object={bench.scene.clone()} 
-        position={[-10, 2, -18]} 
+        position={[-10, 1.0, -18]} 
         rotation={[0, 0, 0]}
         scale={4.0}
         castShadow
         receiveShadow
       />
       
-      {/* Extra large MultipleRocks - even bigger */}
+      {/* Massive MultipleRocks - positioned along the path */}
+      {/* Rock 1: Near left end of path */}
       <primitive 
         object={multipleRocks.scene.clone()} 
-        position={[10, 2, -15]} 
+        position={[-18, 0.3, -2]} 
         rotation={[0, 0.5, 0]}
-        scale={4.5}
-        castShadow
-        receiveShadow
-      />
-      <primitive 
-        object={multipleRocks.scene.clone()} 
-        position={[-8, 2, 10]} 
-        rotation={[0, 1.2, 0]}
-        scale={4.0}
+        scale={7.0}
         castShadow
         receiveShadow
       />
       
-      {/* Extra large Rocks - even bigger */}
+      {/* Massive Rocks - positioned along the path */}
+      {/* Rock 2: Middle-left of path */}
       <primitive 
         object={rocks.scene.clone()} 
-        position={[15, 1.8, 5]} 
+        position={[-5, 0.3, -12]} 
         rotation={[0, 0.8, 0]}
-        scale={4.0}
+        scale={6.0}
         castShadow
         receiveShadow
       />
+      
+      {/* Bushes - filling out the garden - lighter and smaller */}
+      {/* Bush 1: Left side of path (closer to camera) */}
       <primitive 
-        object={rocks.scene.clone()} 
-        position={[-12, 1.8, -8]} 
-        rotation={[0, 1.5, 0]}
-        scale={4.5}
+        object={createLighterBush()} 
+        position={[-22, 0.5, 5]} 
+        rotation={[0, 0.3, 0]}
+        scale={2.5}
         castShadow
         receiveShadow
       />
+      
+      {/* Bush 4: Right side, midway between fence and path */}
+      <primitive 
+        object={createLighterBush()} 
+        position={[23, 0.5, -8]} 
+        rotation={[0, 2.1, 0]}
+        scale={2.5}
+        castShadow
+        receiveShadow
+      />
+      
+      {/* Bush 5: Near the bench/tree area (behind tree, not against fence) */}
+      <primitive 
+        object={createLighterBush()} 
+        position={[-12, 0.5, -22]} 
+        rotation={[0, 1.5, 0]}
+        scale={2.5}
+        castShadow
+        receiveShadow
+      />
+      
     </group>
   );
 }
