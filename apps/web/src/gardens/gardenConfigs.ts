@@ -65,7 +65,7 @@ export const testGarden: GardenConfig = {
   colors: {
     primary: '#5A8F67',      // Rich forest green (main grass)
     secondary: '#7FB88D',    // Lighter highlight green
-    sky: ['#87CEEB', '#B0D4E8'], // Clear blue sky gradient
+    sky: ['#FF9A8B', '#FFEAA7'], // Sunrise gradient - peachy pink to golden yellow
     ground: '#6B5744',       // Warm earth/soil
     ambient: '#F5F0E8'       // Warm natural light
   },

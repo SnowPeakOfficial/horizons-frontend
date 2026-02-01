@@ -6,6 +6,7 @@ import { SeasonalTrees } from './components/SeasonalTrees';
 import { EnvironmentProps } from './components/EnvironmentProps';
 import { TerrainGround, BaseGroundLayer } from './components/TerrainGround';
 import { FencePerimeter } from './components/FencePerimeter';
+import { FloatingParticles } from './components/FloatingParticles';
 
 interface GardenSceneProps {
   config: GardenConfig;
@@ -139,6 +140,22 @@ export function GardenScene({ config, children }: GardenSceneProps) {
         <>
           {/* Fence perimeter around the garden */}
           <FencePerimeter size={60} spacing={10} inset={0} scale={0.6} yOffset={0} />
+          
+          {/* Big Trees as focal points */}
+          <BigTreeAccents />
+          
+          {/* Garden decorations - bench, rocks, bushes */}
+          <GardenDecorations />
+          
+          {/* Floating magical particles */}
+          <FloatingParticles 
+            count={250} 
+            size={0.1} 
+            color="#FFE4B5" 
+            speed={0.4} 
+            spread={40} 
+            height={12} 
+          />
         </>
       )}
       
@@ -214,5 +231,84 @@ function LargeFountain() {
       castShadow
       receiveShadow
     />
+  );
+}
+
+/**
+ * Big Tree accent for test garden - single massive focal point tree
+ */
+function BigTreeAccents() {
+  const { scene } = useGLTF('/models/environment/Big Tree.glb');
+  
+  const tree = useMemo(() => scene.clone(), [scene]);
+  
+  return (
+    <primitive 
+      object={tree} 
+      position={[-20, 8, -20]} 
+      rotation={[0, Math.PI / 2, 0]}
+      scale={8}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * Garden decorations for test garden - bench and rocks
+ */
+function GardenDecorations() {
+  const bench = useGLTF('/models/environment/Bench.glb');
+  const multipleRocks = useGLTF('/models/environment/MultipleRocks.glb');
+  const rocks = useGLTF('/models/environment/Rocks.glb');
+  
+  return (
+    <group>
+      {/* Bench to the right of tree - smaller and moved to avoid clipping */}
+      <primitive 
+        object={bench.scene.clone()} 
+        position={[-10, 2, -18]} 
+        rotation={[0, 0, 0]}
+        scale={4.0}
+        castShadow
+        receiveShadow
+      />
+      
+      {/* Extra large MultipleRocks - even bigger */}
+      <primitive 
+        object={multipleRocks.scene.clone()} 
+        position={[10, 2, -15]} 
+        rotation={[0, 0.5, 0]}
+        scale={4.5}
+        castShadow
+        receiveShadow
+      />
+      <primitive 
+        object={multipleRocks.scene.clone()} 
+        position={[-8, 2, 10]} 
+        rotation={[0, 1.2, 0]}
+        scale={4.0}
+        castShadow
+        receiveShadow
+      />
+      
+      {/* Extra large Rocks - even bigger */}
+      <primitive 
+        object={rocks.scene.clone()} 
+        position={[15, 1.8, 5]} 
+        rotation={[0, 0.8, 0]}
+        scale={4.0}
+        castShadow
+        receiveShadow
+      />
+      <primitive 
+        object={rocks.scene.clone()} 
+        position={[-12, 1.8, -8]} 
+        rotation={[0, 1.5, 0]}
+        scale={4.5}
+        castShadow
+        receiveShadow
+      />
+    </group>
   );
 }

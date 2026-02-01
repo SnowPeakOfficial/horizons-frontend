@@ -596,7 +596,14 @@ function App() {
       )}
 
       {/* 3D Canvas */}
-      <Canvas shadows>
+      <Canvas 
+        shadows
+        style={{
+          background: currentGarden.key === 'test_garden' 
+            ? 'linear-gradient(to bottom, #87CEEB 0%, #FFB6C1 15%, #FF8C42 30%, #FFD700 45%, #FFA500 60%, #FF6B9D 75%, #FF6347 100%)'
+            : `linear-gradient(to bottom, ${currentGarden.colors.sky[0]}, ${currentGarden.colors.sky[1]})`
+        }}
+      >
         <PerspectiveCamera makeDefault position={[0, 5, 10]} fov={60} />
         <OrbitControls 
           enabled={!isDraggingFlower}
