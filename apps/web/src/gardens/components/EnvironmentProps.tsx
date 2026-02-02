@@ -198,7 +198,7 @@ export function EnvironmentProps({
     if (type === 'fence') {
       // Non-uniform scaling: [width, height, depth]
       // Height is 2x the base scale for taller walls
-      return positions.map(() => [5.0, 10.0, 5.0] as [number, number, number]);
+      return positions.map(() => [5.0, 11.0, 5.0] as [number, number, number]);
     } else if (type === 'springPathways') {
       // Large scale for spring pathways (8-10x larger)
       return positions.map(() => 9);
