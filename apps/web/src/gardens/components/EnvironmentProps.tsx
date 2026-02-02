@@ -340,13 +340,13 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
     // REGULAR TREES: Add variety with Tree.glb (left and right only, moved to front)
      result.push({
       type: 'tree',
-      position: [leftEdgeX + 13, 7, wallZ -9],
+      position: [leftEdgeX + 13, 6.8, wallZ -9],
       rotation: 5,
       scale: 5
     });
     result.push({
       type: 'tree',
-      position: [rightEdgeX - 13, 7, wallZ - 9],
+      position: [rightEdgeX - 13, 6.6, wallZ - 9],
       rotation: 5,
       scale: 5
     });
