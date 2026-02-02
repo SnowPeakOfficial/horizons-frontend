@@ -333,13 +333,13 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
     // REGULAR TREES: Add variety with Tree.glb (left and right only, moved to front)
     result.push({
       type: 'regularTree',
-      position: [leftEdgeX + 10, 0, wallZ - 8],
+      position: [leftEdgeX + 10, 0, wallZ - 9],
       rotation: 0,
       scale: 1.6
     });
     result.push({
       type: 'regularTree',
-      position: [rightEdgeX - 10, 0, wallZ - 8],
+      position: [rightEdgeX - 10, 0, wallZ - 9],
       rotation: 0,
       scale: 1.7
     });
@@ -439,19 +439,27 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       // Additional scattered bushes
       { pos: [-18, wallZ + 2], type: 'flowerBush' as const },
       { pos: [18, wallZ + 2], type: 'flowerBush' as const },
-      { pos: [-10, wallZ - 6], type: 'tallBush' as const }, // Moved from -6 to -10 (left of swing)
-      { pos: [10, wallZ - 6], type: 'tallBush' as const }, // Moved from 6 to 10 (right of swing)
+      { pos: [-10, wallZ - 6], type: 'tallBush' as const }, // Left of swing
+      { pos: [10, wallZ - 6], type: 'tallBush' as const }, // Right of swing
       { pos: [-20, wallZ - 3], type: 'flowerBush' as const },
       { pos: [20, wallZ - 3], type: 'flowerBush' as const },
+      { pos: [25, wallZ -5], type: 'flowerBush' as const },
       
-      // MORE TALL BUSHES IN THE BACK (negative Z area)
-      { pos: [-16, wallZ - 8], type: 'tallBush' as const },
-      { pos: [-10, wallZ - 9], type: 'tallBush' as const },
-      { pos: [-4, wallZ - 10], type: 'tallBush' as const },
-      { pos: [4, wallZ - 10], type: 'tallBush' as const },
-      { pos: [10, wallZ - 9], type: 'tallBush' as const },
-      { pos: [16, wallZ - 8], type: 'tallBush' as const },
-      { pos: [0, wallZ - 11], type: 'tallBush' as const },
+      // TALL BUSHES - LEFT of LEFT REGULAR TREE (tree at leftEdgeX + 10, wallZ - 8)
+      // Fill space between wall edge and left tree
+      { pos: [leftEdgeX + 5, wallZ - 8], type: 'tallBush' as const },
+      { pos: [leftEdgeX + 6, wallZ - 9], type: 'tallBush' as const },
+      { pos: [leftEdgeX + 7, wallZ - 10], type: 'tallBush' as const },
+      { pos: [leftEdgeX + 5, wallZ - 10], type: 'tallBush' as const },
+      { pos: [leftEdgeX + 6, wallZ - 7], type: 'tallBush' as const },
+      
+      // TALL BUSHES - RIGHT of RIGHT REGULAR TREE (tree at rightEdgeX - 10, wallZ - 8)
+      // Fill space between right tree and wall edge
+      { pos: [rightEdgeX - 5, wallZ - 8], type: 'tallBush' as const },
+      { pos: [rightEdgeX - 6, wallZ - 9], type: 'tallBush' as const },
+      { pos: [rightEdgeX - 7, wallZ - 10], type: 'tallBush' as const },
+      { pos: [rightEdgeX - 5, wallZ - 10], type: 'tallBush' as const },
+      { pos: [rightEdgeX - 6, wallZ - 7], type: 'tallBush' as const },
     ];
     
     bushPositions.forEach(({ pos: [x, z], type }) => {
