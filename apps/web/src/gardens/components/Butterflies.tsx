@@ -36,6 +36,10 @@ function Butterfly({ index, color, startPosition }: ButterflyProps) {
     
     // Gentle rotation to face movement direction
     meshRef.current.rotation.y = Math.sin(t * 0.5) * 0.3;
+    
+    // Wing flapping animation - horizontal scale pulse
+    const wingFlap = Math.sin(t * 8) * 0.15 + 1; // Fast flapping (8 Hz)
+    meshRef.current.scale.set(wingFlap * 0.8, 0.8, 1);
   });
   
   return (
