@@ -7,6 +7,9 @@ import { EnvironmentProps } from './components/EnvironmentProps';
 import { TerrainGround, BaseGroundLayer } from './components/TerrainGround';
 import { Sky } from './components/Sky';
 import { SkyPresets } from './components/SkyPresets';
+import { Butterflies } from './components/Butterflies';
+import { Bees } from './components/Bees';
+import { FloatingParticles } from './components/FloatingParticles';
 
 interface GardenSceneProps {
   config: GardenConfig;
@@ -158,6 +161,11 @@ export function GardenScene({ config, children }: GardenSceneProps) {
           
           {/* Central fountain */}
           <NewFountain />
+          
+          {/* Animated environment elements */}
+          <Butterflies />
+          <Bees />
+          <FloatingParticles />
         </>
       )}
       
@@ -248,7 +256,7 @@ function NewFountain() {
       object={clonedScene} 
       position={[0, 0.5, 0]} 
       rotation={[0, 0, 0]}
-      scale={1}
+      scale={1.5}
       castShadow
       receiveShadow
     />
