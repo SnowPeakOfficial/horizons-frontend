@@ -252,14 +252,38 @@ function LargeFountain() {
  */
 function NewFountain() {
   const { scene } = useGLTF('/models/environment/Fountain-new.glb');
-  const clonedScene = useMemo(() => scene.clone(), [scene]);
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for new fountain - adjust independently!
+    const LIGHTENING_VALUE = 1.5;
+    
+    if (LIGHTENING_VALUE) {
+      clone.traverse((child: any) => {
+        if (child.isMesh && child.material) {
+          const materials = Array.isArray(child.material) 
+            ? child.material 
+            : [child.material];
+          
+          materials.forEach((mat: any) => {
+            const material = mat.clone();
+            material.color.multiplyScalar(LIGHTENING_VALUE);
+            child.material = material;
+          });
+        }
+      });
+    }
+    
+    return clone;
+  }, [scene]);
   
   return (
     <primitive 
       object={clonedScene} 
       position={[0, 0.5, 0]} 
       rotation={[0, 0, 0]}
-      scale={1.5}
+      scale={1.7}
       castShadow
       receiveShadow
     />
