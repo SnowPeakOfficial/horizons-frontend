@@ -330,18 +330,18 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       scale: 8
     });
     
-    // REGULAR TREES: Add variety with Tree.glb (left and right only)
+    // REGULAR TREES: Add variety with Tree.glb (left and right only, moved to front)
     result.push({
       type: 'regularTree',
-      position: [leftEdgeX + 10, 0, wallZ - 6],
+      position: [leftEdgeX + 10, 0, wallZ - 8],
       rotation: 0,
-      scale: 3
+      scale: 1.6
     });
     result.push({
       type: 'regularTree',
-      position: [rightEdgeX - 10, 0, wallZ - 6],
+      position: [rightEdgeX - 10, 0, wallZ - 8],
       rotation: 0,
-      scale: 3.2
+      scale: 1.7
     });
     
     // SWING SET: Center focal point (scaled down by 50x)
@@ -422,7 +422,7 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       { pos: [leftEdgeX + 12, wallZ - 1], type: 'flowerBush' as const },
       
       // Along right side (away from right trees)
-      { pos: [rightEdgeX + 4, wallZ + 5], type: 'flowerBush' as const },
+      { pos: [rightEdgeX + 4, wallZ + 1], type: 'flowerBush' as const },
       { pos: [rightEdgeX - 1, wallZ + 6], type: 'tallBush' as const },
       { pos: [rightEdgeX + 5, wallZ - 6], type: 'flowerBush' as const },
       { pos: [rightEdgeX - 9, wallZ + 4], type: 'tallBush' as const },
@@ -439,10 +439,19 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       // Additional scattered bushes
       { pos: [-18, wallZ + 2], type: 'flowerBush' as const },
       { pos: [18, wallZ + 2], type: 'flowerBush' as const },
-      { pos: [-6, wallZ - 6], type: 'tallBush' as const },
-      { pos: [6, wallZ - 6], type: 'tallBush' as const },
+      { pos: [-10, wallZ - 6], type: 'tallBush' as const }, // Moved from -6 to -10 (left of swing)
+      { pos: [10, wallZ - 6], type: 'tallBush' as const }, // Moved from 6 to 10 (right of swing)
       { pos: [-20, wallZ - 3], type: 'flowerBush' as const },
       { pos: [20, wallZ - 3], type: 'flowerBush' as const },
+      
+      // MORE TALL BUSHES IN THE BACK (negative Z area)
+      { pos: [-16, wallZ - 8], type: 'tallBush' as const },
+      { pos: [-10, wallZ - 9], type: 'tallBush' as const },
+      { pos: [-4, wallZ - 10], type: 'tallBush' as const },
+      { pos: [4, wallZ - 10], type: 'tallBush' as const },
+      { pos: [10, wallZ - 9], type: 'tallBush' as const },
+      { pos: [16, wallZ - 8], type: 'tallBush' as const },
+      { pos: [0, wallZ - 11], type: 'tallBush' as const },
     ];
     
     bushPositions.forEach(({ pos: [x, z], type }) => {
