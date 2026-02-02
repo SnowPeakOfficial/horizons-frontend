@@ -159,6 +159,9 @@ export function GardenScene({ config, children }: GardenSceneProps) {
           {/* Fence around the test garden */}
           <EnvironmentProps type="fence" gardenSize={GARDEN_SIZE} />
           
+          {/* Decorated wall with trees, lettuce, grass, and flowers */}
+          <EnvironmentProps type="decoratedWall" gardenSize={GARDEN_SIZE} />
+          
           {/* Central fountain */}
           <NewFountain />
           
