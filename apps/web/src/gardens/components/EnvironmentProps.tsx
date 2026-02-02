@@ -305,13 +305,13 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
     result.push({
       type: 'tree',
       position: [leftEdgeX, 10.5, wallZ],
-      rotation: 0,
+      rotation: 5,
       scale: 8
     });
     result.push({
       type: 'tree',
       position: [leftEdgeX + 6, 10.5, wallZ - 4],
-      rotation: 0,
+      rotation: 5,
       scale: 8
     });
     
@@ -320,28 +320,28 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
     result.push({
       type: 'tree',
       position: [rightEdgeX, 10.5, wallZ],
-      rotation: 0,
+      rotation: 5,
       scale: 8
     });
     result.push({
       type: 'tree',
       position: [rightEdgeX - 6, 10.5, wallZ - 4],
-      rotation: 0,
+      rotation: 5,
       scale: 8
     });
     
     // REGULAR TREES: Add variety with Tree.glb (left and right only, moved to front)
-    result.push({
-      type: 'regularTree',
-      position: [leftEdgeX + 10, 0, wallZ - 9],
-      rotation: 0,
-      scale: 1.6
+     result.push({
+      type: 'tree',
+      position: [leftEdgeX + 13, 7, wallZ -9],
+      rotation: 5,
+      scale: 5
     });
     result.push({
-      type: 'regularTree',
-      position: [rightEdgeX - 10, 0, wallZ - 9],
-      rotation: 0,
-      scale: 1.7
+      type: 'tree',
+      position: [rightEdgeX - 13, 7, wallZ - 9],
+      rotation: 5,
+      scale: 5
     });
     
     // SWING SET: Center focal point (scaled down by 50x)
@@ -443,6 +443,8 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       { pos: [10, wallZ - 6], type: 'tallBush' as const }, // Right of swing
       { pos: [-20, wallZ - 3], type: 'flowerBush' as const },
       { pos: [20, wallZ - 3], type: 'flowerBush' as const },
+      { pos: [25, wallZ - 5], type: 'flowerBush' as const }, // Left side
+      { pos: [-25, wallZ - 5], type: 'flowerBush' as const }, // Right side (matching)
       { pos: [25, wallZ -5], type: 'flowerBush' as const },
       
       // TALL BUSHES - LEFT of LEFT REGULAR TREE (tree at leftEdgeX + 10, wallZ - 8)
