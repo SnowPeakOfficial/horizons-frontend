@@ -191,9 +191,6 @@ function createCloudTexture(style: 'runescape' | 'modern' | 'peaceful'): THREE.T
   // Top layer (main)
   drawCloudLayer(ctx, 128, 64, 1.0, colors.main);
   
-  // Add cute kawaii face!
-  drawKawaiiFace(ctx, 128, 64);
-  
   // Create texture
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;

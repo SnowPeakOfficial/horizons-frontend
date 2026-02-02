@@ -38,7 +38,7 @@ export function GardenScene({ config, children }: GardenSceneProps) {
   }, [config.key]);
   
   // SINGLE SOURCE OF TRUTH - Change this one number to resize the entire garden!
-  const GARDEN_SIZE = 50;
+  const GARDEN_SIZE = 60;
   
   // Terrain size offset - expands terrain to fill gap caused by edge falloff
   // Adjust this to close the gap between terrain and fence (try 2-5)
