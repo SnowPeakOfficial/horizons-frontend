@@ -452,6 +452,9 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
     
     // BUSH FLOWERS & TALL BUSHES: More random placement, moved outward from swing
     const bushPositions = [
+      // Single tall bush behind lettuce crates - pushed back toward wall
+      { pos: [0, wallZ + 4], type: 'tallBush' as const },
+      
       // Left outer edge - random organic placement
       { pos: [leftEdgeX - 4, wallZ + 5], type: 'flowerBush' as const },
       { pos: [leftEdgeX + 1, wallZ + 6], type: 'tallBush' as const },
