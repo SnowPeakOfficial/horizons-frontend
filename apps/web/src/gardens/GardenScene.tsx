@@ -155,6 +155,9 @@ export function GardenScene({ config, children }: GardenSceneProps) {
         <>
           {/* Fence around the test garden */}
           <EnvironmentProps type="fence" gardenSize={GARDEN_SIZE} />
+          
+          {/* Central fountain */}
+          <NewFountain />
         </>
       )}
       
@@ -232,3 +235,26 @@ function LargeFountain() {
     />
   );
 }
+
+/**
+ * New Fountain - Central feature for test garden (80% of previous 0.75 scale)
+ */
+function NewFountain() {
+  const { scene } = useGLTF('/models/environment/Fountain-new.glb');
+  const clonedScene = useMemo(() => scene.clone(), [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[0, 0.5, 0]} 
+      rotation={[0, 0, 0]}
+      scale={1}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+// Preload fountain models
+useGLTF.preload('/models/environment/Fountain.glb');
+useGLTF.preload('/models/environment/Fountain-new.glb');
