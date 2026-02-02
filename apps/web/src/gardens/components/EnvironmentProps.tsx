@@ -242,8 +242,15 @@ function Prop({
   const clonedScene = useMemo(() => {
     const clone = scene.clone();
     
-    // For fence, lighten ALL materials proportionally (3x lighter!)
-    if (type === 'fence') {
+    // Individual lightening values for each model type
+    const LIGHTENING_VALUES: Record<string, number> = {
+      fence: 5.0,
+      fountain: 0,
+    };
+    
+    // Lighten materials for specific types
+    const lighteningValue = LIGHTENING_VALUES[type];
+    if (lighteningValue) {
       clone.traverse((child: any) => {
         if (child.isMesh && child.material) {
           // Handle both single materials and material arrays
@@ -253,8 +260,8 @@ function Prop({
           
           materials.forEach((mat: any) => {
             const material = mat.clone();
-            // Brighten by 3x - much lighter!
-            material.color.multiplyScalar(5.0);
+            // Brighten by the specified value
+            material.color.multiplyScalar(lighteningValue);
             child.material = material;
           });
         }
@@ -476,44 +483,67 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
     return result;
   }, [gardenSize]);
   
+  // Pre-process models with lightening effect
+  const processedModels = useMemo(() => {
+    const models: Record<string, THREE.Group> = {};
+    
+    // Individual lightening values for each model type - adjust these independently!
+    const LIGHTENING_VALUES: Record<string, number> = {
+      tree: 3.5,           // Big trees
+      flowerBush: 5,     // Bush with flowers
+      lettuce: 5,        // Crate lettuce
+      tallBush: 2,       // Tall bushes
+    };
+    
+    const processModel = (name: string, scene: THREE.Group) => {
+      const clone = scene.clone();
+      
+      const lighteningValue = LIGHTENING_VALUES[name];
+      if (lighteningValue) {
+        clone.traverse((child: any) => {
+          if (child.isMesh && child.material) {
+            const materials = Array.isArray(child.material) 
+              ? child.material 
+              : [child.material];
+            
+            materials.forEach((mat: any) => {
+              const material = mat.clone();
+              // Brighten by the specified value for this model type
+              material.color.multiplyScalar(lighteningValue);
+              child.material = material;
+            });
+          }
+        });
+      }
+      
+      return clone;
+    };
+    
+    models.tree = processModel('tree', bigTreeModel.scene);
+    models.regularTree = processModel('regularTree', regularTreeModel.scene);
+    models.lettuce = processModel('lettuce', crateLettuceModel.scene);
+    models.grass = processModel('grass', grassPatchModel.scene);
+    models.flowerBush = processModel('flowerBush', bushFlowerModel.scene);
+    models.tallBush = processModel('tallBush', bushTallModel.scene);
+    models.swing = processModel('swing', swingSetModel.scene);
+    
+    return models;
+  }, [bigTreeModel.scene, regularTreeModel.scene, crateLettuceModel.scene, grassPatchModel.scene, bushFlowerModel.scene, bushTallModel.scene, swingSetModel.scene]);
+  
   return (
     <group>
       {elements.map((element, i) => {
-        let model;
-        switch (element.type) {
-          case 'tree':
-            model = bigTreeModel.scene;
-            break;
-          case 'regularTree':
-            model = regularTreeModel.scene;
-            break;
-          case 'lettuce':
-            model = crateLettuceModel.scene;
-            break;
-          case 'grass':
-            model = grassPatchModel.scene;
-            break;
-          case 'flowerBush':
-            model = bushFlowerModel.scene;
-            break;
-          case 'tallBush':
-            model = bushTallModel.scene;
-            break;
-          case 'swing':
-            model = swingSetModel.scene;
-            break;
-          default:
-            model = grassPatchModel.scene;
-        }
+        const model = processedModels[element.type] || processedModels.grass;
         
         return (
-          <Prop
+          <primitive
             key={`${element.type}-${i}`}
-            scene={model}
+            object={model.clone()}
             position={element.position}
-            rotation={element.rotation}
+            rotation={[0, element.rotation, 0]}
             scale={element.scale}
-            type={element.type}
+            castShadow
+            receiveShadow
           />
         );
       })}
