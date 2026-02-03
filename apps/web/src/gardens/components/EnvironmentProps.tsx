@@ -528,7 +528,7 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       flowerBush: 5,     // Bush with flowers
       lettuce: 5,        // Crate lettuce
       tallBush: 2,       // Tall bushes
-      grass: 2.2,       // Grass patches - just slightly darker than terrain (#5A8F67)
+      grass: 1.5,       // Grass patches - just slightly darker than terrain (#5A8F67)
     };
     
     const processModel = (name: string, scene: THREE.Group) => {
