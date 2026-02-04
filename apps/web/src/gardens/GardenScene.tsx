@@ -165,6 +165,12 @@ export function GardenScene({ config, children }: GardenSceneProps) {
           {/* Central fountain */}
           <NewFountain />
           
+          {/* Farmhouse in corner */}
+          <Farmhouse />
+          
+          {/* Rock path from house to fountain */}
+          <RockPathArc />
+          
           {/* Animated environment elements */}
           <Butterflies />
           <Bees />
@@ -290,6 +296,136 @@ function NewFountain() {
   );
 }
 
-// Preload fountain models
+/**
+ * Farmhouse - Building in back-left corner of test garden
+ */
+function Farmhouse() {
+  const { scene } = useGLTF('/models/environment/House.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for farmhouse - make it much brighter
+    const LIGHTENING_VALUE = 3.5;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[-22, 0.5, -22]} 
+      rotation={[0, 0, 0]}
+      scale={13.5}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * Rock Path Arc - Curved walking path from house to fountain area
+ */
+function RockPathArc() {
+  const { scene } = useGLTF('/models/environment/Rock Path Round Small.glb');
+  
+  // Generate arc path positions
+  const pathSegments = useMemo(() => {
+    const segments = [];
+    const numSegments = 12; // Fewer segments for more spacing between pieces
+    
+    // Arc parameters - creates a curve from one side of house to the other
+    // House is at [-22, 0.5, -22]
+    // Fountain is at [0, 0.5, 0]
+    // Path arcs away from fountain, closer to it, and reaches perimeter
+    
+    const centerX = -28.5; // Centered on house
+    const centerZ = -27.7; // Centered on house
+    const radius = 26; // Arc extends to garden walls (from -22 to +30 = ~26 units)
+    const startAngle = Math.PI * 0.0; // Start angle (right side of house, toward garden)
+    const endAngle = Math.PI * 0.5; // End angle (front side of house, stays in garden)
+    
+    for (let i = 0; i < numSegments; i++) {
+      const t = i / (numSegments - 1);
+      const angle = startAngle + (endAngle - startAngle) * t;
+      
+      const x = centerX + Math.cos(angle) * radius;
+      const z = centerZ + Math.sin(angle) * radius;
+      
+      // Calculate rotation to follow the curve
+      const tangentX = -Math.sin(angle);
+      const tangentZ = Math.cos(angle);
+      const baseRotation = Math.atan2(tangentX, tangentZ);
+      
+      // Add deterministic pseudo-random rotation on Y-axis only for variety
+      // Using index-based seed for consistent results across renders
+      const seedY = i * 12.9898 + 78.233;
+      
+      const randomY = Math.abs((Math.sin(seedY) * 43758.5453) % 1);
+      
+      const rotationY = baseRotation + (randomY - 0.5) * Math.PI; // ±90 degrees
+      
+      segments.push({
+        position: [x, 0.6, z] as [number, number, number],
+        rotation: [0, rotationY, 0] as [number, number, number],
+      });
+    }
+    
+    return segments;
+  }, []);
+  
+  return (
+    <group>
+      {pathSegments.map((segment, index) => {
+        const clonedScene = scene.clone();
+        
+        // Lighten the path materials
+        const LIGHTENING_VALUE = 3;
+        clonedScene.traverse((child: any) => {
+          if (child.isMesh && child.material) {
+            const materials = Array.isArray(child.material) 
+              ? child.material 
+              : [child.material];
+            
+            materials.forEach((mat: any) => {
+              const material = mat.clone();
+              material.color.multiplyScalar(LIGHTENING_VALUE);
+              child.material = material;
+            });
+          }
+        });
+        
+        return (
+          <primitive
+            key={index}
+            object={clonedScene}
+            position={segment.position}
+            rotation={segment.rotation}
+            scale={2.5}
+            receiveShadow
+          />
+        );
+      })}
+    </group>
+  );
+}
+
+// Preload models
 useGLTF.preload('/models/environment/Fountain.glb');
 useGLTF.preload('/models/environment/Fountain-new.glb');
+useGLTF.preload('/models/environment/House.glb');
+useGLTF.preload('/models/environment/Rock Path Round Small.glb');
