@@ -13,6 +13,7 @@ interface TerrainGroundProps {
   seed?: number;
   amplitude?: number;
   grassColor?: string;
+  onHeightmapReady?: (heightmap: Float32Array, resolution: number, size: number) => void;
 }
 
 /**

@@ -144,6 +144,9 @@ export function GardenScene({ config, children }: GardenSceneProps) {
           {/* Big Trees as focal points */}
           <BigTreeAccents />
           
+          {/* Farmhouse - large building in front-left corner */}
+          <Farmhouse />
+          
           {/* Curved rock path */}
           <RockPath />
           
@@ -258,6 +261,26 @@ function BigTreeAccents() {
 }
 
 /**
+ * Farmhouse for test garden - building in front-right corner
+ */
+function Farmhouse() {
+  const { scene } = useGLTF('/models/environment/Farm house.glb');
+  
+  const clonedScene = useMemo(() => scene.clone(), [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[24, 0.5, 19]} 
+      rotation={[0, -Math.PI / 4, 0]}
+      scale={0.75}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
  * Curved rock path - stepping stones across the garden
  */
 function RockPath() {
@@ -316,16 +339,18 @@ function GardenDecorations() {
   // Clone and lighten bush materials - subtle brightness increase
   const createLighterBush = () => {
     const clonedBush = bush.scene.clone();
-    clonedBush.traverse((child: any) => {
-      if (child.isMesh && child.material) {
-        child.material = child.material.clone();
+    clonedBush.traverse((child) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mesh = child as any;
+      if (mesh.isMesh && mesh.material) {
+        mesh.material = mesh.material.clone();
         // Subtle brightness increase
-        if (child.material.color) {
-          child.material.color.multiplyScalar(1.15); // 15% brighter (reduced from 40%)
+        if (mesh.material.color) {
+          mesh.material.color.multiplyScalar(1.15); // 15% brighter (reduced from 40%)
         }
         // Subtle emissive for lightness
-        if (child.material.emissive) {
-          child.material.emissive.setRGB(0.05, 0.05, 0.03); // Reduced emissive
+        if (mesh.material.emissive) {
+          mesh.material.emissive.setRGB(0.05, 0.05, 0.03); // Reduced emissive
         }
       }
     });
