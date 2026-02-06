@@ -67,6 +67,151 @@ export function createGrassTexture(size = 512): THREE.CanvasTexture {
 }
 
 /**
+ * Create PLA-style water texture for pond
+ * Teal/cyan color with ripple patterns
+ */
+export function createWaterTexture(size = 512): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+  
+  // PLA water colors - teal/cyan
+  const waterBase = '#4DB8D8';
+  const waterDark = '#3DA8C8';
+  const waterLight = '#5DC8E8';
+  
+  // Base water color
+  ctx.fillStyle = waterBase;
+  ctx.fillRect(0, 0, size, size);
+  
+  // Create ripple patterns
+  const numRipples = 15;
+  for (let i = 0; i < numRipples; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const radius = 30 + Math.random() * 80;
+    
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    gradient.addColorStop(0, waterLight);
+    gradient.addColorStop(0.5, 'transparent');
+    gradient.addColorStop(1, waterDark);
+    
+    ctx.fillStyle = gradient;
+    ctx.globalAlpha = 0.15;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1.0;
+  
+  // Wave patterns
+  ctx.strokeStyle = waterLight;
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.1;
+  
+  for (let y = 0; y < size; y += 20) {
+    ctx.beginPath();
+    for (let x = 0; x < size; x += 5) {
+      const waveY = y + Math.sin(x * 0.05 + y * 0.03) * 3;
+      if (x === 0) {
+        ctx.moveTo(x, waveY);
+      } else {
+        ctx.lineTo(x, waveY);
+      }
+    }
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1.0;
+  
+  // Subtle noise
+  const imageData = ctx.getImageData(0, 0, size, size);
+  const data = imageData.data;
+  
+  for (let i = 0; i < data.length; i += 4) {
+    const noise = (Math.random() - 0.5) * 8;
+    data[i] = Math.max(0, Math.min(255, data[i] + noise));
+    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
+    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
+  }
+  
+  ctx.putImageData(imageData, 0, 0);
+  
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2, 2);
+  
+  return texture;
+}
+
+/**
+ * Create mud texture for pond shore
+ * Dark brown muddy texture
+ */
+export function createMudTexture(size = 512): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+  
+  // Mud colors - dark brown
+  const mudBase = '#4A3520';
+  const mudDark = '#3A2510';
+  const mudLight = '#5A4530';
+  
+  ctx.fillStyle = mudBase;
+  ctx.fillRect(0, 0, size, size);
+  
+  // Organic mud patches
+  const numPatches = 400;
+  for (let i = 0; i < numPatches; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const radius = 3 + Math.random() * 20;
+    
+    const colorChoice = Math.random();
+    let color;
+    if (colorChoice < 0.4) {
+      color = mudDark;
+    } else if (colorChoice < 0.7) {
+      color = mudBase;
+    } else {
+      color = mudLight;
+    }
+    
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    gradient.addColorStop(0, color);
+    gradient.addColorStop(1, 'transparent');
+    
+    ctx.fillStyle = gradient;
+    ctx.globalAlpha = 0.25 + Math.random() * 0.2;
+    ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+  }
+  ctx.globalAlpha = 1.0;
+  
+  // Granular noise for texture
+  const imageData = ctx.getImageData(0, 0, size, size);
+  const data = imageData.data;
+  
+  for (let i = 0; i < data.length; i += 4) {
+    const noise = (Math.random() - 0.5) * 18;
+    data[i] = Math.max(0, Math.min(255, data[i] + noise));
+    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
+    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
+  }
+  
+  ctx.putImageData(imageData, 0, 0);
+  
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(3, 3);
+  
+  return texture;
+}
+
+/**
  * Layer 2: Grass stroke overlay texture
  * TINY diagonal strokes (1-4px) - this is the KEY layer!
  * Will be sampled in WORLD SPACE in shader

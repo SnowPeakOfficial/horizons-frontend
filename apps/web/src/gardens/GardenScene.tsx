@@ -10,6 +10,7 @@ import { SkyPresets } from './components/SkyPresets';
 import { Butterflies } from './components/Butterflies';
 import { Bees } from './components/Bees';
 import { FloatingParticles } from './components/FloatingParticles';
+import { Pond } from './components/Pond';
 
 interface GardenSceneProps {
   config: GardenConfig;
@@ -168,7 +169,8 @@ export function GardenScene({ config, children }: GardenSceneProps) {
           {/* Farmhouse in corner */}
           <Farmhouse />
           
-          {/* Rock path from house to fountain */}
+          {/* Soccer corner arc - pond and rock path in bottom-right corner */}
+          <Pond position={[30, 0.9, -30]} radius={16} />
           <RockPathArc />
           
           {/* Animated environment elements */}
@@ -338,7 +340,7 @@ function Farmhouse() {
 }
 
 /**
- * Rock Path Arc - Curved walking path from house to fountain area
+ * Rock Path Arc - Curved border around pond in bottom-right corner
  */
 function RockPathArc() {
   const { scene } = useGLTF('/models/environment/Rock Path Round Small.glb');
@@ -346,18 +348,16 @@ function RockPathArc() {
   // Generate arc path positions
   const pathSegments = useMemo(() => {
     const segments = [];
-    const numSegments = 12; // Fewer segments for more spacing between pieces
+    const numSegments = 11; // Soccer corner arc spacing
     
-    // Arc parameters - creates a curve from one side of house to the other
-    // House is at [-22, 0.5, -22]
-    // Fountain is at [0, 0.5, 0]
-    // Path arcs away from fountain, closer to it, and reaches perimeter
+    // Soccer corner arc - quarter circle at corner connecting walls
+    // Corner is at [+30, -30] (bottom-right)
     
-    const centerX = -28.5; // Centered on house
-    const centerZ = -27.7; // Centered on house
-    const radius = 26; // Arc extends to garden walls (from -22 to +30 = ~26 units)
-    const startAngle = Math.PI * 0.0; // Start angle (right side of house, toward garden)
-    const endAngle = Math.PI * 0.5; // End angle (front side of house, stays in garden)
+    const centerX = 30;
+const centerZ = -30;
+const radius = 17;               
+const startAngle = Math.PI * 0.5;   // 90° - Start pointing UP/FORWARD (from south wall)
+const endAngle = Math.PI;           // 180° - End pointing LEFT (toward east wall)
     
     for (let i = 0; i < numSegments; i++) {
       const t = i / (numSegments - 1);
