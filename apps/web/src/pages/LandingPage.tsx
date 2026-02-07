@@ -13,6 +13,11 @@ import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
+import Lock from '@mui/icons-material/Lock';
+import InsertPhoto from '@mui/icons-material/InsertPhoto';
+import LocalFlorist from '@mui/icons-material/LocalFlorist';
+import CardGiftcard from '@mui/icons-material/CardGiftcard';
+import Home from '@mui/icons-material/Home';
 
 // Scroll reveal wrapper
 const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number }> = ({
@@ -216,7 +221,7 @@ export const LandingPage: React.FC = () => {
               animationFillMode: 'forwards',
             }}
           >
-            <span>🔒</span>
+            <Lock sx={{ fontSize: 16 }} />
             <span>100% Private</span>
             <span>•</span>
             <span>End-to-End Encrypted</span>
@@ -366,15 +371,14 @@ export const LandingPage: React.FC = () => {
 
       <CurvedDivider color="#FFF9F7" flip />
 
-      {/* ========== HOW IT WORKS - Horizontal Flow with Connecting Lines ========== */}
+      {/* ========== HOW IT WORKS - Clean Numbered Process ========== */}
       <section
         style={{
           padding: '120px 40px',
           background: '#FFF9F7',
-          overflow: 'hidden',
         }}
       >
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <RevealOnScroll>
             <h2
               style={{
@@ -390,153 +394,88 @@ export const LandingPage: React.FC = () => {
             </h2>
           </RevealOnScroll>
 
-          {/* Horizontal Flow Container */}
+          {/* Process Steps - Horizontal One Line */}
           <div
             style={{
-              position: 'relative',
               display: 'flex',
-              gap: 'clamp(20px, 3vw, 40px)',
-              alignItems: 'center',
+              gap: theme.spacing['3xl'],
               justifyContent: 'center',
-              flexWrap: 'nowrap',
-              paddingTop: theme.spacing.xl,
-              overflowX: 'auto',
-              overflowY: 'visible',
+              flexWrap: 'wrap',
             }}
           >
             {[
               {
-                icon: '🌱',
+                icon: <InsertPhoto sx={{ fontSize: 48 }} />,
                 title: 'Plant a memory',
                 description: 'Write, record, or speak what you want to remember',
-                gradient: 'linear-gradient(135deg, rgba(232, 180, 188, 0.15) 0%, rgba(232, 180, 188, 0.05) 100%)',
-                borderColor: 'rgba(232, 180, 188, 0.2)',
               },
               {
-                icon: '🌸',
+                icon: <LocalFlorist sx={{ fontSize: 48 }} />,
                 title: 'Let it bloom',
                 description: 'Choose when your flower opens — now or in the future',
-                gradient: 'linear-gradient(135deg, rgba(197, 169, 208, 0.15) 0%, rgba(197, 169, 208, 0.05) 100%)',
-                borderColor: 'rgba(197, 169, 208, 0.2)',
               },
               {
-                icon: '💐',
+                icon: <CardGiftcard sx={{ fontSize: 48 }} />,
                 title: 'Share as a gift',
                 description: 'Send memories to loved ones, quietly and intentionally',
-                gradient: 'linear-gradient(135deg, rgba(159, 195, 178, 0.15) 0%, rgba(159, 195, 178, 0.05) 100%)',
-                borderColor: 'rgba(159, 195, 178, 0.2)',
               },
               {
-                icon: '🌿',
+                icon: <Home sx={{ fontSize: 48 }} />,
                 title: 'Return anytime',
                 description: 'Your garden waits for you, private and peaceful',
-                gradient: 'linear-gradient(135deg, rgba(240, 217, 181, 0.15) 0%, rgba(240, 217, 181, 0.05) 100%)',
-                borderColor: 'rgba(240, 217, 181, 0.2)',
               },
-            ].map((feature, index) => (
-              <React.Fragment key={index}>
-                {/* Feature Card */}
-                <RevealOnScroll delay={index * 150}>
+            ].map((step, index) => (
+              <RevealOnScroll key={index} delay={index * 100}>
+                <div
+                  style={{
+                    flex: '1 1 220px',
+                    maxWidth: '260px',
+                    textAlign: 'center',
+                    padding: theme.spacing.xl,
+                    transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                >
+                  {/* Icon */}
                   <div
                     style={{
-                      background: 'rgba(255, 255, 255, 0.85)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      borderRadius: theme.radius['3xl'],
-                      padding: 'clamp(24px, 3vw, 40px)',
-                      border: `1px solid ${feature.borderColor}`,
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
-                      transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-                      cursor: 'default',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      flex: '1 1 0',
-                      minWidth: '220px',
-                      maxWidth: '280px',
-                      minHeight: '280px',
+                      color: theme.colors.rose[400],
+                      marginBottom: theme.spacing.lg,
                       display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-12px)';
-                      e.currentTarget.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.15)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.06)';
+                      justifyContent: 'center',
                     }}
                   >
-                    {/* Gradient background */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: feature.gradient,
-                        zIndex: 0,
-                      }}
-                    />
-
-                    {/* Content */}
-                    <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
-                      {/* Icon */}
-                      <div
-                        style={{
-                          fontSize: 'clamp(48px, 5vw, 64px)',
-                          marginBottom: theme.spacing.xl,
-                          lineHeight: 1,
-                        }}
-                      >
-                        {feature.icon}
-                      </div>
-
-                      {/* Title */}
-                      <h3
-                        style={{
-                          fontSize: 'clamp(20px, 2vw, 24px)',
-                          fontWeight: typography.fontWeight.semibold,
-                          marginBottom: theme.spacing.lg,
-                          color: theme.text.primary,
-                          fontFamily: typography.fontFamily.serif,
-                        }}
-                      >
-                        {feature.title}
-                      </h3>
-
-                      {/* Description */}
-                      <p
-                        style={{
-                          fontSize: 'clamp(15px, 1.5vw, 17px)',
-                          lineHeight: 1.7,
-                          color: theme.text.secondary,
-                        }}
-                      >
-                        {feature.description}
-                      </p>
-                    </div>
+                    {step.icon}
                   </div>
-                </RevealOnScroll>
 
-                {/* Connecting Arrow (not after last card) */}
-                {index < 3 && (
-                  <div
+                  {/* Step Title */}
+                  <h3
                     style={{
-                      fontSize: 'clamp(24px, 3vw, 32px)',
-                      color: theme.text.tertiary,
-                      opacity: 0.3,
-                      flexShrink: 0,
-                      animation: 'pulse 2s ease-in-out infinite',
+                      fontSize: 'clamp(18px, 2vw, 22px)',
+                      fontWeight: typography.fontWeight.semibold,
+                      marginBottom: theme.spacing.md,
+                      color: theme.text.primary,
+                      fontFamily: typography.fontFamily.serif,
                     }}
                   >
-                    →
-                  </div>
-                )}
-              </React.Fragment>
+                    {step.title}
+                  </h3>
+
+                  {/* Step Description */}
+                  <p
+                    style={{
+                      fontSize: 'clamp(14px, 1.5vw, 16px)',
+                      lineHeight: 1.7,
+                      color: theme.text.secondary,
+                    }}
+                  >
+                    {step.description}
+                  </p>
+                </div>
+              </RevealOnScroll>
             ))}
           </div>
 
-          <RevealOnScroll delay={600}>
+          <RevealOnScroll delay={400}>
             <p
               style={{
                 marginTop: theme.spacing['7xl'],

@@ -178,7 +178,7 @@ export const Navbar: React.FC = () => {
     <nav style={navbarStyle}>
       <div style={containerStyle}>
         {/* Logo */}
-        <div style={logoStyle} onClick={() => navigate('/my-gardens')}>
+        <div style={logoStyle} onClick={() => navigate('/')}>
           Horizons
         </div>
 

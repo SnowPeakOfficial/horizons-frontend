@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
+import Lock from '@mui/icons-material/Lock';
 
 interface SakuraIntroProps {
   onComplete: () => void;
@@ -38,9 +39,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
     playVideo();
 
     const handleEnded = () => {
-      setTimeout(() => {
-        onComplete();
-      }, 500);
+      onComplete();
     };
 
     video.addEventListener('ended', handleEnded);
@@ -242,7 +241,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                   padding: '18px 48px',
                 }}
               >
-                Read the note
+                Read our letter
               </Button>
             </div>
 
@@ -258,7 +257,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 gap: theme.spacing.lg,
               }}
             >
-              <span>🔒</span>
+              <Lock sx={{ fontSize: 16 }} />
               <span>100% Private</span>
               <span>•</span>
               <span>End-to-End Encrypted</span>
