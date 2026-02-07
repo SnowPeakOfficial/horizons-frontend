@@ -76,15 +76,11 @@ export const RegisterPage: React.FC = () => {
     setErrors({});
 
     try {
-      // Auto-detect timezone
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      
       console.log('📝 Attempting registration for:', formData.email);
       await register({
         name: formData.name.trim(),
         email: formData.email.trim(),
         password: formData.password,
-        timezone,
       });
       toast.success('Welcome to Horizons! 🌸');
       navigate('/dashboard');

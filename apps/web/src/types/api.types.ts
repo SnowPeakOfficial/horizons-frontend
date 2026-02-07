@@ -23,6 +23,7 @@ export interface User {
   tier: UserTier;
   createdAt: string;
   updatedAt: string;
+  emailPreferences?: EmailPreferences;
 }
 
 export interface AuthTokens {
@@ -39,12 +40,12 @@ export interface RegisterRequest {
   email: string;
   password: string;
   name: string;
-  timezone?: string;
 }
 
 export interface AuthResponse {
   user: User;
-  tokens: AuthTokens;
+  accessToken: string;
+  refreshToken?: string;
 }
 
 // ============================================

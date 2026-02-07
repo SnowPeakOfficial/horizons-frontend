@@ -19,8 +19,8 @@ class AuthService {
     const response = await api.post<AuthResponse>('/auth/login', credentials);
     
     // Store tokens
-    if (response.data.tokens.accessToken) {
-      localStorage.setItem('horizons_access_token', response.data.tokens.accessToken);
+    if (response.data.accessToken) {
+      localStorage.setItem('horizons_access_token', response.data.accessToken);
     }
     
     // Store user data
@@ -38,8 +38,8 @@ class AuthService {
     const response = await api.post<AuthResponse>('/auth/register', userData);
     
     // Store tokens
-    if (response.data.tokens.accessToken) {
-      localStorage.setItem('horizons_access_token', response.data.tokens.accessToken);
+    if (response.data.accessToken) {
+      localStorage.setItem('horizons_access_token', response.data.accessToken);
     }
     
     // Store user data
