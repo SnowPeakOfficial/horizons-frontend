@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Input, Card } from '../../components/common';
+import { Navbar } from '../../components/layout/Navbar';
 import { useAuthStore } from '../../stores/authStore';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
@@ -82,8 +83,8 @@ export const RegisterPage: React.FC = () => {
         email: formData.email.trim(),
         password: formData.password,
       });
-      toast.success('Welcome to Horizons! 🌸');
-      navigate('/dashboard');
+      toast.success('Welcome to Horizons!');
+      navigate('/my-gardens');
     } catch (error: unknown) {
       console.error('❌ Registration error:', error);
       
@@ -156,8 +157,10 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div style={containerStyle}>
-      <div style={formContainerStyle}>
+    <>
+      <Navbar />
+      <div style={containerStyle}>
+        <div style={formContainerStyle}>
         <div style={logoStyle}>Horizons</div>
         
         <Card>
@@ -233,7 +236,8 @@ export const RegisterPage: React.FC = () => {
             ← Back to home
           </Link>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

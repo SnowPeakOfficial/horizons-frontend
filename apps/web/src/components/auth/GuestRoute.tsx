@@ -14,7 +14,7 @@ export const GuestRoute: React.FC<GuestRouteProps> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/my-gardens" replace />;
   }
 
   return <>{children}</>;

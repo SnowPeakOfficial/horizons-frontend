@@ -7,6 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common';
+import { Navbar } from '../components/layout/Navbar';
 import { CurvedDivider } from '../components/landing/CurvedDivider';
 import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -60,6 +61,8 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div style={{ background: '#FDFCFA', minHeight: '100vh' }}>
+      {/* Navbar */}
+      <Navbar />
       
       {/* ========== HERO SECTION - Full Modern Design ========== */}
       <section

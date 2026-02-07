@@ -64,8 +64,8 @@ export const GardenPage: React.FC = () => {
           <Button variant="secondary" size="small">
             Plant Flower
           </Button>
-          <Button variant="ghost" size="small" onClick={() => navigate('/dashboard')}>
-            Back to Dashboard
+          <Button variant="ghost" size="small" onClick={() => navigate('/my-gardens')}>
+            Back to My Gardens
           </Button>
         </div>
       </div>

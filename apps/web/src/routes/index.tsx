@@ -6,7 +6,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { LandingPage } from '../pages/LandingPage';
 import { LoginPage } from '../pages/auth/LoginPage';
 import { RegisterPage } from '../pages/auth/RegisterPage';
-import { DashboardPage } from '../pages/DashboardPage';
+import { MyGardensPage } from '../pages/MyGardensPage';
 import { GardenPage } from '../pages/GardenPage';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import { GuestRoute } from '../components/auth/GuestRoute';
@@ -38,10 +38,10 @@ export const router = createBrowserRouter([
   
   // Protected routes (require authentication)
   {
-    path: '/dashboard',
+    path: '/my-gardens',
     element: (
       <ProtectedRoute>
-        <DashboardPage />
+        <MyGardensPage />
       </ProtectedRoute>
     ),
   },
@@ -52,6 +52,12 @@ export const router = createBrowserRouter([
         <GardenPage />
       </ProtectedRoute>
     ),
+  },
+  
+  // Legacy route redirect
+  {
+    path: '/dashboard',
+    element: <Navigate to="/my-gardens" replace />,
   },
   
   // Catch-all redirect

@@ -103,13 +103,17 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
   };
 
   const gardenCardStyle = (isSelected: boolean, isLocked: boolean): React.CSSProperties => ({
-    padding: theme.spacing.md,
-    border: `2px solid ${isSelected ? theme.colors.rose[500] : theme.border.light}`,
-    borderRadius: theme.radius.lg,
+    padding: theme.spacing.lg,
+    border: `2px solid ${isSelected ? theme.colors.rose[500] : 'rgba(232, 180, 184, 0.2)'}`,
+    borderRadius: theme.radius.xl,
     cursor: isLocked ? 'not-allowed' : 'pointer',
     opacity: isLocked ? 0.5 : 1,
-    transition: 'all 0.2s ease',
-    backgroundColor: isSelected ? theme.colors.rose[50] : theme.bg.elevated,
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    backgroundColor: isSelected ? theme.colors.rose[50] : 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    position: 'relative',
+    overflow: 'hidden',
   });
 
   const formStyle: React.CSSProperties = {
@@ -159,6 +163,16 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
                     key={def.id}
                     style={gardenCardStyle(isSelected, false)}
                     onClick={() => setSelectedDefinitionId(def.id)}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) {
+                        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px) scale(1.02)';
+                        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                    }}
                   >
                     <div style={{ ...typography.styles.body, fontWeight: 600, marginBottom: theme.spacing.xs }}>
                       {def.displayName}
@@ -169,8 +183,8 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
                       </div>
                     )}
                     {def.isLimitedEdition && (
-                      <div style={{ ...typography.styles.caption, color: theme.colors.rose[600], marginTop: theme.spacing.xs }}>
-                        ⭐ Limited Edition
+                      <div style={{ ...typography.styles.caption, color: theme.colors.rose[600], marginTop: theme.spacing.xs, fontWeight: 600 }}>
+                        Limited Edition
                       </div>
                     )}
                   </div>
@@ -193,7 +207,7 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
               marginTop: theme.spacing.sm,
             }}>
               <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                💎 Upgrade to PRO to unlock more garden themes
+                Upgrade to PRO to unlock more garden themes
               </div>
             </div>
           )}
