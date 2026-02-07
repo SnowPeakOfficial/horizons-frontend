@@ -84,7 +84,7 @@ class FlowerService {
    * Get all available flower definitions
    */
   async getFlowerDefinitions(): Promise<FlowerDefinition[]> {
-    const response = await api.get<FlowerDefinition[]>('/flower-definitions');
+    const response = await api.get<FlowerDefinition[]>('/flowers/definitions');
     return response.data;
   }
 
@@ -92,7 +92,7 @@ class FlowerService {
    * Get flower definitions available for user's tier
    */
   async getMyFlowerDefinitions(): Promise<FlowerDefinition[]> {
-    const response = await api.get<FlowerDefinition[]>('/flower-definitions/my-tier');
+    const response = await api.get<FlowerDefinition[]>('/flowers/definitions');
     return response.data;
   }
 
@@ -100,7 +100,7 @@ class FlowerService {
    * Get a specific flower definition
    */
   async getFlowerDefinition(definitionId: string): Promise<FlowerDefinition> {
-    const response = await api.get<FlowerDefinition>(`/flower-definitions/${definitionId}`);
+    const response = await api.get<FlowerDefinition>(`/flowers/definitions/${definitionId}`);
     return response.data;
   }
 }

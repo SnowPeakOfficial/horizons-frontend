@@ -122,6 +122,3 @@ ul, ol {
 
 /* ========== Selection ========== */
 ::selection {
-  background-color: rgba(212, 144, 154, 0.3);
-  color: inherit;
-}

@@ -20,6 +20,9 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import People from '@mui/icons-material/People';
 import CalendarToday from '@mui/icons-material/CalendarToday';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import Landscape from '@mui/icons-material/Landscape';
+import TrendingUp from '@mui/icons-material/TrendingUp';
 
 export const GardenPage: React.FC = () => {
   const { gardenId } = useParams<{ gardenId: string }>();
@@ -115,40 +118,52 @@ export const GardenPage: React.FC = () => {
     position: 'absolute',
     bottom: theme.spacing.xl,
     right: theme.spacing.xl,
-    width: '320px',
-    background: 'rgba(255, 255, 255, 0.98)',
+    width: '360px',
+    background: 'linear-gradient(135deg, #FFF5F7 0%, #FFE4E9 100%)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
     borderRadius: theme.radius.xl,
-    padding: theme.spacing.lg,
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-    border: '1px solid rgba(232, 180, 184, 0.3)',
+    padding: theme.spacing.xl,
+    boxShadow: '0 12px 40px rgba(220, 20, 60, 0.15), 0 0 0 1px rgba(232, 180, 184, 0.4)',
+    border: '1px solid rgba(255, 182, 193, 0.5)',
     zIndex: 10,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    animation: 'slideInFromRight 0.5s ease-out',
   };
 
   const infoPanelHeaderStyle: React.CSSProperties = {
     ...typography.styles.h5,
-    marginBottom: theme.spacing.md,
-    color: theme.text.primary,
-    fontWeight: 600,
+    marginBottom: theme.spacing.lg,
+    color: theme.colors.rose[700],
+    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
   };
 
   const infoRowStyle: React.CSSProperties = {
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.sm,
-    ...typography.styles.body,
-    fontSize: '14px',
+    marginBottom: theme.spacing.md,
+    padding: theme.spacing.sm,
+    background: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: theme.radius.md,
+    transition: 'all 0.2s ease',
   };
 
   const infoLabelStyle: React.CSSProperties = {
     color: theme.text.secondary,
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+    fontSize: '14px',
   };
 
   const infoValueStyle: React.CSSProperties = {
     color: theme.text.primary,
-    fontWeight: 500,
+    fontWeight: 600,
+    fontSize: '15px',
   };
 
   const quickActionsStyle: React.CSSProperties = {
@@ -243,32 +258,104 @@ export const GardenPage: React.FC = () => {
         </Canvas>
       </div>
 
-      {/* Floating Info Panel */}
+      {/* Floating Info Panel - Beautiful Redesign */}
       {showInfoPanel && currentGarden && (
         <div style={infoPanelStyle}>
-          <div style={infoPanelHeaderStyle}>Garden Info</div>
+          <div style={infoPanelHeaderStyle}>
+            <Landscape sx={{ fontSize: 24, color: theme.colors.rose[500] }} />
+            Garden Details
+          </div>
           
           <div>
-            <div style={infoRowStyle}>
-              <span style={infoLabelStyle}>Name</span>
+            <div 
+              style={infoRowStyle}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.9)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.7)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(0)';
+              }}
+            >
+              <span style={infoLabelStyle}>
+                <Landscape sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                Name
+              </span>
               <span style={infoValueStyle}>{currentGarden.title}</span>
             </div>
-            <div style={infoRowStyle}>
-              <span style={infoLabelStyle}>Flowers</span>
+            
+            <div 
+              style={infoRowStyle}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.9)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.7)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(0)';
+              }}
+            >
+              <span style={infoLabelStyle}>
+                <LocalFlorist sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                Flowers
+              </span>
               <span style={infoValueStyle}>{flowers.length}</span>
             </div>
-            <div style={infoRowStyle}>
-              <span style={infoLabelStyle}>Members</span>
+            
+            <div 
+              style={infoRowStyle}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.9)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.7)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(0)';
+              }}
+            >
+              <span style={infoLabelStyle}>
+                <People sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                Members
+              </span>
               <span style={infoValueStyle}>{currentGarden._count?.members || 1}</span>
             </div>
-            <div style={infoRowStyle}>
-              <span style={infoLabelStyle}>Theme</span>
+            
+            <div 
+              style={infoRowStyle}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.9)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.7)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(0)';
+              }}
+            >
+              <span style={infoLabelStyle}>
+                <TrendingUp sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                Theme
+              </span>
               <span style={infoValueStyle}>
                 {currentGarden.gardenDefinition?.displayName || 'Default'}
               </span>
             </div>
-            <div style={infoRowStyle}>
-              <span style={infoLabelStyle}>Created</span>
+            
+            <div 
+              style={infoRowStyle}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.9)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.7)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateX(0)';
+              }}
+            >
+              <span style={infoLabelStyle}>
+                <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                Created
+              </span>
               <span style={infoValueStyle}>{formatDate(currentGarden.createdAt)}</span>
             </div>
           </div>
@@ -286,7 +373,7 @@ export const GardenPage: React.FC = () => {
         </div>
       )}
 
-      {/* Show Panel Toggle (when hidden) */}
+      {/* Professional Toggle Icon (when hidden) */}
       {!showInfoPanel && (
         <button
           onClick={() => setShowInfoPanel(true)}
@@ -294,29 +381,32 @@ export const GardenPage: React.FC = () => {
             position: 'absolute',
             bottom: theme.spacing.xl,
             right: theme.spacing.xl,
-            width: '48px',
-            height: '48px',
+            width: '56px',
+            height: '56px',
             borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.98)',
-            border: `1px solid rgba(232, 180, 184, 0.3)`,
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.12)',
+            background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF5F7 100%)',
+            border: `2px solid ${theme.colors.rose[300]}`,
+            boxShadow: '0 8px 24px rgba(220, 20, 60, 0.2)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            transition: 'all 0.2s ease',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            animation: 'pulse 2s ease-in-out infinite',
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = 'scale(1.1)';
-            (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.16)';
+            (e.currentTarget as HTMLElement).style.transform = 'scale(1.15) rotate(5deg)';
+            (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(220, 20, 60, 0.3)';
+            (e.currentTarget as HTMLElement).style.borderColor = theme.colors.rose[500];
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-            (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.12)';
+            (e.currentTarget as HTMLElement).style.transform = 'scale(1) rotate(0deg)';
+            (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(220, 20, 60, 0.2)';
+            (e.currentTarget as HTMLElement).style.borderColor = theme.colors.rose[300];
           }}
         >
-          <span style={{ fontSize: '20px' }}>ℹ️</span>
+          <InfoOutlined sx={{ fontSize: 28, color: theme.colors.rose[500] }} />
         </button>
       )}
 

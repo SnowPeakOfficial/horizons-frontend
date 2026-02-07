@@ -200,6 +200,28 @@ ul, ol {
   }
 }
 
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 24px rgba(220, 20, 60, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(220, 20, 60, 0.3);
+  }
+}
+
 /* Utility Classes */
 .container {
   max-width: 1280px;
