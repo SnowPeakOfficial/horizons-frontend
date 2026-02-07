@@ -13,7 +13,7 @@ import type { GardenDefinition } from '../../types/api.types';
 interface CreateGardenModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateGarden: (title: string, gardenDefinitionId?: string) => Promise<void>;
+  onCreateGarden: (title: string, gardenDefinitionKey?: string) => Promise<void>;
   userTier: string;
 }
 
@@ -24,7 +24,7 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
   userTier,
 }) => {
   const [title, setTitle] = useState('');
-  const [selectedDefinitionId, setSelectedDefinitionId] = useState<string | undefined>();
+  const [selectedDefinitionKey, setSelectedDefinitionKey] = useState<string | undefined>();
   const [gardenDefinitions, setGardenDefinitions] = useState<GardenDefinition[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingDefinitions, setIsLoadingDefinitions] = useState(false);
@@ -63,10 +63,10 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
     setError('');
 
     try {
-      await onCreateGarden(title.trim(), selectedDefinitionId);
+      await onCreateGarden(title.trim(), selectedDefinitionKey);
       // Reset form
       setTitle('');
-      setSelectedDefinitionId(undefined);
+      setSelectedDefinitionKey(undefined);
       onClose();
     } catch (err) {
       setError((err as Error).message || 'Failed to create garden');
@@ -157,12 +157,12 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
           ) : availableDefinitions.length > 0 ? (
             <div style={gardenGridStyle}>
               {availableDefinitions.map((def) => {
-                const isSelected = selectedDefinitionId === def.id;
+                const isSelected = selectedDefinitionKey === def.key;
                 return (
                   <div
                     key={def.id}
                     style={gardenCardStyle(isSelected, false)}
-                    onClick={() => setSelectedDefinitionId(def.id)}
+                    onClick={() => setSelectedDefinitionKey(def.key)}
                     onMouseEnter={(e) => {
                       if (!isSelected) {
                         (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px) scale(1.02)';

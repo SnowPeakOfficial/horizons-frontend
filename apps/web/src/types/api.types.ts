@@ -112,12 +112,12 @@ export interface GardenMember {
 
 export interface CreateGardenRequest {
   title: string;
-  gardenDefinitionId?: string;
+  gardenDefinitionKey?: string;
 }
 
 export interface UpdateGardenRequest {
   title?: string;
-  gardenDefinitionId?: string;
+  gardenDefinitionKey?: string;
   status?: GardenStatus;
 }
 
