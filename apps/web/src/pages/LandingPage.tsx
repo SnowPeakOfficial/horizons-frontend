@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common';
 import { CurvedDivider } from '../components/landing/CurvedDivider';
+import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
@@ -37,6 +38,7 @@ const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number }> = 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
+  const [showIntro, setShowIntro] = useState(true); // Always show intro on page load
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -46,6 +48,15 @@ export const LandingPage: React.FC = () => {
 
   // Parallax effect value
   const parallaxOffset = scrollY * 0.5;
+
+  const handleIntroComplete = () => {
+    setShowIntro(false); // No sessionStorage - intro plays every visit
+  };
+
+  // Show intro video first
+  if (showIntro) {
+    return <SakuraIntro onComplete={handleIntroComplete} />;
+  }
 
   return (
     <div style={{ background: '#FDFCFA', minHeight: '100vh' }}>
