@@ -8,8 +8,10 @@ import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import type { ApiError } from '../types/api.types';
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
 const API_TIMEOUT = 30000; // 30 seconds
+
+console.log('🌐 API Base URL:', API_BASE_URL);
 
 // Create axios instance
 const api: AxiosInstance = axios.create({
@@ -44,27 +46,37 @@ api.interceptors.response.use(
   async (error: AxiosError<ApiError>) => {
     // Handle 401 Unauthorized - token expired
     if (error.response?.status === 401) {
+      console.log('🔒 401 Unauthorized - Clearing auth data');
+      
       // Clear stored auth data
       localStorage.removeItem('horizons_access_token');
       localStorage.removeItem('horizons_user');
       
       // Redirect to login if not already there
       if (!window.location.pathname.includes('/auth')) {
+        console.log('↪️ Redirecting to login...');
         window.location.href = '/auth/login';
       }
     }
     
     // Handle network errors
     if (!error.response) {
-      console.error('Network error:', error.message);
+      console.error('❌ Network error:', error.message);
       return Promise.reject({
         statusCode: 0,
-        message: 'Network error. Please check your connection.',
+        message: 'Cannot connect to server. Please ensure the backend is running at ' + API_BASE_URL,
         error: 'NETWORK_ERROR',
         timestamp: new Date().toISOString(),
         path: error.config?.url || '',
       } as ApiError);
     }
+    
+    // Log error for debugging
+    console.error('API Error:', {
+      status: error.response.status,
+      data: error.response.data,
+      url: error.config?.url,
+    });
     
     // Return formatted error
     return Promise.reject(error.response.data);

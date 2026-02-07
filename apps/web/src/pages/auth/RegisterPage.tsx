@@ -9,6 +9,7 @@ import { Button, Input, Card } from '../../components/common';
 import { useAuthStore } from '../../stores/authStore';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
+import type { ApiError } from '../../types/api.types';
 import toast from 'react-hot-toast';
 
 export const RegisterPage: React.FC = () => {
@@ -35,11 +36,34 @@ export const RegisterPage: React.FC = () => {
     
     // Validation
     const newErrors: typeof errors = {};
-    if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) {
+    
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
+    
+    // Email validation
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])/.test(formData.password)) {
+      newErrors.password = 'Password must contain uppercase and lowercase letters';
+    }
+    
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
     
@@ -52,18 +76,35 @@ export const RegisterPage: React.FC = () => {
     setErrors({});
 
     try {
+      // Auto-detect timezone
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      
+      console.log('📝 Attempting registration for:', formData.email);
       await register({
-        name: formData.name,
-        email: formData.email,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
         password: formData.password,
+        timezone,
       });
-      toast.success('Welcome to Horizons!');
+      toast.success('Welcome to Horizons! 🌸');
       navigate('/dashboard');
     } catch (error: unknown) {
-      const message = error && typeof error === 'object' && 'message' in error
-        ? String(error.message)
-        : 'Registration failed. Please try again.';
-      toast.error(message);
+      console.error('❌ Registration error:', error);
+      
+      // Handle specific error cases
+      const err = error as ApiError;
+      if (err.statusCode === 409) {
+        toast.error('An account with this email already exists');
+        setErrors({ email: 'Email already in use' });
+      } else if (err.statusCode === 400) {
+        toast.error('Invalid registration data. Please check your inputs.');
+      } else if (err.statusCode === 0 || err.error === 'NETWORK_ERROR') {
+        toast.error('Cannot connect to server. Please check if backend is running.');
+      } else if (err.message) {
+        toast.error(err.message);
+      } else {
+        toast.error('Registration failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -153,7 +194,7 @@ export const RegisterPage: React.FC = () => {
             <Input
               label="Password"
               type="password"
-              placeholder="At least 6 characters"
+              placeholder="At least 6 characters, mixed case"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               error={errors.password}

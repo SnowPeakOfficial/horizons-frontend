@@ -9,6 +9,7 @@ import { Button, Input, Card } from '../../components/common';
 import { useAuthStore } from '../../stores/authStore';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
+import type { ApiError } from '../../types/api.types';
 import toast from 'react-hot-toast';
 
 export const LoginPage: React.FC = () => {
@@ -26,10 +27,19 @@ export const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation
+    // Validation
     const newErrors: typeof errors = {};
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -40,14 +50,27 @@ export const LoginPage: React.FC = () => {
     setErrors({});
 
     try {
-      await login({ email: formData.email, password: formData.password });
-      toast.success('Welcome back!');
+      console.log('🔐 Attempting login for:', formData.email);
+      await login({ email: formData.email.trim(), password: formData.password });
+      toast.success('Welcome back! 🌸');
       navigate('/dashboard');
     } catch (error: unknown) {
-      const message = error && typeof error === 'object' && 'message' in error
-        ? String(error.message)
-        : 'Login failed. Please check your credentials.';
-      toast.error(message);
+      console.error('❌ Login error:', error);
+      
+      // Handle specific error cases
+      const err = error as ApiError;
+      if (err.statusCode === 401) {
+        toast.error('Invalid email or password');
+        setErrors({ password: 'Invalid credentials' });
+      } else if (err.statusCode === 429) {
+        toast.error('Too many login attempts. Please try again later.');
+      } else if (err.statusCode === 0 || err.error === 'NETWORK_ERROR') {
+        toast.error('Cannot connect to server. Please check if backend is running.');
+      } else if (err.message) {
+        toast.error(err.message);
+      } else {
+        toast.error('Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
