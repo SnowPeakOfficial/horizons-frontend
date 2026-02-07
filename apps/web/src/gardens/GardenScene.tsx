@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import { useGLTF } from '@react-three/drei';
 import type { GardenConfig } from './gardenConfigs';
+import type { Flower } from '../types/api.types';
+import type { PlacedFlower, FlowerDefinition } from '../flowers/types';
+import { FLOWER_DEFINITIONS } from '../flowers/types';
 import { GrassField } from './components/GrassField';
 import { SeasonalTrees } from './components/SeasonalTrees';
 import { EnvironmentProps } from './components/EnvironmentProps';
@@ -10,19 +13,61 @@ import { SkyPresets } from './components/SkyPresets';
 import { Butterflies } from './components/Butterflies';
 import { Bees } from './components/Bees';
 import { FloatingParticles } from './components/FloatingParticles';
+import { FlowerModel } from '../flowers/FlowerModel';
 
 interface GardenSceneProps {
   config: GardenConfig;
+  flowers?: Flower[];
   children?: React.ReactNode;
+}
+
+/**
+ * Convert API Flower to local PlacedFlower and FlowerDefinition types
+ */
+function convertApiFlowerToLocal(apiFlower: Flower): { flower: PlacedFlower; definition: FlowerDefinition } | null {
+  // Map API flower key to local definition
+  const defKey = apiFlower.flowerDefinition?.key?.toLowerCase() || 'daisy';
+  const definition = FLOWER_DEFINITIONS[defKey];
+  
+  if (!definition) {
+    console.warn(`Unknown flower definition: ${defKey}`);
+    return null;
+  }
+  
+  // Convert API state to local state
+  let state: 'BUD' | 'BLOOMED' | 'OPEN' = 'OPEN';
+  if (apiFlower.state === 'BUD') state = 'BUD';
+  else if (apiFlower.state === 'BLOOMED') state = 'BLOOMED';
+  else state = 'OPEN';
+  
+  const flower: PlacedFlower = {
+    id: apiFlower.id,
+    flowerDefinitionId: definition.id,
+    gardenId: apiFlower.gardenId,
+    position: apiFlower.position || { x: 0, y: 0, z: 0 },
+    rotation: apiFlower.rotation || 0,
+    scale: apiFlower.customScale || definition.defaultScale,
+    placedAt: new Date(apiFlower.createdAt),
+    state,
+    bloomAt: apiFlower.bloomAt ? new Date(apiFlower.bloomAt) : undefined,
+    bloomedAt: apiFlower.bloomedAt ? new Date(apiFlower.bloomedAt) : undefined,
+  };
+  
+  return { flower, definition };
 }
 
 /**
  * Main garden scene component
  * Renders the 3D environment based on garden configuration
  */
-export function GardenScene({ config, children }: GardenSceneProps) {
+export function GardenScene({ config, flowers = [], children }: GardenSceneProps) {
   // Check if this garden uses the new terrain system
   const usesTerrain = config.key === 'test_garden';
+  
+  // Convert API flowers to local format
+  const convertedFlowers = useMemo(() => {
+    return flowers.map(convertApiFlowerToLocal).filter((f): f is { flower: PlacedFlower; definition: FlowerDefinition } => f !== null);
+  }, [flowers]);
   
   // Determine season for tree selection
   const season = useMemo(() => {
@@ -215,7 +260,17 @@ export function GardenScene({ config, children }: GardenSceneProps) {
         />
       )}
       
-      {/* Children (flowers, etc.) */}
+      {/* Render flowers from database */}
+      {convertedFlowers.map(({ flower, definition }) => (
+        <FlowerModel
+          key={flower.id}
+          flower={flower}
+          definition={definition}
+          draggable={false}
+        />
+      ))}
+      
+      {/* Children (additional elements) */}
       {children}
     </group>
   );
