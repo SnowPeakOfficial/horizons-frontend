@@ -186,7 +186,7 @@ export const LandingPage: React.FC = () => {
               variant="ghost"
               size="large"
               onClick={() => {
-                const element = document.getElementById('what-is-this');
+                const element = document.getElementById('our-letter');
                 element?.scrollIntoView({ behavior: 'smooth' });
               }}
               style={{
@@ -194,7 +194,7 @@ export const LandingPage: React.FC = () => {
                 padding: '18px 48px',
               }}
             >
-              Read the note
+              Read our letter
             </Button>
           </div>
 
@@ -247,44 +247,115 @@ export const LandingPage: React.FC = () => {
       {/* Smooth transition */}
       <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent)' }} />
 
-      {/* ========== WHAT HORIZONS IS ========== */}
+      {/* ========== OUR LETTER - Handwritten Note Style ========== */}
       <section
-        id="what-is-this"
+        id="our-letter"
         style={{
           padding: '120px 40px',
-          background: '#FFFFFF',
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFEF9 100%)',
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <RevealOnScroll>
-            <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-              <p
+            {/* Letter Container - Handwritten Note Card */}
+            <div
+              style={{
+                background: '#FFFEF9',
+                borderRadius: theme.radius['2xl'],
+                padding: 'clamp(40px, 6vw, 80px)',
+                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(139, 115, 85, 0.1)',
+                border: '1px solid rgba(139, 115, 85, 0.15)',
+                position: 'relative',
+                transform: 'rotate(-0.5deg)',
+                transition: 'transform 400ms ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'rotate(-0.5deg) translateY(-8px)';
+                e.currentTarget.style.boxShadow = '0 12px 48px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(139, 115, 85, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'rotate(-0.5deg)';
+                e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(139, 115, 85, 0.1)';
+              }}
+            >
+              {/* Subtle paper texture overlay */}
+              <div
                 style={{
-                  fontSize: 'clamp(20px, 2.5vw, 32px)',
-                  lineHeight: 1.8,
-                  color: theme.text.secondary,
-                  marginBottom: theme.spacing['5xl'],
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 115, 85, 0.02) 2px, rgba(139, 115, 85, 0.02) 4px)',
+                  borderRadius: theme.radius['2xl'],
+                  pointerEvents: 'none',
                 }}
-              >
-                Some moments don't belong in a feed.
-                <br />
-                They don't need likes or replies.
-                <br />
-                They just need a place to live.
-              </p>
+              />
 
-              <p
+              {/* Letter Header */}
+              <h2
                 style={{
-                  fontSize: 'clamp(20px, 2.5vw, 32px)',
-                  lineHeight: 1.8,
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(28px, 4vw, 40px)',
+                  fontWeight: typography.fontWeight.normal,
                   color: theme.text.primary,
-                  fontWeight: typography.fontWeight.medium,
+                  textAlign: 'center',
+                  marginBottom: theme.spacing['5xl'],
+                  letterSpacing: '0.02em',
+                  position: 'relative',
                 }}
               >
-                Horizons is a private garden for your memories —<br />
-                written, spoken, or recorded —<br />
-                planted as flowers you can return to over time.
-              </p>
+                A Letter About Horizons
+              </h2>
+
+              {/* Letter Body */}
+              <div
+                style={{
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(17px, 2vw, 20px)',
+                  lineHeight: 1.9,
+                  color: theme.text.secondary,
+                  position: 'relative',
+                }}
+              >
+                <p style={{ marginBottom: theme.spacing['3xl'] }}>
+                  We built this because we kept losing things.
+                </p>
+
+                <p style={{ marginBottom: theme.spacing['3xl'] }}>
+                  Not physical things — but moments. Conversations that mattered. 
+                  Feelings we wanted to remember. Thoughts we had at 2am that felt important.
+                </p>
+
+                <p style={{ marginBottom: theme.spacing['3xl'] }}>
+                  Social media wasn't the answer. It's too public, too performative, 
+                  too temporary.
+                </p>
+
+                <p style={{ marginBottom: theme.spacing['3xl'] }}>
+                  We needed something quieter. Something just for us. A place where 
+                  memories could live without being judged, liked, or compared.
+                </p>
+
+                <p style={{ marginBottom: theme.spacing['3xl'], fontWeight: typography.fontWeight.medium, color: theme.text.primary }}>
+                  So we built Horizons.
+                </p>
+
+                <p style={{ marginBottom: theme.spacing['3xl'] }}>
+                  A private garden where memories grow as flowers. Plant them. 
+                  Watch them bloom. Return when you need to.
+                </p>
+
+                {/* Signature */}
+                <p
+                  style={{
+                    marginTop: theme.spacing['5xl'],
+                    fontStyle: 'italic',
+                    textAlign: 'right',
+                    color: theme.text.tertiary,
+                    fontSize: 'clamp(16px, 1.8vw, 18px)',
+                  }}
+                >
+                  — The Horizons Team
+                </p>
+              </div>
             </div>
           </RevealOnScroll>
         </div>
@@ -292,14 +363,15 @@ export const LandingPage: React.FC = () => {
 
       <CurvedDivider color="#FFF9F7" flip />
 
-      {/* ========== FEATURES GRID - Modern Glassmorphism Cards ========== */}
+      {/* ========== HOW IT WORKS - Horizontal Flow with Connecting Lines ========== */}
       <section
         style={{
           padding: '120px 40px',
           background: '#FFF9F7',
+          overflow: 'hidden',
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <RevealOnScroll>
             <h2
               style={{
@@ -311,103 +383,153 @@ export const LandingPage: React.FC = () => {
                 color: theme.text.primary,
               }}
             >
-              With Horizons, you can:
+              How it works
             </h2>
           </RevealOnScroll>
 
-          {/* Modern Bento Grid */}
+          {/* Horizontal Flow Container */}
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: theme.spacing['2xl'],
+              position: 'relative',
+              display: 'flex',
+              gap: 'clamp(40px, 4vw, 60px)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              paddingTop: theme.spacing.xl,
             }}
           >
             {[
               {
+                icon: '🌱',
                 title: 'Plant a memory',
                 description: 'Write, record, or speak what you want to remember',
-                gradient: 'linear-gradient(135deg, rgba(232, 180, 188, 0.1) 0%, rgba(232, 180, 188, 0.05) 100%)',
+                gradient: 'linear-gradient(135deg, rgba(232, 180, 188, 0.15) 0%, rgba(232, 180, 188, 0.05) 100%)',
+                borderColor: 'rgba(232, 180, 188, 0.2)',
               },
               {
+                icon: '🌸',
                 title: 'Let it bloom',
                 description: 'Choose when your flower opens — now or in the future',
-                gradient: 'linear-gradient(135deg, rgba(197, 169, 208, 0.1) 0%, rgba(197, 169, 208, 0.05) 100%)',
+                gradient: 'linear-gradient(135deg, rgba(197, 169, 208, 0.15) 0%, rgba(197, 169, 208, 0.05) 100%)',
+                borderColor: 'rgba(197, 169, 208, 0.2)',
               },
               {
+                icon: '💐',
                 title: 'Share as a gift',
                 description: 'Send memories to loved ones, quietly and intentionally',
-                gradient: 'linear-gradient(135deg, rgba(159, 195, 178, 0.1) 0%, rgba(159, 195, 178, 0.05) 100%)',
+                gradient: 'linear-gradient(135deg, rgba(159, 195, 178, 0.15) 0%, rgba(159, 195, 178, 0.05) 100%)',
+                borderColor: 'rgba(159, 195, 178, 0.2)',
               },
               {
+                icon: '🌿',
                 title: 'Return anytime',
                 description: 'Your garden waits for you, private and peaceful',
-                gradient: 'linear-gradient(135deg, rgba(240, 217, 181, 0.1) 0%, rgba(240, 217, 181, 0.05) 100%)',
+                gradient: 'linear-gradient(135deg, rgba(240, 217, 181, 0.15) 0%, rgba(240, 217, 181, 0.05) 100%)',
+                borderColor: 'rgba(240, 217, 181, 0.2)',
               },
             ].map((feature, index) => (
-              <RevealOnScroll key={index} delay={index * 100}>
-                <div
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.8)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
-                    borderRadius: theme.radius['3xl'],
-                    padding: theme.spacing['4xl'],
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
-                    transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-                    cursor: 'default',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.12)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.06)';
-                  }}
-                >
-                  {/* Gradient background */}
+              <React.Fragment key={index}>
+                {/* Feature Card */}
+                <RevealOnScroll delay={index * 150}>
                   <div
                     style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: feature.gradient,
-                      opacity: 0.6,
-                      zIndex: 0,
+                      background: 'rgba(255, 255, 255, 0.85)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      borderRadius: theme.radius['3xl'],
+                      padding: theme.spacing['4xl'],
+                      border: `1px solid ${feature.borderColor}`,
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
+                      transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+                      cursor: 'default',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      width: 'clamp(240px, 20vw, 280px)',
+                      minHeight: '280px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      textAlign: 'center',
                     }}
-                  />
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-12px)';
+                      e.currentTarget.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.15)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.06)';
+                    }}
+                  >
+                    {/* Gradient background */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: feature.gradient,
+                        zIndex: 0,
+                      }}
+                    />
 
-                  {/* Content */}
-                  <div style={{ position: 'relative', zIndex: 1 }}>
-                    <h3
-                      style={{
-                        fontSize: '24px',
-                        fontWeight: typography.fontWeight.semibold,
-                        marginBottom: theme.spacing.lg,
-                        color: theme.text.primary,
-                      }}
-                    >
-                      {feature.title}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: '18px',
-                        lineHeight: 1.7,
-                        color: theme.text.secondary,
-                      }}
-                    >
-                      {feature.description}
-                    </p>
+                    {/* Content */}
+                    <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
+                      {/* Icon */}
+                      <div
+                        style={{
+                          fontSize: 'clamp(48px, 5vw, 64px)',
+                          marginBottom: theme.spacing.xl,
+                          lineHeight: 1,
+                        }}
+                      >
+                        {feature.icon}
+                      </div>
+
+                      {/* Title */}
+                      <h3
+                        style={{
+                          fontSize: 'clamp(20px, 2vw, 24px)',
+                          fontWeight: typography.fontWeight.semibold,
+                          marginBottom: theme.spacing.lg,
+                          color: theme.text.primary,
+                          fontFamily: typography.fontFamily.serif,
+                        }}
+                      >
+                        {feature.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p
+                        style={{
+                          fontSize: 'clamp(15px, 1.5vw, 17px)',
+                          lineHeight: 1.7,
+                          color: theme.text.secondary,
+                        }}
+                      >
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </RevealOnScroll>
+                </RevealOnScroll>
+
+                {/* Connecting Arrow (not after last card) */}
+                {index < 3 && (
+                  <div
+                    style={{
+                      fontSize: 'clamp(24px, 3vw, 32px)',
+                      color: theme.text.tertiary,
+                      opacity: 0.3,
+                      flexShrink: 0,
+                      animation: 'pulse 2s ease-in-out infinite',
+                    }}
+                  >
+                    →
+                  </div>
+                )}
+              </React.Fragment>
             ))}
           </div>
 
-          <RevealOnScroll delay={400}>
+          <RevealOnScroll delay={600}>
             <p
               style={{
                 marginTop: theme.spacing['7xl'],
