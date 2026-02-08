@@ -9,8 +9,11 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Button } from '../components/common';
 import { PlantFlowerPanel } from '../components/gardens/PlantFlowerPanel';
+import { FlowerDetailsModal } from '../components/gardens/FlowerDetailsModal';
 import { GardenScene } from '../gardens/GardenScene';
 import { GARDEN_CONFIGS } from '../gardens/gardenConfigs';
+import { FLOWER_DEFINITIONS } from '../flowers/types';
+import type { Flower } from '../types/api.types';
 import { useGardenStore } from '../stores/gardenStore';
 import { useFlowerStore } from '../stores/flowerStore';
 import { useAuthStore } from '../stores/authStore';
@@ -37,6 +40,7 @@ export const GardenPage: React.FC = () => {
   const [selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<any>(null);
   const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
+  const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
 
   useEffect(() => {
     if (gardenId) {
@@ -287,6 +291,7 @@ export const GardenPage: React.FC = () => {
             }}
             onFlowerDragEnd={handleFlowerDragEnd}
             onFlowerDragStateChange={setIsDraggingFlower}
+            onFlowerClick={(flower: Flower) => setSelectedFlower(flower)}
           />
           <OrbitControls
             enabled={!isDraggingFlower}
@@ -473,6 +478,18 @@ export const GardenPage: React.FC = () => {
           // Position is only cleared when the panel fully closes
         }}
         placedPosition={placedPosition}
+      />
+
+      {/* Flower Details Modal - Beautiful Letter Style */}
+      <FlowerDetailsModal
+        isOpen={!!selectedFlower}
+        onClose={() => setSelectedFlower(null)}
+        flower={selectedFlower}
+        definition={selectedFlower ? FLOWER_DEFINITIONS[selectedFlower.flowerDefinition?.key?.toLowerCase() || 'daisy'] : null}
+        onDelete={async (flowerId) => {
+          // TODO: Implement flower deletion
+          console.log('Delete flower:', flowerId);
+        }}
       />
     </div>
   );

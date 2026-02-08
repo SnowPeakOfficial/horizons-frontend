@@ -233,19 +233,21 @@ export function FlowerModel({
         }}
       />
       
-      {/* Romantic Gift Tag - Cute & Pretty */}
+      {/* Romantic Gift Tag - Cute & Pretty - ENHANCED */}
       {hovered && !dragging && (
         <Html position={[0, 3, 0]} center distanceFactor={8}>
           <div style={{
-            background: '#FFF8F0',
-            padding: '20px 24px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15), 0 0 0 2px #FFE4E1',
-            minWidth: '260px',
-            maxWidth: '300px',
+            background: 'linear-gradient(135deg, #FFFBF5 0%, #FFF0F5 100%)',
+            padding: '24px 28px',
+            borderRadius: '16px',
+            boxShadow: '0 8px 32px rgba(220, 20, 60, 0.2), 0 0 0 3px rgba(255, 182, 193, 0.4)',
+            minWidth: '280px',
+            maxWidth: '320px',
             pointerEvents: 'none',
             userSelect: 'none',
-            position: 'relative'
+            position: 'relative',
+            border: '2px solid rgba(255, 228, 225, 0.8)',
+            animation: 'gentleFloat 3s ease-in-out infinite',
           }}>
             {/* Decorative top corner */}
             <div style={{
