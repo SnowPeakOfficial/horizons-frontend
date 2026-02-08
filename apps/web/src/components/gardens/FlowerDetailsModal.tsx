@@ -3,7 +3,7 @@
  * A heartfelt letter experience that transforms data into meaning
  */
 
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Modal } from '../common/Modal';
@@ -119,6 +119,13 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 }) => {
   const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
+
+  // Reset media reveal state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setMediaRevealed(false);
+    }
+  }, [isOpen]);
 
   if (!flower || !definition) return null;
 
@@ -409,8 +416,6 @@ const outerFrameStyle: React.CSSProperties = {
   borderRadius: '16px',
   padding: '40px',
   boxShadow: theme.shadow['2xl'],
-  maxHeight: '90vh',
-  overflowY: 'auto',
 };
 
 const whiteCardStyle: React.CSSProperties = {
