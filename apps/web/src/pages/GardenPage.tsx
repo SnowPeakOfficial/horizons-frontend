@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Button } from '../components/common';
-import { PlantFlowerModal } from '../components/gardens/PlantFlowerModal';
+import { PlantFlowerPanel } from '../components/gardens/PlantFlowerPanel';
 import { GardenScene } from '../gardens/GardenScene';
 import { GARDEN_CONFIGS } from '../gardens/gardenConfigs';
 import { useGardenStore } from '../stores/gardenStore';
@@ -30,8 +30,11 @@ export const GardenPage: React.FC = () => {
   const { user } = useAuthStore();
   const { currentGarden, fetchGardenById } = useGardenStore();
   const { flowers, fetchFlowersByGarden } = useFlowerStore();
-  const [isPlantModalOpen, setIsPlantModalOpen] = useState(false);
+  const [isPlantPanelOpen, setIsPlantPanelOpen] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
+  const [isPlacementMode, setIsPlacementMode] = useState(false);
+  const [selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<any>(null);
+  const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
 
   useEffect(() => {
     if (gardenId) {
@@ -224,7 +227,7 @@ export const GardenPage: React.FC = () => {
           <Button
             variant="primary"
             size="medium"
-            onClick={() => setIsPlantModalOpen(true)}
+            onClick={() => setIsPlantPanelOpen(true)}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -246,6 +249,12 @@ export const GardenPage: React.FC = () => {
           <GardenScene 
             config={GARDEN_CONFIGS.test_garden}
             flowers={flowers}
+            isPlacementMode={isPlacementMode}
+            onTerrainClick={(position) => {
+              if (isPlacementMode) {
+                setPlacedPosition(position);
+              }
+            }}
           />
           <OrbitControls
             enablePan={true}
@@ -410,13 +419,26 @@ export const GardenPage: React.FC = () => {
         </button>
       )}
 
-      {/* Plant Flower Modal */}
-      <PlantFlowerModal
-        isOpen={isPlantModalOpen}
-        onClose={() => setIsPlantModalOpen(false)}
+      {/* Plant Flower Panel */}
+      <PlantFlowerPanel
+        isOpen={isPlantPanelOpen}
+        onClose={() => {
+          setIsPlantPanelOpen(false);
+          setIsPlacementMode(false);
+          setSelectedFlowerForPlacement(null);
+          setPlacedPosition(null);
+        }}
         gardenId={gardenId || ''}
         userTier={user?.tier || 'FREE'}
         onPlantSuccess={handlePlantSuccess}
+        onPlacementModeChange={(active, definition) => {
+          setIsPlacementMode(active);
+          setSelectedFlowerForPlacement(definition);
+          if (!active) {
+            setPlacedPosition(null);
+          }
+        }}
+        placedPosition={placedPosition}
       />
     </div>
   );

@@ -13,6 +13,8 @@ interface TerrainGroundProps {
   seed?: number;
   amplitude?: number;
   grassColor?: string;
+  isPlacementMode?: boolean;
+  onTerrainClick?: (position: { x: number; y: number; z: number }) => void;
 }
 
 /**
@@ -24,7 +26,9 @@ export function TerrainGround({
   resolution = 150,
   seed = 42,
   amplitude = 0.9,
-  grassColor = '#8B9B5C'  // PLA muted olive-green
+  grassColor = '#8B9B5C',  // PLA muted olive-green
+  isPlacementMode = false,
+  onTerrainClick
 }: TerrainGroundProps) {
   
   const terrain = useMemo(() => {
@@ -189,6 +193,17 @@ export function TerrainGround({
     });
   }, [textures]);
   
+  const handleClick = (event: any) => {
+    if (isPlacementMode && onTerrainClick && event.point) {
+      // Get the clicked position in world coordinates
+      onTerrainClick({
+        x: event.point.x,
+        y: event.point.y,
+        z: event.point.z,
+      });
+    }
+  };
+
   return (
     <mesh 
       name="terrain"
@@ -196,6 +211,15 @@ export function TerrainGround({
       material={material}
       receiveShadow
       castShadow
+      onClick={handleClick}
+      onPointerOver={() => {
+        if (isPlacementMode) {
+          document.body.style.cursor = 'crosshair';
+        }
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = 'auto';
+      }}
     />
   );
 }

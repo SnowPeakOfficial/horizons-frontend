@@ -19,6 +19,8 @@ interface GardenSceneProps {
   config: GardenConfig;
   flowers?: Flower[];
   children?: React.ReactNode;
+  isPlacementMode?: boolean;
+  onTerrainClick?: (position: { x: number; y: number; z: number }) => void;
 }
 
 /**
@@ -60,7 +62,7 @@ function convertApiFlowerToLocal(apiFlower: Flower): { flower: PlacedFlower; def
  * Main garden scene component
  * Renders the 3D environment based on garden configuration
  */
-export function GardenScene({ config, flowers = [], children }: GardenSceneProps) {
+export function GardenScene({ config, flowers = [], children, isPlacementMode = false, onTerrainClick }: GardenSceneProps) {
   // Check if this garden uses the new terrain system
   const usesTerrain = config.key === 'test_garden';
   
@@ -175,6 +177,8 @@ export function GardenScene({ config, flowers = [], children }: GardenSceneProps
             seed={42}
             amplitude={0.9}
             grassColor={config.colors.primary}
+            isPlacementMode={isPlacementMode}
+            onTerrainClick={onTerrainClick}
           />
         </>
       ) : (

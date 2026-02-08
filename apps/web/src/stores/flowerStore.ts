@@ -18,7 +18,7 @@ interface FlowerState {
   // Actions
   fetchFlowersByGarden: (gardenId: string) => Promise<void>;
   fetchFlowerDefinitions: () => Promise<void>;
-  plantFlower: (data: PlantFlowerRequest) => Promise<Flower>;
+  plantFlower: (gardenId: string, data: Omit<PlantFlowerRequest, 'gardenId'>) => Promise<Flower>;
   deleteFlower: (flowerId: string) => Promise<void>;
   setSelectedFlower: (flower: Flower | null) => void;
   clearError: () => void;
@@ -55,10 +55,10 @@ export const useFlowerStore = create<FlowerState>((set) => ({
     }
   },
 
-  plantFlower: async (data: PlantFlowerRequest) => {
+  plantFlower: async (gardenId: string, data: Omit<PlantFlowerRequest, 'gardenId'>) => {
     set({ isLoading: true, error: null });
     try {
-      const newFlower = await flowerService.plantFlower(data);
+      const newFlower = await flowerService.plantFlower(gardenId, data);
       set((state) => ({
         flowers: [...state.flowers, newFlower],
         isLoading: false,

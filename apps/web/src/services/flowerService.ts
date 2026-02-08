@@ -17,8 +17,10 @@ class FlowerService {
   /**
    * Get all flowers in a garden
    */
-  async getGardenFlowers(gardenId: string): Promise<Flower[]> {
-    const response = await api.get<Flower[]>(`/gardens/${gardenId}/flowers`);
+  async getGardenFlowers(gardenId: string, includeContent = true): Promise<Flower[]> {
+    const response = await api.get<Flower[]>(
+      `/flowers/gardens/${gardenId}?includeContent=${includeContent}`
+    );
     return response.data;
   }
 
@@ -33,8 +35,8 @@ class FlowerService {
   /**
    * Plant a new flower
    */
-  async plantFlower(data: PlantFlowerRequest): Promise<Flower> {
-    const response = await api.post<Flower>('/flowers', data);
+  async plantFlower(gardenId: string, data: Omit<PlantFlowerRequest, 'gardenId'>): Promise<Flower> {
+    const response = await api.post<Flower>(`/flowers/gardens/${gardenId}/plant`, data);
     return response.data;
   }
 
