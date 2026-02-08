@@ -14,6 +14,7 @@ import { GARDEN_CONFIGS } from '../gardens/gardenConfigs';
 import { useGardenStore } from '../stores/gardenStore';
 import { useFlowerStore } from '../stores/flowerStore';
 import { useAuthStore } from '../stores/authStore';
+import flowerService from '../services/flowerService';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -35,6 +36,7 @@ export const GardenPage: React.FC = () => {
   const [isPlacementMode, setIsPlacementMode] = useState(false);
   const [selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<any>(null);
   const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
+  const [isDraggingFlower, setIsDraggingFlower] = useState(false);
 
   useEffect(() => {
     if (gardenId) {
@@ -49,7 +51,35 @@ export const GardenPage: React.FC = () => {
     }
   };
 
+  const handleFlowerDragEnd = async (flowerId: string, position: { x: number; y: number; z: number }, rotation: number) => {
+    try {
+      console.log(`🌸 Saving flower position: ${flowerId}`, position);
+      
+      // Save to backend
+      await flowerService.updateFlowerPosition({
+        flowerId,
+        position,
+        rotation
+      });
+      
+      console.log('✅ Flower position saved successfully');
+      
+      // Refresh flowers to get updated data
+      if (gardenId) {
+        fetchFlowersByGarden(gardenId);
+      }
+    } catch (error) {
+      console.error('❌ Failed to save flower position:', error);
+      // TODO: Show error toast notification
+      // For now, just refresh to revert to original position
+      if (gardenId) {
+        fetchFlowersByGarden(gardenId);
+      }
+    }
+  };
+
   const formatDate = (dateString: string) => {
+
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
       month: 'short', 
@@ -255,8 +285,11 @@ export const GardenPage: React.FC = () => {
                 setPlacedPosition(position);
               }
             }}
+            onFlowerDragEnd={handleFlowerDragEnd}
+            onFlowerDragStateChange={setIsDraggingFlower}
           />
           <OrbitControls
+            enabled={!isDraggingFlower}
             enablePan={true}
             enableZoom={true}
             enableRotate={true}

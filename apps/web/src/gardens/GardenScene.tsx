@@ -21,6 +21,8 @@ interface GardenSceneProps {
   children?: React.ReactNode;
   isPlacementMode?: boolean;
   onTerrainClick?: (position: { x: number; y: number; z: number }) => void;
+  onFlowerDragEnd?: (flowerId: string, position: { x: number; y: number; z: number }, rotation: number) => void;
+  onFlowerDragStateChange?: (isDragging: boolean) => void;
 }
 
 /**
@@ -66,7 +68,7 @@ function convertApiFlowerToLocal(apiFlower: Flower): { flower: PlacedFlower; def
  * Main garden scene component
  * Renders the 3D environment based on garden configuration
  */
-export function GardenScene({ config, flowers = [], children, isPlacementMode = false, onTerrainClick }: GardenSceneProps) {
+export function GardenScene({ config, flowers = [], children, isPlacementMode = false, onTerrainClick, onFlowerDragEnd, onFlowerDragStateChange }: GardenSceneProps) {
   // Check if this garden uses the new terrain system
   const usesTerrain = config.key === 'test_garden';
   
@@ -274,7 +276,17 @@ export function GardenScene({ config, flowers = [], children, isPlacementMode = 
           key={flower.id}
           flower={flower}
           definition={definition}
-          draggable={false}
+          draggable={true}
+          onDragStart={() => {
+            // Notify parent that dragging started - disable OrbitControls
+            onFlowerDragStateChange?.(true);
+          }}
+          onDragEnd={(placedFlower, position) => {
+            // Notify parent that dragging ended - re-enable OrbitControls
+            onFlowerDragStateChange?.(false);
+            // Call the parent handler to save position to backend
+            onFlowerDragEnd?.(placedFlower.id, position, placedFlower.rotation);
+          }}
         />
       ))}
       
