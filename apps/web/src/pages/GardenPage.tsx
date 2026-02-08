@@ -426,7 +426,9 @@ export const GardenPage: React.FC = () => {
           setIsPlantPanelOpen(false);
           setIsPlacementMode(false);
           setSelectedFlowerForPlacement(null);
-          setPlacedPosition(null);
+          // Don't reset placedPosition here - let the panel manage its own cleanup
+          // This prevents clearing the position before the plant action completes
+          setTimeout(() => setPlacedPosition(null), 100);
         }}
         gardenId={gardenId || ''}
         userTier={user?.tier || 'FREE'}
@@ -434,9 +436,8 @@ export const GardenPage: React.FC = () => {
         onPlacementModeChange={(active, definition) => {
           setIsPlacementMode(active);
           setSelectedFlowerForPlacement(definition);
-          if (!active) {
-            setPlacedPosition(null);
-          }
+          // Don't clear placedPosition here - it needs to persist for step 3
+          // Position is only cleared when the panel fully closes
         }}
         placedPosition={placedPosition}
       />

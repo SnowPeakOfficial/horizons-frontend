@@ -215,13 +215,11 @@ export interface Flower {
   bloomedAt: string | null;
   updatedAt: string;
   
-  // Position data (stored as JSON in backend, but we need it structured)
-  position?: {
-    x: number;
-    y: number;
-    z: number;
-  };
-  rotation?: number;
+  // Position data - backend returns separate X/Y/Z fields
+  positionX: number;
+  positionY: number;
+  positionZ: number;
+  rotation: number;
   
   // Relations
   flowerDefinition?: FlowerDefinition;

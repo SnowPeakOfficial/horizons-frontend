@@ -45,6 +45,16 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     symbolism: 'Innocence, purity, and new beginnings',
     defaultScale: 1.5  // 2x smaller than previous (3.0 / 2)
   },
+  // Backend uses 'daisy_simple' key - map to same definition
+  daisy_simple: {
+    id: 1,
+    name: 'Simple Daisy',
+    description: 'A pure white daisy representing innocence and simplicity',
+    color: '#FFFFFF',
+    modelPath: '/models/flowers/Daisy.glb',
+    symbolism: 'Innocence, purity, and new beginnings',
+    defaultScale: 1.5
+  },
   rose: {
     id: 2,
     name: 'Classic Rose',

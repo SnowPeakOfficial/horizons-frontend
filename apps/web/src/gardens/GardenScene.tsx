@@ -46,7 +46,11 @@ function convertApiFlowerToLocal(apiFlower: Flower): { flower: PlacedFlower; def
     id: apiFlower.id,
     flowerDefinitionId: definition.id,
     gardenId: apiFlower.gardenId,
-    position: apiFlower.position || { x: 0, y: 0, z: 0 },
+    position: {
+      x: apiFlower.positionX ?? 0,
+      y: apiFlower.positionY ?? 0,
+      z: apiFlower.positionZ ?? 0
+    },
     rotation: apiFlower.rotation || 0,
     scale: apiFlower.customScale || definition.defaultScale,
     placedAt: new Date(apiFlower.createdAt),
