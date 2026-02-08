@@ -67,6 +67,7 @@ class FlowerService {
       {
         phase: data.phase,
         text: data.text,
+        imageUrl: data.imageUrl,
         voiceUrl: data.voiceUrl,
         videoUrl: data.videoUrl,
       }

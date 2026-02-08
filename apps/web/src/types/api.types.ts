@@ -191,6 +191,7 @@ export interface FlowerContent {
   flowerId: string;
   phase: FlowerContentPhase;
   text: string | null;
+  imageUrl: string | null;
   voiceUrl: string | null;
   videoUrl: string | null;
   createdAt: string;
@@ -214,6 +215,7 @@ export interface Flower {
   createdAt: string;
   bloomedAt: string | null;
   updatedAt: string;
+  recipientName?: string | null;
   
   // Position data - backend returns separate X/Y/Z fields
   positionX: number;
@@ -229,9 +231,10 @@ export interface Flower {
 
 export interface PlantFlowerRequest {
   gardenId: string;
-  flowerDefinitionId: string;
+  flowerDefinitionKey: string;
   type: FlowerType;
   bloomAt?: string; // ISO date string for BLOOMING type
+  recipientName?: string;
   position?: {
     x: number;
     y: number;
@@ -251,6 +254,7 @@ export interface AddFlowerContentRequest {
   flowerId: string;
   phase: FlowerContentPhase;
   text?: string;
+  imageUrl?: string;
   voiceUrl?: string;
   videoUrl?: string;
 }

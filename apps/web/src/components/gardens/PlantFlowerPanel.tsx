@@ -11,6 +11,7 @@ import { Button } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
+import flowerService from '../../services/flowerService';
 import type { FlowerDefinition, FlowerType } from '../../types/api.types';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import Spa from '@mui/icons-material/Spa';
@@ -40,8 +41,12 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   const [step, setStep] = useState(1);
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
   const [flowerType, setFlowerType] = useState<FlowerType>('STANDARD');
+  const [recipientName, setRecipientName] = useState('');
   const [seedMessage, setSeedMessage] = useState('');
   const [bloomAt, setBloomAt] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [voiceUrl, setVoiceUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -117,16 +122,34 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     setError('');
 
     try {
-      const plantData: any = {
+      // Step 1: Plant the flower with seed message in content
+      const plantData = {
         flowerDefinitionKey: selectedDefinition.key,
         type: flowerType,
         position: placedPosition,
         rotation: Math.random() * Math.PI * 2,
-        seedMessage: seedMessage || undefined,
         bloomAt: flowerType === 'BLOOMING' && bloomAt ? bloomAt : undefined,
+        recipientName: recipientName || undefined,
       };
 
-      await plantFlower(gardenId, plantData);
+      const plantedFlower = await plantFlower(gardenId, plantData);
+      
+      // Step 2: Add content (seed message + media) if any provided
+      if (seedMessage || imageUrl || voiceUrl || videoUrl) {
+        try {
+          await flowerService.addContent({
+            flowerId: plantedFlower.id,
+            phase: flowerType === 'BLOOMING' ? 'SEED' : 'IMMEDIATE',
+            text: seedMessage || undefined,
+            imageUrl: imageUrl || undefined,
+            voiceUrl: voiceUrl || undefined,
+            videoUrl: videoUrl || undefined,
+          });
+        } catch (mediaError) {
+          console.error('Failed to add content:', mediaError);
+          // Continue anyway - flower was planted successfully
+        }
+      }
       
       if (onPlantSuccess) {
         onPlantSuccess();
@@ -198,7 +221,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }}
       >
         <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-          {[1, 2, 3].map((s) => (
+          {[1, 2, 3, 4, 5].map((s) => (
             <div
               key={s}
               style={{
@@ -218,7 +241,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             marginTop: theme.spacing.xs,
           }}
         >
-          Step {step} of 3
+          Step {step} of 5
         </div>
       </div>
 
@@ -324,7 +347,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           </div>
         )}
 
-        {/* Step 3: Configure Bloom Options */}
+        {/* Step 3: Configure Bloom Options + Recipient */}
         {step === 3 && (
           <div>
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
@@ -379,6 +402,30 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               </div>
             </div>
 
+            {/* Recipient Name - NEW! */}
+            <div style={{ marginBottom: theme.spacing.lg }}>
+              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
+                Who is this flower for?
+              </label>
+              <input
+                type="text"
+                value={recipientName}
+                onChange={(e) => setRecipientName(e.target.value)}
+                placeholder="Recipient's name (e.g., Sarah)"
+                style={{
+                  width: '100%',
+                  padding: theme.spacing.md,
+                  border: `1px solid ${theme.border.light}`,
+                  borderRadius: theme.radius.md,
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                }}
+              />
+              <p style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: theme.spacing.xs }}>
+                This will appear as "Dear {recipientName || '[name]'}" in the letter
+              </p>
+            </div>
+
             {/* Seed Message */}
             <div style={{ marginBottom: theme.spacing.lg }}>
               <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
@@ -422,6 +469,145 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 />
               </div>
             )}
+          </div>
+        )}
+
+        {/* Step 4: Add Media (Optional) */}
+        {step === 4 && (
+          <div>
+            <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
+              Add media to your flower (optional)
+            </p>
+
+            <div style={{ marginBottom: theme.spacing.lg }}>
+              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
+                🖼️ Picture URL
+              </label>
+              <input
+                type="text"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://example.com/photo.jpg"
+                style={{
+                  width: '100%',
+                  padding: theme.spacing.md,
+                  border: `1px solid ${theme.border.light}`,
+                  borderRadius: theme.radius.md,
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: theme.spacing.lg }}>
+              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
+                🎤 Voice Message URL
+              </label>
+              <input
+                type="text"
+                value={voiceUrl}
+                onChange={(e) => setVoiceUrl(e.target.value)}
+                placeholder="https://example.com/voice.mp3"
+                style={{
+                  width: '100%',
+                  padding: theme.spacing.md,
+                  border: `1px solid ${theme.border.light}`,
+                  borderRadius: theme.radius.md,
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: theme.spacing.lg }}>
+              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
+                🎬 Video URL
+              </label>
+              <input
+                type="text"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="https://example.com/video.mp4"
+                style={{
+                  width: '100%',
+                  padding: theme.spacing.md,
+                  border: `1px solid ${theme.border.light}`,
+                  borderRadius: theme.radius.md,
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                padding: theme.spacing.md,
+                background: theme.colors.rose[50],
+                borderRadius: theme.radius.md,
+                border: `1px solid ${theme.colors.rose[200]}`,
+              }}
+            >
+              <p style={{ ...typography.styles.caption, color: theme.text.secondary }}>
+                💡 All media is optional. You can skip this step or add media later.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Review */}
+        {step === 5 && (
+          <div>
+            <h3 style={{ ...typography.styles.h5, marginBottom: theme.spacing.lg }}>
+              Review Your Flower
+            </h3>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
+              <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Flower Type</div>
+                <div style={{ ...typography.styles.body, fontWeight: 600 }}>
+                  {selectedDefinition?.displayName}
+                </div>
+              </div>
+
+              <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Bloom Type</div>
+                <div style={{ ...typography.styles.body, fontWeight: 600 }}>
+                  {flowerType === 'STANDARD' ? 'Open Now' : 'Bloom Later'}
+                </div>
+              </div>
+
+              <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>For</div>
+                <div style={{ ...typography.styles.body, fontWeight: 600 }}>
+                  {recipientName || 'Anonymous'}
+                </div>
+              </div>
+
+              {seedMessage && (
+                <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Message</div>
+                  <div style={{ ...typography.styles.body }}>{seedMessage}</div>
+                </div>
+              )}
+
+              {imageUrl && (
+                <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                  <div style={{ ...typography.styles.body }}>✅ Picture attached</div>
+                </div>
+              )}
+
+              {voiceUrl && (
+                <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                  <div style={{ ...typography.styles.body }}>✅ Voice message attached</div>
+                </div>
+              )}
+
+              {videoUrl && (
+                <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                  <div style={{ ...typography.styles.body }}>✅ Video attached</div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -474,6 +660,28 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 3 && (
           <>
             <Button variant="ghost" onClick={() => setStep(2)} style={{ flex: 1 }}>
+              Back
+            </Button>
+            <Button variant="primary" onClick={() => setStep(4)} style={{ flex: 1 }}>
+              Next
+            </Button>
+          </>
+        )}
+
+        {step === 4 && (
+          <>
+            <Button variant="ghost" onClick={() => setStep(3)} style={{ flex: 1 }}>
+              Back
+            </Button>
+            <Button variant="primary" onClick={() => setStep(5)} style={{ flex: 1 }}>
+              Next
+            </Button>
+          </>
+        )}
+
+        {step === 5 && (
+          <>
+            <Button variant="ghost" onClick={() => setStep(4)} style={{ flex: 1 }}>
               Back
             </Button>
             <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>
