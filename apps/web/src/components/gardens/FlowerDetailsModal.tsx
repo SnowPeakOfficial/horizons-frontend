@@ -118,6 +118,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   onDelete
 }) => {
   const [showActions, setShowActions] = React.useState(false);
+  const [mediaRevealed, setMediaRevealed] = React.useState(false);
 
   if (!flower || !definition) return null;
 
@@ -140,7 +141,20 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
     year: 'numeric'
   }) : null;
 
-  // Message content - Beautiful, varied fallback messages
+  // Extract content - seed message and media
+  const seedContent = flower.content?.find(c => 
+    c.phase === 'SEED' || c.phase === 'IMMEDIATE'
+  );
+  
+  const seedMessage = seedContent?.text;
+  const imageUrl = seedContent?.imageUrl;
+  const voiceUrl = seedContent?.voiceUrl;
+  const videoUrl = seedContent?.videoUrl;
+  
+  const hasMedia = !!(imageUrl || voiceUrl || videoUrl);
+  const mediaCount = [imageUrl, voiceUrl, videoUrl].filter(Boolean).length;
+  
+  // Fallback message if no seed message
   const getDefaultMessage = (flowerName: string): string => {
     const messages: Record<string, string> = {
       'rose': 'A symbol of care, planted to remind you that you matter.',
@@ -152,8 +166,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
     return messages[key] || 'A quiet moment, preserved in petals. This flower holds a memory meant just for you.';
   };
 
-  const customMessage = flower.content?.find(c => c.phase === 'IMMEDIATE')?.text || 
-    getDefaultMessage(definition.name);
+  const displayMessage = seedMessage || getDefaultMessage(definition.name);
 
   // Sender & Recipient
   const senderName = flower.plantedBy?.name || "A friend";
@@ -222,10 +235,77 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
               planted just for you on <span style={dateHighlightStyle}>{plantedDate}</span>.
             </div>
             
-            {/* Custom Message */}
-            <div style={messageStyle}>
-              {customMessage}
+            {/* Seed Message - Enhanced Design */}
+            <div style={enhancedMessageStyle}>
+              <div style={messageHeaderStyle}>
+                🌸 A Message from <span style={{ fontFamily: "'Dancing Script', cursive", fontSize: '18px' }}>{senderName}</span> 🌸
+              </div>
+              <div style={messageTextStyle}>
+                {displayMessage}
+              </div>
             </div>
+            
+            {/* Media Reveal Section */}
+            {hasMedia && (
+              <>
+                {!mediaRevealed ? (
+                  /* Unrevealed - Show tap to reveal button */
+                  <div 
+                    style={mediaRevealButtonStyle}
+                    onClick={() => setMediaRevealed(true)}
+                  >
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💌</div>
+                    <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
+                      Special Memories Attached
+                    </div>
+                    <div style={{ fontSize: '13px', opacity: 0.8 }}>
+                      Tap to reveal {mediaCount} {mediaCount === 1 ? 'memory' : 'memories'}
+                    </div>
+                    <div style={{ marginTop: '12px', fontSize: '14px', display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                      {imageUrl && <span>🖼️ Photo</span>}
+                      {voiceUrl && <span>🎤 Voice</span>}
+                      {videoUrl && <span>🎬 Video</span>}
+                    </div>
+                  </div>
+                ) : (
+                  /* Revealed - Show media */
+                  <div style={mediaGridStyle}>
+                    {imageUrl && (
+                      <div style={mediaItemStyle}>
+                        <div style={mediaLabelStyle}>📷 Photo</div>
+                        <img 
+                          src={imageUrl} 
+                          alt="Memory" 
+                          style={mediaImageStyle}
+                        />
+                      </div>
+                    )}
+                    
+                    {voiceUrl && (
+                      <div style={mediaItemStyle}>
+                        <div style={mediaLabelStyle}>🎤 Voice Message</div>
+                        <audio 
+                          controls 
+                          src={voiceUrl}
+                          style={mediaAudioStyle}
+                        />
+                      </div>
+                    )}
+                    
+                    {videoUrl && (
+                      <div style={mediaItemStyle}>
+                        <div style={mediaLabelStyle}>🎬 Video</div>
+                        <video 
+                          controls 
+                          src={videoUrl}
+                          style={mediaVideoStyle}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
             
             {/* Bloom Status - If applicable */}
             {isBloomable && isBud && bloomAtDate && (
@@ -303,6 +383,17 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             transform: translateY(0) scale(1);
           }
         }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
       `}</style>
     </Modal>
   );
@@ -377,17 +468,90 @@ const dateHighlightStyle: React.CSSProperties = {
   color: theme.colors.rose[600],
 };
 
-const messageStyle: React.CSSProperties = {
+// Enhanced message styles
+const enhancedMessageStyle: React.CSSProperties = {
+  marginBottom: '32px',
+  padding: '28px',
+  background: 'linear-gradient(135deg, rgba(255, 250, 245, 0.9) 0%, rgba(255, 245, 247, 0.7) 100%)',
+  borderRadius: '12px',
+  border: `2px solid ${theme.colors.rose[200]}`,
+  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.1)',
+};
+
+const messageHeaderStyle: React.CSSProperties = {
+  fontFamily: typography.fontFamily.serif,
+  fontSize: '14px',
+  fontWeight: 600,
+  color: theme.colors.rose[600],
+  textAlign: 'center',
+  marginBottom: '16px',
+  letterSpacing: '0.5px',
+};
+
+const messageTextStyle: React.CSSProperties = {
   fontFamily: typography.fontFamily.serif,
   fontSize: '16px',
   color: theme.text.primary,
   lineHeight: 2.0,
+  textAlign: 'center',
+};
+
+// Media reveal button
+const mediaRevealButtonStyle: React.CSSProperties = {
   marginBottom: '32px',
   padding: '24px',
-  background: 'rgba(255, 245, 247, 0.5)',
-  borderLeft: `3px solid ${theme.colors.rose[400]}`,
+  background: 'linear-gradient(135deg, rgba(255, 201, 217, 0.3) 0%, rgba(255, 220, 230, 0.3) 100%)',
+  borderRadius: '12px',
+  border: `2px dashed ${theme.colors.rose[300]}`,
+  textAlign: 'center',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  color: theme.colors.rose[700],
+  fontFamily: typography.fontFamily.serif,
+};
+
+// Media grid and items
+const mediaGridStyle: React.CSSProperties = {
+  marginBottom: '32px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px',
+  animation: 'fadeIn 0.5s ease-in',
+};
+
+const mediaItemStyle: React.CSSProperties = {
+  padding: '20px',
+  background: 'rgba(255, 250, 245, 0.5)',
+  borderRadius: '12px',
+  border: `1px solid ${theme.colors.rose[200]}`,
+};
+
+const mediaLabelStyle: React.CSSProperties = {
+  fontFamily: typography.fontFamily.serif,
+  fontSize: '14px',
+  fontWeight: 600,
+  color: theme.colors.rose[600],
+  marginBottom: '12px',
+};
+
+const mediaImageStyle: React.CSSProperties = {
+  width: '100%',
+  maxHeight: '400px',
+  objectFit: 'contain',
   borderRadius: '8px',
-  fontStyle: 'italic',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+};
+
+const mediaAudioStyle: React.CSSProperties = {
+  width: '100%',
+  outline: 'none',
+};
+
+const mediaVideoStyle: React.CSSProperties = {
+  width: '100%',
+  maxHeight: '400px',
+  borderRadius: '8px',
+  outline: 'none',
 };
 
 const bloomInfoStyle: React.CSSProperties = {
