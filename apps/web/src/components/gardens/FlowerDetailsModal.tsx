@@ -140,9 +140,20 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
     year: 'numeric'
   }) : null;
 
-  // Message content
+  // Message content - Beautiful, varied fallback messages
+  const getDefaultMessage = (flowerName: string): string => {
+    const messages: Record<string, string> = {
+      'rose': 'A symbol of care, planted to remind you that you matter.',
+      'daisy': 'Simple beauty, like the moments we cherish most.',
+      'sunflower': 'Warmth and light, planted to brighten your days.',
+    };
+    
+    const key = flowerName.toLowerCase();
+    return messages[key] || 'A quiet moment, preserved in petals. This flower holds a memory meant just for you.';
+  };
+
   const customMessage = flower.content?.find(c => c.phase === 'IMMEDIATE')?.text || 
-    "This flower was planted with care, just for you.";
+    getDefaultMessage(definition.name);
 
   // Sender & Recipient
   const senderName = flower.plantedBy?.name || "A friend";
