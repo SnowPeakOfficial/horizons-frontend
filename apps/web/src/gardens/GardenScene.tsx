@@ -60,6 +60,8 @@ function convertApiFlowerToLocal(apiFlower: Flower): { flower: PlacedFlower; def
     state,
     bloomAt: apiFlower.bloomAt ? new Date(apiFlower.bloomAt) : undefined,
     bloomedAt: apiFlower.bloomedAt ? new Date(apiFlower.bloomedAt) : undefined,
+    recipientName: apiFlower.recipientName || undefined,
+    plantedBy: apiFlower.plantedBy || undefined,
   };
   
   return { flower, definition };

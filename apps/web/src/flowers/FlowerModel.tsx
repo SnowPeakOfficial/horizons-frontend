@@ -320,7 +320,7 @@ export function FlowerModel({
                 }}>
                   <span style={{ color: '#9D8F99' }}>From:</span>{' '}
                   <span style={{ fontWeight: 500 }}>
-                    {'A friend'}
+                    {flower.plantedBy?.name || 'A friend'}
                   </span>
                 </div>
                 
@@ -330,7 +330,9 @@ export function FlowerModel({
                   fontFamily: 'Georgia, serif',
                 }}>
                   <span style={{ color: '#9D8F99' }}>For:</span>{' '}
-                  <span style={{ fontWeight: 500 }}>you</span>
+                  <span style={{ fontWeight: 500 }}>
+                    {flower.recipientName || 'you'}
+                  </span>
                 </div>
                 
                 <div style={{

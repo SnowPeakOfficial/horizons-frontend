@@ -157,7 +157,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 
   // Sender & Recipient
   const senderName = flower.plantedBy?.name || "A friend";
-  const recipientName = "you"; // TODO: Can be personalized
+  const recipientName = flower.recipientName || "you";
 
   // Sign-off tone (metadata-driven)
   const signOffTone = "With love,"; // TODO: Make this selectable enum

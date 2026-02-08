@@ -30,6 +30,11 @@ export interface PlacedFlower {
   state: FlowerState;  // Current bloom state
   bloomAt?: Date;  // Optional scheduled bloom time
   bloomedAt?: Date;  // When the flower actually bloomed
+  recipientName?: string;  // Who the flower is for
+  plantedBy?: {
+    name: string;
+    email?: string;
+  };  // Who planted the flower
 }
 
 /**
