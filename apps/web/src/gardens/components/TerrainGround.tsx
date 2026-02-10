@@ -112,7 +112,7 @@ export function TerrainGround({
     return new THREE.ShaderMaterial({
       uniforms: {
         grassTexture: { value: textures.grass },
-        grassStrokeTexture: { value: textures.grassStrokes }, // NEW!
+        grassStrokeTexture: { value: textures.grassStrokes },
         dirtTexture: { value: textures.dirt },
         lightDirection: { value: new THREE.Vector3(0.5, 1, 0.5).normalize() },
         ambientColor: { value: new THREE.Color('#F5F0E8') },
@@ -131,7 +131,7 @@ export function TerrainGround({
           vBlend = blendWeight;
           vNormal = normalize(normalMatrix * normal);
           vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-          vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz; // World position!
+          vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
@@ -150,6 +150,7 @@ export function TerrainGround({
         varying vec3 vWorldPos;
         
         void main() {
+          // Regular terrain rendering
           // Sample base textures (UV space)
           vec4 grassColor = texture2D(grassTexture, vUv);
           vec4 dirtColor = texture2D(dirtTexture, vUv);
