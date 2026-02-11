@@ -7,16 +7,41 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '../common';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button, Input } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
 import flowerService from '../../services/flowerService';
+import gardenService from '../../services/gardenService';
 import type { FlowerDefinition, FlowerType } from '../../types/api.types';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import Spa from '@mui/icons-material/Spa';
 import Close from '@mui/icons-material/Close';
 import TouchApp from '@mui/icons-material/TouchApp';
+
+// Zod validation schema
+const plantFlowerFormSchema = z.object({
+  recipientName: z.string().max(50, 'Name must be 50 characters or less').optional().or(z.literal('')),
+  recipientEmail: z.string().refine((val) => !val || z.string().email().safeParse(val).success, {
+    message: 'Please enter a valid email address'
+  }),
+  seedMessage: z.string().max(500, 'Message must be 500 characters or less').optional().or(z.literal('')),
+  bloomAt: z.string().optional(),
+  imageUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: 'Please enter a valid URL'
+  }),
+  voiceUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: 'Please enter a valid URL'
+  }),
+  videoUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: 'Please enter a valid URL'
+  }),
+});
+
+type PlantFlowerFormData = z.infer<typeof plantFlowerFormSchema>;
 
 interface PlantFlowerPanelProps {
   isOpen: boolean;
@@ -41,14 +66,34 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   const [step, setStep] = useState(1);
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
   const [flowerType, setFlowerType] = useState<FlowerType>('STANDARD');
-  const [recipientName, setRecipientName] = useState('');
-  const [seedMessage, setSeedMessage] = useState('');
-  const [bloomAt, setBloomAt] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [voiceUrl, setVoiceUrl] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // React Hook Form with Zod validation
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    formState: { errors },
+    watch,
+    reset: resetForm,
+    trigger,
+  } = useForm<PlantFlowerFormData>({
+    resolver: zodResolver(plantFlowerFormSchema),
+    mode: 'onBlur',
+    defaultValues: {
+      recipientName: '',
+      recipientEmail: '',
+      seedMessage: '',
+      bloomAt: '',
+      imageUrl: '',
+      voiceUrl: '',
+      videoUrl: '',
+    },
+  });
+
+  // Watch form values
+  const formValues = watch();
+  const { recipientName, recipientEmail, seedMessage, bloomAt, imageUrl, voiceUrl, videoUrl } = formValues;
 
   useEffect(() => {
     if (isOpen && flowerDefinitions.length === 0) {
@@ -77,8 +122,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     setStep(1);
     setSelectedDefinition(null);
     setFlowerType('STANDARD');
-    setSeedMessage('');
-    setBloomAt('');
+    resetForm();
     setError('');
     if (onPlacementModeChange) {
       onPlacementModeChange(false, null);
@@ -118,6 +162,25 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       return;
     }
 
+    // Validate bloom date if BLOOMING type
+    if (flowerType === 'BLOOMING') {
+      if (!bloomAt) {
+        setError('Please select a bloom date for blooming flowers');
+        return;
+      }
+      if (new Date(bloomAt) <= new Date()) {
+        setError('Bloom date must be in the future');
+        return;
+      }
+    }
+
+    // Trigger form validation
+    const isValid = await trigger();
+    if (!isValid) {
+      setError('Please fix the validation errors before planting');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
 
@@ -147,6 +210,19 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           });
         } catch (mediaError) {
           console.error('Failed to add content:', mediaError);
+          // Continue anyway - flower was planted successfully
+        }
+      }
+      
+      // Step 3: Add garden member if email provided
+      if (recipientEmail) {
+        try {
+          await gardenService.addMember(gardenId, {
+            email: recipientEmail,
+            role: 'CONTRIBUTOR'
+          });
+        } catch (memberError) {
+          console.error('Failed to add member:', memberError);
           // Continue anyway - flower was planted successfully
         }
       }
@@ -402,29 +478,26 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               </div>
             </div>
 
-            {/* Recipient Name - NEW! */}
-            <div style={{ marginBottom: theme.spacing.lg }}>
-              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
-                Who is this flower for?
-              </label>
-              <input
-                type="text"
-                value={recipientName}
-                onChange={(e) => setRecipientName(e.target.value)}
-                placeholder="Recipient's name (e.g., Sarah)"
-                style={{
-                  width: '100%',
-                  padding: theme.spacing.md,
-                  border: `1px solid ${theme.border.light}`,
-                  borderRadius: theme.radius.md,
-                  fontFamily: 'inherit',
-                  fontSize: '14px',
-                }}
-              />
-              <p style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: theme.spacing.xs }}>
-                This will appear as "Dear {recipientName || '[name]'}" in the letter
-              </p>
-            </div>
+            {/* Recipient Name */}
+            <Input
+              {...register('recipientName')}
+              label="Who is this flower for?"
+              placeholder="Recipient's name (e.g., Sarah)"
+              error={errors.recipientName?.message}
+              helperText={`This will appear as "Dear ${recipientName || '[name]'}" in the letter`}
+              fullWidth
+            />
+
+            {/* Recipient Email */}
+            <Input
+              {...register('recipientEmail')}
+              type="email"
+              label="Recipient's Email (Optional)"
+              placeholder="recipient@example.com"
+              error={errors.recipientEmail?.message}
+              helperText="💡 If provided, we'll invite them as a contributor to view this garden"
+              fullWidth
+            />
 
             {/* Seed Message */}
             <div style={{ marginBottom: theme.spacing.lg }}>
@@ -432,42 +505,35 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 Seed Message (Optional)
               </label>
               <textarea
-                value={seedMessage}
-                onChange={(e) => setSeedMessage(e.target.value)}
+                {...register('seedMessage')}
                 placeholder="Add a message to your memory..."
                 style={{
                   width: '100%',
                   minHeight: '100px',
                   padding: theme.spacing.md,
-                  border: `1px solid ${theme.border.light}`,
+                  border: `1px solid ${errors.seedMessage ? theme.semantic.error : theme.border.light}`,
                   borderRadius: theme.radius.md,
                   fontFamily: 'inherit',
                   fontSize: '14px',
                   resize: 'vertical',
                 }}
               />
+              {errors.seedMessage && (
+                <span style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'block' }}>
+                  {errors.seedMessage.message}
+                </span>
+              )}
             </div>
 
             {/* Bloom Date (if BLOOMING selected) */}
             {flowerType === 'BLOOMING' && (
-              <div style={{ marginBottom: theme.spacing.lg }}>
-                <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
-                  Bloom Date
-                </label>
-                <input
-                  type="datetime-local"
-                  value={bloomAt}
-                  onChange={(e) => setBloomAt(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: theme.spacing.md,
-                    border: `1px solid ${theme.border.light}`,
-                    borderRadius: theme.radius.md,
-                    fontFamily: 'inherit',
-                    fontSize: '14px',
-                  }}
-                />
-              </div>
+              <Input
+                {...register('bloomAt')}
+                type="datetime-local"
+                label="Bloom Date"
+                error={errors.bloomAt?.message}
+                fullWidth
+              />
             )}
           </div>
         )}
@@ -479,65 +545,29 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               Add media to your flower (optional)
             </p>
 
-            <div style={{ marginBottom: theme.spacing.lg }}>
-              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
-                🖼️ Picture URL
-              </label>
-              <input
-                type="text"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://example.com/photo.jpg"
-                style={{
-                  width: '100%',
-                  padding: theme.spacing.md,
-                  border: `1px solid ${theme.border.light}`,
-                  borderRadius: theme.radius.md,
-                  fontFamily: 'inherit',
-                  fontSize: '14px',
-                }}
-              />
-            </div>
+            <Input
+              {...register('imageUrl')}
+              label="🖼️ Picture URL"
+              placeholder="https://example.com/photo.jpg"
+              error={errors.imageUrl?.message}
+              fullWidth
+            />
 
-            <div style={{ marginBottom: theme.spacing.lg }}>
-              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
-                🎤 Voice Message URL
-              </label>
-              <input
-                type="text"
-                value={voiceUrl}
-                onChange={(e) => setVoiceUrl(e.target.value)}
-                placeholder="https://example.com/voice.mp3"
-                style={{
-                  width: '100%',
-                  padding: theme.spacing.md,
-                  border: `1px solid ${theme.border.light}`,
-                  borderRadius: theme.radius.md,
-                  fontFamily: 'inherit',
-                  fontSize: '14px',
-                }}
-              />
-            </div>
+            <Input
+              {...register('voiceUrl')}
+              label="🎤 Voice Message URL"
+              placeholder="https://example.com/voice.mp3"
+              error={errors.voiceUrl?.message}
+              fullWidth
+            />
 
-            <div style={{ marginBottom: theme.spacing.lg }}>
-              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
-                🎬 Video URL
-              </label>
-              <input
-                type="text"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://example.com/video.mp4"
-                style={{
-                  width: '100%',
-                  padding: theme.spacing.md,
-                  border: `1px solid ${theme.border.light}`,
-                  borderRadius: theme.radius.md,
-                  fontFamily: 'inherit',
-                  fontSize: '14px',
-                }}
-              />
-            </div>
+            <Input
+              {...register('videoUrl')}
+              label="🎬 Video URL"
+              placeholder="https://example.com/video.mp4"
+              error={errors.videoUrl?.message}
+              fullWidth
+            />
 
             <div
               style={{
@@ -582,6 +612,18 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                   {recipientName || 'Anonymous'}
                 </div>
               </div>
+
+              {recipientEmail && (
+                <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Recipient Email</div>
+                  <div style={{ ...typography.styles.body, fontWeight: 600 }}>
+                    {recipientEmail}
+                  </div>
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: '4px' }}>
+                    ✅ Will be invited as contributor
+                  </div>
+                </div>
+              )}
 
               {seedMessage && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
