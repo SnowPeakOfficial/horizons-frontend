@@ -29,6 +29,7 @@ const plantFlowerFormSchema = z.object({
     message: 'Please enter a valid email address'
   }),
   seedMessage: z.string().max(500, 'Message must be 500 characters or less').optional().or(z.literal('')),
+  bloomMessage: z.string().max(500, 'Message must be 500 characters or less').optional().or(z.literal('')),
   bloomAt: z.string().optional(),
   imageUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
     message: 'Please enter a valid URL'
@@ -84,6 +85,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       recipientName: '',
       recipientEmail: '',
       seedMessage: '',
+      bloomMessage: '',
       bloomAt: '',
       imageUrl: '',
       voiceUrl: '',
@@ -93,7 +95,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
   // Watch form values
   const formValues = watch();
-  const { recipientName, recipientEmail, seedMessage, bloomAt, imageUrl, voiceUrl, videoUrl } = formValues;
+  const { recipientName, recipientEmail, seedMessage, bloomMessage, bloomAt, imageUrl, voiceUrl, videoUrl } = formValues;
 
   useEffect(() => {
     if (isOpen && flowerDefinitions.length === 0) {
@@ -197,20 +199,53 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
       const plantedFlower = await plantFlower(gardenId, plantData);
       
-      // Step 2: Add content (seed message + media) if any provided
-      if (seedMessage || imageUrl || voiceUrl || videoUrl) {
-        try {
-          await flowerService.addContent({
-            flowerId: plantedFlower.id,
-            phase: flowerType === 'BLOOMING' ? 'SEED' : 'IMMEDIATE',
-            text: seedMessage || undefined,
-            imageUrl: imageUrl || undefined,
-            voiceUrl: voiceUrl || undefined,
-            videoUrl: videoUrl || undefined,
-          });
-        } catch (mediaError) {
-          console.error('Failed to add content:', mediaError);
-          // Continue anyway - flower was planted successfully
+      // Step 2: Add content based on flower type
+      if (flowerType === 'BLOOMING') {
+        // For BLOOMING flowers: create separate SEED and BLOOM content
+        
+        // SEED phase content (before bloom)
+        if (seedMessage) {
+          try {
+            await flowerService.addContent({
+              flowerId: plantedFlower.id,
+              phase: 'SEED',
+              text: seedMessage,
+            });
+          } catch (mediaError) {
+            console.error('Failed to add seed content:', mediaError);
+          }
+        }
+        
+        // BLOOM phase content (after bloom - revealed with tap to reveal)
+        if (bloomMessage || imageUrl || voiceUrl || videoUrl) {
+          try {
+            await flowerService.addContent({
+              flowerId: plantedFlower.id,
+              phase: 'BLOOM',
+              text: bloomMessage || undefined,
+              imageUrl: imageUrl || undefined,
+              voiceUrl: voiceUrl || undefined,
+              videoUrl: videoUrl || undefined,
+            });
+          } catch (mediaError) {
+            console.error('Failed to add bloom content:', mediaError);
+          }
+        }
+      } else {
+        // For STANDARD flowers: create IMMEDIATE content (all together)
+        if (seedMessage || imageUrl || voiceUrl || videoUrl) {
+          try {
+            await flowerService.addContent({
+              flowerId: plantedFlower.id,
+              phase: 'IMMEDIATE',
+              text: seedMessage || undefined,
+              imageUrl: imageUrl || undefined,
+              voiceUrl: voiceUrl || undefined,
+              videoUrl: videoUrl || undefined,
+            });
+          } catch (mediaError) {
+            console.error('Failed to add content:', mediaError);
+          }
         }
       }
       
@@ -542,14 +577,48 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 4 && (
           <div>
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
-              Add media to your flower (optional)
+              {flowerType === 'BLOOMING' 
+                ? 'Add content to reveal when the flower blooms (optional)' 
+                : 'Add media to your flower (optional)'}
             </p>
+
+            {/* Bloom Message - only for BLOOMING flowers */}
+            {flowerType === 'BLOOMING' && (
+              <div style={{ marginBottom: theme.spacing.lg }}>
+                <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
+                  Bloom Message (Optional)
+                </label>
+                <textarea
+                  {...register('bloomMessage')}
+                  placeholder="Message to reveal when flower blooms..."
+                  style={{
+                    width: '100%',
+                    minHeight: '100px',
+                    padding: theme.spacing.md,
+                    border: `1px solid ${errors.bloomMessage ? theme.semantic.error : theme.border.light}`,
+                    borderRadius: theme.radius.md,
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    resize: 'vertical',
+                  }}
+                />
+                {errors.bloomMessage && (
+                  <span style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'block' }}>
+                    {errors.bloomMessage.message}
+                  </span>
+                )}
+                <p style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: theme.spacing.xs }}>
+                  💡 This message will appear AFTER the flower blooms
+                </p>
+              </div>
+            )}
 
             <Input
               {...register('imageUrl')}
               label="🖼️ Picture URL"
               placeholder="https://example.com/photo.jpg"
               error={errors.imageUrl?.message}
+              helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
               fullWidth
             />
 
@@ -558,6 +627,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               label="🎤 Voice Message URL"
               placeholder="https://example.com/voice.mp3"
               error={errors.voiceUrl?.message}
+              helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
               fullWidth
             />
 
@@ -566,6 +636,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               label="🎬 Video URL"
               placeholder="https://example.com/video.mp4"
               error={errors.videoUrl?.message}
+              helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
               fullWidth
             />
 
@@ -627,14 +698,29 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
               {seedMessage && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
-                  <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Message</div>
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>
+                    {flowerType === 'BLOOMING' ? 'Seed Message (Before Bloom)' : 'Message'}
+                  </div>
                   <div style={{ ...typography.styles.body }}>{seedMessage}</div>
+                </div>
+              )}
+
+              {bloomMessage && flowerType === 'BLOOMING' && (
+                <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Bloom Message (After Bloom)</div>
+                  <div style={{ ...typography.styles.body }}>{bloomMessage}</div>
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: '4px' }}>
+                    🌸 Will be revealed with tap-to-reveal
+                  </div>
                 </div>
               )}
 
               {imageUrl && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
-                  <div style={{ ...typography.styles.body }}>✅ Picture attached</div>
+                  <div style={{ ...typography.styles.body }}>
+                    ✅ Picture attached
+                    {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}> (revealed after bloom)</span>}
+                  </div>
                 </div>
               )}
 
