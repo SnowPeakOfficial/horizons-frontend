@@ -19,6 +19,7 @@ import Mic from '@mui/icons-material/Mic';
 import Videocam from '@mui/icons-material/Videocam';
 import Photo from '@mui/icons-material/Photo';
 import Spa from '@mui/icons-material/Spa';
+import Close from '@mui/icons-material/Close';
 
 interface FlowerDetailsModalProps {
   isOpen: boolean;
@@ -207,6 +208,23 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
       {/* Outer Pink Frame - Full extent to modal edges */}
       <div style={outerFrameStyle}>
         
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          style={closeButtonStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.background = theme.colors.rose[400];
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.background = theme.colors.rose[500];
+          }}
+          aria-label="Close letter"
+        >
+          <Close sx={{ fontSize: 20, color: '#FFFFFF' }} />
+        </button>
+        
         {/* Heart Garland */}
         <HeartGarland />
         
@@ -254,7 +272,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             <div style={enhancedMessageStyle}>
               <div style={messageHeaderStyle}>
                 <LocalFlorist sx={{ fontSize: 18, color: theme.colors.rose[500], marginRight: '8px', verticalAlign: 'middle' }} />
-                A Message from <span style={{ fontFamily: "'Dancing Script', cursive", fontSize: '18px' }}>{senderName}</span>
+                A Message from {senderName}
                 <LocalFlorist sx={{ fontSize: 18, color: theme.colors.rose[500], marginLeft: '8px', verticalAlign: 'middle' }} />
               </div>
               <div style={messageTextStyle}>
@@ -451,9 +469,27 @@ const outerFrameStyle: React.CSSProperties = {
   boxShadow: theme.shadow['2xl'],
 };
 
+const closeButtonStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '12px',
+  right: '12px',
+  width: '36px',
+  height: '36px',
+  borderRadius: '50%',
+  background: theme.colors.rose[500],
+  border: 'none',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'all 0.2s ease',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+  zIndex: 10,
+};
+
 const whiteCardStyle: React.CSSProperties = {
   position: 'relative',
-  background: '#FFFFFF',
+  background: 'linear-gradient(135deg, #FFFEF9 0%, #FFF9F0 100%)', // Warm paper tone
   borderRadius: '12px',
   padding: '64px 48px 48px 48px',
   marginTop: '48px', // Space for branding
@@ -479,9 +515,9 @@ const letterContentStyle: React.CSSProperties = {
 };
 
 const greetingStyle: React.CSSProperties = {
-  fontFamily: "'Dancing Script', cursive",
-  fontSize: '36px',
-  fontWeight: 400,
+  fontFamily: "'Caveat', cursive",
+  fontSize: '42px',
+  fontWeight: 600,
   color: theme.text.primary,
   marginBottom: '32px',
   lineHeight: 1.3,
@@ -632,17 +668,20 @@ const signOffContainerStyle: React.CSSProperties = {
 };
 
 const signOffStyle: React.CSSProperties = {
-  fontFamily: "'Dancing Script', cursive",
-  fontSize: '26px',
+  fontFamily: "'Caveat', cursive",
+  fontSize: '42px',
+  fontWeight: 600,
   color: theme.text.primary,
-  marginBottom: '8px',
+  marginBottom: '0',
+  lineHeight: 1.3,
 };
 
 const senderNameStyle: React.CSSProperties = {
-  fontFamily: "'Dancing Script', cursive",
-  fontSize: '32px',
+  fontFamily: "'Caveat', cursive",
+  fontSize: '42px',
   fontWeight: 600,
-  color: theme.colors.rose[700],
+  color: theme.text.primary,
+  lineHeight: 1.3,
 };
 
 const actionsMenuStyle: React.CSSProperties = {

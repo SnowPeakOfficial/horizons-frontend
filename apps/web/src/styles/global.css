@@ -6,6 +6,9 @@
 /* Import Google Fonts - Elegant serif and modern sans */
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+/* Import Handwritten Fonts for Personal Touch */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Satisfy&family=Allura&display=swap');
+
 /* CSS Reset & Base Styles */
 *,
 *::before,
