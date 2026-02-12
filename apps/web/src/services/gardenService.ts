@@ -42,7 +42,7 @@ class GardenService {
    * Update an existing garden
    */
   async updateGarden(gardenId: string, data: UpdateGardenRequest): Promise<Garden> {
-    const response = await api.patch<Garden>(`/gardens/${gardenId}`, data);
+    const response = await api.put<Garden>(`/gardens/${gardenId}`, data);
     return response.data;
   }
 

@@ -21,7 +21,6 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import PersonRemove from '@mui/icons-material/PersonRemove';
 import ExitToApp from '@mui/icons-material/ExitToApp';
 import DeleteForever from '@mui/icons-material/DeleteForever';
-import Archive from '@mui/icons-material/Archive';
 import Star from '@mui/icons-material/Star';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 
@@ -57,7 +56,6 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
   
   // Members tab state
   const [newMemberEmail, setNewMemberEmail] = useState('');
-  const [newMemberName, setNewMemberName] = useState('');
   const [newMemberRole, setNewMemberRole] = useState<'VIEWER' | 'CONTRIBUTOR'>('VIEWER');
   
   // Confirmation dialogs
@@ -66,10 +64,8 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
   const [showRemoveMemberConfirm, setShowRemoveMemberConfirm] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState<GardenMember | null>(null);
 
-  // Check if current user is owner
-  const isOwner = garden.members?.some(
-    m => m.userId === currentUserId && m.role === 'OWNER'
-  ) ?? false;
+  // Check if current user is owner - use ownerId from garden
+  const isOwner = garden.ownerId === currentUserId;
 
   useEffect(() => {
     if (isOpen && garden) {
@@ -117,7 +113,6 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
         role: newMemberRole,
       });
       setNewMemberEmail('');
-      setNewMemberName('');
       setNewMemberRole('VIEWER');
       onGardenUpdated();
     } catch (error) {
