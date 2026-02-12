@@ -213,16 +213,14 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
           onClick={onClose}
           style={closeButtonStyle}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.1)';
-            e.currentTarget.style.background = theme.colors.rose[400];
+            e.currentTarget.style.opacity = '1';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.background = theme.colors.rose[500];
+            e.currentTarget.style.opacity = '0.4';
           }}
           aria-label="Close letter"
         >
-          <Close sx={{ fontSize: 20, color: '#FFFFFF' }} />
+          <Close sx={{ fontSize: 20, color: theme.colors.rose[700] }} />
         </button>
         
         {/* Heart Garland */}
@@ -264,17 +262,12 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             
             {/* Opening */}
             <div style={bodyStyle}>
-              This beautiful <span style={flowerNameStyle}>{definition.name}</span> was 
-              planted just for you on <span style={dateHighlightStyle}>{plantedDate}</span>.
+              On <span style={dateHighlightStyle}>{plantedDate}</span>, this beautiful{' '}
+              <span style={flowerNameStyle}>{definition.name}</span> was planted just for you.
             </div>
             
-            {/* Seed Message - Enhanced Design */}
+            {/* Seed Message - Simplified for elegance */}
             <div style={enhancedMessageStyle}>
-              <div style={messageHeaderStyle}>
-                <LocalFlorist sx={{ fontSize: 18, color: theme.colors.rose[500], marginRight: '8px', verticalAlign: 'middle' }} />
-                A Message from {senderName}
-                <LocalFlorist sx={{ fontSize: 18, color: theme.colors.rose[500], marginLeft: '8px', verticalAlign: 'middle' }} />
-              </div>
               <div style={messageTextStyle}>
                 {displayMessage}
               </div>
@@ -291,10 +284,10 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                   >
                     <CardGiftcard sx={{ fontSize: 32, color: theme.colors.rose[500], marginBottom: '8px' }} />
                     <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
-                      Special Memories Attached
+                      Something was left for you
                     </div>
                     <div style={{ fontSize: '13px', opacity: 0.8 }}>
-                      Tap to reveal {mediaCount} {mediaCount === 1 ? 'memory' : 'memories'}
+                      Open {mediaCount} {mediaCount === 1 ? 'keepsake' : 'keepsakes'}
                     </div>
                     <div style={{ marginTop: '12px', fontSize: '14px', display: 'flex', gap: '12px', justifyContent: 'center', alignItems: 'center' }}>
                       {imageUrl && (
@@ -368,8 +361,8 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
               <div style={bloomInfoStyle}>
                 <Spa sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: theme.semantic.success }} />
                 This flower will bloom on{' '}
-                <span style={dateHighlightStyle}>{bloomAtDate}</span>{' '}
-                when its special message will be revealed.
+                <span style={dateHighlightStyle}>{bloomAtDate}</span>,
+                revealing its message.
               </div>
             )}
             
@@ -442,6 +435,17 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
           }
         }
         
+        @keyframes gentleRotateIn {
+          from {
+            opacity: 0;
+            transform: rotate(-15deg) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+          }
+        }
+        
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -467,6 +471,7 @@ const outerFrameStyle: React.CSSProperties = {
   borderRadius: '16px',
   padding: '40px',
   boxShadow: theme.shadow['2xl'],
+  animation: 'unfoldLetter 0.4s ease-out',
 };
 
 const closeButtonStyle: React.CSSProperties = {
@@ -476,15 +481,16 @@ const closeButtonStyle: React.CSSProperties = {
   width: '36px',
   height: '36px',
   borderRadius: '50%',
-  background: theme.colors.rose[500],
+  background: 'rgba(212, 144, 154, 0.4)',
   border: 'none',
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transition: 'all 0.2s ease',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+  transition: 'opacity 0.2s ease',
+  boxShadow: 'none',
   zIndex: 10,
+  opacity: 0.4,
 };
 
 const whiteCardStyle: React.CSSProperties = {
@@ -507,6 +513,7 @@ const flowerAnchorStyle: React.CSSProperties = {
   background: '#FFFFFF',
   boxShadow: '0 8px 24px rgba(61, 51, 64, 0.12)', // Cast shadow on card
   border: `3px solid ${theme.colors.rose[200]}`,
+  animation: 'gentleRotateIn 0.6s ease-out 0.2s both',
 };
 
 const letterContentStyle: React.CSSProperties = {
@@ -516,7 +523,7 @@ const letterContentStyle: React.CSSProperties = {
 
 const greetingStyle: React.CSSProperties = {
   fontFamily: "'Caveat', cursive",
-  fontSize: '42px',
+  fontSize: '34px',
   fontWeight: 600,
   color: theme.text.primary,
   marginBottom: '32px',
@@ -543,27 +550,13 @@ const dateHighlightStyle: React.CSSProperties = {
   color: theme.colors.rose[600],
 };
 
-// Enhanced message styles
+// Enhanced message styles - Simplified for elegance
 const enhancedMessageStyle: React.CSSProperties = {
-  marginBottom: '36px',
-  padding: '36px',
-  background: 'linear-gradient(135deg, rgba(255, 250, 245, 0.95) 0%, rgba(255, 245, 247, 0.8) 100%)',
-  borderRadius: '16px',
-  border: `2px solid ${theme.colors.rose[200]}`,
-  boxShadow: '0 4px 16px rgba(212, 144, 154, 0.12), inset 0 1px 3px rgba(255, 255, 255, 0.5)',
-};
-
-const messageHeaderStyle: React.CSSProperties = {
-  fontFamily: typography.fontFamily.serif,
-  fontSize: '15px',
-  fontWeight: 600,
-  color: theme.colors.rose[600],
-  textAlign: 'center',
-  marginBottom: '20px',
-  letterSpacing: '0.8px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  marginBottom: '40px',
+  padding: '40px 32px',
+  background: 'rgba(255, 250, 245, 0.3)',
+  borderRadius: '12px',
+  border: `1px solid rgba(212, 144, 154, 0.15)`,
 };
 
 const messageTextStyle: React.CSSProperties = {
@@ -669,7 +662,7 @@ const signOffContainerStyle: React.CSSProperties = {
 
 const signOffStyle: React.CSSProperties = {
   fontFamily: "'Caveat', cursive",
-  fontSize: '42px',
+  fontSize: '32px',
   fontWeight: 600,
   color: theme.text.primary,
   marginBottom: '0',
@@ -678,7 +671,7 @@ const signOffStyle: React.CSSProperties = {
 
 const senderNameStyle: React.CSSProperties = {
   fontFamily: "'Caveat', cursive",
-  fontSize: '42px',
+  fontSize: '32px',
   fontWeight: 600,
   color: theme.text.primary,
   lineHeight: 1.3,
