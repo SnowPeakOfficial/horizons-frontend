@@ -92,6 +92,7 @@ export interface Garden {
   status: GardenStatus;
   createdAt: string;
   updatedAt: string;
+  owner?: User;
   gardenDefinition?: GardenDefinition;
   members?: GardenMember[];
   flowers?: Flower[];
@@ -104,10 +105,14 @@ export interface Garden {
 export interface GardenMember {
   id: string;
   gardenId: string;
-  userId: string;
+  userId: string | null;
+  email: string;
+  displayName: string | null;
   role: GardenMemberRole;
+  accessToken: string;
+  isRegistered: boolean;
   joinedAt: string;
-  user?: User;
+  user?: User | null;
 }
 
 export interface CreateGardenRequest {

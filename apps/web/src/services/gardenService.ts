@@ -90,6 +90,13 @@ class GardenService {
     const response = await api.get<GardenDefinition[]>('/garden-definitions/my-tier');
     return response.data;
   }
+
+  /**
+   * Leave a garden (for non-owner members)
+   */
+  async leaveGarden(gardenId: string): Promise<void> {
+    await api.post(`/gardens/${gardenId}/leave`);
+  }
 }
 
 export default new GardenService();

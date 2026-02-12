@@ -10,6 +10,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Button } from '../components/common';
 import { PlantFlowerPanel } from '../components/gardens/PlantFlowerPanel';
 import { FlowerDetailsModal } from '../components/gardens/FlowerDetailsModal';
+import { GardenSettingsModal } from '../components/gardens/GardenSettingsModal';
 import { GardenScene } from '../gardens/GardenScene';
 import { GARDEN_CONFIGS } from '../gardens/gardenConfigs';
 import { FLOWER_DEFINITIONS } from '../flowers/types';
@@ -27,6 +28,7 @@ import CalendarToday from '@mui/icons-material/CalendarToday';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import Landscape from '@mui/icons-material/Landscape';
 import TrendingUp from '@mui/icons-material/TrendingUp';
+import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 
 export const GardenPage: React.FC = () => {
   const { gardenId } = useParams<{ gardenId: string }>();
@@ -41,6 +43,7 @@ export const GardenPage: React.FC = () => {
   const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     if (gardenId) {
@@ -258,6 +261,19 @@ export const GardenPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div style={headerRightStyle}>
+          <Button
+            variant="primary"
+            size="medium"
+            onClick={() => setIsSettingsOpen(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: theme.spacing.xs,
+            }}
+          >
+            <SettingsOutlined sx={{ fontSize: 18 }} />
+            Edit Garden
+          </Button>
           <Button
             variant="primary"
             size="medium"
@@ -491,6 +507,26 @@ export const GardenPage: React.FC = () => {
           console.log('Delete flower:', flowerId);
         }}
       />
+
+      {/* Garden Settings Modal */}
+      {currentGarden && user && (
+        <GardenSettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          garden={currentGarden}
+          currentUserId={user.id}
+          currentUserTier={user.tier}
+          onGardenUpdated={() => {
+            if (gardenId) {
+              fetchGardenById(gardenId);
+              fetchFlowersByGarden(gardenId);
+            }
+          }}
+          onGardenDeleted={() => {
+            navigate('/my-gardens');
+          }}
+        />
+      )}
     </div>
   );
 };

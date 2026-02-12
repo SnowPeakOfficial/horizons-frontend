@@ -10,3 +10,5 @@ export { Input } from './Input';
 export { Modal } from './Modal';
 
 export { Card } from './Card';
+
+export { ConfirmationDialog } from './ConfirmationDialog';
