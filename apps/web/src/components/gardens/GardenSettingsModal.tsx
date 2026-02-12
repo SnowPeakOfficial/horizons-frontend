@@ -140,6 +140,22 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
     }
   };
 
+  const handleUpdateMemberRole = async (memberId: string, newRole: string) => {
+    if (!isOwner) return;
+    
+    try {
+      await gardenService.updateMemberRole(
+        garden.id,
+        memberId,
+        newRole as 'VIEWER' | 'CONTRIBUTOR'
+      );
+      onGardenUpdated();
+    } catch (error) {
+      console.error('Failed to update member role:', error);
+      alert('Failed to update member role. Please try again.');
+    }
+  };
+
   const handleLeaveGarden = async () => {
     setIsLoading(true);
     try {
@@ -346,13 +362,30 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                         </div>
                       </div>
                       <div style={memberRoleContainerStyle}>
-                        <span style={{
-                          ...memberRoleBadgeStyle,
-                          ...(member.role === 'OWNER' ? ownerBadgeStyle : {}),
-                        }}>
-                          {member.role === 'OWNER' && <Star sx={{ fontSize: 14 }} />}
-                          {member.role}
-                        </span>
+                        {member.role === 'OWNER' ? (
+                          <span style={{
+                            ...memberRoleBadgeStyle,
+                            ...ownerBadgeStyle,
+                          }}>
+                            <Star sx={{ fontSize: 14 }} />
+                            {member.role}
+                          </span>
+                        ) : isOwner ? (
+                          // Editable dropdown for non-owner members (owners only)
+                          <select
+                            value={member.role}
+                            onChange={(e) => handleUpdateMemberRole(member.id, e.target.value)}
+                            style={roleSelectStyle}
+                          >
+                            <option value="VIEWER">Viewer</option>
+                            <option value="CONTRIBUTOR">Contributor</option>
+                          </select>
+                        ) : (
+                          // Read-only badge for non-owners viewing
+                          <span style={memberRoleBadgeStyle}>
+                            {member.role}
+                          </span>
+                        )}
                         {isOwner && member.role !== 'OWNER' && (
                           <button
                             onClick={() => {
@@ -739,4 +772,17 @@ const dangerDescStyle: React.CSSProperties = {
   fontSize: '14px',
   color: theme.text.secondary,
   marginBottom: theme.spacing.lg,
+};
+
+const roleSelectStyle: React.CSSProperties = {
+  padding: '6px 12px',
+  borderRadius: theme.radius.sm,
+  border: `1px solid ${theme.border.light}`,
+  fontSize: '13px',
+  fontWeight: 500,
+  color: theme.text.primary,
+  backgroundColor: '#FFFFFF',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  minWidth: '110px',
 };

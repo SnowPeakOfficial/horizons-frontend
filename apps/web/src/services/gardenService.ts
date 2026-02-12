@@ -76,6 +76,21 @@ class GardenService {
   }
 
   /**
+   * Update a member's role in a garden
+   */
+  async updateMemberRole(
+    gardenId: string, 
+    memberId: string, 
+    role: 'VIEWER' | 'CONTRIBUTOR'
+  ): Promise<GardenMember> {
+    const response = await api.patch<GardenMember>(
+      `/gardens/${gardenId}/members/${memberId}`, 
+      { role }
+    );
+    return response.data;
+  }
+
+  /**
    * Get all available garden definitions
    */
   async getGardenDefinitions(): Promise<GardenDefinition[]> {
