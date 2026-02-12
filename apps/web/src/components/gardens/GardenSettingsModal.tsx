@@ -23,6 +23,7 @@ import ExitToApp from '@mui/icons-material/ExitToApp';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import Star from '@mui/icons-material/Star';
 import CalendarToday from '@mui/icons-material/CalendarToday';
+import LocalFlorist from '@mui/icons-material/LocalFlorist';
 
 interface GardenSettingsModalProps {
   isOpen: boolean;
@@ -310,6 +311,16 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                     <CalendarToday sx={{ fontSize: 16, color: theme.text.secondary }} />
                     <span style={infoLabelStyle}>Last Updated</span>
                     <span style={infoValueStyle}>{formatDate(garden.updatedAt)}</span>
+                  </div>
+                  <div style={infoItemStyle}>
+                    <LocalFlorist sx={{ fontSize: 16, color: theme.text.secondary }} />
+                    <span style={infoLabelStyle}>Total Flowers</span>
+                    <span style={infoValueStyle}>{garden._count?.flowers || 0}</span>
+                  </div>
+                  <div style={infoItemStyle}>
+                    <People sx={{ fontSize: 16, color: theme.text.secondary }} />
+                    <span style={infoLabelStyle}>Total Members</span>
+                    <span style={infoValueStyle}>{garden.members?.length || 0}</span>
                   </div>
                 </div>
 
