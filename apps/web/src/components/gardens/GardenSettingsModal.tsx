@@ -200,17 +200,29 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} maxWidth="700px">
+      <Modal isOpen={isOpen} onClose={onClose} maxWidth="700px" showCloseButton={false}>
         <div style={containerStyle}>
+          {/* Close Button - Top Right */}
+          <button
+            onClick={onClose}
+            style={closeButtonStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '1';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '0.6';
+            }}
+            aria-label="Close settings"
+          >
+            <Close sx={{ fontSize: 20 }} />
+          </button>
+
           {/* Header */}
           <div style={headerStyle}>
             <div style={headerTitleStyle}>
               <Settings sx={{ fontSize: 28, color: theme.colors.rose[500] }} />
               <h2 style={titleTextStyle}>Garden Settings</h2>
             </div>
-            <button onClick={onClose} style={closeButtonStyle}>
-              <Close sx={{ fontSize: 20 }} />
-            </button>
           </div>
 
           {/* Tabs */}
@@ -491,7 +503,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
         onConfirm={handleRemoveMember}
         title="Remove Member?"
         message={`Are you sure you want to remove ${memberToRemove?.user?.name || 'this member'} from the garden?`}
-        confirmText="Remove Member"
+        confirmText="Remove"
         variant="warning"
         isLoading={isLoading}
       />
@@ -501,7 +513,30 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
 
 // Styles
 const containerStyle: React.CSSProperties = {
+  position: 'relative',
+  background: '#FFFFFF',
+  borderRadius: theme.radius.xl,
+  boxShadow: theme.shadow.xl,
   animation: 'unfoldLetter 0.4s ease-out',
+};
+
+const closeButtonStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '12px',
+  right: '12px',
+  width: '36px',
+  height: '36px',
+  borderRadius: '50%',
+  background: 'rgba(255, 201, 217, 0.3)',
+  border: 'none',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'opacity 0.2s ease',
+  boxShadow: 'none',
+  zIndex: 10,
+  opacity: 0.6,
 };
 
 const headerStyle: React.CSSProperties = {
@@ -523,19 +558,6 @@ const titleTextStyle: React.CSSProperties = {
   margin: 0,
   color: theme.text.primary,
   fontWeight: 600,
-};
-
-const closeButtonStyle: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  cursor: 'pointer',
-  padding: theme.spacing.sm,
-  borderRadius: '50%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: theme.text.secondary,
-  transition: 'all 0.2s ease',
 };
 
 const tabsContainerStyle: React.CSSProperties = {
@@ -612,6 +634,7 @@ const selectStyle: React.CSSProperties = {
 
 const actionsStyle: React.CSSProperties = {
   marginTop: theme.spacing.xl,
+  marginBottom: theme.spacing.xl,
   display: 'flex',
   justifyContent: 'flex-end',
 };
