@@ -21,6 +21,8 @@ import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import Spa from '@mui/icons-material/Spa';
 import Close from '@mui/icons-material/Close';
 import TouchApp from '@mui/icons-material/TouchApp';
+import Nature from '@mui/icons-material/Nature';
+import Info from '@mui/icons-material/Info';
 
 // Zod validation schema
 const plantFlowerFormSchema = z.object({
@@ -148,7 +150,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
   const handleNextToPlacement = () => {
     if (!selectedDefinition) {
-      setError('Please select a flower type');
+      setError('Choose a flower to continue');
       return;
     }
     setStep(2);
@@ -160,14 +162,14 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
   const handlePlant = async () => {
     if (!selectedDefinition || !placedPosition) {
-      setError('Please select a flower and position');
+      setError('Choose a flower and position to continue');
       return;
     }
 
     // Validate bloom date if BLOOMING type
     if (flowerType === 'BLOOMING') {
       if (!bloomAt) {
-        setError('Please select a bloom date for blooming flowers');
+        setError('Please select a bloom date');
         return;
       }
       if (new Date(bloomAt) <= new Date()) {
@@ -179,7 +181,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     // Trigger form validation
     const isValid = await trigger();
     if (!isValid) {
-      setError('Please fix the validation errors before planting');
+      setError('Something needs a little attention');
       return;
     }
 
@@ -286,7 +288,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         height: '100vh',
         background: 'rgba(255, 255, 255, 0.98)',
         backdropFilter: 'blur(20px)',
-        boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.1)',
+        boxShadow: 'inset 0 0 40px rgba(0,0,0,0.02), -4px 0 24px rgba(0, 0, 0, 0.08)',
+        borderTopLeftRadius: '24px',
+        borderBottomLeftRadius: '24px',
         zIndex: 1000,
         display: 'flex',
         flexDirection: 'column',
@@ -305,7 +309,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }}
       >
         <h2 style={{ ...typography.styles.h4, margin: 0 }}>
-          Plant a Flower
+          Plant a Memory
         </h2>
         <button
           onClick={handleClose}
@@ -368,7 +372,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 1 && (
           <div>
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
-              Choose the type of flower you'd like to plant
+              Choose a flower for this memory
             </p>
 
             <div
@@ -380,19 +384,36 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             >
               {availableDefinitions.map((def) => {
                 const isSelected = selectedDefinition?.id === def.id;
+                const symbolism = 
+                  def.key === 'rose' ? 'Love & devotion' :
+                  def.key === 'sunflower' ? 'Warmth & joy' :
+                  'Innocence & new beginnings';
+                
                 return (
                   <div
                     key={def.id}
                     style={{
                       padding: theme.spacing.lg,
-                      border: `2px solid ${isSelected ? theme.colors.rose[500] : theme.border.light}`,
+                      border: isSelected 
+                        ? `1px solid rgba(255, 105, 180, 0.3)` 
+                        : `1px solid ${theme.border.light}`,
                       borderRadius: theme.radius.lg,
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
                       background: isSelected ? theme.colors.rose[50] : '#FFFFFF',
+                      boxShadow: isSelected ? '0 0 20px rgba(255, 105, 180, 0.15)' : 'none',
                       display: 'flex',
                       alignItems: 'center',
                       gap: theme.spacing.md,
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = isSelected ? '0 0 20px rgba(255, 105, 180, 0.15)' : 'none';
                     }}
                     onClick={() => setSelectedDefinition(def)}
                   >
@@ -403,11 +424,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                       <div style={{ ...typography.styles.body, fontWeight: 600, marginBottom: '4px' }}>
                         {def.displayName}
                       </div>
-                      {def.description && (
-                        <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                          {def.description}
-                        </div>
-                      )}
+                      <div style={{ ...typography.styles.caption, color: theme.text.secondary, fontStyle: 'italic' }}>
+                        {symbolism}
+                      </div>
                     </div>
                   </div>
                 );
@@ -436,11 +455,11 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             </div>
             
             <h3 style={{ ...typography.styles.h5, marginBottom: theme.spacing.sm }}>
-              Click to Place Flower
+              Place your flower in the garden
             </h3>
             
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.xl }}>
-              Click anywhere in the garden to place your {selectedDefinition?.displayName}
+              Click anywhere in the garden where you'd like this memory to grow
             </p>
 
             <div
@@ -451,8 +470,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 border: `1px solid ${theme.colors.rose[200]}`,
               }}
             >
-              <p style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                💡 Tip: Click on the terrain where you'd like your memory flower to grow
+              <p style={{ ...typography.styles.caption, color: theme.text.secondary, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                <Nature sx={{ fontSize: 16, color: theme.semantic.success }} />
+                Choose a spot that feels right
               </p>
             </div>
           </div>
@@ -462,10 +482,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 3 && (
           <div>
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
-              How would you like your flower to bloom?
+              When should this memory be revealed?
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md, marginBottom: theme.spacing.xl }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md, marginBottom: '32px' }}>
               <div
                 style={{
                   padding: theme.spacing.lg,
@@ -480,10 +500,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                   <LocalFlorist sx={{ fontSize: 32, color: theme.colors.rose[500] }} />
                   <div>
                     <div style={{ ...typography.styles.body, fontWeight: 600 }}>
-                      Open Now
+                      Reveal Now
                     </div>
                     <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                      Your memory is immediately visible
+                      Open immediately
                     </div>
                   </div>
                 </div>
@@ -503,10 +523,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                   <Spa sx={{ fontSize: 32, color: theme.colors.rose[500] }} />
                   <div>
                     <div style={{ ...typography.styles.body, fontWeight: 600 }}>
-                      Bloom Later
+                      Reveal Later
                     </div>
                     <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                      Set a future date for your memory to reveal
+                      Let it bloom at a chosen moment
                     </div>
                   </div>
                 </div>
@@ -516,10 +536,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             {/* Recipient Name */}
             <Input
               {...register('recipientName')}
-              label="Who is this flower for?"
+              label="Who is this for? (optional)"
               placeholder="Recipient's name (e.g., Sarah)"
               error={errors.recipientName?.message}
-              helperText={`This will appear as "Dear ${recipientName || '[name]'}" in the letter`}
+              helperText="This name will appear in the letter"
               fullWidth
             />
 
@@ -535,26 +555,35 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             />
 
             {/* Seed Message */}
-            <div style={{ marginBottom: theme.spacing.lg }}>
-              <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
-                Seed Message (Optional)
+            <div style={{ 
+              display: 'flex',
+              flexDirection: 'column',
+              gap: theme.spacing.sm,
+              marginBottom: theme.spacing.lg 
+            }}>
+              <label style={{ ...typography.styles.label, color: theme.text.primary }}>
+                {flowerType === 'BLOOMING' ? 'Before it blooms (optional)' : 'Message (optional)'}
               </label>
               <textarea
                 {...register('seedMessage')}
                 placeholder="Add a message to your memory..."
                 style={{
+                  ...typography.styles.body,
                   width: '100%',
                   minHeight: '100px',
-                  padding: theme.spacing.md,
-                  border: `1px solid ${errors.seedMessage ? theme.semantic.error : theme.border.light}`,
-                  borderRadius: theme.radius.md,
+                  padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+                  border: `2px solid ${errors.seedMessage ? theme.semantic.error : theme.border.medium}`,
+                  borderRadius: theme.radius.lg,
+                  background: theme.bg.elevated,
+                  color: theme.text.primary,
+                  transition: theme.transition.base,
+                  outline: 'none',
                   fontFamily: 'inherit',
-                  fontSize: '14px',
                   resize: 'vertical',
                 }}
               />
               {errors.seedMessage && (
-                <span style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'block' }}>
+                <span style={{ ...typography.styles.caption, color: theme.semantic.error }}>
                   {errors.seedMessage.message}
                 </span>
               )}
@@ -577,45 +606,53 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 4 && (
           <div>
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
-              {flowerType === 'BLOOMING' 
-                ? 'Add content to reveal when the flower blooms (optional)' 
-                : 'Add media to your flower (optional)'}
+              Add something extra (optional)
             </p>
 
             {/* Bloom Message - only for BLOOMING flowers */}
             {flowerType === 'BLOOMING' && (
-              <div style={{ marginBottom: theme.spacing.lg }}>
-                <label style={{ ...typography.styles.body, fontWeight: 500, marginBottom: theme.spacing.xs, display: 'block' }}>
-                  Bloom Message (Optional)
+              <div style={{ 
+                display: 'flex',
+                flexDirection: 'column',
+                gap: theme.spacing.sm,
+                marginBottom: theme.spacing.lg 
+              }}>
+                <label style={{ ...typography.styles.label, color: theme.text.primary }}>
+                  When it blooms
                 </label>
                 <textarea
                   {...register('bloomMessage')}
                   placeholder="Message to reveal when flower blooms..."
                   style={{
+                    ...typography.styles.body,
                     width: '100%',
                     minHeight: '100px',
-                    padding: theme.spacing.md,
-                    border: `1px solid ${errors.bloomMessage ? theme.semantic.error : theme.border.light}`,
-                    borderRadius: theme.radius.md,
+                    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+                    border: `2px solid ${errors.bloomMessage ? theme.semantic.error : theme.border.medium}`,
+                    borderRadius: theme.radius.lg,
+                    background: theme.bg.elevated,
+                    color: theme.text.primary,
+                    transition: theme.transition.base,
+                    outline: 'none',
                     fontFamily: 'inherit',
-                    fontSize: '14px',
                     resize: 'vertical',
                   }}
                 />
-                {errors.bloomMessage && (
-                  <span style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'block' }}>
+                {errors.bloomMessage ? (
+                  <span style={{ ...typography.styles.caption, color: theme.semantic.error }}>
                     {errors.bloomMessage.message}
                   </span>
+                ) : (
+                  <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>
+                    This will be revealed when the flower opens
+                  </span>
                 )}
-                <p style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: theme.spacing.xs }}>
-                  💡 This message will appear AFTER the flower blooms
-                </p>
               </div>
             )}
 
             <Input
               {...register('imageUrl')}
-              label="🖼️ Picture URL"
+              label="Photo"
               placeholder="https://example.com/photo.jpg"
               error={errors.imageUrl?.message}
               helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
@@ -624,7 +661,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
             <Input
               {...register('voiceUrl')}
-              label="🎤 Voice Message URL"
+              label="Voice message"
               placeholder="https://example.com/voice.mp3"
               error={errors.voiceUrl?.message}
               helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
@@ -633,7 +670,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
             <Input
               {...register('videoUrl')}
-              label="🎬 Video URL"
+              label="Video"
               placeholder="https://example.com/video.mp4"
               error={errors.videoUrl?.message}
               helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
@@ -648,8 +685,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 border: `1px solid ${theme.colors.rose[200]}`,
               }}
             >
-              <p style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                💡 All media is optional. You can skip this step or add media later.
+              <p style={{ ...typography.styles.caption, color: theme.text.secondary, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Info sx={{ fontSize: 16, color: theme.colors.rose[500] }} />
+                All media is optional. You can skip this step or add media later.
               </p>
             </div>
           </div>
@@ -659,7 +697,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 5 && (
           <div>
             <h3 style={{ ...typography.styles.h5, marginBottom: theme.spacing.lg }}>
-              Review Your Flower
+              Before you plant
             </h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
@@ -813,7 +851,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               Back
             </Button>
             <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>
-              Plant Flower
+              Plant
             </Button>
           </>
         )}

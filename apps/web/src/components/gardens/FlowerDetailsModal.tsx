@@ -12,6 +12,13 @@ import { typography } from '../../styles/typography';
 import type { Flower } from '../../types/api.types';
 import type { FlowerDefinition } from '../../flowers/types';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
+import LocalFlorist from '@mui/icons-material/LocalFlorist';
+import CardGiftcard from '@mui/icons-material/CardGiftcard';
+import Image from '@mui/icons-material/Image';
+import Mic from '@mui/icons-material/Mic';
+import Videocam from '@mui/icons-material/Videocam';
+import Photo from '@mui/icons-material/Photo';
+import Spa from '@mui/icons-material/Spa';
 
 interface FlowerDetailsModalProps {
   isOpen: boolean;
@@ -195,8 +202,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
       isOpen={isOpen} 
       onClose={onClose} 
       maxWidth="650px"
+      showCloseButton={false}
     >
-      {/* Outer Pink Frame */}
+      {/* Outer Pink Frame - Full extent to modal edges */}
       <div style={outerFrameStyle}>
         
         {/* Heart Garland */}
@@ -245,7 +253,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             {/* Seed Message - Enhanced Design */}
             <div style={enhancedMessageStyle}>
               <div style={messageHeaderStyle}>
-                🌸 A Message from <span style={{ fontFamily: "'Dancing Script', cursive", fontSize: '18px' }}>{senderName}</span> 🌸
+                <LocalFlorist sx={{ fontSize: 18, color: theme.colors.rose[500], marginRight: '8px', verticalAlign: 'middle' }} />
+                A Message from <span style={{ fontFamily: "'Dancing Script', cursive", fontSize: '18px' }}>{senderName}</span>
+                <LocalFlorist sx={{ fontSize: 18, color: theme.colors.rose[500], marginLeft: '8px', verticalAlign: 'middle' }} />
               </div>
               <div style={messageTextStyle}>
                 {displayMessage}
@@ -261,17 +271,29 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     style={mediaRevealButtonStyle}
                     onClick={() => setMediaRevealed(true)}
                   >
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💌</div>
+                    <CardGiftcard sx={{ fontSize: 32, color: theme.colors.rose[500], marginBottom: '8px' }} />
                     <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
                       Special Memories Attached
                     </div>
                     <div style={{ fontSize: '13px', opacity: 0.8 }}>
                       Tap to reveal {mediaCount} {mediaCount === 1 ? 'memory' : 'memories'}
                     </div>
-                    <div style={{ marginTop: '12px', fontSize: '14px', display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                      {imageUrl && <span>🖼️ Photo</span>}
-                      {voiceUrl && <span>🎤 Voice</span>}
-                      {videoUrl && <span>🎬 Video</span>}
+                    <div style={{ marginTop: '12px', fontSize: '14px', display: 'flex', gap: '12px', justifyContent: 'center', alignItems: 'center' }}>
+                      {imageUrl && (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Image sx={{ fontSize: 18 }} /> Photo
+                        </span>
+                      )}
+                      {voiceUrl && (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Mic sx={{ fontSize: 18 }} /> Voice
+                        </span>
+                      )}
+                      {videoUrl && (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Videocam sx={{ fontSize: 18 }} /> Video
+                        </span>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -279,7 +301,10 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                   <div style={mediaGridStyle}>
                     {imageUrl && (
                       <div style={mediaItemStyle}>
-                        <div style={mediaLabelStyle}>📷 Photo</div>
+                        <div style={mediaLabelStyle}>
+                          <Photo sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px' }} />
+                          Photo
+                        </div>
                         <img 
                           src={imageUrl} 
                           alt="Memory" 
@@ -290,7 +315,10 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     
                     {voiceUrl && (
                       <div style={mediaItemStyle}>
-                        <div style={mediaLabelStyle}>🎤 Voice Message</div>
+                        <div style={mediaLabelStyle}>
+                          <Mic sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px' }} />
+                          Voice Message
+                        </div>
                         <audio 
                           controls 
                           src={voiceUrl}
@@ -301,7 +329,10 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     
                     {videoUrl && (
                       <div style={mediaItemStyle}>
-                        <div style={mediaLabelStyle}>🎬 Video</div>
+                        <div style={mediaLabelStyle}>
+                          <Videocam sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px' }} />
+                          Video
+                        </div>
                         <video 
                           controls 
                           src={videoUrl}
@@ -317,7 +348,8 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             {/* Bloom Status - If applicable */}
             {isBloomable && isBud && bloomAtDate && (
               <div style={bloomInfoStyle}>
-                🌱 This flower will bloom on{' '}
+                <Spa sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: theme.semantic.success }} />
+                This flower will bloom on{' '}
                 <span style={dateHighlightStyle}>{bloomAtDate}</span>{' '}
                 when its special message will be revealed.
               </div>
@@ -325,7 +357,8 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             
             {isBloomable && isBloomed && bloomedAtDate && (
               <div style={bloomInfoStyle}>
-                🌸 This flower bloomed on{' '}
+                <LocalFlorist sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: theme.colors.rose[500] }} />
+                This flower bloomed on{' '}
                 <span style={dateHighlightStyle}>{bloomedAtDate}</span>{' '}
                 and revealed its heartfelt message.
               </div>
@@ -447,19 +480,20 @@ const letterContentStyle: React.CSSProperties = {
 
 const greetingStyle: React.CSSProperties = {
   fontFamily: "'Dancing Script', cursive",
-  fontSize: '32px',
+  fontSize: '36px',
   fontWeight: 400,
   color: theme.text.primary,
-  marginBottom: '24px',
+  marginBottom: '32px',
   lineHeight: 1.3,
 };
 
 const bodyStyle: React.CSSProperties = {
   fontFamily: typography.fontFamily.serif,
-  fontSize: '16px',
+  fontSize: '17px',
   color: theme.text.primary,
-  lineHeight: 1.9,
-  marginBottom: '24px',
+  lineHeight: 2.2,
+  marginBottom: '28px',
+  letterSpacing: '0.3px',
 };
 
 const flowerNameStyle: React.CSSProperties = {
@@ -475,30 +509,34 @@ const dateHighlightStyle: React.CSSProperties = {
 
 // Enhanced message styles
 const enhancedMessageStyle: React.CSSProperties = {
-  marginBottom: '32px',
-  padding: '28px',
-  background: 'linear-gradient(135deg, rgba(255, 250, 245, 0.9) 0%, rgba(255, 245, 247, 0.7) 100%)',
-  borderRadius: '12px',
+  marginBottom: '36px',
+  padding: '36px',
+  background: 'linear-gradient(135deg, rgba(255, 250, 245, 0.95) 0%, rgba(255, 245, 247, 0.8) 100%)',
+  borderRadius: '16px',
   border: `2px solid ${theme.colors.rose[200]}`,
-  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.1)',
+  boxShadow: '0 4px 16px rgba(212, 144, 154, 0.12), inset 0 1px 3px rgba(255, 255, 255, 0.5)',
 };
 
 const messageHeaderStyle: React.CSSProperties = {
   fontFamily: typography.fontFamily.serif,
-  fontSize: '14px',
+  fontSize: '15px',
   fontWeight: 600,
   color: theme.colors.rose[600],
   textAlign: 'center',
-  marginBottom: '16px',
-  letterSpacing: '0.5px',
+  marginBottom: '20px',
+  letterSpacing: '0.8px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 };
 
 const messageTextStyle: React.CSSProperties = {
   fontFamily: typography.fontFamily.serif,
-  fontSize: '16px',
+  fontSize: '17px',
   color: theme.text.primary,
-  lineHeight: 2.0,
+  lineHeight: 2.2,
   textAlign: 'center',
+  letterSpacing: '0.2px',
 };
 
 // Media reveal button
@@ -573,35 +611,36 @@ const bloomInfoStyle: React.CSSProperties = {
 };
 
 const quoteContainerStyle: React.CSSProperties = {
-  margin: '40px 0',
+  margin: '48px 0',
   textAlign: 'center',
 };
 
 const quoteStyle: React.CSSProperties = {
   fontFamily: typography.fontFamily.serif,
-  fontSize: '15px',
+  fontSize: '16px',
   fontStyle: 'italic',
   color: theme.text.secondary,
-  lineHeight: 1.8,
-  maxWidth: '400px',
+  lineHeight: 2.0,
+  maxWidth: '420px',
   margin: '0 auto',
+  letterSpacing: '0.5px',
 };
 
 const signOffContainerStyle: React.CSSProperties = {
-  marginTop: '48px',
+  marginTop: '56px',
   textAlign: 'right',
 };
 
 const signOffStyle: React.CSSProperties = {
   fontFamily: "'Dancing Script', cursive",
-  fontSize: '24px',
+  fontSize: '26px',
   color: theme.text.primary,
   marginBottom: '8px',
 };
 
 const senderNameStyle: React.CSSProperties = {
   fontFamily: "'Dancing Script', cursive",
-  fontSize: '28px',
+  fontSize: '32px',
   fontWeight: 600,
   color: theme.colors.rose[700],
 };

@@ -67,9 +67,9 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   const modalStyle: React.CSSProperties = {
-    background: theme.bg.elevated,
+    background: showCloseButton ? theme.bg.elevated : 'transparent',
     borderRadius: theme.radius.xl,
-    boxShadow: theme.shadow.xl,
+    boxShadow: showCloseButton ? theme.shadow.xl : 'none',
     maxWidth,
     width: '100%',
     maxHeight: '90vh',
@@ -104,7 +104,7 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   const contentStyle: React.CSSProperties = {
-    padding: theme.spacing.xl,
+    padding: showCloseButton ? theme.spacing.xl : '0',
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {

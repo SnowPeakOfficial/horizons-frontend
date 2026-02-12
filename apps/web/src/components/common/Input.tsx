@@ -23,6 +23,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       flexDirection: 'column',
       gap: theme.spacing.sm,
       width: fullWidth ? '100%' : 'auto',
+      marginBottom: theme.spacing.lg,
     };
 
     const labelStyle: React.CSSProperties = {
