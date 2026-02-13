@@ -57,6 +57,7 @@ function convertApiFlowerToLocal(apiFlower: Flower): { flower: PlacedFlower; def
     rotation: apiFlower.rotation || 0,
     scale: apiFlower.customScale || definition.defaultScale,
     placedAt: new Date(apiFlower.createdAt),
+    type: apiFlower.type || 'STANDARD', // Add type property from API
     state,
     bloomAt: apiFlower.bloomAt ? new Date(apiFlower.bloomAt) : undefined,
     bloomedAt: apiFlower.bloomedAt ? new Date(apiFlower.bloomedAt) : undefined,

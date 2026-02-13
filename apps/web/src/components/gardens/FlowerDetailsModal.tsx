@@ -11,6 +11,7 @@ import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { Flower } from '../../types/api.types';
 import type { FlowerDefinition } from '../../flowers/types';
+import { FlowerBud } from '../../flowers/FlowerBud';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import CardGiftcard from '@mui/icons-material/CardGiftcard';
@@ -128,14 +129,16 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
 
-  // Reset media reveal state when modal closes
+  // Reset media reveal state when modal opens/closes
   useEffect(() => {
-    if (!isOpen) {
-      setMediaRevealed(false);
-    }
+    setMediaRevealed(false);
   }, [isOpen]);
 
   if (!flower || !definition) return null;
+
+  // Mystery Mode: Hide flower identity for BLOOMING flowers that are still buds
+  const isBud = flower.state === 'BUD';
+  const shouldHideIdentity = flower.type === 'BLOOMING' && isBud;
 
   // Extract data
   const plantedDate = new Date(flower.createdAt).toLocaleDateString('en-US', {
@@ -196,7 +199,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   // Bloom status
   const isBloomable = flower.type === 'BLOOMING';
   const isBloomed = flower.state === 'BLOOMED';
-  const isBud = flower.state === 'BUD';
+
+  // Display name based on mystery mode
+  const displayName = shouldHideIdentity ? "mystery flower" : definition.name;
 
   return (
     <Modal 
@@ -241,7 +246,15 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
               <ambientLight intensity={0.9} />
               <directionalLight position={[5, 5, 5]} intensity={1.2} />
               <Suspense fallback={null}>
-                <FlowerPreview modelPath={modelPath} />
+                {shouldHideIdentity ? (
+                  <FlowerBud 
+                    scale={2.64} 
+                    color={definition.color}
+                    position={[0, -1.5, 0]}
+                  />
+                ) : (
+                  <FlowerPreview modelPath={modelPath} />
+                )}
               </Suspense>
               <OrbitControls 
                 enableZoom={false}
@@ -263,7 +276,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             {/* Opening */}
             <div style={bodyStyle}>
               On <span style={dateHighlightStyle}>{plantedDate}</span>, this beautiful{' '}
-              <span style={flowerNameStyle}>{definition.name}</span> was planted just for you.
+              <span style={flowerNameStyle}>{displayName}</span> was planted just for you.
             </div>
             
             {/* Seed Message - Simplified for elegance */}
@@ -375,12 +388,14 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
               </div>
             )}
             
-            {/* Symbolism Quote */}
-            <div style={quoteContainerStyle}>
-              <div style={quoteStyle}>
-                "{definition.symbolism}"
+            {/* Symbolism Quote - Hide for buds to preserve mystery */}
+            {!shouldHideIdentity && (
+              <div style={quoteContainerStyle}>
+                <div style={quoteStyle}>
+                  "{definition.symbolism}"
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Sign-Off */}
             <div style={signOffContainerStyle}>

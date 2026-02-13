@@ -236,74 +236,82 @@ export function FlowerModel({
       {/* Horizontal Hover Card - Letter Inspired */}
       {hovered && !dragging && (
         <Html position={[0, 3, 0]} center distanceFactor={8}>
-          <div style={{
-            background: '#FFFFFF',
-            padding: '16px 20px',
-            borderRadius: '12px',
-            boxShadow: '0 8px 24px rgba(61, 51, 64, 0.15), 0 4px 12px rgba(61, 51, 64, 0.08)',
-            minWidth: '400px',
-            maxWidth: '450px',
-            pointerEvents: 'none',
-            userSelect: 'none',
-            position: 'relative',
-            border: '2px solid #FFC9D9',
-          }}>
-            {/* Top: HORIZONS branding */}
-            <div style={{
-              textAlign: 'center',
-              fontSize: '10px',
-              fontFamily: 'Georgia, serif',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#9D8F99',
-              marginBottom: '12px',
-              paddingBottom: '8px',
-              borderBottom: '1px solid rgba(232, 180, 184, 0.2)',
-              opacity: 0.6,
-            }}>
-              ♡ HORIZONS ♡
-            </div>
+          {(() => {
+            // Mystery mode for BLOOMING flowers that are still buds
+            const isBud = flower.state === 'BUD';
+            const shouldHideIdentity = flower.type === 'BLOOMING' && isBud;
+            const displayName = shouldHideIdentity ? "Mystery Flower" : definition.name;
+            const displayEmoji = shouldHideIdentity ? "🌱" : 
+              (definition.id === 1 ? '🌼' : definition.id === 2 ? '🌹' : '🌻');
             
-            {/* Main content: Horizontal layout */}
+            return (
             <div style={{
-              display: 'flex',
-              gap: '24px',
-              marginBottom: '12px',
+              background: '#FFFFFF',
+              padding: '16px 20px',
+              borderRadius: '12px',
+              boxShadow: '0 8px 24px rgba(61, 51, 64, 0.15), 0 4px 12px rgba(61, 51, 64, 0.08)',
+              minWidth: '400px',
+              maxWidth: '450px',
+              pointerEvents: 'none',
+              userSelect: 'none',
+              position: 'relative',
+              border: '2px solid #FFC9D9',
             }}>
-              
-              {/* Left: Flower info */}
+              {/* Top: HORIZONS branding */}
               <div style={{
-                flex: '0 0 140px',
                 textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
+                fontSize: '10px',
+                fontFamily: 'Georgia, serif',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: '#9D8F99',
+                marginBottom: '12px',
+                paddingBottom: '8px',
+                borderBottom: '1px solid rgba(232, 180, 184, 0.2)',
+                opacity: 0.6,
               }}>
-                <div style={{ 
-                  fontSize: '32px',
-                  marginBottom: '8px'
-                }}>
-                  {definition.id === 1 ? '🌼' : 
-                   definition.id === 2 ? '🌹' : '🌻'}
-                </div>
-                <div style={{
-                  fontSize: '18px',
-                  fontWeight: 600,
-                  color: '#3D3340',
-                  fontFamily: 'Georgia, serif',
-                  marginBottom: '8px',
-                }}>
-                  {definition.name}
-                </div>
-                <div style={{
-                  fontSize: '12px',
-                  color: '#3D3340',
-                  fontFamily: 'Georgia, serif',
-                }}>
-                  {flower.state === 'BUD' ? '🌱 Waiting to bloom' : '🌸 In bloom'}
-                </div>
+                ♡ HORIZONS ♡
               </div>
+              
+              {/* Main content: Horizontal layout */}
+              <div style={{
+                display: 'flex',
+                gap: '24px',
+                marginBottom: '12px',
+              }}>
+                
+                {/* Left: Flower info */}
+                <div style={{
+                  flex: '0 0 140px',
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <div style={{ 
+                    fontSize: '32px',
+                    marginBottom: '8px'
+                  }}>
+                    {displayEmoji}
+                  </div>
+                  <div style={{
+                    fontSize: '18px',
+                    fontWeight: 600,
+                    color: '#3D3340',
+                    fontFamily: 'Georgia, serif',
+                    marginBottom: '8px',
+                  }}>
+                    {displayName}
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#3D3340',
+                    fontFamily: 'Georgia, serif',
+                  }}>
+                    {flower.state === 'BUD' ? '🌱 Waiting to bloom' : '🌸 In bloom'}
+                  </div>
+                </div>
               
               {/* Right: Metadata */}
               <div style={{
@@ -388,19 +396,21 @@ export function FlowerModel({
               
             </div>
             
-            {/* Bottom: CTA */}
-            <div style={{
-              textAlign: 'center',
-              fontSize: '12px',
-              fontWeight: 500,
-              color: '#D4909A',
-              paddingTop: '12px',
-              borderTop: '1px solid rgba(232, 180, 184, 0.2)',
-              fontFamily: 'Georgia, serif',
-            }}>
-              Click flower to open
+              {/* Bottom: CTA */}
+              <div style={{
+                textAlign: 'center',
+                fontSize: '12px',
+                fontWeight: 500,
+                color: '#D4909A',
+                paddingTop: '12px',
+                borderTop: '1px solid rgba(232, 180, 184, 0.2)',
+                fontFamily: 'Georgia, serif',
+              }}>
+                Click flower to open
+              </div>
             </div>
-          </div>
+            );
+          })()}
         </Html>
       )}
       

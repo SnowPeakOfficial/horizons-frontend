@@ -14,6 +14,7 @@ export interface FlowerDefinition {
 }
 
 export type FlowerState = 'BUD' | 'BLOOMED' | 'OPEN';
+export type FlowerType = 'STANDARD' | 'BLOOMING';
 
 export interface PlacedFlower {
   id: string;
@@ -27,6 +28,7 @@ export interface PlacedFlower {
   rotation: number;
   scale: number;
   placedAt: Date;
+  type: FlowerType;  // STANDARD or BLOOMING
   state: FlowerState;  // Current bloom state
   bloomAt?: Date;  // Optional scheduled bloom time
   bloomedAt?: Date;  // When the flower actually bloomed
