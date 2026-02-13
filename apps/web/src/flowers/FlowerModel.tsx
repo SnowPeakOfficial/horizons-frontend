@@ -241,8 +241,7 @@ export function FlowerModel({
             const isBud = flower.state === 'BUD';
             const shouldHideIdentity = flower.type === 'BLOOMING' && isBud;
             const displayName = shouldHideIdentity ? "Mystery Flower" : definition.name;
-            const displayEmoji = shouldHideIdentity ? "🌱" : 
-              (definition.id === 1 ? '🌼' : definition.id === 2 ? '🌹' : '🌻');
+            const displayEmoji = shouldHideIdentity ? "🌱" : definition.emoji;
             
             return (
             <div style={{
@@ -430,6 +429,20 @@ export function FlowerModel({
 }
 
 // Preload all flower models
+// FREE Tier
+useGLTF.preload('/models/flowers/ForgetMeNot.glb');
 useGLTF.preload('/models/flowers/Daisy.glb');
-useGLTF.preload('/models/flowers/Rose.glb');
 useGLTF.preload('/models/flowers/Sunflower.glb');
+
+// PRO Tier
+useGLTF.preload('/models/flowers/Rose.glb');
+useGLTF.preload('/models/flowers/Tulip.glb');
+useGLTF.preload('/models/flowers/Hibiscus.glb');
+useGLTF.preload('/models/flowers/Cactus.glb');
+useGLTF.preload('/models/flowers/BarrelCactus.glb'); // Cactus bud
+useGLTF.preload('/models/flowers/DesertLily.glb');
+
+// PREMIUM Tier
+useGLTF.preload('/models/flowers/Iris.glb');
+useGLTF.preload('/models/flowers/Orchid.glb');
+useGLTF.preload('/models/flowers/Lotus.glb');
