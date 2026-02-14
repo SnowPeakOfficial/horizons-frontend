@@ -217,7 +217,7 @@ export function FlowerModel({
       ref={meshRef}
       position={[flower.position.x, flower.position.y, flower.position.z]}
       rotation={[0, flower.rotation, 0]}
-      scale={1}
+      scale={definition.defaultScale}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
       onClick={handleClick}

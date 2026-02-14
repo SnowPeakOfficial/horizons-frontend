@@ -62,7 +62,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#87CEEB',
     modelPath: '/models/flowers/ForgetMeNot.glb',
     symbolism: 'A small bloom with a lasting memory — soft, steady, unforgettable.',
-    defaultScale: 1.2,
+    defaultScale: 5,
     previewScale: 11, // 3x bigger
     tier: 'FREE',
     emoji: '💙'
@@ -102,7 +102,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#FFD700',
     modelPath: '/models/flowers/Sunflower.glb',
     symbolism: 'Always turning toward the light — bold, loyal, and full of warmth.',
-    defaultScale: 1.35,
+    defaultScale: 1.45,
     previewScale: 2.5, // Keep default
     tier: 'FREE',
     emoji: '🌻'
@@ -119,7 +119,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#FF0000',
     modelPath: '/models/flowers/Rose.glb',
     symbolism: 'Love in its most classic form — deep, intentional, and enduring.',
-    defaultScale: 0.0144,
+    defaultScale: 0.013,
     previewScale: 0.013, // Use existing scale (already tiny)
     tier: 'PRO',
     emoji: '🌹'
@@ -132,7 +132,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#FF69B4',
     modelPath: '/models/flowers/Tulip.glb',
     symbolism: 'A fresh beginning — graceful, hopeful, and full of possibility.',
-    defaultScale: 1.0,
+    defaultScale: 1.7,
     previewScale: 2.6, // Keep default
     tier: 'PRO',
     emoji: '🌷'
@@ -145,7 +145,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#FF6B9D',
     modelPath: '/models/flowers/Hibiscus.glb',
     symbolism: 'Vivid and expressive — a bloom that feels like sunlight on skin.',
-    defaultScale: 1.1,
+    defaultScale: 0.4,
     previewScale: 0.5, // 4x smaller
     previewOffset: [0, -1.8, 0], // Move down to center
     tier: 'PRO',
@@ -160,7 +160,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Cactus.glb',
     budModelPath: '/models/flowers/BarrelCactus.glb', // Special: use barrel cactus as bud
     symbolism: 'Beauty that survives the harshest seasons — strong, rare, and quietly radiant.',
-    defaultScale: 0.8,
+    defaultScale: 7,
     previewScale: 11, // 3x bigger
     tier: 'PRO',
     emoji: '🌵'
@@ -173,7 +173,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#FFFACD',
     modelPath: '/models/flowers/DesertLily.glb',
     symbolism: 'A rare bloom against the odds — proof that hope can grow anywhere.',
-    defaultScale: 1.0,
+    defaultScale: 0.5,
     previewScale: 1, // 3x smaller
     previewOffset: [0, -2.2, 0], // Move down to center
     tier: 'PRO',
@@ -191,7 +191,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#9370DB',
     modelPath: '/models/flowers/Iris.glb',
     symbolism: 'A bloom of depth and reflection — carrying quiet wisdom and grace.',
-    defaultScale: 1.0,
+    defaultScale: 2.2,
     previewScale: 5.5, // 1.5x bigger
     tier: 'PREMIUM',
     emoji: '💜'
@@ -218,7 +218,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     color: '#FFC0CB',
     modelPath: '/models/flowers/Lotus.glb',
     symbolism: 'Rising untouched from still waters — serene, resilient, and transformed.',
-    defaultScale: 1.0,
+    defaultScale: 3,
     previewScale: 5, // 1.5x bigger
     tier: 'PREMIUM',
     emoji: '🪷'
