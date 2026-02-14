@@ -87,8 +87,8 @@ class FlowerService {
    * Get all available flower definitions
    */
   async getFlowerDefinitions(): Promise<FlowerDefinition[]> {
-    const response = await api.get<FlowerDefinition[]>('/flowers/definitions');
-    return response.data;
+    const response = await api.get<{ flowers: FlowerDefinition[]; userTier: string }>('/flowers/definitions');
+    return response.data.flowers;
   }
 
   /**
