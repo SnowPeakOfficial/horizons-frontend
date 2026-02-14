@@ -3,7 +3,7 @@ import { useSpring, animated } from '@react-spring/three';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { FlowerBud } from './FlowerBud';
-import { FlowerDefinition } from './types';
+import type { FlowerDefinition } from './types';
 
 interface AnimatedFlowerBloomProps {
   definition: FlowerDefinition;
@@ -74,8 +74,8 @@ export function AnimatedFlowerBloom({
         scale={bloomScale.to(s => s * scale)}
         visible={bloomOpacity.to(o => o > 0.01)}
       >
-        {/* Raise model above ground */}
-        <primitive object={clonedScene} position={[0, 1, 0]} />
+        {/* Raise model above ground - use per-flower gardenOffset or default to 1 */}
+        <primitive object={clonedScene} position={[0, definition.gardenOffset ?? 1, 0]} />
       </animated.group>
 
       {/* Particle burst effect when blooming */}
