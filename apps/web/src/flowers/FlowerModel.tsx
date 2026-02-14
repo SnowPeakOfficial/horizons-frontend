@@ -69,12 +69,14 @@ export function FlowerModel({
     if (hoverTimeoutRef.current) {
       window.clearTimeout(hoverTimeoutRef.current);
     }
-    // Hide immediately for instant card switching between flowers
-    setHovered(false);
-    onHover?.(false);
-    if (!dragging) {
-      document.body.style.cursor = 'default';
-    }
+    // Small 50ms delay to prevent flicker, but short enough for rapid switching
+    hoverTimeoutRef.current = window.setTimeout(() => {
+      setHovered(false);
+      onHover?.(false);
+      if (!dragging) {
+        document.body.style.cursor = 'default';
+      }
+    }, 50);
   };
   
   // Cleanup timeout on unmount
@@ -277,6 +279,7 @@ export function FlowerModel({
               userSelect: 'none',
               position: 'relative',
               border: '2px solid #FFC9D9',
+              animation: 'flowerCardFadeIn 0.2s ease-out',
             }}>
               {/* Top: HORIZONS branding */}
               <div style={{
