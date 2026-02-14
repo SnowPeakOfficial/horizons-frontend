@@ -447,7 +447,12 @@ export function FlowerModel({
         >
           <circleGeometry args={[0.8, 32]} />
           <meshBasicMaterial 
-            color={definition.color} 
+            color={
+              // Mystery mode: hide color for BLOOMING buds
+              flower.type === 'BLOOMING' && flower.state === 'BUD'
+                ? '#A8B89F'  // Neutral sage green (matches bud color)
+                : definition.color  // Actual flower color after bloom
+            }
             transparent 
             opacity={0.3}
           />
