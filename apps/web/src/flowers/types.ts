@@ -15,6 +15,7 @@ export interface FlowerDefinition {
   symbolism: string;
   defaultScale: number;
   previewScale: number; // Scale for 3D previews (PlantFlowerPanel, FlowerDetailsModal, etc.)
+  previewOffset?: [number, number, number]; // Optional [x, y, z] offset for centering in preview
   tier: UserTier;
   emoji: string;
 }
@@ -145,7 +146,8 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Hibiscus.glb',
     symbolism: 'Vivid and expressive — a bloom that feels like sunlight on skin.',
     defaultScale: 1.1,
-    previewScale: 0.4, // 4x smaller
+    previewScale: 0.5, // 4x smaller
+    previewOffset: [0, -1.8, 0], // Move down to center
     tier: 'PRO',
     emoji: '🌺'
   },
@@ -172,7 +174,8 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/DesertLily.glb',
     symbolism: 'A rare bloom against the odds — proof that hope can grow anywhere.',
     defaultScale: 1.0,
-    previewScale: 0.7, // 3x smaller
+    previewScale: 1, // 3x smaller
+    previewOffset: [0, -2.2, 0], // Move down to center
     tier: 'PRO',
     emoji: '🏜️'
   },
@@ -202,7 +205,8 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Orchid.glb',
     symbolism: 'Delicate and extraordinary — a bloom reserved for moments that matter.',
     defaultScale: 0.9,
-    previewScale: 1.2, // 3x smaller
+    previewScale: 1.4, // 3x smaller
+    previewOffset: [0, -2.9, 0], // Move down to center
     tier: 'PREMIUM',
     emoji: '🌸'
   },

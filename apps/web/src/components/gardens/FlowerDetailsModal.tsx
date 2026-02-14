@@ -34,7 +34,15 @@ interface FlowerDetailsModalProps {
 /**
  * 3D Flower Preview - Anchored to the letter
  */
-function FlowerPreview({ modelPath, scale }: { modelPath: string; scale: number }) {
+function FlowerPreview({ 
+  modelPath, 
+  scale,
+  offset = [0, 0, 0]
+}: { 
+  modelPath: string; 
+  scale: number;
+  offset?: [number, number, number];
+}) {
   const { scene } = useGLTF(modelPath);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
   
@@ -42,6 +50,7 @@ function FlowerPreview({ modelPath, scale }: { modelPath: string; scale: number 
     <primitive 
       object={clonedScene} 
       scale={scale}
+      position={offset}
       rotation={[0, 0, 0]}
     />
   );
@@ -194,7 +203,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   // Sign-off tone (metadata-driven)
   const signOffTone = "With love,"; // TODO: Make this selectable enum
 
-  // Model path and preview scale from centralized definitions
+  // Model path, preview scale, and preview offset from centralized definitions
   const modelPath = definition.modelPath;
   // Get frontend definition using the backend flower key (stored in flower object)
   const backendKey = Object.keys(FLOWER_DEFINITIONS).find(key => 
@@ -202,6 +211,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   );
   const frontendDef = backendKey ? FLOWER_DEFINITIONS[backendKey] : null;
   const previewScale = frontendDef?.previewScale || 2.5;
+  const previewOffset = frontendDef?.previewOffset;
 
   // Bloom status
   const isBloomable = flower.type === 'BLOOMING';
@@ -260,7 +270,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     position={[0, -1.5, 0]}
                   />
                 ) : (
-                  <FlowerPreview modelPath={modelPath} scale={previewScale} />
+                  <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
                 )}
               </Suspense>
               <OrbitControls 

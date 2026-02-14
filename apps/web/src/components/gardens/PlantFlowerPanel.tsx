@@ -31,14 +31,23 @@ import Lock from '@mui/icons-material/Lock';
 /**
  * 3D Flower Preview Component
  */
-function FlowerPreview({ modelPath, scale }: { modelPath: string; scale: number }) {
+function FlowerPreview({ 
+  modelPath, 
+  scale, 
+  offset = [0, 0, 0] 
+}: { 
+  modelPath: string; 
+  scale: number;
+  offset?: [number, number, number];
+}) {
   const { scene } = useGLTF(modelPath);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
-  
+
   return (
     <primitive 
       object={clonedScene} 
       scale={scale}
+      position={offset}
       rotation={[0, 0, 0]}
     />
   );
@@ -420,6 +429,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 const frontendDef = FLOWER_DEFINITIONS[def.key.toLowerCase()];
                 const modelPath = frontendDef?.modelPath || '';
                 const previewScale = frontendDef?.previewScale || 2.5;
+                const previewOffset = frontendDef?.previewOffset;
                 
                 // Tier badge colors
                 const tierColors = {
@@ -512,7 +522,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                           <ambientLight intensity={0.9} />
                           <directionalLight position={[5, 5, 5]} intensity={1.2} />
                           <Suspense fallback={null}>
-                            <FlowerPreview modelPath={modelPath} scale={previewScale} />
+                            <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
                           </Suspense>
                           <OrbitControls
                             enableZoom={false}
