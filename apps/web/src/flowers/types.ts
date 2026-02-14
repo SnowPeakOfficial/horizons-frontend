@@ -62,7 +62,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/ForgetMeNot.glb',
     symbolism: 'A small bloom with a lasting memory — soft, steady, unforgettable.',
     defaultScale: 1.2,
-    previewScale: 8, // 3x bigger
+    previewScale: 11, // 3x bigger
     tier: 'FREE',
     emoji: '💙'
   },
@@ -75,7 +75,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Daisy.glb',
     symbolism: 'A gentle kind of joy — simple, sincere, and quietly bright.',
     defaultScale: 1.5,
-    previewScale: 2, // 3x smaller
+    previewScale: 2.5, // 3x smaller
     tier: 'FREE',
     emoji: '🌼'
   },
@@ -89,7 +89,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Daisy.glb',
     symbolism: 'A gentle kind of joy — simple, sincere, and quietly bright.',
     defaultScale: 1.5,
-    previewScale: 2, // 3x smaller
+    previewScale: 2.5, // 3x smaller
     tier: 'FREE',
     emoji: '🌼'
   },
@@ -159,7 +159,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     budModelPath: '/models/flowers/BarrelCactus.glb', // Special: use barrel cactus as bud
     symbolism: 'Beauty that survives the harshest seasons — strong, rare, and quietly radiant.',
     defaultScale: 0.8,
-    previewScale: 10, // 3x bigger
+    previewScale: 11, // 3x bigger
     tier: 'PRO',
     emoji: '🌵'
   },
@@ -202,7 +202,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Orchid.glb',
     symbolism: 'Delicate and extraordinary — a bloom reserved for moments that matter.',
     defaultScale: 0.9,
-    previewScale: 1, // 3x smaller
+    previewScale: 1.2, // 3x smaller
     tier: 'PREMIUM',
     emoji: '🌸'
   },
