@@ -32,18 +32,16 @@ export function FlowerModel({
 }: FlowerModelProps) {
   const [hovered, setHovered] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [isBloom, setIsBloom] = useState(flower.state === 'BLOOMED' || flower.state === 'OPEN');
   const meshRef = useRef<THREE.Group>(null);
   const dragPlaneRef = useRef<THREE.Mesh>(null);
+  const hoverTimeoutRef = useRef<number>();
   const { camera, raycaster, gl, scene } = useThree();
   const dragOffsetRef = useRef(new THREE.Vector3());
   const pointerDownTimeRef = useRef(0);
   const pointerDownPosRef = useRef({ x: 0, y: 0 });
   
-  // React to flower state changes
-  useEffect(() => {
-    setIsBloom(flower.state === 'BLOOMED' || flower.state === 'OPEN');
-  }, [flower.state]);
+  // Derive bloom state from flower state (no useEffect needed)
+  const isBloom = flower.state === 'BLOOMED' || flower.state === 'OPEN';
   
   // Create invisible drag plane at ground level
   const dragPlane = useMemo(() => {
@@ -53,6 +51,11 @@ export function FlowerModel({
   
   const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
+    // Clear any pending hide timeout
+    if (hoverTimeoutRef.current) {
+      window.clearTimeout(hoverTimeoutRef.current);
+    }
+    // Show immediately (no delay on hover)
     setHovered(true);
     onHover?.(true);
     if (draggable) {
@@ -62,12 +65,26 @@ export function FlowerModel({
   
   const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
+    // Clear any pending timeout
+    if (hoverTimeoutRef.current) {
+      window.clearTimeout(hoverTimeoutRef.current);
+    }
+    // Hide immediately for instant card switching between flowers
     setHovered(false);
     onHover?.(false);
     if (!dragging) {
       document.body.style.cursor = 'default';
     }
   };
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
   
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
@@ -235,7 +252,12 @@ export function FlowerModel({
       
       {/* Horizontal Hover Card - Letter Inspired */}
       {hovered && !dragging && (
-        <Html position={[0, 3, 0]} center distanceFactor={8}>
+        <Html 
+          position={[0, (definition.gardenOffset ?? 1) + 2, 0]} 
+          center 
+          transform
+          sprite
+        >
           {(() => {
             // Mystery mode for BLOOMING flowers that are still buds
             const isBud = flower.state === 'BUD';
