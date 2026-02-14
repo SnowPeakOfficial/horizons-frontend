@@ -6,7 +6,9 @@
  * Step 3: Configure bloom options
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, useMemo } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,15 +16,33 @@ import { Button, Input } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
+import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import flowerService from '../../services/flowerService';
 import gardenService from '../../services/gardenService';
-import type { FlowerDefinition, FlowerType } from '../../types/api.types';
+import type { FlowerDefinition, FlowerType, UserTier } from '../../types/api.types';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import Spa from '@mui/icons-material/Spa';
 import Close from '@mui/icons-material/Close';
 import TouchApp from '@mui/icons-material/TouchApp';
 import Nature from '@mui/icons-material/Nature';
 import Info from '@mui/icons-material/Info';
+import Lock from '@mui/icons-material/Lock';
+
+/**
+ * 3D Flower Preview Component
+ */
+function FlowerPreview({ modelPath, scale }: { modelPath: string; scale: number }) {
+  const { scene } = useGLTF(modelPath);
+  const clonedScene = useMemo(() => scene.clone(), [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      scale={scale}
+      rotation={[0, 0, 0]}
+    />
+  );
+}
 
 // Zod validation schema
 const plantFlowerFormSchema = z.object({
@@ -138,15 +158,25 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     onClose();
   };
 
-  const getAvailableDefinitions = () => {
-    return flowerDefinitions.filter((def) => {
-      if (userTier === 'FREE') return def.tierAccess === 'FREE';
-      if (userTier === 'PRO') return def.tierAccess === 'FREE' || def.tierAccess === 'PRO';
-      return true;
-    });
+  // Helper to check if flower is locked for current user
+  const isFlowerLocked = (flowerTier: UserTier): boolean => {
+    const tierHierarchy: Record<UserTier, number> = {
+      FREE: 0,
+      PRO: 1,
+      PREMIUM: 2,
+    };
+    return tierHierarchy[userTier as UserTier] < tierHierarchy[flowerTier];
   };
 
-  const availableDefinitions = getAvailableDefinitions();
+  // Sort flowers by tier: FREE → PRO → PREMIUM
+  const sortedFlowerDefinitions = [...flowerDefinitions].sort((a, b) => {
+    const tierOrder: Record<string, number> = {
+      FREE: 0,
+      PRO: 1,
+      PREMIUM: 2,
+    };
+    return tierOrder[a.tierAccess] - tierOrder[b.tierAccess];
+  });
 
   const handleNextToPlacement = () => {
     if (!selectedDefinition) {
@@ -377,57 +407,175 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr',
+                display: 'flex',
+                flexDirection: 'column',
                 gap: theme.spacing.md,
               }}
             >
-              {availableDefinitions.map((def) => {
+              {sortedFlowerDefinitions.map((def) => {
                 const isSelected = selectedDefinition?.id === def.id;
-                const symbolism = 
-                  def.key === 'rose' ? 'Love & devotion' :
-                  def.key === 'sunflower' ? 'Warmth & joy' :
-                  'Innocence & new beginnings';
+                const isLocked = isFlowerLocked(def.tierAccess as UserTier);
+                
+                // Map backend key to frontend definition
+                const frontendDef = FLOWER_DEFINITIONS[def.key.toLowerCase()];
+                const modelPath = frontendDef?.modelPath || '';
+                const previewScale = frontendDef?.previewScale || 2.5;
+                
+                // Tier badge colors
+                const tierColors = {
+                  FREE: { bg: '#E8F5E9', text: '#2E7D32' },
+                  PRO: { bg: '#E3F2FD', text: '#1565C0' },
+                  PREMIUM: { bg: '#F3E5F5', text: '#6A1B9A' },
+                };
+                const tierColor = tierColors[def.tierAccess as keyof typeof tierColors] || tierColors.FREE;
                 
                 return (
                   <div
                     key={def.id}
                     style={{
+                      position: 'relative',
                       padding: theme.spacing.lg,
-                      border: isSelected 
-                        ? `1px solid rgba(255, 105, 180, 0.3)` 
-                        : `1px solid ${theme.border.light}`,
-                      borderRadius: theme.radius.lg,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
+                      border: `2px solid ${
+                        isSelected 
+                          ? theme.colors.rose[400]
+                          : isLocked 
+                          ? theme.colors.neutral.gray[300]
+                          : '#FFD1DC'
+                      }`,
+                      borderRadius: '16px',
+                      cursor: isLocked ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                       background: isSelected ? theme.colors.rose[50] : '#FFFFFF',
-                      boxShadow: isSelected ? '0 0 20px rgba(255, 105, 180, 0.15)' : 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: theme.spacing.md,
-                      transform: 'translateY(0)',
+                      boxShadow: isSelected 
+                        ? '0 4px 16px rgba(255, 105, 180, 0.2)' 
+                        : '0 2px 8px rgba(0, 0, 0, 0.06)',
+                      opacity: isLocked ? 0.7 : 1,
+                      textAlign: 'center',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                      if (!isLocked) {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.12)';
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = isSelected ? '0 0 20px rgba(255, 105, 180, 0.15)' : 'none';
+                      if (!isLocked) {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = isSelected 
+                          ? '0 4px 16px rgba(255, 105, 180, 0.2)' 
+                          : '0 2px 8px rgba(0, 0, 0, 0.06)';
+                      }
                     }}
-                    onClick={() => setSelectedDefinition(def)}
+                    onClick={() => {
+                      if (!isLocked) {
+                        setSelectedDefinition(def);
+                      }
+                    }}
                   >
-                    <div style={{ fontSize: '40px' }}>
-                      {def.key === 'rose' ? '🌹' : def.key === 'sunflower' ? '🌻' : '🌼'}
+                    {/* Tier Badge */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        padding: '4px 10px',
+                        borderRadius: '12px',
+                        background: tierColor.bg,
+                        color: tierColor.text,
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                      }}
+                    >
+                      {def.tierAccess}
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ ...typography.styles.body, fontWeight: 600, marginBottom: '4px' }}>
-                        {def.displayName}
+
+                    {/* 3D Model Preview */}
+                    {modelPath && (
+                      <div
+                        style={{
+                          width: '140px',
+                          height: '140px',
+                          margin: '0 auto 16px',
+                          borderRadius: '50%',
+                          overflow: 'hidden',
+                          background: '#FFFFFF',
+                          border: `3px solid ${tierColor.bg}`,
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                        }}
+                      >
+                        <Canvas
+                          camera={{ position: [0, 0, 8], fov: 45 }}
+                          style={{ width: '100%', height: '100%' }}
+                        >
+                          <ambientLight intensity={0.9} />
+                          <directionalLight position={[5, 5, 5]} intensity={1.2} />
+                          <Suspense fallback={null}>
+                            <FlowerPreview modelPath={modelPath} scale={previewScale} />
+                          </Suspense>
+                          <OrbitControls
+                            enableZoom={false}
+                            enablePan={false}
+                            autoRotate
+                            autoRotateSpeed={2}
+                          />
+                        </Canvas>
                       </div>
-                      <div style={{ ...typography.styles.caption, color: theme.text.secondary, fontStyle: 'italic' }}>
-                        {symbolism}
-                      </div>
+                    )}
+
+                    {/* Flower Name */}
+                    <div
+                      style={{
+                        ...typography.styles.body,
+                        fontWeight: 600,
+                        fontSize: '16px',
+                        marginBottom: theme.spacing.xs,
+                        color: theme.text.primary,
+                      }}
+                    >
+                      {def.displayName}
                     </div>
+
+                    {/* Description */}
+                    <div
+                      style={{
+                        ...typography.styles.caption,
+                        fontSize: '13px',
+                        lineHeight: '1.5',
+                        color: theme.text.secondary,
+                        marginBottom: isLocked ? theme.spacing.sm : 0,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {def.description || 'A beautiful flower for your memory'}
+                    </div>
+
+                    {/* Lock Message */}
+                    {isLocked && (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          marginTop: theme.spacing.sm,
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          background: theme.colors.neutral.gray[100],
+                          color: theme.text.secondary,
+                          fontSize: '12px',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <Lock sx={{ fontSize: 14 }} />
+                        Requires {def.tierAccess}
+                      </div>
+                    )}
                   </div>
                 );
               })}

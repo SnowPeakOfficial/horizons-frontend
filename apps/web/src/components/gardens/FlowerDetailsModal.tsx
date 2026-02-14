@@ -11,6 +11,7 @@ import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { Flower } from '../../types/api.types';
 import type { FlowerDefinition } from '../../flowers/types';
+import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import { FlowerBud } from '../../flowers/FlowerBud';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
@@ -33,14 +34,14 @@ interface FlowerDetailsModalProps {
 /**
  * 3D Flower Preview - Anchored to the letter
  */
-function FlowerPreview({ modelPath }: { modelPath: string }) {
+function FlowerPreview({ modelPath, scale }: { modelPath: string; scale: number }) {
   const { scene } = useGLTF(modelPath);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
   
   return (
     <primitive 
       object={clonedScene} 
-      scale={2.5}
+      scale={scale}
       rotation={[0, 0, 0]}
     />
   );
@@ -193,8 +194,14 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   // Sign-off tone (metadata-driven)
   const signOffTone = "With love,"; // TODO: Make this selectable enum
 
-  // Model path
+  // Model path and preview scale from centralized definitions
   const modelPath = definition.modelPath;
+  // Get frontend definition using the backend flower key (stored in flower object)
+  const backendKey = Object.keys(FLOWER_DEFINITIONS).find(key => 
+    FLOWER_DEFINITIONS[key].id === definition.id
+  );
+  const frontendDef = backendKey ? FLOWER_DEFINITIONS[backendKey] : null;
+  const previewScale = frontendDef?.previewScale || 2.5;
 
   // Bloom status
   const isBloomable = flower.type === 'BLOOMING';
@@ -253,7 +260,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     position={[0, -1.5, 0]}
                   />
                 ) : (
-                  <FlowerPreview modelPath={modelPath} />
+                  <FlowerPreview modelPath={modelPath} scale={previewScale} />
                 )}
               </Suspense>
               <OrbitControls 

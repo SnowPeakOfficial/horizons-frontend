@@ -14,6 +14,7 @@ export interface FlowerDefinition {
   budModelPath?: string; // Optional: for flowers like cactus with separate bud model
   symbolism: string;
   defaultScale: number;
+  previewScale: number; // Scale for 3D previews (PlantFlowerPanel, FlowerDetailsModal, etc.)
   tier: UserTier;
   emoji: string;
 }
@@ -61,6 +62,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/ForgetMeNot.glb',
     symbolism: 'A small bloom with a lasting memory — soft, steady, unforgettable.',
     defaultScale: 1.2,
+    previewScale: 8, // 3x bigger
     tier: 'FREE',
     emoji: '💙'
   },
@@ -73,6 +75,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Daisy.glb',
     symbolism: 'A gentle kind of joy — simple, sincere, and quietly bright.',
     defaultScale: 1.5,
+    previewScale: 2, // 3x smaller
     tier: 'FREE',
     emoji: '🌼'
   },
@@ -86,6 +89,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Daisy.glb',
     symbolism: 'A gentle kind of joy — simple, sincere, and quietly bright.',
     defaultScale: 1.5,
+    previewScale: 2, // 3x smaller
     tier: 'FREE',
     emoji: '🌼'
   },
@@ -98,6 +102,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Sunflower.glb',
     symbolism: 'Always turning toward the light — bold, loyal, and full of warmth.',
     defaultScale: 1.35,
+    previewScale: 2.5, // Keep default
     tier: 'FREE',
     emoji: '🌻'
   },
@@ -114,6 +119,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Rose.glb',
     symbolism: 'Love in its most classic form — deep, intentional, and enduring.',
     defaultScale: 0.0144,
+    previewScale: 0.013, // Use existing scale (already tiny)
     tier: 'PRO',
     emoji: '🌹'
   },
@@ -126,6 +132,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Tulip.glb',
     symbolism: 'A fresh beginning — graceful, hopeful, and full of possibility.',
     defaultScale: 1.0,
+    previewScale: 2.5, // Keep default
     tier: 'PRO',
     emoji: '🌷'
   },
@@ -138,6 +145,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Hibiscus.glb',
     symbolism: 'Vivid and expressive — a bloom that feels like sunlight on skin.',
     defaultScale: 1.1,
+    previewScale: 0.4, // 4x smaller
     tier: 'PRO',
     emoji: '🌺'
   },
@@ -151,6 +159,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     budModelPath: '/models/flowers/BarrelCactus.glb', // Special: use barrel cactus as bud
     symbolism: 'Beauty that survives the harshest seasons — strong, rare, and quietly radiant.',
     defaultScale: 0.8,
+    previewScale: 10, // 3x bigger
     tier: 'PRO',
     emoji: '🌵'
   },
@@ -163,6 +172,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/DesertLily.glb',
     symbolism: 'A rare bloom against the odds — proof that hope can grow anywhere.',
     defaultScale: 1.0,
+    previewScale: 0.7, // 3x smaller
     tier: 'PRO',
     emoji: '🏜️'
   },
@@ -179,6 +189,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Iris.glb',
     symbolism: 'A bloom of depth and reflection — carrying quiet wisdom and grace.',
     defaultScale: 1.0,
+    previewScale: 3.75, // 1.5x bigger
     tier: 'PREMIUM',
     emoji: '💜'
   },
@@ -191,6 +202,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Orchid.glb',
     symbolism: 'Delicate and extraordinary — a bloom reserved for moments that matter.',
     defaultScale: 0.9,
+    previewScale: 1, // 3x smaller
     tier: 'PREMIUM',
     emoji: '🌸'
   },
@@ -203,6 +215,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Lotus.glb',
     symbolism: 'Rising untouched from still waters — serene, resilient, and transformed.',
     defaultScale: 1.0,
+    previewScale: 4, // 1.5x bigger
     tier: 'PREMIUM',
     emoji: '🪷'
   }
