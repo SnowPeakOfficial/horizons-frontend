@@ -132,7 +132,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Tulip.glb',
     symbolism: 'A fresh beginning — graceful, hopeful, and full of possibility.',
     defaultScale: 1.0,
-    previewScale: 2.5, // Keep default
+    previewScale: 2.6, // Keep default
     tier: 'PRO',
     emoji: '🌷'
   },
@@ -189,7 +189,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Iris.glb',
     symbolism: 'A bloom of depth and reflection — carrying quiet wisdom and grace.',
     defaultScale: 1.0,
-    previewScale: 3.75, // 1.5x bigger
+    previewScale: 5.5, // 1.5x bigger
     tier: 'PREMIUM',
     emoji: '💜'
   },
@@ -215,7 +215,7 @@ export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
     modelPath: '/models/flowers/Lotus.glb',
     symbolism: 'Rising untouched from still waters — serene, resilient, and transformed.',
     defaultScale: 1.0,
-    previewScale: 4, // 1.5x bigger
+    previewScale: 5, // 1.5x bigger
     tier: 'PREMIUM',
     emoji: '🪷'
   }
