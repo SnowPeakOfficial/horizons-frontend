@@ -415,7 +415,11 @@ export function FlowerModel({
       
       {/* Hover indicator - subtle circle on ground */}
       {hovered && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
+        <mesh 
+          rotation={[-Math.PI / 2, 0, 0]} 
+          position={[0, 0.05, 0]}
+          scale={1 / definition.defaultScale}
+        >
           <circleGeometry args={[0.8, 32]} />
           <meshBasicMaterial 
             color={definition.color} 
