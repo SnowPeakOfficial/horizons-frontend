@@ -59,10 +59,10 @@ export function AnimatedFlowerBloom({
 
   return (
     <group>
-      {/* Bud state - fades out when blooming - FIXED: use constant size for all buds */}
+      {/* Bud state - fades out when blooming - Universal size matching Daisy */}
       <animated.group
         // @ts-ignore - R3F animated types
-        scale={budOpacity.to(o => o * 1)}  // Always size 1, regardless of flower scale
+        scale={budOpacity.to(o => o * (1.5 / definition.defaultScale))}  // Counter-scale to always match Daisy's bud size (1.5)
         visible={budOpacity.to(o => o > 0.01)}
       >
         <FlowerBud scale={1} color={definition.color} />
