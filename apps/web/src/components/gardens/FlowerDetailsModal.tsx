@@ -391,8 +391,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
               <div style={bloomInfoStyle}>
                 <Spa sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: theme.semantic.success }} />
                 This flower will bloom on{' '}
-                <span style={dateHighlightStyle}>{bloomAtDate}</span>,
-                revealing its message.
+                <span style={dateHighlightStyle}>{bloomAtDate}</span>, revealing its message.
               </div>
             )}
             
@@ -555,7 +554,7 @@ const letterContentStyle: React.CSSProperties = {
 
 const greetingStyle: React.CSSProperties = {
   fontFamily: "'Caveat', cursive",
-  fontSize: '34px',
+  fontSize: 'clamp(1.75rem, 2vw + 0.5rem, 2rem)', // 28px → 32px (reduced from 34px)
   fontWeight: 600,
   color: theme.text.primary,
   marginBottom: '32px',
@@ -694,7 +693,7 @@ const signOffContainerStyle: React.CSSProperties = {
 
 const signOffStyle: React.CSSProperties = {
   fontFamily: "'Caveat', cursive",
-  fontSize: '32px',
+  fontSize: 'clamp(1.75rem, 2vw + 0.25rem, 1.875rem)', // 28px → 30px (reduced from 32px)
   fontWeight: 600,
   color: theme.text.primary,
   marginBottom: '0',
@@ -703,7 +702,7 @@ const signOffStyle: React.CSSProperties = {
 
 const senderNameStyle: React.CSSProperties = {
   fontFamily: "'Caveat', cursive",
-  fontSize: '32px',
+  fontSize: 'clamp(1.75rem, 2vw + 0.25rem, 1.875rem)', // 28px → 30px (reduced from 32px)
   fontWeight: 600,
   color: theme.text.primary,
   lineHeight: 1.3,

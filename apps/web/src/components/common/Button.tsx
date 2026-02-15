@@ -37,30 +37,31 @@ export const Button: React.FC<ButtonProps> = ({
     justifyContent: 'center',
     gap: theme.spacing.sm,
     border: 'none',
-    borderRadius: theme.radius.full,
+    borderRadius: theme.radius.md, // 12px rounded corners
     cursor: isDisabled ? 'not-allowed' : 'pointer',
-    transition: theme.transition.smooth,
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     opacity: isDisabled ? 0.5 : 1,
     width: fullWidth ? '100%' : 'auto',
     fontFamily: typography.fontFamily.sans,
     fontWeight: typography.fontWeight.semibold,
     letterSpacing: '0.01em',
+    textTransform: 'none', // Keep natural casing
   };
 
   const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     small: {
       padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
-      fontSize: typography.fontSize.bodySmall,
+      fontSize: 'clamp(0.813rem, 0.75vw + 0.25rem, 0.875rem)', // Fluid
       height: '36px',
     },
     medium: {
       padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-      fontSize: typography.fontSize.body,
+      fontSize: 'clamp(0.875rem, 1vw + 0.25rem, 1rem)', // Fluid
       height: '48px',
     },
     large: {
       padding: `${theme.spacing.lg} ${theme.spacing['2xl']}`,
-      fontSize: typography.fontSize.bodyLarge,
+      fontSize: 'clamp(1rem, 1vw + 0.25rem, 1.125rem)', // Fluid
       height: '56px',
     },
   };

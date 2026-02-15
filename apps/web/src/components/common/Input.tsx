@@ -34,13 +34,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputStyle: React.CSSProperties = {
       ...typography.styles.body,
       padding: `${theme.spacing.md} ${theme.spacing.lg}`,
-      border: `2px solid ${error ? theme.semantic.error : isFocused ? theme.colors.rose[500] : theme.border.medium}`,
-      borderRadius: theme.radius.lg,
+      border: `2px solid ${error ? theme.semantic.error : isFocused ? theme.colors.rose[600] : theme.border.medium}`,
+      borderRadius: theme.radius.md, // Rounded corners (12px)
       background: theme.bg.elevated,
       color: theme.text.primary,
-      transition: theme.transition.base,
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       outline: 'none',
       width: '100%',
+      fontSize: 'clamp(0.875rem, 1vw + 0.25rem, 1rem)', // Fluid typography
+      boxShadow: isFocused ? `0 0 0 3px rgba(232, 180, 184, 0.15)` : 'none',
     };
 
     const helperStyle: React.CSSProperties = {

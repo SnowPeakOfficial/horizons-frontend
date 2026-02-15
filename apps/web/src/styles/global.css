@@ -303,8 +303,21 @@ ul, ol {
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid #E8B4B8;
+  outline: 2px solid #D4909A;
   outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Loading shimmer utility */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(232, 180, 184, 0.15),
+    transparent
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 /* Responsive Typography */

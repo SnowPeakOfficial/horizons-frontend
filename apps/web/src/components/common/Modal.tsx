@@ -67,9 +67,12 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   const modalStyle: React.CSSProperties = {
-    background: showCloseButton ? theme.bg.elevated : 'transparent',
-    borderRadius: theme.radius.xl,
-    boxShadow: showCloseButton ? theme.shadow.xl : 'none',
+    background: showCloseButton ? 'rgba(255, 255, 255, 0.98)' : 'transparent',
+    backdropFilter: showCloseButton ? 'blur(24px)' : 'none',
+    WebkitBackdropFilter: showCloseButton ? 'blur(24px)' : 'none',
+    border: showCloseButton ? `1px solid ${theme.border.light}` : 'none',
+    borderRadius: theme.radius['2xl'], // 32px for softer feel
+    boxShadow: showCloseButton ? '0 24px 64px rgba(212, 144, 154, 0.15)' : 'none',
     maxWidth,
     width: '100%',
     maxHeight: '90vh',
