@@ -44,10 +44,10 @@ export const MyGardensPage: React.FC = () => {
     return gardens.reduce((sum, garden) => sum + (garden._count?.flowers || 0), 0);
   };
 
-  // Clean styles
+  // Premium styles with gradient background
   const containerStyle: React.CSSProperties = {
     minHeight: '100vh',
-    background: '#FFFFFF',
+    background: 'linear-gradient(135deg, #FFF9F5 0%, #FFE8E8 50%, #FFF0F5 100%)',
   };
 
   const contentStyle: React.CSSProperties = {
@@ -57,18 +57,34 @@ export const MyGardensPage: React.FC = () => {
   };
 
   const headerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.xl,
-    paddingBottom: theme.spacing.lg,
-    borderBottom: `1px solid ${theme.border.light}`,
+    textAlign: 'center',
+    marginBottom: theme.spacing['2xl'],
+    paddingTop: theme.spacing.lg,
   };
 
   const titleStyle: React.CSSProperties = {
-    ...typography.styles.h2,
+    ...typography.styles.h1,
     color: theme.text.primary,
-    fontWeight: 600,
+    fontWeight: 700,
+    marginBottom: theme.spacing.xs,
+    background: 'linear-gradient(135deg, #D4909A 0%, #E8A4A4 50%, #C48991 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  };
+
+  const subtitleStyle: React.CSSProperties = {
+    ...typography.styles.body,
+    color: theme.text.secondary,
+    fontSize: '1.125rem',
+    marginBottom: theme.spacing.xl,
+  };
+
+  const headerActionsStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.xl,
   };
 
   const statsContainerStyle: React.CSSProperties = {
@@ -79,22 +95,29 @@ export const MyGardensPage: React.FC = () => {
   };
 
   const statCardStyle: React.CSSProperties = {
-    padding: theme.spacing.lg,
-    border: `1px solid ${theme.border.light}`,
-    borderRadius: theme.radius.lg,
-    background: '#FFFFFF',
+    padding: theme.spacing.xl,
+    border: `1px solid rgba(255, 255, 255, 0.6)`,
+    borderRadius: theme.radius.xl,
+    background: 'rgba(255, 255, 255, 0.7)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    boxShadow: '0 8px 32px rgba(212, 144, 154, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05)',
+    transition: 'all 0.3s ease',
+    textAlign: 'center',
   };
 
   const statValueStyle: React.CSSProperties = {
-    ...typography.styles.h3,
-    color: theme.text.primary,
-    marginBottom: theme.spacing.xs,
+    ...typography.styles.h2,
+    color: theme.colors.rose[600],
+    marginBottom: theme.spacing.sm,
+    fontWeight: 700,
   };
 
   const statLabelStyle: React.CSSProperties = {
     ...typography.styles.body,
     color: theme.text.secondary,
-    fontSize: '0.875rem',
+    fontSize: '0.9375rem',
+    fontWeight: 500,
   };
 
   const gardensGridStyle: React.CSSProperties = {
@@ -104,20 +127,26 @@ export const MyGardensPage: React.FC = () => {
   };
 
   const gardenCardStyle: React.CSSProperties = {
-    border: `1px solid ${theme.border.light}`,
-    borderRadius: theme.radius.lg,
+    border: `1px solid rgba(255, 255, 255, 0.8)`,
+    borderRadius: theme.radius.xl,
     overflow: 'hidden',
     cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    background: '#FFFFFF',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    background: 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
   };
 
   const gardenHeaderStyle: React.CSSProperties = {
-    height: '120px',
-    background: theme.colors.rose[100],
+    height: '140px',
+    background: 'linear-gradient(135deg, #FFE5EC 0%, #FFC9D9 50%, #FFB3C7 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    fontSize: '48px',
+    position: 'relative',
+    overflow: 'hidden',
   };
 
   const gardenContentStyle: React.CSSProperties = {
@@ -170,15 +199,18 @@ export const MyGardensPage: React.FC = () => {
       <main style={contentStyle}>
         {/* Page Header */}
         <div style={headerStyle}>
-          <h1 style={titleStyle}>My Gardens</h1>
+          <h1 style={titleStyle}>Your Memory Gardens</h1>
+          <p style={subtitleStyle}>Preserved moments, blooming forever</p>
           {canCreateMore() && (
-            <Button 
-              variant="primary" 
-              size="medium"
-              onClick={() => setIsCreateModalOpen(true)}
-            >
-              New Garden
-            </Button>
+            <div style={headerActionsStyle}>
+              <Button 
+                variant="primary" 
+                size="medium"
+                onClick={() => setIsCreateModalOpen(true)}
+              >
+                🌸 Plant a New Garden
+              </Button>
+            </div>
           )}
         </div>
 
@@ -227,15 +259,17 @@ export const MyGardensPage: React.FC = () => {
                 style={gardenCardStyle}
                 onClick={() => handleOpenGarden(garden)}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = theme.colors.rose[300];
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-8px) scale(1.02)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(212, 144, 154, 0.25), 0 8px 16px rgba(0, 0, 0, 0.1)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 1)';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = theme.border.light;
-                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.8)';
                 }}
               >
-                <div style={gardenHeaderStyle}></div>
+                <div style={gardenHeaderStyle}>🌸</div>
                 <div style={gardenContentStyle}>
                   <h3 style={gardenTitleStyle}>{garden.title}</h3>
                   <div style={gardenMetaStyle}>{formatDate(garden.createdAt)}</div>

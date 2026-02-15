@@ -31,9 +31,11 @@ export const Navbar: React.FC = () => {
     left: 0,
     right: 0,
     zIndex: 1000,
-    background: '#FFFFFF',
-    borderBottom: `1px solid ${theme.border.light}`,
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    background: 'rgba(255, 255, 255, 0.85)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    borderBottom: `1px solid rgba(232, 180, 184, 0.2)`,
+    boxShadow: '0 2px 12px rgba(212, 144, 154, 0.08)',
   };
 
   const containerStyle: React.CSSProperties = {
@@ -47,10 +49,17 @@ export const Navbar: React.FC = () => {
 
   const logoStyle: React.CSSProperties = {
     ...typography.styles.h4,
-    fontWeight: 600,
-    color: theme.colors.rose[700],
+    fontWeight: 700,
+    fontFamily: 'Georgia, serif',
+    background: 'linear-gradient(135deg, #D4909A 0%, #C48991 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
     cursor: 'pointer',
     textDecoration: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
   };
 
   const navLinksStyle: React.CSSProperties = {
@@ -79,12 +88,13 @@ export const Navbar: React.FC = () => {
 
   const tierBadgeStyle: React.CSSProperties = {
     padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.full,
     ...typography.styles.caption,
-    fontWeight: 600,
-    background: theme.colors.rose[100],
+    fontWeight: 700,
+    background: 'linear-gradient(135deg, #FFE5EC 0%, #FFC9D9 100%)',
     color: theme.colors.rose[700],
-    border: `1px solid ${theme.colors.rose[200]}`,
+    border: `1px solid rgba(255, 255, 255, 0.8)`,
+    boxShadow: '0 2px 8px rgba(212, 144, 154, 0.15)',
   };
 
   const userMenuButtonStyle: React.CSSProperties = {
@@ -148,6 +158,7 @@ export const Navbar: React.FC = () => {
         <div style={containerStyle}>
           {/* Logo */}
           <div style={logoStyle} onClick={() => navigate('/')}>
+            <span style={{ fontSize: '1.2em' }}>🌸</span>
             Horizons
           </div>
 
@@ -179,6 +190,7 @@ export const Navbar: React.FC = () => {
       <div style={containerStyle}>
         {/* Logo */}
         <div style={logoStyle} onClick={() => navigate('/')}>
+          <span style={{ fontSize: '1.2em' }}>🌸</span>
           Horizons
         </div>
 
