@@ -104,17 +104,17 @@ export const GardenPage: React.FC = () => {
     top: 0,
     left: 0,
     right: 0,
-    height: '64px',
+    height: '72px',
     padding: `0 ${theme.spacing.xl}`,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     zIndex: 100,
-    background: 'rgba(255, 255, 255, 0.95)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderBottom: '1px solid rgba(232, 180, 184, 0.2)',
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.04)',
+    background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.92) 100%)',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
+    borderBottom: '1px solid rgba(232, 180, 184, 0.25)',
+    boxShadow: '0 4px 16px rgba(212, 144, 154, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04)',
   };
 
   const headerLeftStyle: React.CSSProperties = {
@@ -125,15 +125,24 @@ export const GardenPage: React.FC = () => {
 
   const headerTitleStyle: React.CSSProperties = {
     ...typography.styles.h4,
-    color: theme.text.primary,
-    fontWeight: 600,
+    fontFamily: 'Georgia, serif',
+    background: 'linear-gradient(135deg, #D4909A 0%, #C48991 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    fontWeight: 700,
+    fontSize: '1.5rem',
   };
 
   const headerStatsStyle: React.CSSProperties = {
     display: 'flex',
-    gap: theme.spacing.lg,
+    gap: theme.spacing.xl,
     alignItems: 'center',
     marginLeft: theme.spacing.xl,
+    padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
+    background: 'rgba(255, 255, 255, 0.6)',
+    borderRadius: theme.radius.full,
+    border: '1px solid rgba(232, 180, 184, 0.2)',
   };
 
   const statItemStyle: React.CSSProperties = {
@@ -142,7 +151,8 @@ export const GardenPage: React.FC = () => {
     gap: theme.spacing.xs,
     ...typography.styles.body,
     color: theme.text.secondary,
-    fontSize: '14px',
+    fontSize: '13px',
+    fontWeight: 500,
   };
 
   const headerRightStyle: React.CSSProperties = {

@@ -380,10 +380,13 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               key={s}
               style={{
                 flex: 1,
-                height: '4px',
-                background: s <= step ? theme.colors.rose[500] : theme.colors.neutral.gray[200],
-                borderRadius: '2px',
-                transition: 'background 0.3s ease',
+                height: '5px',
+                background: s <= step 
+                  ? 'linear-gradient(90deg, #D4909A 0%, #E8A4A4 100%)' 
+                  : 'rgba(232, 180, 184, 0.15)',
+                borderRadius: '3px',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: s <= step ? '0 2px 4px rgba(212, 144, 154, 0.3)' : 'none',
               }}
             />
           ))}
@@ -392,7 +395,11 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           style={{
             ...typography.styles.caption,
             color: theme.text.secondary,
-            marginTop: theme.spacing.xs,
+            marginTop: theme.spacing.sm,
+            fontWeight: 600,
+            fontSize: '11px',
+            letterSpacing: '0.5px',
+            textTransform: 'uppercase',
           }}
         >
           Step {step} of 5

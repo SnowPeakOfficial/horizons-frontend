@@ -104,17 +104,42 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
 
   const gardenCardStyle = (isSelected: boolean, isLocked: boolean): React.CSSProperties => ({
     padding: theme.spacing.lg,
-    border: `2px solid ${isSelected ? theme.colors.rose[500] : 'rgba(232, 180, 184, 0.2)'}`,
+    border: `2px solid ${isSelected ? theme.colors.rose[500] : 'rgba(232, 180, 184, 0.3)'}`,
     borderRadius: theme.radius.xl,
     cursor: isLocked ? 'not-allowed' : 'pointer',
-    opacity: isLocked ? 0.5 : 1,
+    opacity: isLocked ? 0.6 : 1,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    backgroundColor: isSelected ? theme.colors.rose[50] : 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: isSelected ? theme.colors.rose[50] : 'rgba(255, 255, 255, 0.95)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
     position: 'relative',
     overflow: 'hidden',
+    boxShadow: isSelected ? '0 8px 24px rgba(212, 144, 154, 0.2)' : '0 2px 8px rgba(0, 0, 0, 0.06)',
   });
+
+  // Garden theme color mappings for visual previews
+  const gardenThemeColors: Record<string, { gradient: string; emoji: string }> = {
+    'test_garden': { 
+      gradient: 'linear-gradient(135deg, #5A8F67 0%, #7FB88D 100%)',
+      emoji: '🌳'
+    },
+    'quiet_garden': { 
+      gradient: 'linear-gradient(135deg, #A8B89F 0%, #D4C5B9 100%)',
+      emoji: '🍃'
+    },
+    'spring_meadow': { 
+      gradient: 'linear-gradient(135deg, #4A7C59 0%, #FFE66D 100%)',
+      emoji: '🌸'
+    },
+    'autumn_grove': { 
+      gradient: 'linear-gradient(135deg, #A67C52 0%, #C1666B 100%)',
+      emoji: '🍂'
+    },
+    'winter_wonderland': { 
+      gradient: 'linear-gradient(135deg, #E8F4F8 0%, #B8C5D6 100%)',
+      emoji: '❄️'
+    },
+  };
 
   const formStyle: React.CSSProperties = {
     display: 'flex',
@@ -158,6 +183,8 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
             <div style={gardenGridStyle}>
               {availableDefinitions.map((def) => {
                 const isSelected = selectedDefinitionKey === def.key;
+                const themeColors = gardenThemeColors[def.key] || { gradient: 'linear-gradient(135deg, #5A8F67 0%, #7FB88D 100%)', emoji: '🌸' };
+                
                 return (
                   <div
                     key={def.id}
@@ -165,26 +192,68 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
                     onClick={() => setSelectedDefinitionKey(def.key)}
                     onMouseEnter={(e) => {
                       if (!isSelected) {
-                        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px) scale(1.02)';
-                        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)';
+                        (e.currentTarget as HTMLElement).style.transform = 'translateY(-6px) scale(1.02)';
+                        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(0, 0, 0, 0.15)';
                       }
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)';
-                      (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                      (e.currentTarget as HTMLElement).style.boxShadow = isSelected ? '0 8px 24px rgba(212, 144, 154, 0.2)' : '0 2px 8px rgba(0, 0, 0, 0.06)';
                     }}
                   >
-                    <div style={{ ...typography.styles.body, fontWeight: 600, marginBottom: theme.spacing.xs }}>
+                    {/* Visual Garden Preview Circle */}
+                    <div
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        margin: `0 auto ${theme.spacing.md}`,
+                        borderRadius: '50%',
+                        background: themeColors.gradient,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '36px',
+                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+                        border: '3px solid rgba(255, 255, 255, 0.8)',
+                      }}
+                    >
+                      {themeColors.emoji}
+                    </div>
+
+                    {/* Garden Name */}
+                    <div style={{ ...typography.styles.body, fontWeight: 600, marginBottom: theme.spacing.xs, textAlign: 'center' }}>
                       {def.displayName}
                     </div>
+
+                    {/* Description */}
                     {def.description && (
-                      <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>
+                      <div style={{ ...typography.styles.caption, color: theme.text.secondary, textAlign: 'center', lineHeight: '1.4' }}>
                         {def.description}
                       </div>
                     )}
+
+                    {/* Tier Badge */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        padding: '4px 8px',
+                        borderRadius: theme.radius.full,
+                        background: def.tierAccess === 'PREMIUM' ? 'linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%)' : 'linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%)',
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        color: def.tierAccess === 'PREMIUM' ? '#6A1B9A' : '#2E7D32',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                      }}
+                    >
+                      {def.tierAccess}
+                    </div>
+
                     {def.isLimitedEdition && (
-                      <div style={{ ...typography.styles.caption, color: theme.colors.rose[600], marginTop: theme.spacing.xs, fontWeight: 600 }}>
-                        Limited Edition
+                      <div style={{ ...typography.styles.caption, color: theme.colors.rose[600], marginTop: theme.spacing.sm, fontWeight: 600, textAlign: 'center' }}>
+                        ✨ Limited Edition
                       </div>
                     )}
                   </div>
