@@ -9,6 +9,7 @@ import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import api from '../../services/api';
 import type { GardenDefinition } from '../../types/api.types';
+import Close from '@mui/icons-material/Close';
 
 interface CreateGardenModalProps {
   isOpen: boolean;
@@ -157,10 +158,26 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
   const availableDefinitions = getAvailableDefinitions();
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} maxWidth="600px">
-      <h2 style={titleStyle}>Create New Garden</h2>
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="600px" showCloseButton={false}>
+      <div style={containerStyle}>
+        {/* Custom Close Button - Top Right */}
+        <button
+          onClick={onClose}
+          style={closeButtonStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = '1';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = '0.6';
+          }}
+          aria-label="Close"
+        >
+          <Close sx={{ fontSize: 20 }} />
+        </button>
+        
+        <h2 style={titleStyle}>Create New Garden</h2>
 
-      <form onSubmit={handleSubmit} style={formStyle}>
+        <form onSubmit={handleSubmit} style={formStyle}>
         <Input
           label="Garden Name"
           type="text"
@@ -300,6 +317,35 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
           </Button>
         </div>
       </form>
+      </div>
     </Modal>
   );
+};
+
+// Styles
+const containerStyle: React.CSSProperties = {
+  position: 'relative',
+  background: '#FFFFFF',
+  borderRadius: theme.radius.xl,
+  boxShadow: theme.shadow.xl,
+  padding: theme.spacing.xl,
+};
+
+const closeButtonStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '12px',
+  right: '12px',
+  width: '36px',
+  height: '36px',
+  borderRadius: '50%',
+  background: 'rgba(255, 201, 217, 0.3)',
+  border: 'none',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'opacity 0.2s ease',
+  boxShadow: 'none',
+  zIndex: 10,
+  opacity: 0.6,
 };

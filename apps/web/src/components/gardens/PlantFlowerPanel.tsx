@@ -82,6 +82,7 @@ interface PlantFlowerPanelProps {
   userTier: string;
   onPlantSuccess?: () => void;
   onPlacementModeChange?: (active: boolean, definition: FlowerDefinition | null) => void;
+  onClearPosition?: () => void;
   placedPosition: { x: number; y: number; z: number } | null;
 }
 
@@ -92,6 +93,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   userTier,
   onPlantSuccess,
   onPlacementModeChange,
+  onClearPosition,
   placedPosition,
 }) => {
   const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
@@ -990,7 +992,15 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
         {step === 3 && (
           <>
-            <Button variant="ghost" onClick={() => setStep(2)} style={{ flex: 1 }}>
+            <Button variant="ghost" onClick={() => {
+              setStep(2);
+              if (onClearPosition) {
+                onClearPosition();
+              }
+              if (onPlacementModeChange && selectedDefinition) {
+                onPlacementModeChange(true, selectedDefinition);
+              }
+            }} style={{ flex: 1 }}>
               Back
             </Button>
             <Button variant="primary" onClick={() => setStep(4)} style={{ flex: 1 }}>

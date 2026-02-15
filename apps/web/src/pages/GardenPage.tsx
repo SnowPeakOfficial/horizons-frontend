@@ -289,6 +289,7 @@ export const GardenPage: React.FC = () => {
           // Don't clear placedPosition here - it needs to persist for step 3
           // Position is only cleared when the panel fully closes
         }}
+        onClearPosition={() => setPlacedPosition(null)}
         placedPosition={placedPosition}
       />
 

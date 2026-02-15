@@ -662,9 +662,13 @@ const memberItemStyle: React.CSSProperties = {
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: theme.spacing.md,
-  background: '#F9FAFB',
+  background: 'rgba(255, 255, 255, 0.8)',
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
   borderRadius: theme.radius.md,
-  border: `1px solid ${theme.border.light}`,
+  border: '1px solid rgba(232, 180, 184, 0.3)',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+  transition: 'all 0.2s ease',
 };
 
 const memberInfoStyle: React.CSSProperties = {
