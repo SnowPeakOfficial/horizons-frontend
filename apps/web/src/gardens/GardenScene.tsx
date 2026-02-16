@@ -123,7 +123,7 @@ export function GardenScene({ config, children }: GardenSceneProps) {
       {usesTerrain ? (
         <>
           {/* New terrain system with rolling hills - uses TERRAIN_SIZE to fill gap */}
-          <BaseGroundLayer size={TERRAIN_SIZE} color={config.colors.ground} />
+          <BaseGroundLayer size={68} />
           <TerrainGround
             size={TERRAIN_SIZE}
             resolution={150}
@@ -170,6 +170,12 @@ export function GardenScene({ config, children }: GardenSceneProps) {
           
           {/* Cabana in back-right corner */}
           <Cabana />
+          
+          {/* Picnic Table on top of Cabana */}
+          <PicnicTable />
+          
+          {/* Succulent Pot on top of Cabana */}
+          <SucculentPot1 />
           
           {/* Fiddle-leaf Plant beside Cabana */}
           <FiddleLeafPlant />
@@ -340,7 +346,7 @@ function Farmhouse() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[-22, 0.5, -24]} 
+      position={[-23.1, 0.5, -24]} 
       rotation={[0, 0, 0]}
       scale={13.5}
       castShadow
@@ -384,6 +390,129 @@ function Cabana() {
       position={[20.8, 0.6, -20.8]} 
       rotation={[0, Math.PI, 0]}
       scale={0.02}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * PicnicTable - Table placed on top of the Cabana
+ */
+function PicnicTable() {
+  const { scene } = useGLTF('/models/environment/Picnic Table.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for picnic table - darker for better contrast
+    const LIGHTENING_VALUE = 1.5;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[20.8, 0.8, -20.8]} 
+      rotation={[0, Math.PI / 2, 0]}
+      scale={4.5}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * SucculentPot1 - First succulent pot on top of Cabana
+ */
+function SucculentPot1() {
+  const { scene } = useGLTF('/models/environment/Succulent Pot.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for succulent pot
+    const LIGHTENING_VALUE = 2.5;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[13, 0.8, -13]} 
+      rotation={[0, 0, 0]}
+      scale={1}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * SucculentPot2 - Second succulent pot on top of Cabana
+ */
+function SucculentPot2() {
+  const { scene } = useGLTF('/models/environment/Succulent Pot.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for succulent pot
+    const LIGHTENING_VALUE = 2.5;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[22.1, 0.8, -20.8]} 
+      rotation={[0, 0.5, 0]}
+      scale={0.8}
       castShadow
       receiveShadow
     />
@@ -463,7 +592,7 @@ function CoffeePlant() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[26, 0.5, -18]} 
+      position={[29, 0.5, -9]} 
       rotation={[0, 0, 0]}
       scale={0.7}
       castShadow
@@ -503,7 +632,7 @@ function FlowerBush1() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[-10, 0.5, -16]} 
+      position={[-15, 0.5, -28.2]} 
       rotation={[0, 0.5, 0]}
       scale={2}
       castShadow
@@ -543,7 +672,7 @@ function FlowerBush2() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[0, 0.5, -20]} 
+      position={[-3, 0.5, -28.2]} 
       rotation={[0, 1.2, 0]}
       scale={1.8}
       castShadow
@@ -583,7 +712,7 @@ function FlowerBush3() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[5, 0.5, -14]} 
+      position={[3, 0.5, -28]} 
       rotation={[0, 2.1, 0]}
       scale={2.2}
       castShadow
@@ -623,7 +752,7 @@ function FlowerBush4() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[-5, 0.5, -25]} 
+      position={[-9, 0.5, -28]} 
       rotation={[0, 0.8, 0]}
       scale={1.9}
       castShadow
@@ -637,6 +766,8 @@ useGLTF.preload('/models/environment/Fountain.glb');
 useGLTF.preload('/models/environment/Fountain-new.glb');
 useGLTF.preload('/models/environment/House.glb');
 useGLTF.preload('/models/environment/Cabana.glb');
+useGLTF.preload('/models/environment/Picnic Table.glb');
+useGLTF.preload('/models/environment/Succulent Pot.glb');
 useGLTF.preload('/models/environment/Fiddle-leaf Plant.glb');
 useGLTF.preload('/models/environment/Coffee plant.glb');
 useGLTF.preload('/models/environment/Bush with Flowers.glb');

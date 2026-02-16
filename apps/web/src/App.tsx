@@ -617,7 +617,7 @@ function App() {
               if (placingFlowerType) {
                 e.stopPropagation();
                 const { x, z } = e.point;
-                addFlower(placingFlowerType, { x, y: 0, z });
+                addFlower(placingFlowerType, { x, y: 1.5, z });
                 setPlacingFlowerType(null);
               }
             }}

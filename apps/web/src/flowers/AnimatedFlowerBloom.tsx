@@ -74,8 +74,8 @@ export function AnimatedFlowerBloom({
         scale={bloomScale.to(s => s * scale)}
         visible={bloomOpacity.to(o => o > 0.01)}
       >
-        {/* Raise model above ground */}
-        <primitive object={clonedScene} position={[0, 1, 0]} />
+        {/* Raise model above ground - increased to sit on top of terrain */}
+        <primitive object={clonedScene} position={[0, 2, 0]} />
       </animated.group>
 
       {/* Particle burst effect when blooming */}

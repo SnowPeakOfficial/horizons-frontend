@@ -88,32 +88,32 @@ export function EnvironmentProps({
       const actualSpacing = gardenSize / wallsPerSide;
       
       // Fixed inset based on wall geometry - works across all garden sizes
-      // Wall width is 5.0 units, so inset should be half that to sit flush at edge
-      // Negative value pushes walls outward
-      const wallWidth = 4; // Must match the scale value below
-      const inset = -(wallWidth / 2.5); // -2.5 for flush fit
+      // Negative inset pushes walls outward to sit at outer perimeter
+      const wallWidth = 11.5; // Extended width for better corner coverage
+      const inset = -2.5; // Negative pushes walls to garden terrain edge
       const gardenRadius = (gardenSize / 2) - inset;
       
+      // All sides skip corners equally for symmetric square perimeter
       // North side (positive Z)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         const x = -(gardenSize / 2) + (i + 0.5) * actualSpacing;
         pos.push([x, 0, gardenRadius]);
       }
       
       // South side (negative Z)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         const x = -(gardenSize / 2) + (i + 0.5) * actualSpacing;
         pos.push([x, 0, -gardenRadius]);
       }
       
       // East side (positive X)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         const z = -(gardenSize / 2) + (i + 0.5) * actualSpacing;
         pos.push([gardenRadius, 0, z]);
       }
       
       // West side (negative X)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         const z = -(gardenSize / 2) + (i + 0.5) * actualSpacing;
         pos.push([-gardenRadius, 0, z]);
       }
@@ -144,23 +144,24 @@ export function EnvironmentProps({
       
       const rots: number[] = [];
       
+      // All sides skip corners equally - symmetric rotations
       // North side - facing south (inward)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         rots.push(Math.PI); // 180 degrees
       }
       
       // South side - facing north (inward)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         rots.push(0); // 0 degrees
       }
       
       // East side - facing west (inward)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         rots.push(-Math.PI / 2); // -90 degrees
       }
       
       // West side - facing east (inward)
-      for (let i = 0; i < wallsPerSide; i++) {
+      for (let i = 1; i < wallsPerSide - 1; i++) {
         rots.push(Math.PI / 2); // 90 degrees
       }
       
@@ -198,7 +199,8 @@ export function EnvironmentProps({
     if (type === 'fence') {
       // Non-uniform scaling: [width, height, depth]
       // Height is 2x the base scale for taller walls
-      return positions.map(() => [5.0, 11.0, 5.0] as [number, number, number]);
+      // Extended width to 11.5 for better corner coverage
+      return positions.map(() => [11.5, 11.0, 11.5] as [number, number, number]);
     } else if (type === 'springPathways') {
       // Large scale for spring pathways (8-10x larger)
       return positions.map(() => 9);
@@ -375,143 +377,128 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       });
     }
     
-    // GRASS PATCHES: VERY ABUNDANT for lush look with extra coverage along walls (120+ patches)
+    // GRASS PATCHES: VERY ABUNDANT for lush look with extra coverage along walls (filtered to stay within bounds)
     const grassPositions = [
-      // VERY DENSE around left big trees
+      // VERY DENSE around left big trees (removed ones beyond wallZ + 3)
       [leftEdgeX - 2, wallZ + 2], [leftEdgeX + 5, wallZ + 1],
       [leftEdgeX + 1, wallZ - 4], [leftEdgeX + 4, wallZ - 3],
-      [leftEdgeX - 1, wallZ + 4], [leftEdgeX + 6, wallZ - 2],
-      [leftEdgeX + 2, wallZ - 5], [leftEdgeX - 3, wallZ],
+      [leftEdgeX + 6, wallZ - 2],
+      [leftEdgeX - 3, wallZ],
       [leftEdgeX + 3, wallZ + 3], [leftEdgeX - 2, wallZ - 2],
       [leftEdgeX + 7, wallZ], [leftEdgeX + 1, wallZ + 2],
       [leftEdgeX - 4, wallZ + 1], [leftEdgeX + 8, wallZ - 1],
-      [leftEdgeX, wallZ + 5], [leftEdgeX + 4, wallZ + 4],
-      [leftEdgeX - 1, wallZ - 5], [leftEdgeX + 5, wallZ - 4],
+      [leftEdgeX + 5, wallZ - 4],
       
-      // VERY DENSE around right big trees
+      // VERY DENSE around right big trees (removed ones beyond wallZ + 3)
       [rightEdgeX + 2, wallZ + 2], [rightEdgeX - 5, wallZ + 1],
       [rightEdgeX - 1, wallZ - 4], [rightEdgeX - 4, wallZ - 3],
-      [rightEdgeX + 1, wallZ + 4], [rightEdgeX - 6, wallZ - 2],
-      [rightEdgeX - 2, wallZ - 5], [rightEdgeX + 3, wallZ],
+      [rightEdgeX - 6, wallZ - 2],
+      [rightEdgeX + 3, wallZ],
       [rightEdgeX - 3, wallZ + 3], [rightEdgeX + 2, wallZ - 2],
       [rightEdgeX - 7, wallZ], [rightEdgeX - 1, wallZ + 2],
       [rightEdgeX + 4, wallZ + 1], [rightEdgeX - 8, wallZ - 1],
-      [rightEdgeX, wallZ + 5], [rightEdgeX - 4, wallZ + 4],
-      [rightEdgeX + 1, wallZ - 5], [rightEdgeX - 5, wallZ - 4],
+      [rightEdgeX - 5, wallZ - 4],
       
-      // DENSE around regular trees (left and right)
-      [leftEdgeX + 10, wallZ - 7], [leftEdgeX + 11, wallZ - 5],
-      [leftEdgeX + 9, wallZ - 8], [leftEdgeX + 12, wallZ - 6],
-      [leftEdgeX + 14, wallZ - 7.5], [leftEdgeX + 8, wallZ - 9.5],
-      [rightEdgeX - 10, wallZ - 7], [rightEdgeX - 11, wallZ - 5],
-      [rightEdgeX - 9, wallZ - 8], [rightEdgeX - 12, wallZ - 6],
-      [rightEdgeX - 14, wallZ - 7.5], [rightEdgeX - 8, wallZ - 9.5],
-      
-      // Around swing area (but not too close)
-      [-2, wallZ - 9], [2, wallZ - 9], [-3, wallZ - 7], [3, wallZ - 7],
-      [-1.5, wallZ - 10], [1.5, wallZ - 10],
-      
-      // CONTINUOUS coverage along wall edges - left side (more dense, no gaps)
-      [-28, wallZ + 3], [-27, wallZ + 1], [-26, wallZ + 2], [-25, wallZ + 0.5],
-      [-24, wallZ + 4], [-23, wallZ + 1.5], [-22, wallZ], [-21, wallZ + 3],
+      // CONTINUOUS coverage along wall edges - left side (removed ones beyond wallZ + 3)
+      [-27, wallZ + 1], [-26, wallZ + 2], [-25, wallZ + 0.5],
+      [-23, wallZ + 1.5], [-22, wallZ], [-21, wallZ + 3],
       [-20, wallZ + 1], [-19, wallZ + 2], [-18, wallZ - 1], [-17, wallZ + 1],
       [-16, wallZ + 2.5], [-15, wallZ + 0.5], [-14, wallZ - 0.5], [-13, wallZ + 3],
       [-12, wallZ - 2], [-11, wallZ + 1], [-10, wallZ + 3], [-9, wallZ + 0.5],
       [-8, wallZ + 1], [-7, wallZ + 2], [-6, wallZ - 1.5], [-5, wallZ - 1],
-      [-4, wallZ + 1.5], [-3, wallZ + 4],
+      [-4, wallZ + 1.5],
       
-      // CONTINUOUS coverage along wall edges - right side (more dense, no gaps)
-      [28, wallZ + 3], [27, wallZ + 1], [26, wallZ + 2], [25, wallZ + 0.5],
-      [24, wallZ + 4], [23, wallZ + 1.5], [22, wallZ], [21, wallZ + 3],
+      // CONTINUOUS coverage along wall edges - right side (removed ones beyond wallZ + 3)
+      [27, wallZ + 1], [26, wallZ + 2], [25, wallZ + 0.5],
+      [23, wallZ + 1.5], [22, wallZ], [21, wallZ + 3],
       [20, wallZ + 1], [19, wallZ + 2], [18, wallZ - 1], [17, wallZ + 1],
       [16, wallZ + 2.5], [15, wallZ + 0.5], [14, wallZ - 0.5], [13, wallZ + 3],
       [12, wallZ - 2], [11, wallZ + 1], [10, wallZ + 3], [9, wallZ + 0.5],
       [8, wallZ + 1], [7, wallZ + 2], [6, wallZ - 1.5], [5, wallZ - 1],
-      [4, wallZ + 1.5], [3, wallZ + 4],
+      [4, wallZ + 1.5],
       
       // DENSE coverage in center area (away from lettuce)
-      [0, wallZ + 2], [0, wallZ - 3], [0, wallZ + 4], [0, wallZ - 5],
+      [0, wallZ + 2], [0, wallZ - 3],
       [-2, wallZ + 3], [2, wallZ + 3], [-4, wallZ - 2], [4, wallZ - 2],
       
-      // More scattered for organic integration
+      // More scattered for organic integration (removed ones beyond wallZ + 3)
       [-25, wallZ - 4], [25, wallZ - 4], [-23, wallZ - 2], [23, wallZ - 2],
       [-19, wallZ - 3], [19, wallZ - 3], [-10, wallZ - 4], [10, wallZ - 4],
-      [-22, wallZ + 5], [22, wallZ + 5], [-24, wallZ - 2], [24, wallZ - 2],
+      [-24, wallZ - 2], [24, wallZ - 2],
       [-18, wallZ + 3], [18, wallZ + 3], [-16, wallZ - 3], [16, wallZ - 3],
-      [-14, wallZ + 4], [14, wallZ + 4], [-20, wallZ - 4], [20, wallZ - 4],
+      [-20, wallZ - 4], [20, wallZ - 4],
     ];
     
     grassPositions.forEach(([x, z]) => {
       result.push({
         type: 'grass',
-        position: [x, 0, z],
+        position: [x, 0.5, z],
         rotation: 0.8, // Uniform rotation for consistent look
-        scale: 1.0
+        scale: 0.75
       });
     });
     
-    // BUSH FLOWERS & TALL BUSHES: More random placement, moved outward from swing
+    // BUSH FLOWERS & TALL BUSHES: Spaced out to avoid overlapping (NORTH SIDE - ORIGINAL)
     const bushPositions = [
-      // Single tall bush behind lettuce crates - pushed back toward wall
-      { pos: [0, wallZ + 4], type: 'tallBush' as const },
-      
-      // Left outer edge - random organic placement
-      { pos: [leftEdgeX - 4, wallZ + 5], type: 'flowerBush' as const },
-      { pos: [leftEdgeX + 1, wallZ + 6], type: 'tallBush' as const },
-      { pos: [leftEdgeX - 5, wallZ - 6], type: 'flowerBush' as const },
-      { pos: [leftEdgeX + 9, wallZ + 3.5], type: 'tallBush' as const },
+      // Left outer edge - spaced out from flower bushes
+      { pos: [leftEdgeX - 4, wallZ - 1], type: 'flowerBush' as const },
+      { pos: [leftEdgeX + 1, wallZ - 6], type: 'tallBush' as const }, // Moved further down to avoid overlap
+      { pos: [leftEdgeX + 9, wallZ - 2], type: 'tallBush' as const }, // Moved down for spacing
       { pos: [leftEdgeX + 12, wallZ - 0.5], type: 'flowerBush' as const },
-      { pos: [leftEdgeX - 3, wallZ + 2], type: 'tallBush' as const },
+      { pos: [leftEdgeX - 3, wallZ - 7], type: 'tallBush' as const }, // Moved further down to avoid overlap
       { pos: [leftEdgeX + 2, wallZ - 3], type: 'flowerBush' as const },
       
-      // Right outer edge - random organic placement
-      { pos: [rightEdgeX + 4, wallZ + 1.5], type: 'flowerBush' as const },
-      { pos: [rightEdgeX - 1, wallZ + 6], type: 'tallBush' as const },
-      { pos: [rightEdgeX + 5, wallZ - 6], type: 'flowerBush' as const },
-      { pos: [rightEdgeX - 9, wallZ + 3.5], type: 'tallBush' as const },
+      // Right outer edge - spaced out from flower bushes
+      { pos: [rightEdgeX + 2, wallZ + 1.5], type: 'flowerBush' as const },
+      { pos: [rightEdgeX - 1, wallZ - 4], type: 'tallBush' as const }, // Moved down for spacing
+      { pos: [rightEdgeX - 9, wallZ - 2], type: 'tallBush' as const }, // Moved down for spacing
       { pos: [rightEdgeX - 12, wallZ - 1.5], type: 'flowerBush' as const },
-      { pos: [rightEdgeX + 3, wallZ + 2.5], type: 'tallBush' as const },
+      { pos: [rightEdgeX + 3, wallZ - 1], type: 'tallBush' as const }, // Moved down significantly
       { pos: [rightEdgeX - 2, wallZ - 2.5], type: 'flowerBush' as const },
       
-      // Far left and right - more spread out
-      { pos: [-22, wallZ + 4], type: 'tallBush' as const },
+      // Far left and right - spaced out, removed ones near cabana area
+      { pos: [-22, wallZ - 1], type: 'tallBush' as const }, // Moved down for spacing
       { pos: [-24, wallZ - 1], type: 'flowerBush' as const },
-      { pos: [-19, wallZ + 1.5], type: 'tallBush' as const },
-      { pos: [22, wallZ + 4], type: 'tallBush' as const },
+      { pos: [-19, wallZ - 2], type: 'tallBush' as const }, // Moved down for spacing
       { pos: [24, wallZ - 1], type: 'flowerBush' as const },
-      { pos: [19, wallZ + 1.5], type: 'tallBush' as const },
-      { pos: [25, wallZ - 5], type: 'flowerBush' as const },
-      { pos: [-25, wallZ - 5], type: 'flowerBush' as const },
       
-      // Random scattered - avoiding swing area (wallZ - 8)
-      { pos: [-16, wallZ + 3.5], type: 'tallBush' as const },
+      // Random scattered - avoiding swing area, better spacing
+      { pos: [-16, wallZ], type: 'tallBush' as const }, // Moved down for spacing
       { pos: [-13, wallZ - 4.5], type: 'flowerBush' as const },
-      { pos: [16, wallZ + 3.5], type: 'tallBush' as const },
+      { pos: [16, wallZ], type: 'tallBush' as const }, // Moved down for spacing
       { pos: [13, wallZ - 4.5], type: 'flowerBush' as const },
       { pos: [-17, wallZ - 2], type: 'flowerBush' as const },
       { pos: [17, wallZ - 2], type: 'flowerBush' as const },
-      
-      // Around LEFT regular tree (outer side)
-      { pos: [leftEdgeX + 5, wallZ - 8], type: 'tallBush' as const },
-      { pos: [leftEdgeX + 6, wallZ - 9.5], type: 'tallBush' as const },
-      { pos: [leftEdgeX + 7, wallZ - 10.5], type: 'tallBush' as const },
-      { pos: [leftEdgeX + 5, wallZ - 10], type: 'tallBush' as const },
-      { pos: [leftEdgeX + 6, wallZ - 6.5], type: 'tallBush' as const },
-      
-      // Around RIGHT regular tree (outer side)
-      { pos: [rightEdgeX - 5, wallZ - 8], type: 'tallBush' as const },
-      { pos: [rightEdgeX - 6, wallZ - 9.5], type: 'tallBush' as const },
-      { pos: [rightEdgeX - 7, wallZ - 10.5], type: 'tallBush' as const },
-      { pos: [rightEdgeX - 5, wallZ - 10], type: 'tallBush' as const },
-      { pos: [rightEdgeX - 6, wallZ - 6.5], type: 'tallBush' as const },
     ];
     
     bushPositions.forEach(({ pos: [x, z], type }) => {
       result.push({
         type,
-        position: [x, 0, z],
+        position: [x, type === 'tallBush' ? 2 : 0, z],
         rotation: 0,
-        scale: 2.0
+        scale: type === 'tallBush' ? 1.0 : 2.0
+      });
+    });
+    
+    // SOUTH SIDE TALL BUSHES: Grouped closer together, shifted toward house and flower bushes
+    const southBushPositions = [
+      { pos: [-15, -24], type: 'tallBush' as const },
+      { pos: [-13, -25], type: 'tallBush' as const },
+      { pos: [-11, -24], type: 'tallBush' as const },
+      { pos: [-9, -25.5], type: 'tallBush' as const },
+      { pos: [-7, -24.5], type: 'tallBush' as const },
+      { pos: [-5, -25], type: 'tallBush' as const },
+      { pos: [-3, -24], type: 'tallBush' as const },
+      { pos: [-1, -25], type: 'tallBush' as const },
+      { pos: [1, -24.5], type: 'tallBush' as const },
+    ];
+    
+    southBushPositions.forEach(({ pos: [x, z], type }) => {
+      result.push({
+        type,
+        position: [x, 2, z],
+        rotation: 0,
+        scale: 1.0
       });
     });
     
@@ -528,7 +515,7 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       flowerBush: 5,     // Bush with flowers
       lettuce: 5,        // Crate lettuce
       tallBush: 2,       // Tall bushes
-      grass: 1.5,       // Grass patches - just slightly darker than terrain (#5A8F67)
+      grass: 1.7,       // Grass patches - moderate brightness
     };
     
     const processModel = (name: string, scene: THREE.Group) => {
