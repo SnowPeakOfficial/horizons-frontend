@@ -116,7 +116,7 @@ export function TerrainGround({
     return new THREE.ShaderMaterial({
       uniforms: {
         grassTexture: { value: textures.grass },
-        grassStrokeTexture: { value: textures.grassStrokes }, // NEW!
+        grassStrokeTexture: { value: textures.grassStrokes },
         dirtTexture: { value: textures.dirt },
         lightDirection: { value: new THREE.Vector3(0.5, 1, 0.5).normalize() },
         ambientColor: { value: new THREE.Color('#F5F0E8') },
@@ -135,7 +135,7 @@ export function TerrainGround({
           vBlend = blendWeight;
           vNormal = normalize(normalMatrix * normal);
           vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-          vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz; // World position!
+          vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
@@ -154,6 +154,7 @@ export function TerrainGround({
         varying vec3 vWorldPos;
         
         void main() {
+          // Regular terrain rendering
           // Sample base textures (UV space)
           vec4 grassColor = texture2D(grassTexture, vUv);
           vec4 dirtColor = texture2D(dirtTexture, vUv);
@@ -189,7 +190,7 @@ export function TerrainGround({
           gl_FragColor = vec4(finalColor, 1.0);
         }
       `,
-      side: THREE.FrontSide,
+      side: THREE.DoubleSide,
     });
   }, [textures]);
   
@@ -228,20 +229,31 @@ export function TerrainGround({
  * Base ground layer - PLA-style warm soil
  */
 export function BaseGroundLayer({
-  size = 60,
-  color = '#8B6F47'
+  size = 70
 }: {
   size?: number;
-  color?: string;
 }) {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
-      <planeGeometry args={[size, size]} />
-      <meshStandardMaterial 
-        color={color}
-        roughness={0.95}
-        metalness={0.0}
-      />
-    </mesh>
+    <>
+      {/* Top surface plane */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
+        <planeGeometry args={[size, size]} />
+        <meshStandardMaterial 
+          color="#EDD9BF"
+          roughness={0.95}
+          metalness={0.0}
+        />
+      </mesh>
+      
+      {/* Thick ground base - solid box to hide GLB models from below */}
+      <mesh position={[0, -0.25, 0]} receiveShadow castShadow>
+        <boxGeometry args={[size, 0.5, size]} />
+        <meshStandardMaterial 
+          color="#EDD9BF"
+          roughness={0.95}
+          metalness={0.0}
+        />
+      </mesh>
+    </>
   );
 }

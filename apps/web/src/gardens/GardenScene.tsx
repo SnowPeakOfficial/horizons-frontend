@@ -180,7 +180,7 @@ export function GardenScene({ config, flowers = [], children, isPlacementMode = 
       {usesTerrain ? (
         <>
           {/* New terrain system with rolling hills - uses TERRAIN_SIZE to fill gap */}
-          <BaseGroundLayer size={TERRAIN_SIZE} color={config.colors.ground} />
+          <BaseGroundLayer size={68} />
           <TerrainGround
             size={TERRAIN_SIZE}
             resolution={150}
@@ -224,11 +224,29 @@ export function GardenScene({ config, flowers = [], children, isPlacementMode = 
           {/* Central fountain */}
           <NewFountain />
           
-          {/* Farmhouse in corner */}
+          {/* Farmhouse in back-left corner */}
           <Farmhouse />
           
-          {/* Rock path from house to fountain */}
-          <RockPathArc />
+          {/* Cabana in back-right corner */}
+          <Cabana />
+          
+          {/* Picnic Table on top of Cabana */}
+          <PicnicTable />
+          
+          {/* Succulent Pot on top of Cabana */}
+          <SucculentPot1 />
+          
+          {/* Fiddle-leaf Plant beside Cabana */}
+          <FiddleLeafPlant />
+          
+          {/* Coffee Plant on other side of Cabana */}
+          <CoffeePlant />
+          
+          {/* Bushes with Flowers scattered between farmhouse and cabana */}
+          <FlowerBush1 />
+          <FlowerBush2 />
+          <FlowerBush3 />
+          <FlowerBush4 />
           
           {/* Animated environment elements */}
           <Butterflies />
@@ -417,7 +435,7 @@ function Farmhouse() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[-22, 0.5, -22]} 
+      position={[-23.1, 0.5, -24]} 
       rotation={[0, 0, 0]}
       scale={13.5}
       castShadow
@@ -427,89 +445,408 @@ function Farmhouse() {
 }
 
 /**
- * Rock Path Arc - Curved walking path from house to fountain area
+ * Cabana - Relaxation structure in back-right corner of test garden
  */
-function RockPathArc() {
-  const { scene } = useGLTF('/models/environment/Rock Path Round Small.glb');
+function Cabana() {
+  const { scene } = useGLTF('/models/environment/Cabana.glb');
   
-  // Generate arc path positions
-  const pathSegments = useMemo(() => {
-    const segments = [];
-    const numSegments = 12; // Fewer segments for more spacing between pieces
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
     
-    // Arc parameters - creates a curve from one side of house to the other
-    // House is at [-22, 0.5, -22]
-    // Fountain is at [0, 0.5, 0]
-    // Path arcs away from fountain, closer to it, and reaches perimeter
+    // Lightening value for cabana - make it brighter
+    const LIGHTENING_VALUE = 5;
     
-    const centerX = -28.5; // Centered on house
-    const centerZ = -27.7; // Centered on house
-    const radius = 26; // Arc extends to garden walls (from -22 to +30 = ~26 units)
-    const startAngle = Math.PI * 0.0; // Start angle (right side of house, toward garden)
-    const endAngle = Math.PI * 0.5; // End angle (front side of house, stays in garden)
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
     
-    for (let i = 0; i < numSegments; i++) {
-      const t = i / (numSegments - 1);
-      const angle = startAngle + (endAngle - startAngle) * t;
-      
-      const x = centerX + Math.cos(angle) * radius;
-      const z = centerZ + Math.sin(angle) * radius;
-      
-      // Calculate rotation to follow the curve
-      const tangentX = -Math.sin(angle);
-      const tangentZ = Math.cos(angle);
-      const baseRotation = Math.atan2(tangentX, tangentZ);
-      
-      // Add deterministic pseudo-random rotation on Y-axis only for variety
-      // Using index-based seed for consistent results across renders
-      const seedY = i * 12.9898 + 78.233;
-      
-      const randomY = Math.abs((Math.sin(seedY) * 43758.5453) % 1);
-      
-      const rotationY = baseRotation + (randomY - 0.5) * Math.PI; // ±90 degrees
-      
-      segments.push({
-        position: [x, 0.6, z] as [number, number, number],
-        rotation: [0, rotationY, 0] as [number, number, number],
-      });
-    }
-    
-    return segments;
-  }, []);
+    return clone;
+  }, [scene]);
   
   return (
-    <group>
-      {pathSegments.map((segment, index) => {
-        const clonedScene = scene.clone();
+    <primitive 
+      object={clonedScene} 
+      position={[20.8, 0.6, -20.8]} 
+      rotation={[0, Math.PI, 0]}
+      scale={0.02}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * PicnicTable - Table placed on top of the Cabana
+ */
+function PicnicTable() {
+  const { scene } = useGLTF('/models/environment/Picnic Table.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for picnic table - darker for better contrast
+    const LIGHTENING_VALUE = 1.5;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
         
-        // Lighten the path materials
-        const LIGHTENING_VALUE = 3;
-        clonedScene.traverse((child: any) => {
-          if (child.isMesh && child.material) {
-            const materials = Array.isArray(child.material) 
-              ? child.material 
-              : [child.material];
-            
-            materials.forEach((mat: any) => {
-              const material = mat.clone();
-              material.color.multiplyScalar(LIGHTENING_VALUE);
-              child.material = material;
-            });
-          }
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
         });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[20.8, 0.8, -20.8]} 
+      rotation={[0, Math.PI / 2, 0]}
+      scale={4.5}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * SucculentPot1 - First succulent pot on top of Cabana
+ */
+function SucculentPot1() {
+  const { scene } = useGLTF('/models/environment/Succulent Pot.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for succulent pot
+    const LIGHTENING_VALUE = 2.5;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
         
-        return (
-          <primitive
-            key={index}
-            object={clonedScene}
-            position={segment.position}
-            rotation={segment.rotation}
-            scale={2.5}
-            receiveShadow
-          />
-        );
-      })}
-    </group>
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[13, 0.8, -13]} 
+      rotation={[0, 0, 0]}
+      scale={1}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * SucculentPot2 - Second succulent pot on top of Cabana
+ */
+function SucculentPot2() {
+  const { scene } = useGLTF('/models/environment/Succulent Pot.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for succulent pot
+    const LIGHTENING_VALUE = 2.5;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[22.1, 0.8, -20.8]} 
+      rotation={[0, 0.5, 0]}
+      scale={0.8}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * Fiddle-leaf Plant - Decorative plant beside the Cabana
+ */
+function FiddleLeafPlant() {
+  const { scene } = useGLTF('/models/environment/Fiddle-leaf Plant.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for plant - make it brighter
+    const LIGHTENING_VALUE = 3.0;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[9, 0.5, -29]} 
+      rotation={[0, 0, 0]}
+      scale={0.7}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * Coffee Plant - Decorative plant on other side of Cabana
+ */
+function CoffeePlant() {
+  const { scene } = useGLTF('/models/environment/Coffee plant.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // Lightening value for coffee plant - make it brighter
+    const LIGHTENING_VALUE = 3.0;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[29, 0.5, -9]} 
+      rotation={[0, 0, 0]}
+      scale={0.7}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * FlowerBush1 - Decorative bush scattered between farmhouse and cabana
+ */
+function FlowerBush1() {
+  const { scene } = useGLTF('/models/environment/Bush with Flowers.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    const LIGHTENING_VALUE = 4;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[-15, 0.5, -28.2]} 
+      rotation={[0, 0.5, 0]}
+      scale={2}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * FlowerBush2 - Decorative bush scattered between farmhouse and cabana
+ */
+function FlowerBush2() {
+  const { scene } = useGLTF('/models/environment/Bush with Flowers.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    const LIGHTENING_VALUE = 4;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[-3, 0.5, -28.2]} 
+      rotation={[0, 1.2, 0]}
+      scale={1.8}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * FlowerBush3 - Decorative bush scattered between farmhouse and cabana
+ */
+function FlowerBush3() {
+  const { scene } = useGLTF('/models/environment/Bush with Flowers.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    const LIGHTENING_VALUE = 4;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[3, 0.5, -28]} 
+      rotation={[0, 2.1, 0]}
+      scale={2.2}
+      castShadow
+      receiveShadow
+    />
+  );
+}
+
+/**
+ * FlowerBush4 - Decorative bush scattered between farmhouse and cabana
+ */
+function FlowerBush4() {
+  const { scene } = useGLTF('/models/environment/Bush with Flowers.glb');
+  
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    const LIGHTENING_VALUE = 4;
+    
+    clone.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) 
+          ? child.material 
+          : [child.material];
+        
+        materials.forEach((mat: any) => {
+          const material = mat.clone();
+          material.color.multiplyScalar(LIGHTENING_VALUE);
+          child.material = material;
+        });
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+  
+  return (
+    <primitive 
+      object={clonedScene} 
+      position={[-9, 0.5, -28]} 
+      rotation={[0, 0.8, 0]}
+      scale={1.9}
+      castShadow
+      receiveShadow
+    />
   );
 }
 
@@ -517,4 +854,9 @@ function RockPathArc() {
 useGLTF.preload('/models/environment/Fountain.glb');
 useGLTF.preload('/models/environment/Fountain-new.glb');
 useGLTF.preload('/models/environment/House.glb');
-useGLTF.preload('/models/environment/Rock Path Round Small.glb');
+useGLTF.preload('/models/environment/Cabana.glb');
+useGLTF.preload('/models/environment/Picnic Table.glb');
+useGLTF.preload('/models/environment/Succulent Pot.glb');
+useGLTF.preload('/models/environment/Fiddle-leaf Plant.glb');
+useGLTF.preload('/models/environment/Coffee plant.glb');
+useGLTF.preload('/models/environment/Bush with Flowers.glb');
