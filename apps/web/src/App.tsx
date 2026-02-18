@@ -1,6 +1,7 @@
-import { Canvas, ThreeEvent } from '@react-three/fiber';
+import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { GardenScene } from './gardens/GardenScene';
 import { GARDEN_CONFIGS, GardenConfig } from './gardens/gardenConfigs';
 import { useFlowerGarden, FLOWER_DEFINITIONS } from './flowers';
@@ -24,10 +25,69 @@ function App() {
   const [placingFlowerType, setPlacingFlowerType] = useState<number | null>(null);
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
 
+  // Detect mobile screen size (hides overlays on small screens)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   return (
     <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0 }}>
-      {/* Garden Selector UI */}
-      <div style={{
+      {/* Garden Selector UI - compact on mobile, full on desktop */}
+      {isMobile ? (
+        <div style={{
+          position: 'absolute',
+          top: 12,
+          left: 12,
+          zIndex: 100,
+          display: 'flex',
+          gap: '6px',
+        }}>
+          {Object.values(GARDEN_CONFIGS).map((garden) => {
+            const isSelected = currentGarden.key === garden.key;
+            const gardenEmojis: Record<string, string> = {
+              quiet_garden: '🌿',
+              spring_meadow: '🌸',
+              autumn_grove: '🍂',
+              winter_wonderland: '❄️'
+            };
+            const gardenColors: Record<string, string> = {
+              quiet_garden: '#A8B89F',
+              spring_meadow: '#4A7C59',
+              autumn_grove: '#D4A574',
+              winter_wonderland: '#B8C5D6'
+            };
+            const accentColor = gardenColors[garden.key] || '#4A90A4';
+            return (
+              <button
+                key={garden.key}
+                onClick={() => setCurrentGarden(garden)}
+                title={garden.displayName}
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  border: isSelected ? `2px solid ${accentColor}` : '2px solid rgba(255,255,255,0.3)',
+                  background: isSelected ? 'rgba(255,255,255,0.2)' : 'rgba(30,30,30,0.75)',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: isSelected ? `0 0 8px ${accentColor}80` : '0 2px 6px rgba(0,0,0,0.3)',
+                  backdropFilter: 'blur(8px)',
+                  padding: 0,
+                }}
+              >
+                {gardenEmojis[garden.key] || '🌱'}
+              </button>
+            );
+          })}
+        </div>
+      ) : <div style={{
         position: 'absolute',
         top: 20,
         left: 20,
@@ -108,10 +168,10 @@ function App() {
             </button>
           );
         })}
-      </div>
+      </div>}
 
-      {/* Flower Palette */}
-      <div style={{
+      {/* Flower Palette - hidden on mobile */}
+      {!isMobile && <div style={{
         position: 'absolute',
         top: 20,
         right: 20,
@@ -196,10 +256,10 @@ function App() {
             ? '👆 Click garden to place flower' 
             : 'Click a flower to place it'}
         </div>
-      </div>
+      </div>}
 
-      {/* Garden Info (Bottom Left - Simple) */}
-      {!selectedFlower && (
+      {/* Garden Info (Bottom Left - Simple) - hidden on mobile */}
+      {!isMobile && !selectedFlower && (
         <div style={{
           position: 'absolute',
           bottom: 20,
@@ -598,15 +658,7 @@ function App() {
       {/* 3D Canvas */}
       <Canvas shadows>
         <PerspectiveCamera makeDefault position={[0, 5, 10]} fov={60} />
-        <OrbitControls 
-          enabled={!isDraggingFlower}
-          enablePan={true}
-          enableZoom={true}
-          enableRotate={true}
-          minDistance={5}
-          maxDistance={30}
-          maxPolarAngle={Math.PI / 2.2}
-        />
+        <CameraController isDraggingFlower={isDraggingFlower} />
         
         <GardenScene config={currentGarden}>
           {/* Ground plane for clicking to place flowers */}
@@ -617,7 +669,7 @@ function App() {
               if (placingFlowerType) {
                 e.stopPropagation();
                 const { x, z } = e.point;
-                addFlower(placingFlowerType, { x, y: 1.5, z });
+                addFlower(placingFlowerType, { x, y: 0, z });
                 setPlacingFlowerType(null);
               }
             }}
@@ -660,6 +712,38 @@ function App() {
         </GardenScene>
       </Canvas>
     </div>
+  );
+}
+
+/**
+ * CameraController - Manages OrbitControls with ground boundary clamping
+ * Prevents the camera from panning below the terrain surface
+ */
+function CameraController({ isDraggingFlower }: { isDraggingFlower: boolean }) {
+  const controlsRef = useRef<OrbitControlsImpl>(null);
+
+  useFrame(() => {
+    if (controlsRef.current) {
+      // Clamp the orbit target Y so it can never go below ground level
+      if (controlsRef.current.target.y < 0) {
+        controlsRef.current.target.y = 0;
+        controlsRef.current.update();
+      }
+    }
+  });
+
+  return (
+    <OrbitControls
+      ref={controlsRef}
+      enabled={!isDraggingFlower}
+      enablePan={true}
+      enableZoom={true}
+      enableRotate={true}
+      minDistance={8}
+      maxDistance={25}
+      minPolarAngle={Math.PI / 8}
+      maxPolarAngle={Math.PI / 3}
+    />
   );
 }
 
