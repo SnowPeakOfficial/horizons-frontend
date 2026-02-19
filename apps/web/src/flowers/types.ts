@@ -3,17 +3,26 @@
  * Matches backend schema for flowers and garden content
  */
 
+export type UserTier = 'FREE' | 'PRO' | 'PREMIUM';
+
 export interface FlowerDefinition {
   id: number;
   name: string;
   description: string;
   color: string;
   modelPath: string;
+  budModelPath?: string; // Optional: for flowers like cactus with separate bud model
   symbolism: string;
   defaultScale: number;
+  gardenOffset?: number; // Optional Y-offset for garden placement (default: 1)
+  previewScale: number; // Scale for 3D previews (PlantFlowerPanel, FlowerDetailsModal, etc.)
+  previewOffset?: [number, number, number]; // Optional [x, y, z] offset for centering in preview
+  tier: UserTier;
+  emoji: string;
 }
 
 export type FlowerState = 'BUD' | 'BLOOMED' | 'OPEN';
+export type FlowerType = 'STANDARD' | 'BLOOMING';
 
 export interface PlacedFlower {
   id: string;
@@ -27,41 +36,205 @@ export interface PlacedFlower {
   rotation: number;
   scale: number;
   placedAt: Date;
+  type: FlowerType;  // STANDARD or BLOOMING
   state: FlowerState;  // Current bloom state
   bloomAt?: Date;  // Optional scheduled bloom time
   bloomedAt?: Date;  // When the flower actually bloomed
+  recipientName?: string;  // Who the flower is for
+  plantedBy?: {
+    name: string;
+    email?: string;
+  };  // Who planted the flower
 }
 
 /**
  * Available flower definitions
+ * Keys match backend flower definition keys exactly
  */
 export const FLOWER_DEFINITIONS: Record<string, FlowerDefinition> = {
-  daisy: {
+  // ============================================
+  // FREE TIER (3 flowers)
+  // ============================================
+  
+  forget_me_not: {
     id: 1,
-    name: 'Simple Daisy',
-    description: 'A pure white daisy representing innocence and simplicity',
+    name: 'Forget-Me-Not',
+    description: 'A small bloom with a lasting memory — soft, steady, unforgettable.',
+    color: '#87CEEB',
+    modelPath: '/models/flowers/ForgetMeNot.glb',
+    symbolism: 'A small bloom with a lasting memory — soft, steady, unforgettable.',
+    defaultScale: 6.5,
+    gardenOffset: 0.28, // Large scale - needs to be lower
+    previewScale: 11, // 3x bigger
+    tier: 'FREE',
+    emoji: '💙'
+  },
+  
+  daisy_simple: {
+    id: 2,
+    name: 'Daisy',
+    description: 'A gentle kind of joy — simple, sincere, and quietly bright.',
     color: '#FFFFFF',
     modelPath: '/models/flowers/Daisy.glb',
-    symbolism: 'Innocence, purity, and new beginnings',
-    defaultScale: 1.5  // 2x smaller than previous (3.0 / 2)
+    symbolism: 'A gentle kind of joy — simple, sincere, and quietly bright.',
+    defaultScale: 1.5,
+    previewScale: 2.5, // 3x smaller
+    gardenOffset: 1.25,
+    tier: 'FREE',
+    emoji: '🌼'
   },
-  rose: {
+  
+  // Alias for backward compatibility
+  daisy: {
     id: 2,
-    name: 'Classic Rose',
-    description: 'A timeless red rose symbolizing deep love',
-    color: '#DC143C',
-    modelPath: '/models/flowers/Rose.glb',
-    symbolism: 'Timeless love and cherished memories',
-    defaultScale: 0.0144  // 6x larger than previous (0.0024 * 6)
+    name: 'Daisy',
+    description: 'A gentle kind of joy — simple, sincere, and quietly bright.',
+    color: '#FFFFFF',
+    modelPath: '/models/flowers/Daisy.glb',
+    symbolism: 'A gentle kind of joy — simple, sincere, and quietly bright.',
+    defaultScale: 1.5,
+    previewScale: 2.5, // 3x smaller
+    gardenOffset: 1.25,
+    tier: 'FREE',
+    emoji: '🌼'
   },
-  sunflower: {
+  
+  sunflower_bright: {
     id: 3,
     name: 'Sunflower',
-    description: 'A bright sunflower for unplanned moments of joy',
+    description: 'Always turning toward the light — bold, loyal, and full of warmth.',
     color: '#FFD700',
     modelPath: '/models/flowers/Sunflower.glb',
-    symbolism: 'Unplanned moments and spontaneous happiness',
-    defaultScale: 1.35  // 1.5x larger than previous (0.9 * 1.5)
+    symbolism: 'Always turning toward the light — bold, loyal, and full of warmth.',
+    defaultScale: 1.45,
+    previewScale: 2.5, // Keep default
+    gardenOffset: 1.25,
+    tier: 'FREE',
+    emoji: '🌻'
+  },
+  
+  // ============================================
+  // PRO TIER (5 flowers)
+  // ============================================
+  
+  rose_classic: {
+    id: 4,
+    name: 'Rose',
+    description: 'Love in its most classic form — deep, intentional, and enduring.',
+    color: '#FF0000',
+    modelPath: '/models/flowers/Rose.glb',
+    symbolism: 'Love in its most classic form — deep, intentional, and enduring.',
+    defaultScale: 0.01,
+    gardenOffset: 120, // Tiny model - raise a bit
+    previewScale: 0.013, // Use existing scale (already tiny)
+    tier: 'PRO',
+    emoji: '🌹'
+  },
+  
+  tulip_spring: {
+    id: 5,
+    name: 'Tulip',
+    description: 'A fresh beginning — graceful, hopeful, and full of possibility.',
+    color: '#FF69B4',
+    modelPath: '/models/flowers/Tulip.glb',
+    symbolism: 'A fresh beginning — graceful, hopeful, and full of possibility.',
+    defaultScale: 1.7,
+    gardenOffset: 1.3, // Raise a bit
+    previewScale: 2.6, // Keep default
+    tier: 'PRO',
+    emoji: '🌷'
+  },
+  
+  hibiscus_tropical: {
+    id: 6,
+    name: 'Hibiscus',
+    description: 'Vivid and expressive — a bloom that feels like sunlight on skin.',
+    color: '#FF6B9D',
+    modelPath: '/models/flowers/Hibiscus.glb',
+    symbolism: 'Vivid and expressive — a bloom that feels like sunlight on skin.',
+    defaultScale: 0.35,
+    gardenOffset: 0, // Bit high - lower slightly
+    previewScale: 0.5, // 4x smaller
+    previewOffset: [0, -1.8, 0], // Move down to center
+    tier: 'PRO',
+    emoji: '🌺'
+  },
+  
+  cactus_resilient: {
+    id: 7,
+    name: 'Cactus Flower',
+    description: 'Beauty that survives the harshest seasons — strong, rare, and quietly radiant.',
+    color: '#FF1493',
+    modelPath: '/models/flowers/Cactus.glb',
+    budModelPath: '/models/flowers/BarrelCactus.glb', // Special: use barrel cactus as bud
+    symbolism: 'Beauty that survives the harshest seasons — strong, rare, and quietly radiant.',
+    defaultScale: 5.5,
+    gardenOffset: 0.45, // Very large scale - needs to be much lower
+    previewScale: 11, // 3x bigger
+    tier: 'PRO',
+    emoji: '🌵'
+  },
+  
+  desert_lily: {
+    id: 8,
+    name: 'Desert Lily',
+    description: 'A rare bloom against the odds — proof that hope can grow anywhere.',
+    color: '#FFFACD',
+    modelPath: '/models/flowers/DesertLily.glb',
+    symbolism: 'A rare bloom against the odds — proof that hope can grow anywhere.',
+    defaultScale: 0.6,
+    gardenOffset: 0, // Bit high - lower slightly
+    previewScale: 1, // 3x smaller
+    previewOffset: [0, -2.2, 0], // Move down to center
+    tier: 'PRO',
+    emoji: '🏜️'
+  },
+  
+  // ============================================
+  // PREMIUM TIER (3 flowers)
+  // ============================================
+  
+  iris_reflective: {
+    id: 9,
+    name: 'Iris',
+    description: 'A bloom of depth and reflection — carrying quiet wisdom and grace.',
+    color: '#9370DB',
+    modelPath: '/models/flowers/Iris.glb',
+    symbolism: 'A bloom of depth and reflection — carrying quiet wisdom and grace.',
+    defaultScale: 2.5,
+    gardenOffset: 1, // Medium scale - keep near ground
+    previewScale: 5.5, // 1.5x bigger
+    tier: 'PREMIUM',
+    emoji: '💜'
+  },
+  
+  orchid_rare: {
+    id: 10,
+    name: 'Orchid',
+    description: 'Delicate and extraordinary — a bloom reserved for moments that matter.',
+    color: '#DA70D6',
+    modelPath: '/models/flowers/Orchid.glb',
+    symbolism: 'Delicate and extraordinary — a bloom reserved for moments that matter.',
+    defaultScale: 0.8,
+    gardenOffset: 0, // Bit high - lower slightly
+    previewScale: 1.4, // 3x smaller
+    previewOffset: [0, -2.9, 0], // Move down to center
+    tier: 'PREMIUM',
+    emoji: '🌸'
+  },
+  
+  lotus_still: {
+    id: 11,
+    name: 'Lotus',
+    description: 'Rising untouched from still waters — serene, resilient, and transformed.',
+    color: '#FFC0CB',
+    modelPath: '/models/flowers/Lotus.glb',
+    symbolism: 'Rising untouched from still waters — serene, resilient, and transformed.',
+    defaultScale: 2.7,
+    gardenOffset: 0.75, // Large scale - needs to be lower
+    previewScale: 5, // 1.5x bigger
+    tier: 'PREMIUM',
+    emoji: '🪷'
   }
 };
 
