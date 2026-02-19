@@ -24,8 +24,8 @@ export const MyGardensPage: React.FC = () => {
     fetchGardens();
   }, [fetchGardens]);
 
-  const handleCreateGarden = async (title: string, gardenDefinitionKey?: string) => {
-    await createGarden({ title, gardenDefinitionKey });
+  const handleCreateGarden = async (title: string) => {
+    await createGarden({ title });
     setIsCreateModalOpen(false);
   };
 

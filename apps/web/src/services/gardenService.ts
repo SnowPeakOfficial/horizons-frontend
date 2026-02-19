@@ -32,9 +32,13 @@ class GardenService {
 
   /**
    * Create a new garden
+   * Note: gardenDefinitionKey is intentionally omitted — the backend validates
+   * it against its own DB and will reject unknown keys. The 3D scene uses
+   * local GARDEN_CONFIGS regardless of what the backend stores.
    */
   async createGarden(data: CreateGardenRequest): Promise<Garden> {
-    const response = await api.post<Garden>('/gardens', data);
+    const { title } = data;
+    const response = await api.post<Garden>('/gardens', { title });
     return response.data;
   }
 
