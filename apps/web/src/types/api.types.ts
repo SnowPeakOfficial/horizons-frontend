@@ -221,7 +221,8 @@ export interface Flower {
   bloomedAt: string | null;
   updatedAt: string;
   recipientName?: string | null;
-  
+  letterTemplate?: string | null;
+
   // Position data - backend returns separate X/Y/Z fields
   positionX: number;
   positionY: number;
@@ -253,6 +254,7 @@ export interface PlantFlowerRequest {
   glowIntensity?: number;
   animationStyle?: FlowerAnimation;
   particleEffect?: FlowerParticle;
+  letterTemplate?: string;
 }
 
 export interface AddFlowerContentRequest {

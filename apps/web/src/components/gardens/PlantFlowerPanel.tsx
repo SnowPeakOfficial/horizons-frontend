@@ -20,6 +20,8 @@ import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import flowerService from '../../services/flowerService';
 import gardenService from '../../services/gardenService';
 import type { FlowerDefinition, FlowerType, UserTier } from '../../types/api.types';
+import { LETTER_TEMPLATES, LETTER_TEMPLATE_ORDER } from '../../flowers/letterTemplates';
+import type { LetterTemplateKey } from '../../flowers/letterTemplates';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import Spa from '@mui/icons-material/Spa';
 import Close from '@mui/icons-material/Close';
@@ -100,13 +102,13 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   const [step, setStep] = useState(1);
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
   const [flowerType, setFlowerType] = useState<FlowerType>('STANDARD');
+  const [letterTemplate, setLetterTemplate] = useState<LetterTemplateKey | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   // React Hook Form with Zod validation
   const {
     register,
-    handleSubmit: handleFormSubmit,
     formState: { errors },
     watch,
     reset: resetForm,
@@ -157,6 +159,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     setStep(1);
     setSelectedDefinition(null);
     setFlowerType('STANDARD');
+    setLetterTemplate(null);
     resetForm();
     setError('');
     if (onPlacementModeChange) {
@@ -238,6 +241,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         rotation: Math.random() * Math.PI * 2,
         bloomAt: flowerType === 'BLOOMING' && bloomAt ? bloomAt : undefined,
         recipientName: recipientName || undefined,
+        letterTemplate: letterTemplate || undefined,
       };
 
       const plantedFlower = await plantFlower(gardenId, plantData);
@@ -377,7 +381,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }}
       >
         <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-          {[1, 2, 3, 4, 5].map((s) => (
+          {[1, 2, 3, 4, 5, 6].map((s) => (
             <div
               key={s}
               style={{
@@ -404,7 +408,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             textTransform: 'uppercase',
           }}
         >
-          Step {step} of 5
+          Step {step} of 6
         </div>
       </div>
 
@@ -769,8 +773,91 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           </div>
         )}
 
-        {/* Step 4: Add Media (Optional) */}
+        {/* Step 4: Choose Letter Template */}
         {step === 4 && (
+          <div>
+            <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
+              Choose the tone for this letter
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
+              {LETTER_TEMPLATE_ORDER.map((key) => {
+                const tmpl = LETTER_TEMPLATES[key];
+                const isSelected = letterTemplate === key;
+                return (
+                  <div
+                    key={key}
+                    onClick={() => { setLetterTemplate(key); setError(''); }}
+                    style={{
+                      padding: theme.spacing.lg,
+                      border: `2px solid ${isSelected ? tmpl.accentColor : theme.border.light}`,
+                      borderRadius: '16px',
+                      cursor: 'pointer',
+                      background: isSelected ? `${tmpl.frameColor}30` : '#FFFFFF',
+                      boxShadow: isSelected
+                        ? `0 4px 16px ${tmpl.frameColor}60`
+                        : '0 2px 8px rgba(0,0,0,0.06)',
+                      transition: 'all 0.25s ease',
+                    }}
+                    onMouseEnter={(e) => { if (!isSelected) { e.currentTarget.style.borderColor = tmpl.accentColor + '80'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                    onMouseLeave={(e) => { if (!isSelected) { e.currentTarget.style.borderColor = theme.border.light; e.currentTarget.style.transform = 'translateY(0)'; } }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: theme.spacing.md }}>
+                      {/* Colour swatch */}
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: tmpl.frameColor,
+                        flexShrink: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '20px',
+                        boxShadow: `0 2px 8px ${tmpl.frameColor}80`,
+                      }}>
+                        {tmpl.emoji}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ ...typography.styles.body, fontWeight: 700, color: tmpl.accentDark, marginBottom: '2px' }}>
+                          {tmpl.label}
+                        </div>
+                        <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginBottom: '6px' }}>
+                          {tmpl.description}
+                        </div>
+                        <div style={{
+                          fontFamily: "'Caveat', cursive",
+                          fontSize: '14px',
+                          color: tmpl.accentColor,
+                          fontStyle: 'italic',
+                        }}>
+                          {tmpl.previewSnippet}
+                        </div>
+                      </div>
+                      {isSelected && (
+                        <div style={{
+                          width: '22px',
+                          height: '22px',
+                          borderRadius: '50%',
+                          background: tmpl.accentColor,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          fontSize: '13px',
+                          color: '#fff',
+                          fontWeight: 700,
+                        }}>✓</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Add Media (Optional) */}
+        {step === 5 && (
           <div>
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
               Add something extra (optional)
@@ -860,8 +947,8 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           </div>
         )}
 
-        {/* Step 5: Review */}
-        {step === 5 && (
+        {/* Step 6: Review */}
+        {step === 6 && (
           <div>
             <h3 style={{ ...typography.styles.h5, marginBottom: theme.spacing.lg }}>
               Before you plant
@@ -940,6 +1027,15 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                   <div style={{ ...typography.styles.body }}>✅ Video attached</div>
                 </div>
               )}
+
+              {letterTemplate && (
+                <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Letter Theme</div>
+                  <div style={{ ...typography.styles.body, fontWeight: 600 }}>
+                    {LETTER_TEMPLATES[letterTemplate].emoji} {LETTER_TEMPLATES[letterTemplate].label}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -1014,7 +1110,14 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             <Button variant="ghost" onClick={() => setStep(3)} style={{ flex: 1 }}>
               Back
             </Button>
-            <Button variant="primary" onClick={() => setStep(5)} style={{ flex: 1 }}>
+            <Button variant="primary" onClick={() => {
+              if (!letterTemplate) {
+                setError('Please choose a letter theme to continue');
+                return;
+              }
+              setError('');
+              setStep(5);
+            }} style={{ flex: 1 }}>
               Next
             </Button>
           </>
@@ -1023,6 +1126,17 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 5 && (
           <>
             <Button variant="ghost" onClick={() => setStep(4)} style={{ flex: 1 }}>
+              Back
+            </Button>
+            <Button variant="primary" onClick={() => setStep(6)} style={{ flex: 1 }}>
+              Next
+            </Button>
+          </>
+        )}
+
+        {step === 6 && (
+          <>
+            <Button variant="ghost" onClick={() => setStep(5)} style={{ flex: 1 }}>
               Back
             </Button>
             <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>
