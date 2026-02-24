@@ -270,8 +270,8 @@ export const GardenPage: React.FC = () => {
             screenSpacePanning={false}
             minDistance={10}
             maxDistance={70}
-            minPolarAngle={Math.PI / 8}
-            maxPolarAngle={Math.PI / 2.5}
+            minPolarAngle={Math.PI / 6}
+            maxPolarAngle={Math.PI / 3}
             target={[0, 0, 0]}
           />
         </Canvas>
