@@ -136,7 +136,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             <div
               style={{
                 fontFamily: typography.fontFamily.serif,
-                fontSize: 'clamp(36px, 6vw, 72px)',
+                fontSize: 'clamp(64px, 10vw, 128px)',
                 fontWeight: typography.fontWeight.normal,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
@@ -163,13 +163,13 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             {/* Logo/Brand */}
             <div
               style={{
-                ...typography.styles.h6,
                 fontFamily: typography.fontFamily.serif,
+                fontSize: 'clamp(36px, 5vw, 60px)',
+                fontWeight: typography.fontWeight.normal,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
                 color: theme.text.tertiary,
                 marginBottom: theme.spacing['6xl'],
-                fontWeight: typography.fontWeight.normal,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
                 opacity: 0.7,
               }}
             >

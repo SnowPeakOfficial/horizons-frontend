@@ -111,15 +111,14 @@ export const LandingPage: React.FC = () => {
           {/* Logo/Brand */}
           <div
             style={{
-              ...typography.styles.h6,
               fontFamily: typography.fontFamily.serif,
+              fontSize: 'clamp(36px, 5vw, 60px)',
+              fontWeight: typography.fontWeight.normal,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
               color: theme.text.tertiary,
               marginBottom: theme.spacing['6xl'],
-              fontWeight: typography.fontWeight.normal,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
               opacity: 0.7,
-              animation: 'fadeIn 1s ease forwards',
             }}
           >
             Horizons
@@ -136,9 +135,6 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '-0.02em',
               maxWidth: '900px',
               margin: `0 auto ${theme.spacing['4xl']} auto`,
-              animation: 'fadeIn 1s ease 0.2s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
             }}
           >
             A quiet place to keep
@@ -155,9 +151,6 @@ export const LandingPage: React.FC = () => {
               lineHeight: 1.7,
               maxWidth: '700px',
               margin: `0 auto ${theme.spacing['6xl']} auto`,
-              animation: 'fadeIn 1s ease 0.4s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
             }}
           >
             Plant memories as flowers.
@@ -172,9 +165,6 @@ export const LandingPage: React.FC = () => {
               gap: theme.spacing.lg,
               justifyContent: 'center',
               flexWrap: 'wrap',
-              animation: 'fadeIn 1s ease 0.6s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
             }}
           >
             <Button
@@ -216,9 +206,6 @@ export const LandingPage: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               gap: theme.spacing.lg,
-              animation: 'fadeIn 1s ease 0.8s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
             }}
           >
             <Lock sx={{ fontSize: 16 }} />
