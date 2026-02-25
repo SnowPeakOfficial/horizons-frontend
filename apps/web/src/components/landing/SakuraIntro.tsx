@@ -156,7 +156,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               style={{
                 fontFamily: typography.fontFamily.serif,
                 fontSize: 'clamp(64px, 10vw, 128px)',
-                fontWeight: typography.fontWeight.normal,
+                fontWeight: typography.fontWeight.medium,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
                 color: theme.text.tertiary,
