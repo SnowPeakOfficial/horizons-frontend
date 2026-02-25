@@ -133,7 +133,7 @@ export const LandingPage: React.FC = () => {
             style={{
               fontFamily: typography.fontFamily.serif,
               fontSize: 'clamp(36px, 5vw, 60px)',
-              fontWeight: typography.fontWeight.normal,
+              fontWeight: typography.fontWeight.semi,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               color: theme.text.tertiary,
@@ -199,6 +199,7 @@ export const LandingPage: React.FC = () => {
               style={{
                 fontSize: '18px',
                 padding: '18px 48px',
+                background: `linear-gradient(135deg, ${theme.colors.rose[600]} 0%, ${theme.colors.rose[700]} 100%)`,
                 boxShadow: '0 4px 0 rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.04)',
               }}
             >
@@ -216,7 +217,7 @@ export const LandingPage: React.FC = () => {
                 fontSize: '18px',
                 padding: '18px 48px',
                 background: 'rgba(255, 255, 255, 0.92)',
-                color: theme.colors.rose[500],
+                color: theme.colors.rose[700],
                 boxShadow: '0 4px 0 rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.03)',
                 backdropFilter: 'blur(8px)',
               }}
