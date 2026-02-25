@@ -133,7 +133,7 @@ export const LandingPage: React.FC = () => {
             style={{
               fontFamily: typography.fontFamily.serif,
               fontSize: 'clamp(36px, 5vw, 60px)',
-              fontWeight: typography.fontWeight.semi,
+              fontWeight: typography.fontWeight.medium,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               color: theme.text.tertiary,
