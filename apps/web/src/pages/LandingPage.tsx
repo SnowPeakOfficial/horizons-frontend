@@ -43,7 +43,7 @@ const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number }> = 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
-  const [showIntro, setShowIntro] = useState(true); // Always show intro on page load
+  const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem('introPlayed')); // Once per session
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -55,7 +55,8 @@ export const LandingPage: React.FC = () => {
   void scrollY;
 
   const handleIntroComplete = () => {
-    setShowIntro(false); // No sessionStorage - intro plays every visit
+    sessionStorage.setItem('introPlayed', 'true');
+    setShowIntro(false);
   };
 
   // Show intro video first
