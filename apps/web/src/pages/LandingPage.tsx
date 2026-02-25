@@ -13,7 +13,6 @@ import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
-import Lock from '@mui/icons-material/Lock';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import CardGiftcard from '@mui/icons-material/CardGiftcard';
@@ -52,8 +51,8 @@ export const LandingPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Parallax effect value
-  const parallaxOffset = scrollY * 0.5;
+  // Suppress unused warning — kept for future parallax use
+  void scrollY;
 
   const handleIntroComplete = () => {
     setShowIntro(false); // No sessionStorage - intro plays every visit
@@ -69,34 +68,55 @@ export const LandingPage: React.FC = () => {
       {/* Navbar */}
       <Navbar />
       
-      {/* ========== HERO SECTION - Full Modern Design ========== */}
+      {/* ========== HERO SECTION ========== */}
       <section
         style={{
           position: 'relative',
-          minHeight: '100vh',
+          minHeight: 'auto',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           overflow: 'hidden',
+          paddingTop: '80px',
           background: `linear-gradient(180deg, 
             #FDFCFA 0%, 
             #FFF9F7 50%,
             #FFFFFF 100%)`,
         }}
       >
-        {/* Subtle background gradient mesh - NO falling icons */}
+        {/* Subtle background gradient mesh */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             background: `radial-gradient(circle at 20% 30%, rgba(232, 180, 188, 0.08) 0%, transparent 50%),
                          radial-gradient(circle at 80% 70%, rgba(197, 169, 208, 0.06) 0%, transparent 50%)`,
-            transform: `translateY(${parallaxOffset}px)`,
             pointerEvents: 'none',
           }}
         />
 
-        {/* Hero Content - Properly Centered */}
+        {/* Bloomory-style peripheral labels */}
+        <div style={{
+          position: 'absolute', top: '88px', left: '52px',
+          fontFamily: typography.fontFamily.serif, fontSize: '15px',
+          letterSpacing: '0.25em', textTransform: 'uppercase' as const,
+          color: theme.text.tertiary, opacity: 1, zIndex: 10,
+          pointerEvents: 'none',
+        }}>EST. 2026</div>
+
+        <div style={{
+          position: 'absolute', top: '88px', right: '52px',
+          fontFamily: typography.fontFamily.serif, fontSize: '15px',
+          letterSpacing: '0.1em', color: theme.text.tertiary, opacity: 1,
+          zIndex: 10, pointerEvents: 'none',
+          display: 'flex', alignItems: 'center', gap: '6px',
+        }}>
+          <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
+          <span>Private by design</span>
+        </div>
+
+        {/* Hero Content */}
         <div
           style={{
             position: 'relative',
@@ -117,7 +137,7 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               color: theme.text.tertiary,
-              marginBottom: theme.spacing['6xl'],
+              marginBottom: theme.spacing['2xl'],
               opacity: 0.7,
             }}
           >
@@ -134,7 +154,7 @@ export const LandingPage: React.FC = () => {
               lineHeight: 1.1,
               letterSpacing: '-0.02em',
               maxWidth: '900px',
-              margin: `0 auto ${theme.spacing['4xl']} auto`,
+              margin: `0 auto ${theme.spacing['xl']} auto`,
             }}
           >
             A quiet place to keep
@@ -150,7 +170,7 @@ export const LandingPage: React.FC = () => {
               color: theme.text.secondary,
               lineHeight: 1.7,
               maxWidth: '700px',
-              margin: `0 auto ${theme.spacing['6xl']} auto`,
+              margin: `0 auto ${theme.spacing['2xl']} auto`,
             }}
           >
             Plant memories as flowers.
@@ -165,6 +185,8 @@ export const LandingPage: React.FC = () => {
               gap: theme.spacing.lg,
               justifyContent: 'center',
               flexWrap: 'wrap',
+              position: 'relative',
+              zIndex: 3,
             }}
           >
             <Button
@@ -190,52 +212,44 @@ export const LandingPage: React.FC = () => {
               style={{
                 fontSize: '18px',
                 padding: '18px 48px',
+                background: 'rgba(255, 255, 255, 0.92)',
+                color: theme.colors.rose[500],
+                boxShadow: '0 4px 16px rgba(212, 144, 154, 0.12)',
+                backdropFilter: 'blur(8px)',
               }}
             >
               Read our letter
             </Button>
           </div>
 
-          {/* Trust Badge */}
-          <div
-            style={{
-              marginTop: theme.spacing['7xl'],
-              ...typography.styles.caption,
-              color: theme.text.tertiary,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: theme.spacing.lg,
-            }}
-          >
-            <Lock sx={{ fontSize: 16 }} />
-            <span>100% Private</span>
-            <span>•</span>
-            <span>End-to-End Encrypted</span>
-            <span>•</span>
-            <span>Zero Tracking</span>
-          </div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Hydrangea image — pulled up close to buttons, Bloomory/Once-style */}
         <div
           style={{
-            position: 'absolute',
-            bottom: theme.spacing['4xl'],
-            left: '50%',
-            transform: 'translateX(-50%)',
-            animation: 'float 3s ease-in-out infinite',
+            position: 'relative',
+            zIndex: 1,
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '-200px',
+            // Overflow the section bottom so image peeks below fold
+            marginBottom: '0px',
           }}
         >
-          <div
+          <img
+            src="/images/Default_A_delicate_intricately_detailed_3D_hydrangea_blooms_ag_1_5608c5bf-c46a-46b8-b9a4-6f3a3aeb05dc_0.png"
+            alt=""
             style={{
-              ...typography.styles.h4,
-              color: theme.text.tertiary,
-              opacity: 0.4,
+              width: 'clamp(700px, 80vw, 1100px)',
+              height: 'auto',
+              userSelect: 'none',
+              pointerEvents: 'none',
+              // Fade bottom edge into the background
+              WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+              maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
             }}
-          >
-            ↓
-          </div>
+          />
         </div>
       </section>
 
