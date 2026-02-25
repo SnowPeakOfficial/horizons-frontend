@@ -268,10 +268,12 @@ export const GardenPage: React.FC = () => {
               RIGHT: 0,  // Orbit on right-click drag
             }}
             screenSpacePanning={false}
-            minDistance={10}
-            maxDistance={70}
-            minPolarAngle={Math.PI / 6}
-            maxPolarAngle={Math.PI / 3}
+            minDistance={15}
+            maxDistance={60}
+            minPolarAngle={Math.PI / 8}
+            maxPolarAngle={Math.PI / 4}
+            maxAzimuthAngle={Infinity}
+            minAzimuthAngle={-Infinity}
             target={[0, 0, 0]}
           />
         </Canvas>

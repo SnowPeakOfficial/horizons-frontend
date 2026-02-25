@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { ConfirmationDialog } from '../components/common/ConfirmationDialog';
 import subscriptionService from '../services/subscriptionService';
 import { theme } from '../styles/theme';
@@ -218,6 +219,7 @@ export const PricingPage: React.FC = () => {
                 borderRadius: '24px',
                 padding: '36px 32px',
                 flex: 1,
+                minHeight: '540px',
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
@@ -295,7 +297,7 @@ export const PricingPage: React.FC = () => {
               </div>
 
               {/* Features */}
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px', flex: 1, minHeight: '168px' }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px', flex: 1 }}>
                 {tier.features.map((f, i) => (
                   <li key={i} style={{
                     fontSize: '14px',
@@ -311,86 +313,103 @@ export const PricingPage: React.FC = () => {
                 ))}
               </ul>
 
-              {/* CTA Button */}
-              <button
-                disabled={isDisabled || loadingTier === tier.key}
-                onClick={() => {
-                  if (tier.key === 'FREE' && !isAuthenticated) { navigate('/auth/register'); return; }
-                  if (tier.key === 'PRO') handleUpgrade('PRO');
-                }}
-                style={{
-                  marginTop: 'auto',
-                  padding: '14px 28px',
-                  borderRadius: '12px',
-                  cursor: isDisabled ? 'default' : 'pointer',
-                  fontWeight: 600,
-                  fontSize: '15px',
-                  fontFamily: 'Georgia, serif',
-                  background: isCurrent || isFreeIncluded
-                    ? '#FFF0F2'
-                    : tier.comingSoon
-                    ? '#F3EEF8'
-                    : tier.featured
-                    ? 'linear-gradient(135deg, #D4909A 0%, #B87580 100%)'
-                    : 'linear-gradient(135deg, #E8B4B8 0%, #D4909A 100%)',
-                  border: isCurrent || isFreeIncluded
-                    ? '1.5px solid #E8B4B8'
-                    : tier.comingSoon
-                    ? '1.5px solid #C5A9D0'
-                    : 'none',
-                  color: isCurrent || isFreeIncluded
-                    ? '#C07080'
-                    : tier.comingSoon
-                    ? '#8B6BA0'
-                    : '#FFFFFF',
-                  boxShadow: (!isDisabled && tier.featured)
-                    ? '0 4px 16px rgba(212, 144, 154, 0.35)'
-                    : 'none',
-                }}
-              >
-                {btnLabel}
-              </button>
+              {/* CTA Button — pushed to bottom, aligned across all cards */}
+              <div style={{ marginTop: 'auto' }}>
+                <button
+                  disabled={isDisabled || loadingTier === tier.key}
+                  onClick={() => {
+                    if (tier.key === 'FREE' && !isAuthenticated) { navigate('/auth/register'); return; }
+                    if (tier.key === 'PRO') handleUpgrade('PRO');
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '14px 28px',
+                    borderRadius: '12px',
+                    cursor: isDisabled ? 'default' : 'pointer',
+                    fontWeight: 600,
+                    fontSize: '15px',
+                    fontFamily: 'Georgia, serif',
+                    background: isCurrent || isFreeIncluded
+                      ? '#FFF0F2'
+                      : tier.comingSoon
+                      ? '#F3EEF8'
+                      : tier.featured
+                      ? 'linear-gradient(135deg, #D4909A 0%, #B87580 100%)'
+                      : 'linear-gradient(135deg, #E8B4B8 0%, #D4909A 100%)',
+                    border: isCurrent || isFreeIncluded
+                      ? '1.5px solid #E8B4B8'
+                      : tier.comingSoon
+                      ? '1.5px solid #C5A9D0'
+                      : 'none',
+                    color: isCurrent || isFreeIncluded
+                      ? '#C07080'
+                      : tier.comingSoon
+                      ? '#8B6BA0'
+                      : '#FFFFFF',
+                    boxShadow: (!isDisabled && tier.featured)
+                      ? '0 4px 16px rgba(212, 144, 154, 0.35)'
+                      : 'none',
+                  }}
+                >
+                  {btnLabel}
+                </button>
+              </div>
 
-              {/* Cancel / renew link — fixed-height slot so all cards have same bottom space */}
-              <div style={{ minHeight: '32px', marginTop: '12px', textAlign: 'center' }}>
-              {isCurrent && tier.key === 'PRO' && (
-                <div>
-                  {renewSuccess ? (
-                    <p style={{ fontSize: '12px', color: '#6B8E6B', margin: 0 }}>{renewSuccess}</p>
-                  ) : cancelSuccess ? (
-                    <p style={{ fontSize: '12px', color: '#6B8E6B', margin: 0 }}>{cancelSuccess}</p>
-                  ) : subscription?.cancelAtPeriodEnd ? (
-                    <div>
-                      <p style={{ fontSize: '12px', color: '#9D8F99', margin: '0 0 2px' }}>
-                        Cancels at end of billing period
-                      </p>
+              {/* Cancel / renew slot — fixed height on ALL cards to keep buttons aligned */}
+              <div style={{ marginTop: '12px', textAlign: 'center', minHeight: '56px' }}>
+                {isCurrent && tier.key === 'PRO' && (
+                  <div>
+                    {renewSuccess ? (
+                      <p style={{ fontSize: '12px', color: '#6B8E6B', margin: 0 }}>{renewSuccess}</p>
+                    ) : cancelSuccess ? (
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6B8E6B', margin: '0 0 4px' }}>{cancelSuccess}</p>
+                        <span
+                          style={{
+                            fontSize: '12px',
+                            color: renewLoading ? '#A8C5A8' : '#6B8E6B',
+                            cursor: renewLoading ? 'default' : 'pointer',
+                            textDecoration: 'underline',
+                          }}
+                          onClick={renewLoading ? undefined : handleReactivate}
+                        >
+                          {renewLoading ? 'Renewing...' : 'Resubscribe'}
+                        </span>
+                      </div>
+                    ) : subscription?.cancelAtPeriodEnd ? (
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#9D8F99', margin: '0 0 2px' }}>
+                          {subscription.currentPeriodEnd
+                            ? `Cancels on ${new Date(subscription.currentPeriodEnd).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' })}`
+                            : 'Cancels at end of billing period'}
+                        </p>
+                        <span
+                          style={{
+                            fontSize: '12px',
+                            color: renewLoading ? '#A8C5A8' : '#6B8E6B',
+                            cursor: renewLoading ? 'default' : 'pointer',
+                            textDecoration: 'underline',
+                          }}
+                          onClick={renewLoading ? undefined : handleReactivate}
+                        >
+                          {renewLoading ? 'Renewing...' : 'Renew subscription'}
+                        </span>
+                      </div>
+                    ) : (
                       <span
                         style={{
                           fontSize: '12px',
-                          color: renewLoading ? '#A8C5A8' : '#6B8E6B',
-                          cursor: renewLoading ? 'default' : 'pointer',
+                          color: cancelLoading ? '#C0A8AA' : '#C0706A',
+                          cursor: cancelLoading ? 'default' : 'pointer',
                           textDecoration: 'underline',
                         }}
-                        onClick={renewLoading ? undefined : handleReactivate}
+                        onClick={cancelLoading ? undefined : () => setShowCancelModal(true)}
                       >
-                        {renewLoading ? 'Renewing...' : 'Renew subscription'}
+                        {cancelLoading ? 'Cancelling...' : 'Cancel subscription'}
                       </span>
-                    </div>
-                  ) : (
-                    <span
-                      style={{
-                        fontSize: '12px',
-                        color: cancelLoading ? '#C0A8AA' : '#C0706A',
-                        cursor: cancelLoading ? 'default' : 'pointer',
-                        textDecoration: 'underline',
-                      }}
-                      onClick={cancelLoading ? undefined : () => setShowCancelModal(true)}
-                    >
-                      {cancelLoading ? 'Cancelling...' : 'Cancel subscription'}
-                    </span>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -414,6 +433,7 @@ export const PricingPage: React.FC = () => {
         variant="warning"
         isLoading={cancelLoading}
       />
+      <Footer />
     </div>
   );
 };

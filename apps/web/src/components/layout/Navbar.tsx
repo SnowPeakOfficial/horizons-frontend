@@ -13,7 +13,6 @@ import subscriptionService from '../../services/subscriptionService';
 import Person from '@mui/icons-material/Person';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import CreditCard from '@mui/icons-material/CreditCard';
 import BugReport from '@mui/icons-material/BugReport';
 
 export const Navbar: React.FC = () => {
@@ -381,24 +380,6 @@ export const Navbar: React.FC = () => {
                     <Settings sx={{ fontSize: 18 }} />
                     Settings
                   </div>
-                  {user?.tier !== 'FREE' && (
-                    <div
-                      style={dropdownItemStyle}
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        navigate('/billing');
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = theme.colors.rose[50];
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = 'transparent';
-                      }}
-                    >
-                      <CreditCard sx={{ fontSize: 18 }} />
-                      Billing
-                    </div>
-                  )}
                   <div style={{ height: '1px', background: theme.border.light, margin: `${theme.spacing.xs} 0` }} />
                   <div
                     style={{...dropdownItemStyle, color: theme.text.tertiary}}

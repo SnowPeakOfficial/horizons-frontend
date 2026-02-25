@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { CurvedDivider } from '../components/landing/CurvedDivider';
 import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -629,75 +630,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========== FOOTER ========== */}
-      <footer
-        style={{
-          padding: '80px 40px 40px 40px',
-          textAlign: 'center',
-          borderTop: `1px solid ${theme.border.light}`,
-          background: '#FDFCFA',
-        }}
-      >
-        <p
-          style={{
-            ...typography.styles.body,
-            color: theme.text.tertiary,
-            marginBottom: theme.spacing['4xl'],
-          }}
-        >
-          Thank you for taking a moment.
-        </p>
-
-        <div
-          style={{
-            ...typography.styles.caption,
-            color: theme.text.tertiary,
-            display: 'flex',
-            gap: theme.spacing.xl,
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <a
-            href="/privacy"
-            style={{
-              color: 'inherit',
-              textDecoration: 'none',
-              transition: theme.transition.base,
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = theme.text.secondary)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = theme.text.tertiary)}
-          >
-            Privacy
-          </a>
-          <span>·</span>
-          <a
-            href="/terms"
-            style={{
-              color: 'inherit',
-              textDecoration: 'none',
-              transition: theme.transition.base,
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = theme.text.secondary)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = theme.text.tertiary)}
-          >
-            Terms
-          </a>
-          <span>·</span>
-          <a
-            href="mailto:hello@horizons.app"
-            style={{
-              color: 'inherit',
-              textDecoration: 'none',
-              transition: theme.transition.base,
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = theme.text.secondary)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = theme.text.tertiary)}
-          >
-            Contact
-          </a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
