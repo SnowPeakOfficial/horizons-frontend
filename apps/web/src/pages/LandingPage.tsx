@@ -99,7 +99,7 @@ export const LandingPage: React.FC = () => {
         {/* Bloomory-style peripheral labels */}
         <div style={{
           position: 'absolute', top: '88px', left: '52px',
-          fontFamily: typography.fontFamily.serif, fontSize: '15px',
+          fontFamily: typography.fontFamily.serif, fontSize: '18px',
           letterSpacing: '0.25em', textTransform: 'uppercase' as const,
           color: theme.text.tertiary, opacity: 1, zIndex: 10,
           pointerEvents: 'none',
@@ -107,7 +107,7 @@ export const LandingPage: React.FC = () => {
 
         <div style={{
           position: 'absolute', top: '88px', right: '52px',
-          fontFamily: typography.fontFamily.serif, fontSize: '15px',
+          fontFamily: typography.fontFamily.serif, fontSize: '18px',
           letterSpacing: '0.1em', color: theme.text.tertiary, opacity: 1,
           zIndex: 10, pointerEvents: 'none',
           display: 'flex', alignItems: 'center', gap: '6px',
@@ -139,6 +139,7 @@ export const LandingPage: React.FC = () => {
               color: theme.text.tertiary,
               marginBottom: theme.spacing['2xl'],
               opacity: 0.7,
+              textShadow: '0 1px 3px rgba(0,0,0,0.08)',
             }}
           >
             Horizons
@@ -155,6 +156,7 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '-0.02em',
               maxWidth: '900px',
               margin: `0 auto ${theme.spacing['xl']} auto`,
+              textShadow: '0 1px 2px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)',
             }}
           >
             A quiet place to keep
@@ -166,11 +168,12 @@ export const LandingPage: React.FC = () => {
           <p
             style={{
               fontSize: 'clamp(20px, 3vw, 28px)',
-              fontWeight: typography.fontWeight.normal,
-              color: theme.text.secondary,
+              fontWeight: typography.fontWeight.medium,
               lineHeight: 1.7,
               maxWidth: '700px',
               margin: `0 auto ${theme.spacing['2xl']} auto`,
+              color: theme.text.primary,
+              textShadow: '0 1px 3px rgba(0,0,0,0.08)',
             }}
           >
             Plant memories as flowers.
@@ -196,7 +199,7 @@ export const LandingPage: React.FC = () => {
               style={{
                 fontSize: '18px',
                 padding: '18px 48px',
-                boxShadow: '0 8px 32px rgba(212, 144, 154, 0.3)',
+                boxShadow: '0 4px 0 rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.04)',
               }}
             >
               Enter your garden
@@ -214,7 +217,7 @@ export const LandingPage: React.FC = () => {
                 padding: '18px 48px',
                 background: 'rgba(255, 255, 255, 0.92)',
                 color: theme.colors.rose[500],
-                boxShadow: '0 4px 16px rgba(212, 144, 154, 0.12)',
+                boxShadow: '0 4px 0 rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.03)',
                 backdropFilter: 'blur(8px)',
               }}
             >
