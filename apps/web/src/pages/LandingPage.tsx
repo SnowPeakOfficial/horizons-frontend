@@ -386,16 +386,16 @@ export const LandingPage: React.FC = () => {
           <RevealOnScroll>
             <p style={{
               fontFamily: typography.fontFamily.serif,
-              fontSize: '13px',
+              fontSize: '18px',
               letterSpacing: '0.2em',
               textTransform: 'uppercase' as const,
-              color: theme.colors.rose[400],
+              color: theme.text.tertiary,
               textAlign: 'center',
               marginBottom: theme.spacing.lg,
             }}>How it works</p>
             <h2
               style={{
-                fontSize: 'clamp(36px, 5vw, 60px)',
+                fontSize: 'clamp(40px, 5.5vw, 64px)',
                 fontFamily: typography.fontFamily.serif,
                 fontWeight: typography.fontWeight.normal,
                 textAlign: 'center',
@@ -454,8 +454,8 @@ export const LandingPage: React.FC = () => {
                   display: 'flex',
                   flexDirection: step.imageRight ? 'row-reverse' : 'row',
                   alignItems: 'center',
-                  gap: 'clamp(40px, 6vw, 100px)',
-                  marginBottom: index < 3 ? '96px' : '0',
+                  gap: 'clamp(32px, 4vw, 72px)',
+                  marginBottom: index < 3 ? '64px' : '0',
                   flexWrap: 'wrap',
                 }}
               >
@@ -468,22 +468,6 @@ export const LandingPage: React.FC = () => {
                   minHeight: '320px',
                   position: 'relative',
                 }}>
-                  {/* Large decorative number behind image */}
-                  <div style={{
-                    position: 'absolute',
-                    fontSize: 'clamp(120px, 15vw, 180px)',
-                    fontFamily: typography.fontFamily.serif,
-                    fontWeight: '300',
-                    color: theme.colors.rose[200],
-                    opacity: 0.35,
-                    lineHeight: 1,
-                    userSelect: 'none',
-                    pointerEvents: 'none',
-                    zIndex: 0,
-                    letterSpacing: '-0.05em',
-                  }}>
-                    {step.number}
-                  </div>
                   <img
                     src={step.image}
                     alt={step.imageAlt}
@@ -508,7 +492,7 @@ export const LandingPage: React.FC = () => {
                   {/* Step label */}
                   <p style={{
                     fontFamily: typography.fontFamily.serif,
-                    fontSize: '12px',
+                    fontSize: '16px',
                     letterSpacing: '0.2em',
                     textTransform: 'uppercase' as const,
                     color: theme.text.tertiary,
