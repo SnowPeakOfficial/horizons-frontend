@@ -14,11 +14,6 @@ import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
-import Lock from '@mui/icons-material/Lock';
-import InsertPhoto from '@mui/icons-material/InsertPhoto';
-import LocalFlorist from '@mui/icons-material/LocalFlorist';
-import CardGiftcard from '@mui/icons-material/CardGiftcard';
-import Home from '@mui/icons-material/Home';
 
 // Scroll reveal wrapper
 const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number }> = ({
@@ -45,7 +40,7 @@ const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number }> = 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
-  const [showIntro, setShowIntro] = useState(true); // Always show intro on page load
+  const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem('introPlayed')); // Once per session
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -53,11 +48,12 @@ export const LandingPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Parallax effect value
-  const parallaxOffset = scrollY * 0.5;
+  // Suppress unused warning — kept for future parallax use
+  void scrollY;
 
   const handleIntroComplete = () => {
-    setShowIntro(false); // No sessionStorage - intro plays every visit
+    sessionStorage.setItem('introPlayed', 'true');
+    setShowIntro(false);
   };
 
   // Show intro video first
@@ -70,34 +66,55 @@ export const LandingPage: React.FC = () => {
       {/* Navbar */}
       <Navbar />
       
-      {/* ========== HERO SECTION - Full Modern Design ========== */}
+      {/* ========== HERO SECTION ========== */}
       <section
         style={{
           position: 'relative',
-          minHeight: '100vh',
+          minHeight: 'auto',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           overflow: 'hidden',
+          paddingTop: '0px',
           background: `linear-gradient(180deg, 
             #FDFCFA 0%, 
             #FFF9F7 50%,
             #FFFFFF 100%)`,
         }}
       >
-        {/* Subtle background gradient mesh - NO falling icons */}
+        {/* Subtle background gradient mesh */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             background: `radial-gradient(circle at 20% 30%, rgba(232, 180, 188, 0.08) 0%, transparent 50%),
                          radial-gradient(circle at 80% 70%, rgba(197, 169, 208, 0.06) 0%, transparent 50%)`,
-            transform: `translateY(${parallaxOffset}px)`,
             pointerEvents: 'none',
           }}
         />
 
-        {/* Hero Content - Properly Centered */}
+        {/* Bloomory-style peripheral labels */}
+        <div style={{
+          position: 'absolute', top: '88px', left: '52px',
+          fontFamily: typography.fontFamily.serif, fontSize: '18px',
+          letterSpacing: '0.25em', textTransform: 'uppercase' as const,
+          color: theme.text.tertiary, opacity: 1, zIndex: 10,
+          pointerEvents: 'none',
+        }}>EST. 2026</div>
+
+        <div style={{
+          position: 'absolute', top: '88px', right: '52px',
+          fontFamily: typography.fontFamily.serif, fontSize: '18px',
+          letterSpacing: '0.1em', color: theme.text.tertiary, opacity: 1,
+          zIndex: 10, pointerEvents: 'none',
+          display: 'flex', alignItems: 'center', gap: '6px',
+        }}>
+          <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
+          <span>Private by design</span>
+        </div>
+
+        {/* Hero Content */}
         <div
           style={{
             position: 'relative',
@@ -112,15 +129,15 @@ export const LandingPage: React.FC = () => {
           {/* Logo/Brand */}
           <div
             style={{
-              ...typography.styles.h6,
               fontFamily: typography.fontFamily.serif,
-              color: theme.text.tertiary,
-              marginBottom: theme.spacing['6xl'],
-              fontWeight: typography.fontWeight.normal,
-              letterSpacing: '0.1em',
+              fontSize: 'clamp(36px, 5vw, 60px)',
+              fontWeight: typography.fontWeight.medium,
+              letterSpacing: '0.15em',
               textTransform: 'uppercase',
+              color: theme.text.tertiary,
+              marginBottom: theme.spacing['2xl'],
               opacity: 0.7,
-              animation: 'fadeIn 1s ease forwards',
+              textShadow: '0 1px 3px rgba(0,0,0,0.08)',
             }}
           >
             Horizons
@@ -136,10 +153,8 @@ export const LandingPage: React.FC = () => {
               lineHeight: 1.1,
               letterSpacing: '-0.02em',
               maxWidth: '900px',
-              margin: `0 auto ${theme.spacing['4xl']} auto`,
-              animation: 'fadeIn 1s ease 0.2s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
+              margin: `0 auto ${theme.spacing['xl']} auto`,
+              textShadow: '0 1px 2px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)',
             }}
           >
             A quiet place to keep
@@ -151,14 +166,12 @@ export const LandingPage: React.FC = () => {
           <p
             style={{
               fontSize: 'clamp(20px, 3vw, 28px)',
-              fontWeight: typography.fontWeight.normal,
-              color: theme.text.secondary,
+              fontWeight: typography.fontWeight.medium,
               lineHeight: 1.7,
               maxWidth: '700px',
-              margin: `0 auto ${theme.spacing['6xl']} auto`,
-              animation: 'fadeIn 1s ease 0.4s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
+              margin: `0 auto ${theme.spacing['2xl']} auto`,
+              color: theme.text.primary,
+              textShadow: '0 1px 3px rgba(0,0,0,0.08)',
             }}
           >
             Plant memories as flowers.
@@ -173,9 +186,8 @@ export const LandingPage: React.FC = () => {
               gap: theme.spacing.lg,
               justifyContent: 'center',
               flexWrap: 'wrap',
-              animation: 'fadeIn 1s ease 0.6s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
+              position: 'relative',
+              zIndex: 3,
             }}
           >
             <Button
@@ -185,7 +197,8 @@ export const LandingPage: React.FC = () => {
               style={{
                 fontSize: '18px',
                 padding: '18px 48px',
-                boxShadow: '0 8px 32px rgba(212, 144, 154, 0.3)',
+                background: `linear-gradient(135deg, ${theme.colors.rose[600]} 0%, ${theme.colors.rose[700]} 100%)`,
+                boxShadow: '0 4px 0 rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.04)',
               }}
             >
               Enter your garden
@@ -201,55 +214,44 @@ export const LandingPage: React.FC = () => {
               style={{
                 fontSize: '18px',
                 padding: '18px 48px',
+                background: 'rgba(255, 255, 255, 0.92)',
+                color: theme.colors.rose[700],
+                boxShadow: '0 4px 0 rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.03)',
+                backdropFilter: 'blur(8px)',
               }}
             >
               Read our letter
             </Button>
           </div>
 
-          {/* Trust Badge */}
-          <div
-            style={{
-              marginTop: theme.spacing['7xl'],
-              ...typography.styles.caption,
-              color: theme.text.tertiary,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: theme.spacing.lg,
-              animation: 'fadeIn 1s ease 0.8s forwards',
-              opacity: 0,
-              animationFillMode: 'forwards',
-            }}
-          >
-            <Lock sx={{ fontSize: 16 }} />
-            <span>100% Private</span>
-            <span>•</span>
-            <span>End-to-End Encrypted</span>
-            <span>•</span>
-            <span>Zero Tracking</span>
-          </div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Hydrangea image — pulled up close to buttons, Bloomory/Once-style */}
         <div
           style={{
-            position: 'absolute',
-            bottom: theme.spacing['4xl'],
-            left: '50%',
-            transform: 'translateX(-50%)',
-            animation: 'float 3s ease-in-out infinite',
+            position: 'relative',
+            zIndex: 1,
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '-200px',
+            // Overflow the section bottom so image peeks below fold
+            marginBottom: '0px',
           }}
         >
-          <div
+          <img
+            src="/images/Default_A_delicate_intricately_detailed_3D_hydrangea_blooms_ag_1_5608c5bf-c46a-46b8-b9a4-6f3a3aeb05dc_0.png"
+            alt=""
             style={{
-              ...typography.styles.h4,
-              color: theme.text.tertiary,
-              opacity: 0.4,
+              width: 'clamp(700px, 80vw, 1100px)',
+              height: 'auto',
+              userSelect: 'none',
+              pointerEvents: 'none',
+              // Fade bottom edge into the background
+              WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+              maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
             }}
-          >
-            ↓
-          </div>
+          />
         </div>
       </section>
 
@@ -372,123 +374,162 @@ export const LandingPage: React.FC = () => {
 
       <CurvedDivider color="#FFF9F7" flip />
 
-      {/* ========== HOW IT WORKS - Clean Numbered Process ========== */}
+      {/* ========== HOW IT WORKS - Editorial Vertical Steps ========== */}
       <section
         style={{
           padding: '120px 40px',
           background: '#FFF9F7',
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+
+          {/* Section label + headline */}
           <RevealOnScroll>
+            <p style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: '18px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase' as const,
+              color: theme.text.tertiary,
+              textAlign: 'center',
+              marginBottom: theme.spacing.lg,
+            }}>How it works</p>
             <h2
               style={{
-                fontSize: 'clamp(32px, 4vw, 48px)',
+                fontSize: 'clamp(40px, 5.5vw, 64px)',
                 fontFamily: typography.fontFamily.serif,
                 fontWeight: typography.fontWeight.normal,
                 textAlign: 'center',
-                marginBottom: theme.spacing['7xl'],
+                marginBottom: '96px',
                 color: theme.text.primary,
+                letterSpacing: '-0.01em',
+                lineHeight: 1.15,
               }}
             >
-              How it works
+              How a memory becomes a flower
             </h2>
           </RevealOnScroll>
 
-          {/* Process Steps - Horizontal One Line */}
-          <div
-            style={{
-              display: 'flex',
-              gap: theme.spacing['3xl'],
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-            }}
-          >
-            {[
-              {
-                icon: <InsertPhoto sx={{ fontSize: 48 }} />,
-                title: 'Plant a memory',
-                description: 'Write, record, or speak what you want to remember',
-              },
-              {
-                icon: <LocalFlorist sx={{ fontSize: 48 }} />,
-                title: 'Let it bloom',
-                description: 'Choose when your flower opens — now or in the future',
-              },
-              {
-                icon: <CardGiftcard sx={{ fontSize: 48 }} />,
-                title: 'Share as a gift',
-                description: 'Send memories to loved ones, quietly and intentionally',
-              },
-              {
-                icon: <Home sx={{ fontSize: 48 }} />,
-                title: 'Return anytime',
-                description: 'Your garden waits for you, private and peaceful',
-              },
-            ].map((step, index) => (
-              <RevealOnScroll key={index} delay={index * 100}>
-                <div
-                  style={{
-                    flex: '1 1 220px',
-                    maxWidth: '260px',
-                    textAlign: 'center',
-                    padding: theme.spacing.xl,
-                    transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                >
-                  {/* Icon */}
-                  <div
+          {/* Steps — vertical alternating layout */}
+          {[
+            {
+              number: '01',
+              label: 'STEP 01',
+              title: 'Plant a memory',
+              description: 'Write a thought, attach a photo, record a voice note — anything worth keeping. The moment becomes a flower in your garden.',
+              image: '/images/Moment to remember-rafiki.png',
+              imageAlt: 'A person capturing a moment to remember',
+              imageRight: false,
+            },
+            {
+              number: '02',
+              label: 'STEP 02',
+              title: 'Choose when it blooms',
+              description: 'Set it to open now, or seal it for later — a week, a year, or a lifetime. Some things are sweeter with time.',
+              image: '/images/Flowers-rafiki.png',
+              imageAlt: 'Flowers blooming — a memory coming to life',
+              imageRight: true,
+            },
+            {
+              number: '03',
+              label: 'STEP 03',
+              title: 'Grow your garden',
+              description: "Every memory you plant adds to your private garden — a quiet, growing space that's entirely yours.",
+              image: '/images/Flowers-amico.png',
+              imageAlt: 'A garden growing — a collection of memories',
+              imageRight: false,
+            },
+            {
+              number: '04',
+              label: 'STEP 04',
+              title: 'Send it as a flower',
+              description: "When the moment is right, send a memory to someone you love. No wrapping needed — just a flower, and a letter.",
+              image: "/images/Valentine's bouquet with a card-bro.png",
+              imageAlt: "A bouquet with a card — a memory sent with love",
+              imageRight: true,
+            },
+          ].map((step, index) => (
+            <RevealOnScroll key={index} delay={index * 80}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: step.imageRight ? 'row-reverse' : 'row',
+                  alignItems: 'center',
+                  gap: 'clamp(32px, 4vw, 72px)',
+                  marginBottom: index < 3 ? '64px' : '0',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {/* Image side */}
+                <div style={{
+                  flex: '1 1 340px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  minHeight: '320px',
+                  position: 'relative',
+                }}>
+                  <img
+                    src={step.image}
+                    alt={step.imageAlt}
                     style={{
-                      color: theme.colors.rose[400],
-                      marginBottom: theme.spacing.lg,
-                      display: 'flex',
-                      justifyContent: 'center',
+                      width: 'clamp(240px, 35vw, 420px)',
+                      height: 'auto',
+                      position: 'relative',
+                      zIndex: 1,
+                      userSelect: 'none',
+                      pointerEvents: 'none',
+                      filter: 'drop-shadow(0 8px 32px rgba(212, 144, 154, 0.15))',
                     }}
-                  >
-                    {step.icon}
-                  </div>
+                  />
+                </div>
 
-                  {/* Step Title */}
-                  <h3
-                    style={{
-                      fontSize: 'clamp(18px, 2vw, 22px)',
-                      fontWeight: typography.fontWeight.semibold,
-                      marginBottom: theme.spacing.md,
-                      color: theme.text.primary,
-                      fontFamily: typography.fontFamily.serif,
-                    }}
-                  >
+                {/* Text side */}
+                <div style={{
+                  flex: '1 1 380px',
+                  maxWidth: '520px',
+                  padding: '0 8px',
+                }}>
+                  {/* Step label */}
+                  <p style={{
+                    fontFamily: typography.fontFamily.serif,
+                    fontSize: '16px',
+                    letterSpacing: '0.2em',
+                    textTransform: 'uppercase' as const,
+                    color: theme.text.tertiary,
+                    marginBottom: theme.spacing.md,
+                  }}>
+                    {step.label}
+                  </p>
+
+                  {/* Step title */}
+                  <h3 style={{
+                    fontSize: 'clamp(28px, 3.5vw, 40px)',
+                    fontFamily: typography.fontFamily.serif,
+                    fontWeight: typography.fontWeight.normal,
+                    color: theme.text.primary,
+                    marginBottom: theme.spacing.xl,
+                    lineHeight: 1.2,
+                    letterSpacing: '-0.01em',
+                  }}>
                     {step.title}
                   </h3>
 
-                  {/* Step Description */}
-                  <p
-                    style={{
-                      fontSize: 'clamp(14px, 1.5vw, 16px)',
-                      lineHeight: 1.7,
-                      color: theme.text.secondary,
-                    }}
-                  >
+                  {/* Step description */}
+                  <p style={{
+                    fontSize: 'clamp(17px, 2vw, 20px)',
+                    lineHeight: 1.8,
+                    color: theme.text.secondary,
+                    maxWidth: '480px',
+                  }}>
                     {step.description}
                   </p>
                 </div>
-              </RevealOnScroll>
-            ))}
-          </div>
+              </div>
+            </RevealOnScroll>
+          ))}
 
-          <RevealOnScroll delay={400}>
-            <p
-              style={{
-                marginTop: theme.spacing['7xl'],
-                textAlign: 'center',
-                fontSize: '18px',
-                color: theme.text.tertiary,
-                fontStyle: 'italic',
-              }}
-            >
-              Nothing more than that.
-            </p>
-          </RevealOnScroll>
+
         </div>
       </section>
 

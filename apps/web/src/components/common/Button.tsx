@@ -101,6 +101,7 @@ export const Button: React.FC<ButtonProps> = ({
     },
     ghost: {
       background: theme.bg.blush,
+      transform: 'translateY(-1px)',
     },
     danger: {
       background: theme.colors.rose[700],

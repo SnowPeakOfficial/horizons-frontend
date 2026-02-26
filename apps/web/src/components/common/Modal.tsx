@@ -14,6 +14,8 @@ interface ModalProps {
   children: React.ReactNode;
   maxWidth?: string;
   showCloseButton?: boolean;
+  /** Optional className applied to the scrolling modal container */
+  className?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -23,6 +25,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   maxWidth = '600px',
   showCloseButton = true,
+  className,
 }) => {
   // Close on Escape key
   useEffect(() => {
@@ -119,7 +122,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div style={backdropStyle} onClick={handleBackdropClick}>
-      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+      <div style={modalStyle} className={className} onClick={(e) => e.stopPropagation()}>
         {(title || showCloseButton) && (
           <div style={headerStyle}>
             {title && <h2 style={titleStyle}>{title}</h2>}

@@ -13,6 +13,7 @@ import type { Flower } from '../../types/api.types';
 import type { FlowerDefinition } from '../../flowers/types';
 import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import { FlowerBud } from '../../flowers/FlowerBud';
+import { resolveLetterTemplate } from '../../flowers/letterTemplates';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import CardGiftcard from '@mui/icons-material/CardGiftcard';
@@ -59,7 +60,7 @@ function FlowerPreview({
 /**
  * Heart Garland - Subtle framing at top
  */
-function HeartGarland() {
+function HeartGarland({ garland, color }: { garland: string; color: string }) {
   return (
     <div style={{
       position: 'absolute',
@@ -67,11 +68,12 @@ function HeartGarland() {
       left: '50%',
       transform: 'translateX(-50%)',
       fontSize: '14px',
-      color: theme.colors.rose[600],
+      color,
       letterSpacing: '4px',
       opacity: 0.6,
+      whiteSpace: 'nowrap',
     }}>
-      ♡―♥︎―♡
+      {garland}
     </div>
   );
 }
@@ -100,29 +102,15 @@ function HorizonsBranding() {
 }
 
 /**
- * Doodle Hearts - Subtle decoration
+ * Doodle Hearts - Subtle decoration (only for romantic template)
  */
-function DoodleHearts() {
+function DoodleHearts({ color }: { color: string }) {
   return (
     <>
-      <div style={{
-        position: 'absolute',
-        top: '45%',
-        right: '32px',
-        fontSize: '16px',
-        color: theme.colors.rose[400],
-        opacity: 0.4,
-      }}>
+      <div style={{ position: 'absolute', top: '45%', right: '32px', fontSize: '16px', color, opacity: 0.4 }}>
         ♡
       </div>
-      <div style={{
-        position: 'absolute',
-        bottom: '140px',
-        left: '32px',
-        fontSize: '14px',
-        color: theme.colors.rose[600],
-        opacity: 0.3,
-      }}>
+      <div style={{ position: 'absolute', bottom: '140px', left: '32px', fontSize: '14px', color, opacity: 0.3 }}>
         ♥︎
       </div>
     </>
@@ -200,8 +188,16 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   const senderName = flower.plantedBy?.name || "A friend";
   const recipientName = flower.recipientName || "you";
 
-  // Sign-off tone (metadata-driven)
-  const signOffTone = "With love,"; // TODO: Make this selectable enum
+  // Display name based on mystery mode (must precede openingSentence)
+  const displayName = shouldHideIdentity ? "mystery flower" : definition.name;
+
+  // Resolve letter template
+  const tmpl = resolveLetterTemplate(flower.letterTemplate);
+
+  // Opening sentence with interpolated date and flower name
+  const openingSentence = tmpl.openingSentence
+    .replace('{date}', plantedDate)
+    .replace('{flower}', displayName);
 
   // Model path, preview scale, and preview offset from centralized definitions
   const modelPath = definition.modelPath;
@@ -217,23 +213,21 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   const isBloomable = flower.type === 'BLOOMING';
   const isBloomed = flower.state === 'BLOOMED';
 
-  // Display name based on mystery mode
-  const displayName = shouldHideIdentity ? "mystery flower" : definition.name;
-
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
       maxWidth="650px"
       showCloseButton={false}
+      className="flower-letter-modal"
     >
-      {/* Outer Pink Frame - Full extent to modal edges */}
-      <div style={outerFrameStyle}>
+      {/* Outer Frame - color driven by letter template */}
+      <div style={{ ...outerFrameStyle, background: tmpl.frameColor }}>
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          style={closeButtonStyle}
+          style={{ ...closeButtonStyle, background: `${tmpl.frameColor}66` }}
           onMouseEnter={(e) => {
             e.currentTarget.style.opacity = '1';
           }}
@@ -242,20 +236,20 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
           }}
           aria-label="Close letter"
         >
-          <Close sx={{ fontSize: 20, color: theme.colors.rose[700] }} />
+          <Close sx={{ fontSize: 20, color: tmpl.accentDark }} />
         </button>
         
         {/* Heart Garland */}
-        <HeartGarland />
+        <HeartGarland garland={tmpl.garland} color={tmpl.accentColor} />
         
         {/* Horizons Branding */}
         <HorizonsBranding />
         
-        {/* White Letter Card */}
-        <div style={whiteCardStyle}>
+        {/* White Letter Card - gradient driven by letter template */}
+        <div style={{ ...whiteCardStyle, background: tmpl.cardGradient }}>
           
           {/* 3D Flower - Anchored to top-right edge */}
-          <div style={flowerAnchorStyle}>
+          <div style={{ ...flowerAnchorStyle, border: `3px solid ${tmpl.frameColor}` }}>
             <Canvas
               camera={{ position: [0, 0, 8], fov: 45 }}
               style={{ width: '100%', height: '100%' }}
@@ -292,8 +286,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             
             {/* Opening */}
             <div style={bodyStyle}>
-              On <span style={dateHighlightStyle}>{plantedDate}</span>, this beautiful{' '}
-              <span style={flowerNameStyle}>{displayName}</span> was planted just for you.
+              {openingSentence.split(/({date}|{flower})/g).length > 1
+                ? openingSentence
+                : openingSentence}
             </div>
             
             {/* Seed Message - Simplified for elegance */}
@@ -309,10 +304,15 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                 {!mediaRevealed ? (
                   /* Unrevealed - Show tap to reveal button */
                   <div 
-                    style={mediaRevealButtonStyle}
+                    style={{
+                      ...mediaRevealButtonStyle,
+                      background: `${tmpl.frameColor}33`,
+                      border: `2px dashed ${tmpl.accentColor}66`,
+                      color: tmpl.accentDark,
+                    }}
                     onClick={() => setMediaRevealed(true)}
                   >
-                    <CardGiftcard sx={{ fontSize: 32, color: theme.colors.rose[500], marginBottom: '8px' }} />
+                    <CardGiftcard sx={{ fontSize: 32, color: tmpl.accentColor, marginBottom: '8px' }} />
                     <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
                       Something was left for you
                     </div>
@@ -341,9 +341,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                   /* Revealed - Show media */
                   <div style={mediaGridStyle}>
                     {imageUrl && (
-                      <div style={mediaItemStyle}>
-                        <div style={mediaLabelStyle}>
-                          <Photo sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px' }} />
+                      <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
+                        <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
+                          <Photo sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: tmpl.accentColor }} />
                           Photo
                         </div>
                         <img 
@@ -355,9 +355,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     )}
                     
                     {voiceUrl && (
-                      <div style={mediaItemStyle}>
-                        <div style={mediaLabelStyle}>
-                          <Mic sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px' }} />
+                      <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
+                        <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
+                          <Mic sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: tmpl.accentColor }} />
                           Voice Message
                         </div>
                         <audio 
@@ -369,9 +369,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     )}
                     
                     {videoUrl && (
-                      <div style={mediaItemStyle}>
-                        <div style={mediaLabelStyle}>
-                          <Videocam sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px' }} />
+                      <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
+                        <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
+                          <Videocam sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: tmpl.accentColor }} />
                           Video
                         </div>
                         <video 
@@ -415,14 +415,14 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             
             {/* Sign-Off */}
             <div style={signOffContainerStyle}>
-              <div style={signOffStyle}>{signOffTone}</div>
+              <div style={signOffStyle}>{tmpl.signOff}</div>
               <div style={senderNameStyle}>{senderName}</div>
             </div>
             
           </div>
           
-          {/* Subtle Doodle Hearts */}
-          <DoodleHearts />
+          {/* Subtle Doodle Hearts - only for romantic */}
+          {tmpl.showDoodleHearts && <DoodleHearts color={tmpl.accentColor} />}
           
         </div>
         
@@ -453,8 +453,23 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         
       </div>
       
-      {/* Animations */}
+      {/* Animations + scoped scrollbar theming */}
       <style>{`
+        .flower-letter-modal {
+          scrollbar-width: thin;
+          scrollbar-color: ${tmpl.frameColor} transparent;
+        }
+        .flower-letter-modal::-webkit-scrollbar {
+          width: 6px;
+        }
+        .flower-letter-modal::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .flower-letter-modal::-webkit-scrollbar-thumb {
+          background-color: ${tmpl.frameColor};
+          border-radius: 3px;
+        }
+
         @keyframes unfoldLetter {
           from {
             opacity: 0;
@@ -496,9 +511,11 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 // STYLES - The Core Ritual Design
 // ============================================
 
+// outerFrameStyle is now generated dynamically in the component
+// (kept as a function below — see getOuterFrameStyle)
 const outerFrameStyle: React.CSSProperties = {
   position: 'relative',
-  background: theme.colors.rose[300], // Soft pink frame
+  background: theme.colors.rose[300],
   borderRadius: '16px',
   padding: '40px',
   boxShadow: theme.shadow['2xl'],
@@ -570,11 +587,6 @@ const bodyStyle: React.CSSProperties = {
   letterSpacing: '0.3px',
 };
 
-const flowerNameStyle: React.CSSProperties = {
-  fontWeight: 600,
-  color: theme.colors.rose[700],
-  fontStyle: 'italic',
-};
 
 const dateHighlightStyle: React.CSSProperties = {
   fontWeight: 600,

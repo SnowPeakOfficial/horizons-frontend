@@ -1,8 +1,7 @@
 /**
  * SakuraIntro Component - Ultra-Smooth Scale Aperture
- * Takes FULL hero section and scales from 20% → 100%
- * Uses CSS transform scale() for perfect smoothness
- * 100 keyframes for butter-smooth progression
+ * Hero section is a 1:1 literal copy of LandingPage hero.
+ * Only differences: height:'100%' on section, no-op onClick for "Read our letter".
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -10,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
-import Lock from '@mui/icons-material/Lock';
 
 interface SakuraIntroProps {
   onComplete: () => void;
@@ -24,7 +22,6 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Adjust video to 8 seconds (8 second original = 1.0x playback)
     video.playbackRate = 1.0;
 
     const playVideo = async () => {
@@ -78,7 +75,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
         <source src="/videos/sakura-blast.mp4" type="video/mp4" />
       </video>
 
-      {/* Full Hero Section - Scales from 20% to 100% */}
+      {/* Full Hero Section - Scales from 15% to 100% */}
       <div
         style={{
           position: 'absolute',
@@ -94,16 +91,18 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           boxShadow: '0 0 80px rgba(255, 255, 255, 0.4)',
         }}
       >
-        {/* FULL HERO SECTION - EXACTLY AS-IS FROM LANDING PAGE */}
+        {/* ── HERO SECTION — exact copy of LandingPage hero ── */}
         <section
           style={{
             position: 'relative',
-            width: '100%',
+            minHeight: 'auto',
             height: '100%',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             overflow: 'hidden',
+            paddingTop: '80px',
             background: `linear-gradient(180deg, 
               #FDFCFA 0%, 
               #FFF9F7 50%,
@@ -121,6 +120,26 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             }}
           />
 
+          {/* Bloomory-style peripheral labels */}
+          <div style={{
+            position: 'absolute', top: '88px', left: '52px',
+            fontFamily: typography.fontFamily.serif, fontSize: '18px',
+            letterSpacing: '0.25em', textTransform: 'uppercase' as const,
+            color: theme.text.tertiary, opacity: 1, zIndex: 10,
+            pointerEvents: 'none',
+          }}>EST. 2026</div>
+
+          <div style={{
+            position: 'absolute', top: '88px', right: '52px',
+            fontFamily: typography.fontFamily.serif, fontSize: '18px',
+            letterSpacing: '0.1em', color: theme.text.tertiary, opacity: 1,
+            zIndex: 10, pointerEvents: 'none',
+            display: 'flex', alignItems: 'center', gap: '6px',
+          }}>
+            <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
+            <span>Private by design</span>
+          </div>
+
           {/* Logo Layer - Shows First (0-2s) */}
           <div
             style={{
@@ -136,8 +155,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             <div
               style={{
                 fontFamily: typography.fontFamily.serif,
-                fontSize: 'clamp(36px, 6vw, 72px)',
-                fontWeight: typography.fontWeight.normal,
+                fontSize: 'clamp(64px, 10vw, 128px)',
+                fontWeight: typography.fontWeight.medium,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
                 color: theme.text.tertiary,
@@ -163,20 +182,21 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             {/* Logo/Brand */}
             <div
               style={{
-                ...typography.styles.h6,
                 fontFamily: typography.fontFamily.serif,
-                color: theme.text.tertiary,
-                marginBottom: theme.spacing['6xl'],
-                fontWeight: typography.fontWeight.normal,
-                letterSpacing: '0.1em',
+                fontSize: 'clamp(36px, 5vw, 60px)',
+                fontWeight: typography.fontWeight.medium,
+                letterSpacing: '0.15em',
                 textTransform: 'uppercase',
+                color: theme.text.tertiary,
+                marginBottom: theme.spacing['2xl'],
                 opacity: 0.7,
+                textShadow: '0 1px 3px rgba(0,0,0,0.08)',
               }}
             >
               Horizons
             </div>
 
-            {/* Main Headline - Large & Bold */}
+            {/* Main Headline */}
             <h1
               style={{
                 fontSize: 'clamp(48px, 8vw, 96px)',
@@ -186,7 +206,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 lineHeight: 1.1,
                 letterSpacing: '-0.02em',
                 maxWidth: '900px',
-                margin: `0 auto ${theme.spacing['4xl']} auto`,
+                margin: `0 auto ${theme.spacing['xl']} auto`,
+                textShadow: '0 1px 2px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)',
               }}
             >
               A quiet place to keep
@@ -198,11 +219,12 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             <p
               style={{
                 fontSize: 'clamp(20px, 3vw, 28px)',
-                fontWeight: typography.fontWeight.normal,
-                color: theme.text.secondary,
+                fontWeight: typography.fontWeight.medium,
                 lineHeight: 1.7,
                 maxWidth: '700px',
-                margin: `0 auto ${theme.spacing['6xl']} auto`,
+                margin: `0 auto ${theme.spacing['2xl']} auto`,
+                color: theme.text.primary,
+                textShadow: '0 1px 3px rgba(0,0,0,0.08)',
               }}
             >
               Plant memories as flowers.
@@ -217,6 +239,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 gap: theme.spacing.lg,
                 justifyContent: 'center',
                 flexWrap: 'wrap',
+                position: 'relative',
+                zIndex: 3,
               }}
             >
               <Button
@@ -226,12 +250,13 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 style={{
                   fontSize: '18px',
                   padding: '18px 48px',
-                  boxShadow: '0 8px 32px rgba(212, 144, 154, 0.3)',
+                  background: `linear-gradient(135deg, ${theme.colors.rose[600]} 0%, ${theme.colors.rose[700]} 100%)`,
+                  boxShadow: '0 4px 0 rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.04)',
                 }}
               >
                 Enter your garden
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="large"
@@ -239,31 +264,42 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 style={{
                   fontSize: '18px',
                   padding: '18px 48px',
+                  background: 'rgba(255, 255, 255, 0.92)',
+                  color: theme.colors.rose[700],
+                  boxShadow: '0 4px 0 rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.03)',
+                  backdropFilter: 'blur(8px)',
                 }}
               >
                 Read our letter
               </Button>
             </div>
+          </div>
 
-            {/* Trust Badge */}
-            <div
+          {/* Hydrangea image — exact copy from LandingPage */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '-200px',
+              marginBottom: '0px',
+              animation: 'heroContentFade 8s ease forwards',
+            }}
+          >
+            <img
+              src="/images/Default_A_delicate_intricately_detailed_3D_hydrangea_blooms_ag_1_5608c5bf-c46a-46b8-b9a4-6f3a3aeb05dc_0.png"
+              alt=""
               style={{
-                marginTop: theme.spacing['7xl'],
-                ...typography.styles.caption,
-                color: theme.text.tertiary,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: theme.spacing.lg,
+                width: 'clamp(700px, 80vw, 1100px)',
+                height: 'auto',
+                userSelect: 'none',
+                pointerEvents: 'none',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
               }}
-            >
-              <Lock sx={{ fontSize: 16 }} />
-              <span>100% Private</span>
-              <span>•</span>
-              <span>End-to-End Encrypted</span>
-              <span>•</span>
-              <span>Zero Tracking</span>
-            </div>
+            />
           </div>
         </section>
       </div>
