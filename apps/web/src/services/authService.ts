@@ -99,6 +99,26 @@ class AuthService {
     
     return response.data;
   }
+
+  /**
+   * Update current user profile (name, timezone)
+   */
+  async updateProfile(data: { name?: string; timezone?: string }): Promise<User> {
+    const response = await api.put<User>('/users/me', data);
+    
+    // Update stored user data
+    localStorage.setItem('horizons_user', JSON.stringify(response.data));
+    
+    return response.data;
+  }
+
+  /**
+   * Get user statistics (gardens count, flowers count, etc.)
+   */
+  async getUserStats(): Promise<{ totalGardens: number; totalFlowers: number; memberSince: string }> {
+    const response = await api.get<{ totalGardens: number; totalFlowers: number; memberSince: string }>('/users/me/stats');
+    return response.data;
+  }
 }
 
 export default new AuthService();

@@ -3,22 +3,32 @@
  * Supports both guest and authenticated states
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
+import subscriptionService from '../../services/subscriptionService';
 import Person from '@mui/icons-material/Person';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import CreditCard from '@mui/icons-material/CreditCard';
+import BugReport from '@mui/icons-material/BugReport';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout, isAuthenticated } = useAuthStore();
+  const { user, logout, isAuthenticated, loadUser } = useAuthStore();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isDevMenuOpen, setIsDevMenuOpen] = useState(false);
+  const [devLoading, setDevLoading] = useState<string | null>(null);
+
+  // Refresh user tier from API on mount so badge is always current
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadUser();
+    }
+  }, [isAuthenticated, loadUser]);
 
   const handleLogout = () => {
     logout();
@@ -147,6 +157,19 @@ export const Navbar: React.FC = () => {
     gap: theme.spacing.sm,
   };
 
+  const handleDevChangeTier = async (tier: 'FREE' | 'PRO' | 'PREMIUM') => {
+    setDevLoading(tier);
+    try {
+      await subscriptionService.changeTier(tier);
+      await loadUser();
+    } catch (e) {
+      console.error('Dev tier change failed', e);
+    } finally {
+      setDevLoading(null);
+      setIsDevMenuOpen(false);
+    }
+  };
+
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
@@ -242,6 +265,66 @@ export const Navbar: React.FC = () => {
               {user?.tier || 'FREE'}
             </div>
 
+            {/* DEV: Tier Switcher */}
+            <div style={{ position: 'relative' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '4px 10px',
+                  borderRadius: theme.radius.md,
+                  background: 'rgba(255, 200, 100, 0.15)',
+                  border: '1px dashed rgba(200, 150, 50, 0.4)',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: '#9B7B30',
+                  letterSpacing: '0.05em',
+                }}
+                onClick={() => { setIsDevMenuOpen(!isDevMenuOpen); setIsUserMenuOpen(false); }}
+              >
+                <BugReport sx={{ fontSize: 14 }} />
+                DEV
+              </div>
+
+              {isDevMenuOpen && (
+                <div style={{ ...dropdownStyle, minWidth: '140px' }}>
+                  <div style={{ padding: '6px 12px 4px', fontSize: '10px', fontWeight: 700, color: '#9B7B30', letterSpacing: '0.08em' }}>
+                    SWITCH TIER
+                  </div>
+                  {(['FREE', 'PRO', 'PREMIUM'] as const).map((tier) => (
+                    <div
+                      key={tier}
+                      style={{
+                        ...dropdownItemStyle,
+                        fontWeight: user?.tier === tier ? 700 : 400,
+                        color: user?.tier === tier ? theme.colors.rose[700] : theme.text.primary,
+                        background: user?.tier === tier ? theme.colors.rose[50] : 'transparent',
+                        opacity: devLoading && devLoading !== tier ? 0.5 : 1,
+                        cursor: devLoading ? 'default' : 'pointer',
+                        fontSize: '13px',
+                      }}
+                      onClick={() => devLoading ? undefined : handleDevChangeTier(tier)}
+                      onMouseEnter={(e) => {
+                        if (!devLoading && user?.tier !== tier) {
+                          (e.currentTarget as HTMLElement).style.background = theme.colors.rose[50];
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (user?.tier !== tier) {
+                          (e.currentTarget as HTMLElement).style.background = 'transparent';
+                        }
+                      }}
+                    >
+                      {devLoading === tier ? '...' : tier}
+                      {user?.tier === tier && ' ✓'}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div style={{ position: 'relative' }}>
               <div
                 style={userMenuButtonStyle}
@@ -297,24 +380,6 @@ export const Navbar: React.FC = () => {
                     <Settings sx={{ fontSize: 18 }} />
                     Settings
                   </div>
-                  {user?.tier !== 'FREE' && (
-                    <div
-                      style={dropdownItemStyle}
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        navigate('/billing');
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = theme.colors.rose[50];
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = 'transparent';
-                      }}
-                    >
-                      <CreditCard sx={{ fontSize: 18 }} />
-                      Billing
-                    </div>
-                  )}
                   <div style={{ height: '1px', background: theme.border.light, margin: `${theme.spacing.xs} 0` }} />
                   <div
                     style={{...dropdownItemStyle, color: theme.text.tertiary}}
@@ -341,8 +406,8 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Click outside to close menu */}
-      {isUserMenuOpen && (
+      {/* Click outside to close menus */}
+      {(isUserMenuOpen || isDevMenuOpen) && (
         <div
           style={{
             position: 'fixed',
@@ -352,7 +417,7 @@ export const Navbar: React.FC = () => {
             bottom: 0,
             zIndex: 999,
           }}
-          onClick={() => setIsUserMenuOpen(false)}
+          onClick={() => { setIsUserMenuOpen(false); setIsDevMenuOpen(false); }}
         />
       )}
     </nav>

@@ -84,10 +84,21 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
   },
 
-  loadUser: () => {
-    const user = authService.getCurrentUser();
+  loadUser: async () => {
     const isAuthenticated = authService.isAuthenticated();
-    set({ user, isAuthenticated });
+    if (!isAuthenticated) {
+      set({ user: null, isAuthenticated: false });
+      return;
+    }
+    try {
+      // Fetch fresh user data from API (includes current tier)
+      const user = await authService.getProfile();
+      set({ user, isAuthenticated: true });
+    } catch {
+      // Fall back to cached localStorage data if API fails
+      const user = authService.getCurrentUser();
+      set({ user, isAuthenticated: !!user });
+    }
   },
 
   clearError: () => {

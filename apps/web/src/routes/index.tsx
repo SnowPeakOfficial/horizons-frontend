@@ -8,61 +8,115 @@ import { LoginPage } from '../pages/auth/LoginPage';
 import { RegisterPage } from '../pages/auth/RegisterPage';
 import { MyGardensPage } from '../pages/MyGardensPage';
 import { GardenPage } from '../pages/GardenPage';
+import { PricingPage } from '../pages/PricingPage';
+import { PricingSuccessPage } from '../pages/PricingSuccessPage';
+import { ProfilePage } from '../pages/ProfilePage';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import { GuestRoute } from '../components/auth/GuestRoute';
+import { PrivacyPage } from '../pages/PrivacyPage';
+import { TermsPage } from '../pages/TermsPage';
+import { ContactPage } from '../pages/ContactPage';
+import { RootLayout } from '../components/layout/RootLayout';
 
 export const router = createBrowserRouter([
-  // Public routes
   {
-    path: '/',
-    element: <LandingPage />,
-  },
-  
-  // Auth routes (only accessible when logged out)
-  {
-    path: '/auth/login',
-    element: (
-      <GuestRoute>
-        <LoginPage />
-      </GuestRoute>
-    ),
-  },
-  {
-    path: '/auth/register',
-    element: (
-      <GuestRoute>
-        <RegisterPage />
-      </GuestRoute>
-    ),
-  },
-  
-  // Protected routes (require authentication)
-  {
-    path: '/my-gardens',
-    element: (
-      <ProtectedRoute>
-        <MyGardensPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/garden/:gardenId',
-    element: (
-      <ProtectedRoute>
-        <GardenPage />
-      </ProtectedRoute>
-    ),
-  },
-  
-  // Legacy route redirect
-  {
-    path: '/dashboard',
-    element: <Navigate to="/my-gardens" replace />,
-  },
-  
-  // Catch-all redirect
-  {
-    path: '*',
-    element: <Navigate to="/" replace />,
+    element: <RootLayout />,
+    children: [
+      // Public routes
+      {
+        path: '/',
+        element: <LandingPage />,
+      },
+
+      // Auth routes (only accessible when logged out)
+      {
+        path: '/auth/login',
+        element: (
+          <GuestRoute>
+            <LoginPage />
+          </GuestRoute>
+        ),
+      },
+      {
+        path: '/auth/register',
+        element: (
+          <GuestRoute>
+            <RegisterPage />
+          </GuestRoute>
+        ),
+      },
+
+      // Protected routes (require authentication)
+      {
+        path: '/my-gardens',
+        element: (
+          <ProtectedRoute>
+            <MyGardensPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/garden/:gardenId',
+        element: (
+          <ProtectedRoute>
+            <GardenPage />
+          </ProtectedRoute>
+        ),
+      },
+
+      // Pricing (public)
+      {
+        path: '/pricing',
+        element: <PricingPage />,
+      },
+
+      // Pricing success (after Stripe checkout) — public so Stripe redirect always lands
+      {
+        path: '/pricing/success',
+        element: <PricingSuccessPage />,
+      },
+
+      // Alias: backend redirects to /subscription/success
+      {
+        path: '/subscription/success',
+        element: <PricingSuccessPage />,
+      },
+
+      // Profile (protected)
+      {
+        path: '/profile',
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
+
+      // Legal & contact (public)
+      {
+        path: '/privacy',
+        element: <PrivacyPage />,
+      },
+      {
+        path: '/terms',
+        element: <TermsPage />,
+      },
+      {
+        path: '/contact',
+        element: <ContactPage />,
+      },
+
+      // Legacy route redirect
+      {
+        path: '/dashboard',
+        element: <Navigate to="/my-gardens" replace />,
+      },
+
+      // Catch-all redirect
+      {
+        path: '*',
+        element: <Navigate to="/" replace />,
+      },
+    ],
   },
 ]);

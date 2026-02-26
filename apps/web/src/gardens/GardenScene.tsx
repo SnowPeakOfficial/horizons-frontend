@@ -15,6 +15,12 @@ import { Bees } from './components/Bees';
 import { FloatingParticles } from './components/FloatingParticles';
 import { FlowerModel } from '../flowers/FlowerModel';
 
+interface HoveredFlowerInfo {
+  flower: PlacedFlower;
+  definition: FlowerDefinition;
+  worldPosition: { x: number; y: number; z: number };
+}
+
 interface GardenSceneProps {
   config: GardenConfig;
   flowers?: Flower[];
@@ -24,6 +30,7 @@ interface GardenSceneProps {
   onFlowerDragEnd?: (flowerId: string, position: { x: number; y: number; z: number }, rotation: number) => void;
   onFlowerDragStateChange?: (isDragging: boolean) => void;
   onFlowerClick?: (flower: Flower) => void;
+  onFlowerHover?: (info: HoveredFlowerInfo | null) => void;
 }
 
 /**
@@ -72,7 +79,7 @@ function convertApiFlowerToLocal(apiFlower: Flower): { flower: PlacedFlower; def
  * Main garden scene component
  * Renders the 3D environment based on garden configuration
  */
-export function GardenScene({ config, flowers = [], children, isPlacementMode = false, onTerrainClick, onFlowerDragEnd, onFlowerDragStateChange, onFlowerClick }: GardenSceneProps) {
+export function GardenScene({ config, flowers = [], children, isPlacementMode = false, onTerrainClick, onFlowerDragEnd, onFlowerDragStateChange, onFlowerClick, onFlowerHover }: GardenSceneProps) {
   // Check if this garden uses the new terrain system
   const usesTerrain = config.key === 'test_garden';
   
@@ -308,14 +315,19 @@ export function GardenScene({ config, flowers = [], children, isPlacementMode = 
                 onFlowerClick?.(apiFlower);
               }
             }}
+            onHover={(isHovered, hFlower, hDef, worldPos) => {
+              if (isHovered && hFlower && hDef && worldPos) {
+                onFlowerHover?.({ flower: hFlower, definition: hDef, worldPosition: worldPos });
+              } else {
+                onFlowerHover?.(null);
+              }
+            }}
             onDragStart={() => {
-              // Notify parent that dragging started - disable OrbitControls
+              onFlowerHover?.(null);
               onFlowerDragStateChange?.(true);
             }}
             onDragEnd={(placedFlower, position) => {
-              // Notify parent that dragging ended - re-enable OrbitControls
               onFlowerDragStateChange?.(false);
-              // Call the parent handler to save position to backend
               onFlowerDragEnd?.(placedFlower.id, position, placedFlower.rotation);
             }}
           />

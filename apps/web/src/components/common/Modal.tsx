@@ -104,6 +104,7 @@ export const Modal: React.FC<ModalProps> = ({
     borderRadius: theme.radius.md,
     transition: theme.transition.base,
     lineHeight: 1,
+    marginLeft: 'auto',
   };
 
   const contentStyle: React.CSSProperties = {
