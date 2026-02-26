@@ -9,6 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
+import LocalFloristOutlinedIcon from '@mui/icons-material/LocalFloristOutlined';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -44,6 +49,16 @@ export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
   const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem('introPlayed')); // Once per session
+  const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set());
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqs(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -690,6 +705,140 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
+
+      {/* ========== FAQ ========== */}
+      <section
+        style={{
+          padding: '120px 40px',
+          background: '#FFFFFF',
+        }}
+      >
+        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+          <RevealOnScroll>
+            <p style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: '18px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase' as const,
+              color: theme.text.tertiary,
+              textAlign: 'center',
+              marginBottom: theme.spacing.lg,
+            }}>FAQ</p>
+            <h2 style={{
+              fontSize: 'clamp(40px, 5.5vw, 64px)',
+              fontFamily: typography.fontFamily.serif,
+              fontWeight: typography.fontWeight.normal,
+              textAlign: 'center',
+              marginBottom: '64px',
+              color: theme.text.primary,
+              letterSpacing: '-0.01em',
+              lineHeight: 1.15,
+            }}>
+              Questions we get asked
+            </h2>
+          </RevealOnScroll>
+
+          <RevealOnScroll delay={80}>
+            <div>
+              {[
+                {
+                  Icon: CreditCardOutlinedIcon,
+                  question: 'Is Horizons free?',
+                  answer: 'Yes — Horizons has a free tier that lets you plant memories and grow your garden. Pro and Premium plans unlock additional gardens, larger storage, and more customization options.',
+                },
+                {
+                  Icon: VisibilityOffOutlinedIcon,
+                  question: 'Who can see my memories?',
+                  answer: 'Only you — unless you deliberately invite someone. Your garden is private by default. Nothing is public, nothing is indexed, and no one can stumble in uninvited.',
+                },
+                {
+                  Icon: SaveOutlinedIcon,
+                  question: 'What happens to my memories if I cancel?',
+                  answer: "They're yours. You can export everything before you leave, and we keep your data for 30 days after cancellation so nothing is lost accidentally.",
+                },
+                {
+                  Icon: IosShareOutlinedIcon,
+                  question: 'Can I share with someone who doesn\'t have Horizons?',
+                  answer: 'Yes. You can send a memory as a flower via a private link — the recipient can open and read it without an account. Sharing is always a deliberate choice.',
+                },
+                {
+                  Icon: LockOutlinedIcon,
+                  question: 'Is my data encrypted?',
+                  answer: 'End-to-end. Your memories are encrypted in transit and at rest. We never index your content, never sell your data, and never use your memories to train anything.',
+                },
+                {
+                  Icon: LocalFloristOutlinedIcon,
+                  question: "What's the difference between a garden and a memory?",
+                  answer: "A garden is a space — like a journal or an album. A memory is a single flower within that garden. You can have multiple gardens for different parts of your life, each with their own collection of flowers.",
+                },
+              ].map(({ Icon, question, answer }, i) => {
+                const isOpen = openFaqs.has(i);
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      borderTop: `1px solid ${theme.border.light}`,
+                      ...(i === 5 ? { borderBottom: `1px solid ${theme.border.light}` } : {}),
+                    }}
+                  >
+                    <button
+                      onClick={() => toggleFaq(i)}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        padding: '24px 0',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                      }}
+                    >
+                      <Icon style={{ fontSize: 20, color: theme.colors.rose[400], flexShrink: 0 }} />
+                      <span style={{
+                        flex: 1,
+                        fontFamily: typography.fontFamily.serif,
+                        fontSize: 'clamp(16px, 1.6vw, 19px)',
+                        fontWeight: typography.fontWeight.medium,
+                        color: theme.text.primary,
+                        lineHeight: 1.4,
+                      }}>
+                        {question}
+                      </span>
+                      <KeyboardArrowDownIcon style={{
+                        fontSize: 22,
+                        color: theme.text.tertiary,
+                        flexShrink: 0,
+                        transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+                      }} />
+                    </button>
+
+                    <div style={{
+                      overflow: 'hidden',
+                      maxHeight: isOpen ? '300px' : '0px',
+                      opacity: isOpen ? 1 : 0,
+                      transition: 'max-height 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
+                    }}>
+                      <p style={{
+                        fontFamily: typography.fontFamily.serif,
+                        fontSize: 'clamp(15px, 1.4vw, 17px)',
+                        lineHeight: 1.8,
+                        color: theme.text.secondary,
+                        paddingBottom: '24px',
+                        paddingLeft: '36px',
+                      }}>
+                        {answer}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
 
       {/* ========== FINAL CTA ========== */}
       <section
