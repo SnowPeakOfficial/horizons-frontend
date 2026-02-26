@@ -533,101 +533,182 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      <CurvedDivider color="#FFFFFF" />
-
-      {/* ========== HOW IT FEELS ========== */}
+      {/* ========== WHY HORIZONS — Orix-style panel row ========== */}
       <section
         style={{
-          padding: '120px 40px',
+          padding: '120px 40px 0 40px',
           background: '#FFFFFF',
         }}
       >
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+
+          {/* Section header — matches "How it works" style exactly */}
           <RevealOnScroll>
-            <p
-              style={{
-                fontSize: 'clamp(20px, 2.5vw, 32px)',
-                lineHeight: 1.8,
-                color: theme.text.secondary,
-                marginBottom: theme.spacing['5xl'],
-              }}
-            >
-              There are no feeds here.
-              <br />
-              No numbers to keep up with.
-              <br />
-              No pressure to share.
-            </p>
-
-            <p
-              style={{
-                fontSize: 'clamp(20px, 2.5vw, 32px)',
-                lineHeight: 1.8,
-                color: theme.text.primary,
-                fontWeight: typography.fontWeight.medium,
-              }}
-            >
-              Only the people you invite.
-              <br />
-              Only the moments you choose to keep.
-            </p>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      <CurvedDivider color="#FFF9F7" flip />
-
-      {/* ========== PRIVACY & TRUST ========== */}
-      <section
-        style={{
-          padding: '120px 40px',
-          background: '#FFF9F7',
-        }}
-      >
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-          <RevealOnScroll>
-            <h2
-              style={{
-                fontSize: 'clamp(32px, 4vw, 48px)',
-                fontFamily: typography.fontFamily.serif,
-                fontWeight: typography.fontWeight.normal,
-                marginBottom: theme.spacing['5xl'],
-                color: theme.text.primary,
-              }}
-            >
-              Horizons is private by design
+            <p style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: '18px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase' as const,
+              color: theme.text.tertiary,
+              textAlign: 'center',
+              marginBottom: theme.spacing.lg,
+            }}>Why Horizons</p>
+            <h2 style={{
+              fontSize: 'clamp(40px, 5.5vw, 64px)',
+              fontFamily: typography.fontFamily.serif,
+              fontWeight: typography.fontWeight.normal,
+              textAlign: 'center',
+              marginBottom: '64px',
+              color: theme.text.primary,
+              letterSpacing: '-0.01em',
+              lineHeight: 1.15,
+            }}>
+              A space built differently
             </h2>
+          </RevealOnScroll>
 
-            <p
-              style={{
-                fontSize: 'clamp(18px, 2vw, 24px)',
-                lineHeight: 1.8,
-                color: theme.text.secondary,
-                marginBottom: theme.spacing['4xl'],
-              }}
-            >
-              Your gardens aren't public.
-              <br />
-              Your memories aren't indexed.
-              <br />
-              Nothing is shared without intention.
-            </p>
+          {/* Panel row */}
+          <RevealOnScroll delay={100}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1.1fr 1fr 1fr',
+              minHeight: '380px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              border: `1px solid ${theme.border.light}`,
+            }}>
 
-            <p
-              style={{
-                fontSize: 'clamp(18px, 2vw, 24px)',
-                lineHeight: 1.8,
-                color: theme.text.primary,
-                fontWeight: typography.fontWeight.medium,
-              }}
-            >
-              This is a space meant to feel safe.
-            </p>
+              {/* Panel 1 — Flower image */}
+              <div style={{
+                position: 'relative',
+                overflow: 'hidden',
+                background: '#F5ECE8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <img
+                  src="/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_1_1e7015ea-9d7e-4641-a544-8aadfba8a958_0.png"
+                  alt=""
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                    display: 'block',
+                  }}
+                />
+              </div>
+
+              {/* Panel 2 — Manifesto */}
+              <div style={{
+                background: '#FDFCFA',
+                padding: '40px 36px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                borderLeft: `1px solid ${theme.border.light}`,
+              }}>
+                <p style={{
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(18px, 1.8vw, 24px)',
+                  lineHeight: 1.75,
+                  color: theme.text.secondary,
+                  fontWeight: typography.fontWeight.normal,
+                  marginBottom: '28px',
+                }}>
+                  No feeds.<br />
+                  No numbers.<br />
+                  No pressure.
+                </p>
+                <p style={{
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(20px, 2vw, 28px)',
+                  lineHeight: 1.45,
+                  color: theme.text.primary,
+                  fontWeight: typography.fontWeight.normal,
+                  letterSpacing: '-0.01em',
+                }}>
+                  Only the people<br />
+                  you invite.
+                </p>
+              </div>
+
+              {/* Panel 3 — Payoff */}
+              <div style={{
+                background: '#FFF9F7',
+                padding: '40px 36px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                borderLeft: `1px solid ${theme.border.light}`,
+              }}>
+                <p style={{
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(20px, 2vw, 28px)',
+                  lineHeight: 1.45,
+                  color: theme.text.primary,
+                  fontWeight: typography.fontWeight.normal,
+                  marginBottom: '20px',
+                  letterSpacing: '-0.01em',
+                }}>
+                  Only the moments<br />
+                  you choose to keep.
+                </p>
+                <p style={{
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(14px, 1.2vw, 16px)',
+                  lineHeight: 1.7,
+                  color: theme.text.tertiary,
+                  fontStyle: 'italic',
+                }}>
+                  A space meant to feel safe.
+                </p>
+              </div>
+
+              {/* Panel 4 — Trust signals */}
+              <div style={{
+                background: '#F8F4F2',
+                padding: '40px 36px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                gap: '24px',
+                borderLeft: `1px solid ${theme.border.light}`,
+              }}>
+                {[
+                  { headline: 'Your garden is private', body: 'No one enters unless you invite them.' },
+                  { headline: 'Nothing is indexed', body: "Your memories aren't searchable or public." },
+                  { headline: 'Sharing is intentional', body: 'Nothing leaves without your choice.' },
+                ].map((item, i) => (
+                  <div key={i}>
+                    <p style={{
+                      fontFamily: typography.fontFamily.serif,
+                      fontSize: 'clamp(14px, 1.3vw, 16px)',
+                      fontWeight: typography.fontWeight.medium,
+                      color: theme.text.primary,
+                      marginBottom: '6px',
+                      lineHeight: 1.3,
+                    }}>
+                      {item.headline}
+                    </p>
+                    <p style={{
+                      fontSize: 'clamp(13px, 1.1vw, 15px)',
+                      lineHeight: 1.65,
+                      color: theme.text.tertiary,
+                    }}>
+                      {item.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+            </div>
           </RevealOnScroll>
         </div>
       </section>
 
-      <CurvedDivider color="#FFFFFF" />
 
       {/* ========== FINAL CTA ========== */}
       <section
