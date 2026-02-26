@@ -6,6 +6,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -563,29 +566,30 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '-0.01em',
               lineHeight: 1.15,
             }}>
-              A space built differently
+              Where moments are kept with care
             </h2>
           </RevealOnScroll>
 
-          {/* Panel row */}
+          {/* Panel row — 3 columns: Flower | Manifesto (wide) | Trust (slim) */}
           <RevealOnScroll delay={100}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1.1fr 1fr 1fr',
-              minHeight: '380px',
+              gridTemplateColumns: '1fr 1.6fr 0.9fr',
+              minHeight: '420px',
               borderRadius: '12px',
               overflow: 'hidden',
               border: `1px solid ${theme.border.light}`,
             }}>
 
-              {/* Panel 1 — Flower image */}
+              {/* Panel 1 — Flower image, anchored to bottom */}
               <div style={{
                 position: 'relative',
                 overflow: 'hidden',
                 background: '#F5ECE8',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'flex-end',
                 justifyContent: 'center',
+                padding: '0 16px',
               }}>
                 <img
                   src="/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_1_1e7015ea-9d7e-4641-a544-8aadfba8a958_0.png"
@@ -601,101 +605,78 @@ export const LandingPage: React.FC = () => {
                 />
               </div>
 
-              {/* Panel 2 — Manifesto */}
+              {/* Panel 2 — Merged manifesto: the emotional hero */}
               <div style={{
-                background: '#FDFCFA',
-                padding: '40px 36px',
+                background: '#FFFFFF',
+                padding: '56px 52px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 borderLeft: `1px solid ${theme.border.light}`,
               }}>
+                {/* Muted setup lines */}
                 <p style={{
                   fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(18px, 1.8vw, 24px)',
-                  lineHeight: 1.75,
-                  color: theme.text.secondary,
+                  fontSize: 'clamp(16px, 1.5vw, 20px)',
+                  lineHeight: 2,
+                  color: theme.text.tertiary,
                   fontWeight: typography.fontWeight.normal,
-                  marginBottom: '28px',
+                  marginBottom: '40px',
+                  letterSpacing: '0.01em',
                 }}>
                   No feeds.<br />
                   No numbers.<br />
                   No pressure.
                 </p>
+                {/* Dominant payoff — carved inscription */}
                 <p style={{
                   fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(20px, 2vw, 28px)',
-                  lineHeight: 1.45,
+                  fontSize: 'clamp(28px, 3vw, 42px)',
+                  lineHeight: 1.35,
                   color: theme.text.primary,
                   fontWeight: typography.fontWeight.normal,
-                  letterSpacing: '-0.01em',
+                  letterSpacing: '-0.02em',
                 }}>
                   Only the people<br />
-                  you invite.
-                </p>
-              </div>
-
-              {/* Panel 3 — Payoff */}
-              <div style={{
-                background: '#FFF9F7',
-                padding: '40px 36px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                borderLeft: `1px solid ${theme.border.light}`,
-              }}>
-                <p style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(20px, 2vw, 28px)',
-                  lineHeight: 1.45,
-                  color: theme.text.primary,
-                  fontWeight: typography.fontWeight.normal,
-                  marginBottom: '20px',
-                  letterSpacing: '-0.01em',
-                }}>
+                  you invite.<br />
                   Only the moments<br />
                   you choose to keep.
                 </p>
-                <p style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(14px, 1.2vw, 16px)',
-                  lineHeight: 1.7,
-                  color: theme.text.tertiary,
-                  fontStyle: 'italic',
-                }}>
-                  A space meant to feel safe.
-                </p>
               </div>
 
-              {/* Panel 4 — Trust signals */}
+              {/* Panel 3 — Trust signals, slim with dividers */}
               <div style={{
                 background: '#F8F4F2',
-                padding: '40px 36px',
+                padding: '48px 36px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                gap: '24px',
                 borderLeft: `1px solid ${theme.border.light}`,
               }}>
                 {[
-                  { headline: 'Your garden is private', body: 'No one enters unless you invite them.' },
-                  { headline: 'Nothing is indexed', body: "Your memories aren't searchable or public." },
-                  { headline: 'Sharing is intentional', body: 'Nothing leaves without your choice.' },
+                  { icon: LockOutlinedIcon, headline: 'Your garden is private', body: 'No one enters unless you invite them.' },
+                  { icon: VisibilityOffOutlinedIcon, headline: 'Nothing is indexed', body: "Your memories aren't searchable or public." },
+                  { icon: SendOutlinedIcon, headline: 'Sharing is intentional', body: 'Nothing leaves without your choice.' },
                 ].map((item, i) => (
-                  <div key={i}>
+                  <div key={i} style={{
+                    paddingTop: i === 0 ? '0' : '24px',
+                    paddingBottom: i < 2 ? '24px' : '0',
+                    borderTop: i === 0 ? 'none' : `1px solid ${theme.border.light}`,
+                  }}>
+                    <item.icon sx={{ fontSize: 20, color: theme.colors.rose[400], mb: '10px', display: 'block' }} />
                     <p style={{
                       fontFamily: typography.fontFamily.serif,
-                      fontSize: 'clamp(14px, 1.3vw, 16px)',
+                      fontSize: 'clamp(13px, 1.2vw, 15px)',
                       fontWeight: typography.fontWeight.medium,
                       color: theme.text.primary,
                       marginBottom: '6px',
-                      lineHeight: 1.3,
+                      lineHeight: 1.4,
                     }}>
                       {item.headline}
                     </p>
                     <p style={{
-                      fontSize: 'clamp(13px, 1.1vw, 15px)',
-                      lineHeight: 1.65,
+                      fontSize: 'clamp(12px, 1vw, 14px)',
+                      lineHeight: 1.7,
                       color: theme.text.tertiary,
                     }}>
                       {item.body}
