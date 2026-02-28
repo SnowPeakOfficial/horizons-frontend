@@ -19,6 +19,8 @@ interface HoveredFlowerInfo {
   flower: PlacedFlower;
   definition: FlowerDefinition;
   worldPosition: { x: number; y: number; z: number };
+  screenX?: number;
+  screenY?: number;
 }
 
 interface GardenSceneProps {
@@ -315,9 +317,9 @@ export function GardenScene({ config, flowers = [], children, isPlacementMode = 
                 onFlowerClick?.(apiFlower);
               }
             }}
-            onHover={(isHovered, hFlower, hDef, worldPos) => {
+            onHover={(isHovered, hFlower, hDef, worldPos, screenPos) => {
               if (isHovered && hFlower && hDef && worldPos) {
-                onFlowerHover?.({ flower: hFlower, definition: hDef, worldPosition: worldPos });
+                onFlowerHover?.({ flower: hFlower, definition: hDef, worldPosition: worldPos, screenX: screenPos?.x, screenY: screenPos?.y });
               } else {
                 onFlowerHover?.(null);
               }

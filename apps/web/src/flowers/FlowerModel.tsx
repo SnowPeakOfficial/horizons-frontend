@@ -1,4 +1,4 @@
-import { useGLTF, Html } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import { useMemo, useState, useRef, useEffect } from 'react';
 import { useThree, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -8,7 +8,7 @@ import { AnimatedFlowerBloom } from './AnimatedFlowerBloom';
 interface FlowerModelProps {
   flower: PlacedFlower;
   definition: FlowerDefinition;
-  onHover?: (hovered: boolean, flower?: PlacedFlower, definition?: FlowerDefinition, worldPosition?: { x: number; y: number; z: number }) => void;
+  onHover?: (hovered: boolean, flower?: PlacedFlower, definition?: FlowerDefinition, worldPosition?: { x: number; y: number; z: number }, screenPosition?: { x: number; y: number }) => void;
   onClick?: (flower: PlacedFlower) => void;
   onDragStart?: (flower: PlacedFlower) => void;
   onDrag?: (flower: PlacedFlower, position: { x: number; y: number; z: number }) => void;
@@ -57,11 +57,12 @@ export function FlowerModel({
     }
     // Show immediately (no delay on hover)
     setHovered(true);
-    // Pass flower data and world position to parent for screen-space tooltip
+    // Pass flower data, world position, and screen position to parent
     const worldPos = meshRef.current
       ? { x: meshRef.current.position.x, y: meshRef.current.position.y, z: meshRef.current.position.z }
       : { x: flower.position.x, y: flower.position.y, z: flower.position.z };
-    onHover?.(true, flower, definition, worldPos);
+    const screenPos = { x: e.clientX, y: e.clientY };
+    onHover?.(true, flower, definition, worldPos, screenPos);
     if (draggable) {
       document.body.style.cursor = 'grab';
     }
@@ -256,147 +257,6 @@ export function FlowerModel({
         }}
       />
       
-      {/* Horizontal Hover Card - Letter Inspired */}
-      {/* Counter-scale group so Html world-position isn't affected by parent scale */}
-      {hovered && !dragging && (
-        <group scale={1 / definition.defaultScale}>
-        <Html 
-          position={[0, (definition.gardenOffset ?? 1) + 4, 0]} 
-          zIndexRange={[100, 0]}
-          style={{ pointerEvents: 'none' }}
-        >
-          {(() => {
-            const isBud = flower.state === 'BUD';
-            const shouldHideIdentity = flower.type === 'BLOOMING' && isBud;
-            const displayName = shouldHideIdentity ? "Mystery Flower" : definition.name;
-            const displayEmoji = shouldHideIdentity ? "🌱" : definition.emoji;
-            
-            return (
-            <div style={{
-              background: '#FFFFFF',
-              padding: '16px 20px',
-              borderRadius: '12px',
-              boxShadow: '0 8px 24px rgba(61, 51, 64, 0.15), 0 4px 12px rgba(61, 51, 64, 0.08)',
-              minWidth: '400px',
-              maxWidth: '450px',
-              pointerEvents: 'none',
-              userSelect: 'none',
-              position: 'relative',
-              border: '2px solid #FFC9D9',
-              transform: 'translateX(-50%) translateY(-100%)',
-              marginBottom: '8px',
-            }}>
-              {/* Top: HORIZONS branding */}
-              <div style={{
-                textAlign: 'center',
-                fontSize: '10px',
-                fontFamily: 'Georgia, serif',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: '#9D8F99',
-                marginBottom: '12px',
-                paddingBottom: '8px',
-                borderBottom: '1px solid rgba(232, 180, 184, 0.2)',
-                opacity: 0.6,
-              }}>
-                ♡ HORIZONS ♡
-              </div>
-              
-              {/* Main content: Horizontal layout */}
-              <div style={{
-                display: 'flex',
-                gap: '24px',
-                marginBottom: '12px',
-              }}>
-                {/* Left: Flower info */}
-                <div style={{
-                  flex: '0 0 140px',
-                  textAlign: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <div style={{ fontSize: '32px', marginBottom: '8px' }}>
-                    {displayEmoji}
-                  </div>
-                  <div style={{
-                    fontSize: '18px',
-                    fontWeight: 600,
-                    color: '#3D3340',
-                    fontFamily: 'Georgia, serif',
-                    marginBottom: '8px',
-                  }}>
-                    {displayName}
-                  </div>
-                  <div style={{
-                    fontSize: '12px',
-                    color: '#3D3340',
-                    fontFamily: 'Georgia, serif',
-                  }}>
-                    {flower.state === 'BUD' ? '🌱 Waiting to bloom' : '🌸 In bloom'}
-                  </div>
-                </div>
-              
-                {/* Right: Metadata */}
-                <div style={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px',
-                  justifyContent: 'center',
-                }}>
-                  <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}>
-                    <span style={{ color: '#9D8F99' }}>From:</span>{' '}
-                    <span style={{ fontWeight: 500 }}>{flower.plantedBy?.name || 'A friend'}</span>
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}>
-                    <span style={{ color: '#9D8F99' }}>For:</span>{' '}
-                    <span style={{ fontWeight: 500 }}>{flower.recipientName || 'you'}</span>
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif', marginTop: '4px' }}>
-                    <span style={{ color: '#9D8F99' }}>Planted:</span>{' '}
-                    <span style={{ fontWeight: 500 }}>
-                      {new Date(flower.placedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </span>
-                  </div>
-                  {flower.state === 'BUD' && flower.bloomAt && (
-                    <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}>
-                      <span style={{ color: '#9D8F99' }}>Will bloom:</span>{' '}
-                      <span style={{ fontWeight: 500 }}>
-                        {new Date(flower.bloomAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </span>
-                    </div>
-                  )}
-                  {(flower.state === 'BLOOMED' || flower.state === 'OPEN') && flower.bloomedAt && (
-                    <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}>
-                      <span style={{ color: '#9D8F99' }}>Bloomed:</span>{' '}
-                      <span style={{ fontWeight: 500 }}>
-                        {new Date(flower.bloomedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* Bottom: CTA */}
-              <div style={{
-                textAlign: 'center',
-                fontSize: '12px',
-                fontWeight: 500,
-                color: '#D4909A',
-                paddingTop: '12px',
-                borderTop: '1px solid rgba(232, 180, 184, 0.2)',
-                fontFamily: 'Georgia, serif',
-              }}>
-                Click flower to open
-              </div>
-            </div>
-            );
-          })()}
-        </Html>
-        </group>
-      )}
       
       {/* Hover indicator - subtle circle on ground */}
       {hovered && (
