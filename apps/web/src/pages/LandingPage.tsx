@@ -627,36 +627,42 @@ export const LandingPage: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                alignItems: 'center',
                 borderLeft: `1px solid ${theme.border.light}`,
               }}>
-                {/* Muted setup lines */}
-                <p style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(16px, 1.5vw, 20px)',
-                  lineHeight: 2,
-                  color: theme.text.tertiary,
-                  fontWeight: typography.fontWeight.normal,
-                  marginBottom: '40px',
-                  letterSpacing: '0.01em',
-                }}>
-                  No feeds.<br />
-                  No numbers.<br />
-                  No pressure.
-                </p>
-                {/* Dominant payoff — carved inscription */}
-                <p style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(28px, 3vw, 42px)',
-                  lineHeight: 1.35,
-                  color: theme.text.primary,
-                  fontWeight: typography.fontWeight.normal,
-                  letterSpacing: '-0.02em',
-                }}>
-                  Only the people<br />
-                  you invite.<br />
-                  Only the moments<br />
-                  you choose to keep.
-                </p>
+                {/* Inner wrapper — both texts share this same bounding box */}
+                <div style={{ width: 'fit-content' }}>
+                  {/* Muted setup lines — top, left-aligned */}
+                  <p style={{
+                    fontFamily: typography.fontFamily.serif,
+                    fontSize: 'clamp(16px, 1.5vw, 20px)',
+                    lineHeight: 2,
+                    color: theme.text.tertiary,
+                    fontWeight: typography.fontWeight.normal,
+                    marginBottom: '40px',
+                    letterSpacing: '0.01em',
+                    textAlign: 'left',
+                  }}>
+                    No feeds.<br />
+                    No numbers.<br />
+                    No pressure.
+                  </p>
+                  {/* Dominant payoff — bottom, centered */}
+                  <p style={{
+                    fontFamily: typography.fontFamily.serif,
+                    fontSize: 'clamp(28px, 3vw, 42px)',
+                    lineHeight: 1.35,
+                    color: theme.text.primary,
+                    fontWeight: typography.fontWeight.normal,
+                    letterSpacing: '-0.02em',
+                    textAlign: 'left',
+                  }}>
+                    Only the people<br />
+                    you invite.<br />
+                    Only the moments<br />
+                    you choose to keep.
+                  </p>
+                </div>
               </div>
 
               {/* Panel 3 — Trust signals, slim with dividers */}
