@@ -125,16 +125,18 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             position: 'absolute', top: '88px', left: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
             letterSpacing: '0.25em', textTransform: 'uppercase' as const,
-            color: theme.text.tertiary, opacity: 1, zIndex: 10,
+            color: theme.text.tertiary, zIndex: 10,
             pointerEvents: 'none',
+            animation: 'heroContentFade 8s ease forwards',
           }}>EST. 2026</div>
 
           <div style={{
             position: 'absolute', top: '88px', right: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
-            letterSpacing: '0.1em', color: theme.text.tertiary, opacity: 1,
+            letterSpacing: '0.1em', color: theme.text.tertiary,
             zIndex: 10, pointerEvents: 'none',
             display: 'flex', alignItems: 'center', gap: '6px',
+            animation: 'heroContentFade 8s ease forwards',
           }}>
             <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
             <span>Private by design</span>
