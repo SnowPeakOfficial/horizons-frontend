@@ -10,6 +10,7 @@ import { theme } from '../styles/theme';
 export const PricingPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, loadUser } = useAuthStore();
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   const [loadingTier, setLoadingTier] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [cancelLoading, setCancelLoading] = useState(false);
@@ -78,7 +79,7 @@ export const PricingPage: React.FC = () => {
     setLoadingTier(tier);
     setError(null);
     try {
-      await subscriptionService.redirectToCheckout(tier);
+      await subscriptionService.redirectToCheckout(tier, billingInterval);
     } catch (err: unknown) {
       const msg =
         err && typeof err === 'object' && 'message' in err
@@ -96,6 +97,7 @@ export const PricingPage: React.FC = () => {
       emoji: '\uD83C\uDF31',
       price: '$0',
       period: 'forever',
+      annualNote: null,
       tagline: 'Start your garden journey',
       color: theme.colors.rose[600],
       borderColor: theme.colors.rose[200],
@@ -115,8 +117,9 @@ export const PricingPage: React.FC = () => {
       key: 'PRO',
       name: 'Pro',
       emoji: '\uD83C\uDF38',
-      price: '$5.99',
-      period: 'CAD / month',
+      price: billingInterval === 'yearly' ? '$49.99' : '$5.99',
+      period: billingInterval === 'yearly' ? 'CAD / year' : 'CAD / month',
+      annualNote: billingInterval === 'yearly' ? 'That\'s $4.17/mo — save $21.89' : null,
       tagline: 'For deeper connections',
       color: '#D4909A',
       borderColor: '#FFB0C8',
@@ -137,6 +140,7 @@ export const PricingPage: React.FC = () => {
       emoji: '\uD83D\uDC9C',
       price: 'Coming Soon',
       period: '',
+      annualNote: null,
       tagline: 'The full experience',
       color: '#9E7DAE',
       borderColor: '#D6C3E3',
@@ -166,6 +170,46 @@ export const PricingPage: React.FC = () => {
         <p style={{ fontSize: '18px', color: '#6B5F68', maxWidth: '560px', margin: '0 auto', lineHeight: 1.6 }}>
           Plant meaningful flowers, share real moments. Start free and upgrade when you&apos;re ready.
         </p>
+
+        {/* Billing interval toggle */}
+        <div style={{ display: 'inline-flex', alignItems: 'center', marginTop: '32px', background: 'rgba(255,255,255,0.7)', borderRadius: '999px', padding: '4px', border: '1.5px solid rgba(232,180,184,0.4)', boxShadow: '0 2px 12px rgba(212,144,154,0.1)' }}>
+          <button
+            onClick={() => setBillingInterval('monthly')}
+            style={{
+              padding: '8px 24px',
+              borderRadius: '999px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '14px',
+              fontFamily: 'Georgia, serif',
+              transition: 'all 0.2s ease',
+              background: billingInterval === 'monthly' ? 'linear-gradient(135deg, #D4909A 0%, #B87580 100%)' : 'transparent',
+              color: billingInterval === 'monthly' ? '#FFFFFF' : '#9D8F99',
+              boxShadow: billingInterval === 'monthly' ? '0 2px 8px rgba(212,144,154,0.3)' : 'none',
+            }}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setBillingInterval('yearly')}
+            style={{
+              padding: '8px 24px',
+              borderRadius: '999px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '14px',
+              fontFamily: 'Georgia, serif',
+              transition: 'all 0.2s ease',
+              background: billingInterval === 'yearly' ? 'linear-gradient(135deg, #D4909A 0%, #B87580 100%)' : 'transparent',
+              color: billingInterval === 'yearly' ? '#FFFFFF' : '#9D8F99',
+              boxShadow: billingInterval === 'yearly' ? '0 2px 8px rgba(212,144,154,0.3)' : 'none',
+            }}
+          >
+            Yearly
+          </button>
+        </div>
       </div>
 
       {/* Error banner */}
@@ -279,8 +323,8 @@ export const PricingPage: React.FC = () => {
                 <p style={{ fontSize: '13px', color: '#9D8F99', margin: 0 }}>{tier.tagline}</p>
               </div>
 
-              {/* Price */}
-              <div style={{ marginBottom: '28px', paddingBottom: '28px', borderBottom: '1px solid rgba(232, 180, 184, 0.2)', minHeight: '60px' }}>
+              {/* Price — fixed height so features start at the same line across all cards */}
+              <div style={{ marginBottom: '28px', paddingBottom: '28px', borderBottom: '1px solid rgba(232, 180, 184, 0.2)', height: '90px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '4px' }}>
                   <span style={{
                     fontSize: '38px',
@@ -294,6 +338,11 @@ export const PricingPage: React.FC = () => {
                     <span style={{ fontSize: '13px', color: '#9D8F99', marginLeft: '4px' }}>{tier.period}</span>
                   )}
                 </div>
+                {tier.annualNote && (
+                  <p style={{ fontSize: '12px', color: '#B87580', margin: '4px 0 0', textAlign: 'center', fontStyle: 'italic' }}>
+                    {tier.annualNote}
+                  </p>
+                )}
               </div>
 
               {/* Features */}
