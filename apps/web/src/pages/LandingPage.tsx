@@ -147,18 +147,38 @@ export const LandingPage: React.FC = () => {
           {/* Logo/Brand */}
           <div
             style={{
-              fontFamily: typography.fontFamily.serif,
-              fontSize: 'clamp(36px, 5vw, 60px)',
-              fontWeight: typography.fontWeight.medium,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: theme.text.tertiary,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '16px',
               marginBottom: theme.spacing['2xl'],
               opacity: 0.7,
-              textShadow: '0 1px 3px rgba(0,0,0,0.08)',
             }}
           >
-            Horizons
+            <img
+              src="/images/horizons-logo.svg"
+              alt="Horizons logo"
+              style={{
+                height: 'clamp(36px, 5vw, 60px)',
+                width: 'auto',
+                display: 'block',
+                userSelect: 'none',
+                pointerEvents: 'none',
+              }}
+            />
+            <span
+              style={{
+                fontFamily: typography.fontFamily.serif,
+                fontSize: 'clamp(36px, 5vw, 60px)',
+                fontWeight: typography.fontWeight.medium,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: theme.text.tertiary,
+                textShadow: '0 1px 3px rgba(0,0,0,0.08)',
+              }}
+            >
+              Horizons
+            </span>
           </div>
 
           {/* Main Headline - Large & Bold */}
