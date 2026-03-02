@@ -38,12 +38,19 @@ export const GardenPage: React.FC = () => {
   const { flowers, fetchFlowersByGarden } = useFlowerStore();
   const [isPlantPanelOpen, setIsPlantPanelOpen] = useState(false);
   const [isPlacementMode, setIsPlacementMode] = useState(false);
-  const [selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<any>(null);
+  const [selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<{ key: string } | null>(null);
   const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const orbitRef = useRef<OrbitControlsImpl>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [hoveredFlowerTooltip, setHoveredFlowerTooltip] = useState<{
+    flower: PlacedFlower;
+    definition: FlowerDefinition;
+    screenX: number;
+    screenY: number;
+  } | null>(null);
 
   useEffect(() => {
     if (gardenId) {
@@ -298,7 +305,6 @@ export const GardenPage: React.FC = () => {
             target={[0, 0, 0]}
           />
           {/* Clamp pan target every frame to keep camera inside the garden */}
-          <CameraLimiter orbitRef={orbitRef} panLimit={25} />
         </Canvas>
       </div>
 
