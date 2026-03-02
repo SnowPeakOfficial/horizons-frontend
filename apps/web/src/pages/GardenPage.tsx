@@ -17,6 +17,7 @@ import { GardenScene } from '../gardens/GardenScene';
 import { GARDEN_CONFIGS } from '../gardens/gardenConfigs';
 import { FLOWER_DEFINITIONS } from '../flowers/types';
 import type { Flower } from '../types/api.types';
+import type { PlacedFlower, FlowerDefinition } from '../flowers/types';
 import { useGardenStore } from '../stores/gardenStore';
 import { useFlowerStore } from '../stores/flowerStore';
 import { useAuthStore } from '../stores/authStore';
@@ -257,8 +258,23 @@ export const GardenPage: React.FC = () => {
               }
             }}
             onFlowerDragEnd={handleFlowerDragEnd}
-            onFlowerDragStateChange={setIsDraggingFlower}
+            onFlowerDragStateChange={(isDragging) => {
+              setIsDraggingFlower(isDragging);
+              if (isDragging) setHoveredFlowerTooltip(null);
+            }}
             onFlowerClick={(flower: Flower) => setSelectedFlower(flower)}
+            onFlowerHover={(info) => {
+              if (info) {
+                setHoveredFlowerTooltip({
+                  flower: info.flower,
+                  definition: info.definition,
+                  screenX: info.screenX ?? 0,
+                  screenY: info.screenY ?? 0,
+                });
+              } else {
+                setHoveredFlowerTooltip(null);
+              }
+            }}
           />
           <CameraClamp controlsRef={orbitRef} />
           <OrbitControls
@@ -276,11 +292,13 @@ export const GardenPage: React.FC = () => {
             minDistance={15}
             maxDistance={60}
             minPolarAngle={Math.PI / 8}
-            maxPolarAngle={Math.PI / 4}
+            maxPolarAngle={Math.PI / 3}
             maxAzimuthAngle={Infinity}
             minAzimuthAngle={-Infinity}
             target={[0, 0, 0]}
           />
+          {/* Clamp pan target every frame to keep camera inside the garden */}
+          <CameraLimiter orbitRef={orbitRef} panLimit={25} />
         </Canvas>
       </div>
 
@@ -307,6 +325,68 @@ export const GardenPage: React.FC = () => {
         onClearPosition={() => setPlacedPosition(null)}
         placedPosition={placedPosition}
       />
+
+      {/* Flower Hover Tooltip - DOM overlay, always visible */}
+      {hoveredFlowerTooltip && (() => {
+        const { flower, definition, screenX, screenY } = hoveredFlowerTooltip;
+        const isBud = flower.state === 'BUD';
+        const shouldHideIdentity = flower.type === 'BLOOMING' && isBud;
+        const displayName = shouldHideIdentity ? 'Mystery Flower' : definition.name;
+        const displayEmoji = shouldHideIdentity ? '\u{1F331}' : definition.emoji;
+
+        const TOOLTIP_W = 450;
+        const PAD = 12;
+        // Position above cursor; clamp after measuring via ref
+        const tooltipH = tooltipRef.current?.offsetHeight ?? 220;
+        let left = screenX - TOOLTIP_W / 2;
+        let top = screenY - tooltipH - 16;
+        left = Math.max(PAD, Math.min(window.innerWidth - TOOLTIP_W - PAD, left));
+        top = Math.max(PAD, Math.min(window.innerHeight - tooltipH - PAD, top));
+
+        return (
+          <div
+            ref={tooltipRef}
+            style={{
+              position: 'fixed',
+              left,
+              top,
+              width: TOOLTIP_W,
+              zIndex: 9999,
+              pointerEvents: 'none',
+              background: '#FFFFFF',
+              padding: '16px 20px',
+              borderRadius: '12px',
+              boxShadow: '0 8px 24px rgba(61,51,64,0.15), 0 4px 12px rgba(61,51,64,0.08)',
+              border: '2px solid #FFC9D9',
+            }}
+          >
+            <div style={{ textAlign: 'center', fontSize: '10px', fontFamily: 'Georgia, serif', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9D8F99', marginBottom: '12px', paddingBottom: '8px', borderBottom: '1px solid rgba(232,180,184,0.2)', opacity: 0.6 }}>
+              {'\u2661'} HORIZONS {'\u2661'}
+            </div>
+            <div style={{ display: 'flex', gap: '24px', marginBottom: '12px' }}>
+              <div style={{ flex: '0 0 140px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }}>{displayEmoji}</div>
+                <div style={{ fontSize: '18px', fontWeight: 600, color: '#3D3340', fontFamily: 'Georgia, serif', marginBottom: '8px' }}>{displayName}</div>
+                <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}>{flower.state === 'BUD' ? '\u{1F331} Waiting to bloom' : '\u{1F338} In bloom'}</div>
+              </div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'center' }}>
+                <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}><span style={{ color: '#9D8F99' }}>From:</span> <span style={{ fontWeight: 500 }}>{flower.plantedBy?.name || 'A friend'}</span></div>
+                <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}><span style={{ color: '#9D8F99' }}>For:</span> <span style={{ fontWeight: 500 }}>{flower.recipientName || 'you'}</span></div>
+                <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif', marginTop: '4px' }}><span style={{ color: '#9D8F99' }}>Planted:</span> <span style={{ fontWeight: 500 }}>{new Date(flower.placedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
+                {flower.state === 'BUD' && flower.bloomAt && (
+                  <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}><span style={{ color: '#9D8F99' }}>Will bloom:</span> <span style={{ fontWeight: 500 }}>{new Date(flower.bloomAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
+                )}
+                {(flower.state === 'BLOOMED' || flower.state === 'OPEN') && flower.bloomedAt && (
+                  <div style={{ fontSize: '12px', color: '#3D3340', fontFamily: 'Georgia, serif' }}><span style={{ color: '#9D8F99' }}>Bloomed:</span> <span style={{ fontWeight: 500 }}>{new Date(flower.bloomedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
+                )}
+              </div>
+            </div>
+            <div style={{ textAlign: 'center', fontSize: '12px', fontWeight: 500, color: '#D4909A', paddingTop: '12px', borderTop: '1px solid rgba(232,180,184,0.2)', fontFamily: 'Georgia, serif' }}>
+              Click flower to open
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Flower Details Modal - Beautiful Letter Style */}
       <FlowerDetailsModal
