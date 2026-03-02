@@ -7,6 +7,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import * as THREE from 'three';
 import { Button } from '../components/common';
 import { PlantFlowerPanel } from '../components/gardens/PlantFlowerPanel';
 import { FlowerDetailsModal } from '../components/gardens/FlowerDetailsModal';
@@ -41,14 +43,8 @@ export const GardenPage: React.FC = () => {
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const orbitRef = useRef<any>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-  const [hoveredFlowerTooltip, setHoveredFlowerTooltip] = useState<{
-    flower: PlacedFlower;
-    definition: FlowerDefinition;
-    screenX: number;
-    screenY: number;
-  } | null>(null);
+  const orbitRef = useRef<OrbitControlsImpl>(null);
+
   useEffect(() => {
     if (gardenId) {
       fetchGardenById(gardenId);
@@ -280,6 +276,7 @@ export const GardenPage: React.FC = () => {
               }
             }}
           />
+          <CameraClamp controlsRef={orbitRef} />
           <OrbitControls
             ref={orbitRef}
             enabled={!isDraggingFlower}
@@ -427,23 +424,35 @@ export const GardenPage: React.FC = () => {
 };
 
 /**
- * Clamps the OrbitControls pan target every frame to keep the camera
- * within the garden bounds. Uses useFrame to avoid infinite loops.
+ * CameraClamp - runs inside the Canvas every frame and clamps the OrbitControls
+ * target (the pan focal point) so the user can't pan outside the garden bounds.
+ * The garden is 60×60 units centred at origin, so we allow -25..+25 on X and Z.
  */
-function CameraLimiter({ orbitRef, panLimit }: { orbitRef: React.RefObject<any>; panLimit: number }) {
+const PAN_BOUNDS = {
+  minX: -25, maxX: 25,
+  minY:   0, maxY:  5,
+  minZ: -25, maxZ: 25,
+};
+
+function CameraClamp({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl | null> }) {
   useFrame(() => {
-    const controls = orbitRef.current;
+    const controls = controlsRef.current;
     if (!controls) return;
-    const target = controls.target;
-    const clamped = {
-      x: Math.max(-panLimit, Math.min(panLimit, target.x)),
-      z: Math.max(-panLimit, Math.min(panLimit, target.z)),
-    };
-    if (target.x !== clamped.x || target.z !== clamped.z) {
-      target.x = clamped.x;
-      target.z = clamped.z;
+
+    const target = controls.target as THREE.Vector3;
+    let changed = false;
+
+    if (target.x < PAN_BOUNDS.minX) { target.x = PAN_BOUNDS.minX; changed = true; }
+    if (target.x > PAN_BOUNDS.maxX) { target.x = PAN_BOUNDS.maxX; changed = true; }
+    if (target.y < PAN_BOUNDS.minY) { target.y = PAN_BOUNDS.minY; changed = true; }
+    if (target.y > PAN_BOUNDS.maxY) { target.y = PAN_BOUNDS.maxY; changed = true; }
+    if (target.z < PAN_BOUNDS.minZ) { target.z = PAN_BOUNDS.minZ; changed = true; }
+    if (target.z > PAN_BOUNDS.maxZ) { target.z = PAN_BOUNDS.maxZ; changed = true; }
+
+    if (changed) {
       controls.update();
     }
   });
+
   return null;
 }

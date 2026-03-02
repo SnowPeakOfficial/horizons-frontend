@@ -33,10 +33,15 @@ const subscriptionService = {
   /**
    * Create a Stripe Checkout session and redirect to Stripe
    * @param tier - 'PRO' or 'PREMIUM'
+   * @param interval - 'monthly' or 'yearly'
    */
-  async createCheckoutSession(tier: 'PRO' | 'PREMIUM'): Promise<CheckoutSessionResponse> {
+  async createCheckoutSession(
+    tier: 'PRO' | 'PREMIUM',
+    interval: 'monthly' | 'yearly' = 'monthly',
+  ): Promise<CheckoutSessionResponse> {
     const response = await api.post<CheckoutSessionResponse>('/subscriptions/create-checkout', {
       tier,
+      interval,
     });
 
     return response.data;
@@ -45,8 +50,11 @@ const subscriptionService = {
   /**
    * Redirect user to Stripe Checkout for upgrading
    */
-  async redirectToCheckout(tier: 'PRO' | 'PREMIUM'): Promise<void> {
-    const session = await this.createCheckoutSession(tier);
+  async redirectToCheckout(
+    tier: 'PRO' | 'PREMIUM',
+    interval: 'monthly' | 'yearly' = 'monthly',
+  ): Promise<void> {
+    const session = await this.createCheckoutSession(tier, interval);
     // Redirect to Stripe hosted checkout
     window.location.href = session.url;
   },
