@@ -914,7 +914,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             {/* Photo upload */}
             <div style={{ marginBottom: theme.spacing.lg }}>
               <label style={{ ...typography.styles.label, color: theme.text.primary, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: theme.spacing.sm }}>
-                <AddAPhoto sx={{ fontSize: 18, color: theme.text.secondary }} /> Photo {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
+                <AddAPhoto sx={{ fontSize: 18, color: theme.colors.rose[400] }} /> Photo {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
               </label>
               {imageFile ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>
@@ -941,7 +941,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             {/* Voice upload */}
             <div style={{ marginBottom: theme.spacing.lg }}>
               <label style={{ ...typography.styles.label, color: theme.text.primary, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: theme.spacing.sm }}>
-                <Mic sx={{ fontSize: 18, color: theme.text.secondary }} /> Voice message {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
+                <Mic sx={{ fontSize: 18, color: theme.colors.rose[400] }} /> Voice message {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
               </label>
               {voiceFile ? (
                 <div style={{ padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>
@@ -971,7 +971,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             {/* Video upload */}
             <div style={{ marginBottom: theme.spacing.lg }}>
               <label style={{ ...typography.styles.label, color: theme.text.primary, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: theme.spacing.sm }}>
-                <Videocam sx={{ fontSize: 18, color: theme.text.secondary }} /> Video {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
+                <Videocam sx={{ fontSize: 18, color: theme.colors.rose[400] }} /> Video {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
               </label>
               {videoFile ? (
                 <div style={{ padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>

@@ -283,7 +283,7 @@ export const GardenPage: React.FC = () => {
               }
             }}
           />
-          <CameraClamp controlsRef={orbitRef} />
+          <CameraLimiter controlsRef={orbitRef} />
           <OrbitControls
             ref={orbitRef}
             enabled={!isDraggingFlower}
@@ -440,7 +440,7 @@ const PAN_BOUNDS = {
   minZ: -25, maxZ: 25,
 };
 
-function CameraClamp({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl | null> }) {
+function CameraLimiter({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl | null> }) {
   useFrame(() => {
     const controls = controlsRef.current;
     if (!controls) return;

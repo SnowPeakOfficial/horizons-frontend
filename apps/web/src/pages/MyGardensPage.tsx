@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { CreateGardenModal } from '../components/gardens/CreateGardenModal';
 import { useAuthStore } from '../stores/authStore';
 import { useGardenStore } from '../stores/gardenStore';
@@ -286,7 +287,8 @@ export const MyGardensPage: React.FC = () => {
         {/* Upgrade CTA (if at limit) */}
         {!canCreateMore() && user?.tier !== 'PREMIUM' && (
           <div style={{
-            marginTop: theme.spacing.xl,
+            marginTop: theme.spacing['4xl'],
+            marginBottom: theme.spacing['4xl'],
             padding: theme.spacing.lg,
             border: `1px solid ${theme.colors.rose[200]}`,
             borderRadius: theme.radius.lg,
@@ -309,6 +311,8 @@ export const MyGardensPage: React.FC = () => {
           </div>
         )}
       </main>
+
+      <Footer />
 
       {/* Create Garden Modal */}
       <CreateGardenModal
