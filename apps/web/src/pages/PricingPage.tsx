@@ -466,7 +466,7 @@ export const PricingPage: React.FC = () => {
       </div>
 
       {/* Footer note */}
-      <div style={{ textAlign: 'center', paddingBottom: '64px', color: '#9D8F99', fontSize: '13px' }}>
+      <div style={{ textAlign: 'center', paddingBottom: '28px', color: '#9D8F99', fontSize: '13px' }}>
         <p>All prices in CAD. Cancel anytime from your billing portal.</p>
       </div>
 

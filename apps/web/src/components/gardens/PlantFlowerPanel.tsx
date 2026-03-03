@@ -6,7 +6,7 @@
  * Step 3: Configure bloom options
  */
 
-import React, { useState, useEffect, Suspense, useMemo } from 'react';
+import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,8 @@ import { useFlowerStore } from '../../stores/flowerStore';
 import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import flowerService from '../../services/flowerService';
 import gardenService from '../../services/gardenService';
+import { uploadMedia, createPreviewUrl } from '../../services/uploadService';
+import { validateMediaFile, getUploadHint, MediaValidationError } from '../../services/mediaGuardrails';
 import type { FlowerDefinition, FlowerType, UserTier } from '../../types/api.types';
 import { LETTER_TEMPLATES, LETTER_TEMPLATE_ORDER } from '../../flowers/letterTemplates';
 import type { LetterTemplateKey } from '../../flowers/letterTemplates';
@@ -29,6 +31,10 @@ import TouchApp from '@mui/icons-material/TouchApp';
 import Nature from '@mui/icons-material/Nature';
 import Info from '@mui/icons-material/Info';
 import Lock from '@mui/icons-material/Lock';
+import AddAPhoto from '@mui/icons-material/AddAPhoto';
+import Mic from '@mui/icons-material/Mic';
+import Videocam from '@mui/icons-material/Videocam';
+import MusicNote from '@mui/icons-material/MusicNote';
 
 /**
  * 3D Flower Preview Component
@@ -64,18 +70,15 @@ const plantFlowerFormSchema = z.object({
   seedMessage: z.string().max(500, 'Message must be 500 characters or less').optional().or(z.literal('')),
   bloomMessage: z.string().max(500, 'Message must be 500 characters or less').optional().or(z.literal('')),
   bloomAt: z.string().optional(),
-  imageUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
-    message: 'Please enter a valid URL'
-  }),
-  voiceUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
-    message: 'Please enter a valid URL'
-  }),
-  videoUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
-    message: 'Please enter a valid URL'
-  }),
 });
 
 type PlantFlowerFormData = z.infer<typeof plantFlowerFormSchema>;
+
+// Media file state for pending uploads
+interface MediaFile {
+  file: File;
+  previewUrl: string; // object URL for local preview
+}
 
 interface PlantFlowerPanelProps {
   isOpen: boolean;
@@ -106,6 +109,26 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Media file state — files selected by user, not yet uploaded
+  const [imageFile, setImageFile] = useState<MediaFile | null>(null);
+  const [voiceFile, setVoiceFile] = useState<MediaFile | null>(null);
+  const [videoFile, setVideoFile] = useState<MediaFile | null>(null);
+
+  // Upload progress (0-100 or null)
+  const [imageProgress, setImageProgress] = useState<number | null>(null);
+  const [voiceProgress, setVoiceProgress] = useState<number | null>(null);
+  const [videoProgress, setVideoProgress] = useState<number | null>(null);
+
+  // Per-media validation errors (shown inline next to each upload button)
+  const [imageError, setImageError] = useState('');
+  const [voiceError, setVoiceError] = useState('');
+  const [videoError, setVideoError] = useState('');
+
+  // Hidden file input refs
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const voiceInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+
   // React Hook Form with Zod validation
   const {
     register,
@@ -122,15 +145,53 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       seedMessage: '',
       bloomMessage: '',
       bloomAt: '',
-      imageUrl: '',
-      voiceUrl: '',
-      videoUrl: '',
     },
   });
 
   // Watch form values
   const formValues = watch();
-  const { recipientName, recipientEmail, seedMessage, bloomMessage, bloomAt, imageUrl, voiceUrl, videoUrl } = formValues;
+  const { recipientName, recipientEmail, seedMessage, bloomMessage, bloomAt } = formValues;
+
+  // Helper: select a file, validate it, then create a local preview
+  const handleFileSelect = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: 'image' | 'voice' | 'video',
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Clear previous error for this slot
+    if (type === 'image') setImageError('');
+    if (type === 'voice') setVoiceError('');
+    if (type === 'video') setVideoError('');
+
+    // Run guardrail validation BEFORE creating a preview
+    try {
+      await validateMediaFile(file, type);
+    } catch (err) {
+      const msg = err instanceof MediaValidationError ? err.message : 'Invalid file.';
+      if (type === 'image') setImageError(msg);
+      if (type === 'voice') setVoiceError(msg);
+      if (type === 'video') setVideoError(msg);
+      e.target.value = '';
+      return; // reject the file — do not show preview
+    }
+
+    const previewUrl = createPreviewUrl(file);
+    const mediaFile: MediaFile = { file, previewUrl };
+    if (type === 'image') { setImageFile(mediaFile); setImageProgress(null); }
+    if (type === 'voice') { setVoiceFile(mediaFile); setVoiceProgress(null); }
+    if (type === 'video') { setVideoFile(mediaFile); setVideoProgress(null); }
+    // Reset input so same file can be re-selected
+    e.target.value = '';
+  };
+
+  // Helper: remove a selected file and revoke preview URL
+  const clearFile = (type: 'image' | 'voice' | 'video') => {
+    if (type === 'image' && imageFile) { URL.revokeObjectURL(imageFile.previewUrl); setImageFile(null); setImageProgress(null); }
+    if (type === 'voice' && voiceFile) { URL.revokeObjectURL(voiceFile.previewUrl); setVoiceFile(null); setVoiceProgress(null); }
+    if (type === 'video' && videoFile) { URL.revokeObjectURL(videoFile.previewUrl); setVideoFile(null); setVideoProgress(null); }
+  };
 
   useEffect(() => {
     if (isOpen && flowerDefinitions.length === 0) {
@@ -162,6 +223,12 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     setLetterTemplate(null);
     resetForm();
     setError('');
+    // Revoke any pending media preview URLs to avoid memory leaks
+    if (imageFile) URL.revokeObjectURL(imageFile.previewUrl);
+    if (voiceFile) URL.revokeObjectURL(voiceFile.previewUrl);
+    if (videoFile) URL.revokeObjectURL(videoFile.previewUrl);
+    setImageFile(null); setVoiceFile(null); setVideoFile(null);
+    setImageProgress(null); setVoiceProgress(null); setVideoProgress(null);
     if (onPlacementModeChange) {
       onPlacementModeChange(false, null);
     }
@@ -245,8 +312,35 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       };
 
       const plantedFlower = await plantFlower(gardenId, plantData);
-      
-      // Step 2: Add content based on flower type
+
+      // Step 2: Upload any media files to Firebase Storage
+      let uploadedImageUrl: string | undefined;
+      let uploadedVoiceUrl: string | undefined;
+      let uploadedVideoUrl: string | undefined;
+
+      if (imageFile) {
+        try {
+          uploadedImageUrl = await uploadMedia(imageFile.file, 'image', plantedFlower.id, setImageProgress);
+        } catch (uploadErr) {
+          console.error('Failed to upload image:', uploadErr);
+        }
+      }
+      if (voiceFile) {
+        try {
+          uploadedVoiceUrl = await uploadMedia(voiceFile.file, 'voice', plantedFlower.id, setVoiceProgress);
+        } catch (uploadErr) {
+          console.error('Failed to upload voice:', uploadErr);
+        }
+      }
+      if (videoFile) {
+        try {
+          uploadedVideoUrl = await uploadMedia(videoFile.file, 'video', plantedFlower.id, setVideoProgress);
+        } catch (uploadErr) {
+          console.error('Failed to upload video:', uploadErr);
+        }
+      }
+
+      // Step 3: Add content based on flower type
       if (flowerType === 'BLOOMING') {
         // For BLOOMING flowers: create separate SEED and BLOOM content
         
@@ -264,15 +358,15 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }
         
         // BLOOM phase content (after bloom - revealed with tap to reveal)
-        if (bloomMessage || imageUrl || voiceUrl || videoUrl) {
+        if (bloomMessage || uploadedImageUrl || uploadedVoiceUrl || uploadedVideoUrl) {
           try {
             await flowerService.addContent({
               flowerId: plantedFlower.id,
               phase: 'BLOOM',
               text: bloomMessage || undefined,
-              imageUrl: imageUrl || undefined,
-              voiceUrl: voiceUrl || undefined,
-              videoUrl: videoUrl || undefined,
+              imageUrl: uploadedImageUrl,
+              voiceUrl: uploadedVoiceUrl,
+              videoUrl: uploadedVideoUrl,
             });
           } catch (mediaError) {
             console.error('Failed to add bloom content:', mediaError);
@@ -280,15 +374,15 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }
       } else {
         // For STANDARD flowers: create IMMEDIATE content (all together)
-        if (seedMessage || imageUrl || voiceUrl || videoUrl) {
+        if (seedMessage || uploadedImageUrl || uploadedVoiceUrl || uploadedVideoUrl) {
           try {
             await flowerService.addContent({
               flowerId: plantedFlower.id,
               phase: 'IMMEDIATE',
               text: seedMessage || undefined,
-              imageUrl: imageUrl || undefined,
-              voiceUrl: voiceUrl || undefined,
-              videoUrl: videoUrl || undefined,
+              imageUrl: uploadedImageUrl,
+              voiceUrl: uploadedVoiceUrl,
+              videoUrl: uploadedVideoUrl,
             });
           } catch (mediaError) {
             console.error('Failed to add content:', mediaError);
@@ -381,7 +475,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }}
       >
         <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-          {[1, 2, 3, 4, 5, 6].map((s) => (
+          {[1, 2, 3, 4, 5].map((s) => (
             <div
               key={s}
               style={{
@@ -408,7 +502,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             textTransform: 'uppercase',
           }}
         >
-          Step {step} of 6
+          Step {step} of 5
         </div>
       </div>
 
@@ -770,6 +864,153 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 fullWidth
               />
             )}
+
+            {/* Bloom Message - only for BLOOMING flowers */}
+            {flowerType === 'BLOOMING' && (
+              <div style={{ 
+                display: 'flex',
+                flexDirection: 'column',
+                gap: theme.spacing.sm,
+                marginBottom: theme.spacing.lg 
+              }}>
+                <label style={{ ...typography.styles.label, color: theme.text.primary }}>
+                  When it blooms
+                </label>
+                <textarea
+                  {...register('bloomMessage')}
+                  placeholder="Message to reveal when flower blooms..."
+                  style={{
+                    ...typography.styles.body,
+                    width: '100%',
+                    minHeight: '100px',
+                    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+                    border: `2px solid ${errors.bloomMessage ? theme.semantic.error : theme.border.medium}`,
+                    borderRadius: theme.radius.lg,
+                    background: theme.bg.elevated,
+                    color: theme.text.primary,
+                    transition: theme.transition.base,
+                    outline: 'none',
+                    fontFamily: 'inherit',
+                    resize: 'vertical',
+                  }}
+                />
+                {errors.bloomMessage ? (
+                  <span style={{ ...typography.styles.caption, color: theme.semantic.error }}>
+                    {errors.bloomMessage.message}
+                  </span>
+                ) : (
+                  <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>
+                    This will be revealed when the flower opens
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Hidden file inputs */}
+            <input ref={imageInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleFileSelect(e, 'image')} />
+            <input ref={voiceInputRef} type="file" accept="audio/*" style={{ display: 'none' }} onChange={(e) => handleFileSelect(e, 'voice')} />
+            <input ref={videoInputRef} type="file" accept="video/*" style={{ display: 'none' }} onChange={(e) => handleFileSelect(e, 'video')} />
+
+            {/* Photo upload */}
+            <div style={{ marginBottom: theme.spacing.lg }}>
+              <label style={{ ...typography.styles.label, color: theme.text.primary, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: theme.spacing.sm }}>
+                <AddAPhoto sx={{ fontSize: 18, color: theme.colors.rose[400] }} /> Photo {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
+              </label>
+              {imageFile ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>
+                  <img src={imageFile.previewUrl} alt="preview" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: theme.radius.md }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ ...typography.styles.caption, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{imageFile.file.name}</div>
+                    <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{(imageFile.file.size / 1024 / 1024).toFixed(1)} MB</div>
+                    {imageProgress !== null && <div style={{ marginTop: 4, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${imageProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
+                  </div>
+                  <button onClick={() => clearFile('image')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.text.secondary, padding: 4, fontSize: 18, lineHeight: 1 }}>✕</button>
+                </div>
+              ) : (
+                <button onClick={() => imageInputRef.current?.click()} style={{ width: '100%', padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${imageError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
+                  + Choose photo
+                </button>
+              )}
+              {imageError ? (
+                <div style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'flex', alignItems: 'center', gap: 4 }}>⚠️ {imageError}</div>
+              ) : (
+                <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: theme.spacing.xs }}>{getUploadHint('image')}</div>
+              )}
+            </div>
+
+            {/* Voice upload */}
+            <div style={{ marginBottom: theme.spacing.lg }}>
+              <label style={{ ...typography.styles.label, color: theme.text.primary, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: theme.spacing.sm }}>
+                <Mic sx={{ fontSize: 18, color: theme.colors.rose[400] }} /> Voice message {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
+              </label>
+              {voiceFile ? (
+                <div style={{ padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md, marginBottom: voiceProgress !== null ? theme.spacing.sm : 0 }}>
+                    <MusicNote sx={{ fontSize: 28, color: theme.colors.rose[400] }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ ...typography.styles.caption, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{voiceFile.file.name}</div>
+                      <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{(voiceFile.file.size / 1024 / 1024).toFixed(1)} MB</div>
+                    </div>
+                    <button onClick={() => clearFile('voice')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.text.secondary, padding: 4, fontSize: 18, lineHeight: 1 }}>✕</button>
+                  </div>
+                  <audio controls src={voiceFile.previewUrl} style={{ width: '100%', height: 36 }} />
+                  {voiceProgress !== null && <div style={{ marginTop: 4, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${voiceProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
+                </div>
+              ) : (
+                <button onClick={() => voiceInputRef.current?.click()} style={{ width: '100%', padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${voiceError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
+                  + Choose audio file
+                </button>
+              )}
+              {voiceError ? (
+                <div style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'flex', alignItems: 'center', gap: 4 }}>⚠️ {voiceError}</div>
+              ) : (
+                <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: theme.spacing.xs }}>{getUploadHint('voice')}</div>
+              )}
+            </div>
+
+            {/* Video upload */}
+            <div style={{ marginBottom: theme.spacing.lg }}>
+              <label style={{ ...typography.styles.label, color: theme.text.primary, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: theme.spacing.sm }}>
+                <Videocam sx={{ fontSize: 18, color: theme.colors.rose[400] }} /> Video {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
+              </label>
+              {videoFile ? (
+                <div style={{ padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md, marginBottom: theme.spacing.sm }}>
+                    <Videocam sx={{ fontSize: 28, color: theme.colors.rose[400] }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ ...typography.styles.caption, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{videoFile.file.name}</div>
+                      <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{(videoFile.file.size / 1024 / 1024).toFixed(1)} MB</div>
+                    </div>
+                    <button onClick={() => clearFile('video')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.text.secondary, padding: 4, fontSize: 18, lineHeight: 1 }}>✕</button>
+                  </div>
+                  <video controls src={videoFile.previewUrl} style={{ width: '100%', borderRadius: theme.radius.md, maxHeight: 160 }} />
+                  {videoProgress !== null && <div style={{ marginTop: 4, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${videoProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
+                </div>
+              ) : (
+                <button onClick={() => videoInputRef.current?.click()} style={{ width: '100%', padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${videoError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
+                  + Choose video
+                </button>
+              )}
+              {videoError ? (
+                <div style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'flex', alignItems: 'center', gap: 4 }}>⚠️ {videoError}</div>
+              ) : (
+                <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: theme.spacing.xs }}>{getUploadHint('video')}</div>
+              )}
+            </div>
+
+            <div
+              style={{
+                padding: theme.spacing.md,
+                background: theme.colors.rose[50],
+                borderRadius: theme.radius.md,
+                border: `1px solid ${theme.colors.rose[200]}`,
+              }}
+            >
+              <p style={{ ...typography.styles.caption, color: theme.text.secondary, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Info sx={{ fontSize: 16, color: theme.colors.rose[500] }} />
+                All media is optional. Files upload when you plant.
+              </p>
+            </div>
           </div>
         )}
 
@@ -856,99 +1097,8 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           </div>
         )}
 
-        {/* Step 5: Add Media (Optional) */}
+        {/* Step 5: Review */}
         {step === 5 && (
-          <div>
-            <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
-              Add something extra (optional)
-            </p>
-
-            {/* Bloom Message - only for BLOOMING flowers */}
-            {flowerType === 'BLOOMING' && (
-              <div style={{ 
-                display: 'flex',
-                flexDirection: 'column',
-                gap: theme.spacing.sm,
-                marginBottom: theme.spacing.lg 
-              }}>
-                <label style={{ ...typography.styles.label, color: theme.text.primary }}>
-                  When it blooms
-                </label>
-                <textarea
-                  {...register('bloomMessage')}
-                  placeholder="Message to reveal when flower blooms..."
-                  style={{
-                    ...typography.styles.body,
-                    width: '100%',
-                    minHeight: '100px',
-                    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
-                    border: `2px solid ${errors.bloomMessage ? theme.semantic.error : theme.border.medium}`,
-                    borderRadius: theme.radius.lg,
-                    background: theme.bg.elevated,
-                    color: theme.text.primary,
-                    transition: theme.transition.base,
-                    outline: 'none',
-                    fontFamily: 'inherit',
-                    resize: 'vertical',
-                  }}
-                />
-                {errors.bloomMessage ? (
-                  <span style={{ ...typography.styles.caption, color: theme.semantic.error }}>
-                    {errors.bloomMessage.message}
-                  </span>
-                ) : (
-                  <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                    This will be revealed when the flower opens
-                  </span>
-                )}
-              </div>
-            )}
-
-            <Input
-              {...register('imageUrl')}
-              label="Photo"
-              placeholder="https://example.com/photo.jpg"
-              error={errors.imageUrl?.message}
-              helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
-              fullWidth
-            />
-
-            <Input
-              {...register('voiceUrl')}
-              label="Voice message"
-              placeholder="https://example.com/voice.mp3"
-              error={errors.voiceUrl?.message}
-              helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
-              fullWidth
-            />
-
-            <Input
-              {...register('videoUrl')}
-              label="Video"
-              placeholder="https://example.com/video.mp4"
-              error={errors.videoUrl?.message}
-              helperText={flowerType === 'BLOOMING' ? 'Will be revealed when flower blooms' : undefined}
-              fullWidth
-            />
-
-            <div
-              style={{
-                padding: theme.spacing.md,
-                background: theme.colors.rose[50],
-                borderRadius: theme.radius.md,
-                border: `1px solid ${theme.colors.rose[200]}`,
-              }}
-            >
-              <p style={{ ...typography.styles.caption, color: theme.text.secondary, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Info sx={{ fontSize: 16, color: theme.colors.rose[500] }} />
-                All media is optional. You can skip this step or add media later.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Step 6: Review */}
-        {step === 6 && (
           <div>
             <h3 style={{ ...typography.styles.h5, marginBottom: theme.spacing.lg }}>
               Before you plant
@@ -1007,24 +1157,32 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 </div>
               )}
 
-              {imageUrl && (
+              {imageFile && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
-                  <div style={{ ...typography.styles.body }}>
-                    ✅ Picture attached
-                    {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}> (revealed after bloom)</span>}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md }}>
+                    <img src={imageFile.previewUrl} alt="preview" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: theme.radius.md }} />
+                    <div>
+                      <div style={{ ...typography.styles.body, fontWeight: 600 }}>📷 Photo attached</div>
+                      <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{imageFile.file.name}</div>
+                      {flowerType === 'BLOOMING' && <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>Revealed after bloom</div>}
+                    </div>
                   </div>
                 </div>
               )}
 
-              {voiceUrl && (
+              {voiceFile && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
-                  <div style={{ ...typography.styles.body }}>✅ Voice message attached</div>
+                  <div style={{ ...typography.styles.body, fontWeight: 600, marginBottom: 4 }}>🎙️ Voice message attached</div>
+                  <audio controls src={voiceFile.previewUrl} style={{ width: '100%', height: 36 }} />
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: 4 }}>{voiceFile.file.name}</div>
                 </div>
               )}
 
-              {videoUrl && (
+              {videoFile && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
-                  <div style={{ ...typography.styles.body }}>✅ Video attached</div>
+                  <div style={{ ...typography.styles.body, fontWeight: 600, marginBottom: 4 }}>🎬 Video attached</div>
+                  <video controls src={videoFile.previewUrl} style={{ width: '100%', borderRadius: theme.radius.md, maxHeight: 140 }} />
+                  <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: 4 }}>{videoFile.file.name}</div>
                 </div>
               )}
 
@@ -1126,17 +1284,6 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         {step === 5 && (
           <>
             <Button variant="ghost" onClick={() => setStep(4)} style={{ flex: 1 }}>
-              Back
-            </Button>
-            <Button variant="primary" onClick={() => setStep(6)} style={{ flex: 1 }}>
-              Next
-            </Button>
-          </>
-        )}
-
-        {step === 6 && (
-          <>
-            <Button variant="ghost" onClick={() => setStep(5)} style={{ flex: 1 }}>
               Back
             </Button>
             <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>

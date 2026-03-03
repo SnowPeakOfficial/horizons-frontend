@@ -289,7 +289,8 @@ export const MyGardensPage: React.FC = () => {
         {/* Upgrade CTA (if at limit) */}
         {!canCreateMore() && user?.tier !== 'PREMIUM' && (
           <div style={{
-            marginTop: theme.spacing.xl,
+            marginTop: theme.spacing['4xl'],
+            marginBottom: theme.spacing['4xl'],
             padding: theme.spacing.lg,
             border: `1px solid ${theme.colors.rose[200]}`,
             borderRadius: theme.radius.lg,
