@@ -130,12 +130,13 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   // Reset media reveal state when modal opens/closes
   useEffect(() => {
     setMediaRevealed(false);
-  }, [isOpen]);
+  }, [isOpen, flower?.id]);
 
   if (!flower || !definition) return null;
 
   // Mystery Mode: Hide flower identity for BLOOMING flowers that are still buds
   const isBud = flower.state === 'BUD';
+  const isBloomed = flower.state === 'BLOOMED';
   const shouldHideIdentity = flower.type === 'BLOOMING' && isBud;
 
   // Extract data
@@ -157,18 +158,36 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
     year: 'numeric'
   }) : null;
 
-  // Extract content - seed message and media
-  const seedContent = flower.content?.find(c => 
+  // Extract content by phase
+  // For BLOOMING flowers: SEED has the "before bloom" message, BLOOM has media + bloom message
+  // For STANDARD flowers: IMMEDIATE has everything
+  const seedContent = flower.content?.find(c =>
     c.phase === 'SEED' || c.phase === 'IMMEDIATE'
   );
-  
+  const bloomContent = flower.content?.find(c => c.phase === 'BLOOM');
+
   const seedMessage = seedContent?.text;
-  const imageUrl = seedContent?.imageUrl;
-  const voiceUrl = seedContent?.voiceUrl;
-  const videoUrl = seedContent?.videoUrl;
-  
-  const hasMedia = !!(imageUrl || voiceUrl || videoUrl);
+
+  // Media comes from BLOOM content (for BLOOMING flowers) or IMMEDIATE (for STANDARD)
+  // Only show BLOOM media if the flower has actually bloomed
+  const mediaContent = flower.type === 'BLOOMING'
+    ? (isBloomed ? bloomContent : null)
+    : seedContent;
+
+  // Bloom-phase text message (only shown once flower has bloomed)
+  const bloomMessage = isBloomed ? bloomContent?.text : null;
+
+  const imageUrl = mediaContent?.imageUrl;
+  const voiceUrl = mediaContent?.voiceUrl;
+  const videoUrl = mediaContent?.videoUrl;
+
+  // "hasMedia" means there's anything to reveal — media files or a bloom message
+  const hasMedia = !!(imageUrl || voiceUrl || videoUrl || bloomMessage);
   const mediaCount = [imageUrl, voiceUrl, videoUrl].filter(Boolean).length;
+
+  // For STANDARD flowers (OPEN state) and already-BLOOMED flowers, show media directly.
+  // Only use tap-to-reveal for BUD state — where the surprise is still intact.
+  const showMediaDirectly = !isBud;
   
   // Fallback message if no seed message
   const getDefaultMessage = (flowerName: string): string => {
@@ -211,7 +230,6 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 
   // Bloom status
   const isBloomable = flower.type === 'BLOOMING';
-  const isBloomed = flower.state === 'BLOOMED';
 
   return (
     <Modal 
@@ -298,11 +316,11 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
               </div>
             </div>
             
-            {/* Media Reveal Section */}
+            {/* Media Section */}
             {hasMedia && (
               <>
-                {!mediaRevealed ? (
-                  /* Unrevealed - Show tap to reveal button */
+                {!showMediaDirectly && !mediaRevealed ? (
+                  /* BUD state only — tap-to-reveal surprise mechanic */
                   <div 
                     style={{
                       ...mediaRevealButtonStyle,
@@ -314,10 +332,10 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                   >
                     <CardGiftcard sx={{ fontSize: 32, color: tmpl.accentColor, marginBottom: '8px' }} />
                     <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
-                      Something was left for you
+                      Something is waiting for you
                     </div>
                     <div style={{ fontSize: '13px', opacity: 0.8 }}>
-                      Open {mediaCount} {mediaCount === 1 ? 'keepsake' : 'keepsakes'}
+                      Opens when this flower blooms
                     </div>
                     <div style={{ marginTop: '12px', fontSize: '14px', display: 'flex', gap: '12px', justifyContent: 'center', alignItems: 'center' }}>
                       {imageUrl && (
@@ -338,44 +356,56 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     </div>
                   </div>
                 ) : (
-                  /* Revealed - Show media */
+                  /* OPEN or BLOOMED — show media directly in the letter */
                   <div style={mediaGridStyle}>
+                    {/* Bloom message (text that came with the BLOOM phase) */}
+                    {bloomMessage && (
+                      <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
+                        <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
+                          🌸 A message that waited for you
+                        </div>
+                        <div style={{ ...messageTextStyle, textAlign: 'left' }}>
+                          {bloomMessage}
+                        </div>
+                      </div>
+                    )}
+
                     {imageUrl && (
                       <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
                         <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
                           <Photo sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: tmpl.accentColor }} />
                           Photo
                         </div>
-                        <img 
-                          src={imageUrl} 
-                          alt="Memory" 
+                        <img
+                          src={imageUrl}
+                          alt="Memory"
                           style={mediaImageStyle}
                         />
                       </div>
                     )}
-                    
+
                     {voiceUrl && (
                       <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
                         <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
                           <Mic sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: tmpl.accentColor }} />
                           Voice Message
                         </div>
-                        <audio 
-                          controls 
+                        <audio
+                          controls
                           src={voiceUrl}
                           style={mediaAudioStyle}
                         />
                       </div>
                     )}
-                    
+
                     {videoUrl && (
                       <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
                         <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
                           <Videocam sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: tmpl.accentColor }} />
                           Video
                         </div>
-                        <video 
-                          controls 
+                        <video
+                          controls
                           src={videoUrl}
                           style={mediaVideoStyle}
                         />

@@ -291,15 +291,15 @@ export const GardenPage: React.FC = () => {
             enableZoom={true}
             enableRotate={true}
             mouseButtons={{
-              LEFT: 2,   // Pan on left-click drag
+              LEFT: 0,   // Orbit on left-click drag
               MIDDLE: 1, // Zoom on scroll / middle button
-              RIGHT: 0,  // Orbit on right-click drag
+              RIGHT: 2,  // Pan on right-click drag
             }}
             screenSpacePanning={false}
             minDistance={15}
             maxDistance={60}
             minPolarAngle={Math.PI / 8}
-            maxPolarAngle={Math.PI / 3}
+            maxPolarAngle={Math.PI * 0.48}
             maxAzimuthAngle={Infinity}
             minAzimuthAngle={-Infinity}
             target={[0, 0, 0]}
