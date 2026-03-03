@@ -62,17 +62,17 @@ export const Footer: React.FC = () => {
   };
 
   const logoStyle: React.CSSProperties = {
-    fontSize: '22px',
-    fontWeight: 700,
     fontFamily: 'Georgia, serif',
-    background: 'linear-gradient(135deg, #D4909A 0%, #C48991 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
+    fontWeight: 500,
+    fontSize: '18px',
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase',
+    color: '#9D8F99',
+    opacity: 0.7,
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '10px',
   };
 
   const taglineStyle: React.CSSProperties = {
@@ -132,8 +132,12 @@ export const Footer: React.FC = () => {
           {/* Brand */}
           <div>
             <div style={logoStyle} onClick={() => navigate('/')}>
-              <span style={{ fontSize: '1.2em' }}>🌸</span>
-              Horizons
+              <img
+                src="/images/horizons-logo.svg"
+                alt="Horizons logo"
+                style={{ height: '24px', width: 'auto', display: 'block' }}
+              />
+              <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
             </div>
             <p style={taglineStyle}>
               A digital garden to grow and share meaningful moments.

@@ -102,17 +102,41 @@ function HorizonsBranding() {
 }
 
 /**
- * Doodle Hearts - Subtle decoration (only for romantic template)
+ * Body Decorations - Template-specific symbols placed at fixed positions inside the white card.
+ * Positions are fully hardcoded in letterTemplates.ts so the layout is identical on every open.
  */
-function DoodleHearts({ color }: { color: string }) {
+function BodyDecorations({ decorations, color }: {
+  decorations: Array<{
+    symbol: string;
+    fontSize: string;
+    opacity: number;
+    top: string;
+    side: 'left' | 'right';
+    inset: number;
+  }>;
+  color: string;
+}) {
   return (
     <>
-      <div style={{ position: 'absolute', top: '45%', right: '32px', fontSize: '16px', color, opacity: 0.4 }}>
-        ♡
-      </div>
-      <div style={{ position: 'absolute', bottom: '140px', left: '32px', fontSize: '14px', color, opacity: 0.3 }}>
-        ♥︎
-      </div>
+      {decorations.map((d, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            top: d.top,
+            left: d.side === 'left' ? `${d.inset}px` : undefined,
+            right: d.side === 'right' ? `${d.inset}px` : undefined,
+            fontSize: d.fontSize,
+            color,
+            opacity: d.opacity,
+            pointerEvents: 'none',
+            userSelect: 'none',
+            lineHeight: 1,
+          }}
+        >
+          {d.symbol}
+        </div>
+      ))}
     </>
   );
 }
@@ -451,8 +475,8 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             
           </div>
           
-          {/* Subtle Doodle Hearts - only for romantic */}
-          {tmpl.showDoodleHearts && <DoodleHearts color={tmpl.accentColor} />}
+          {/* Body Decorations - template-specific symbols scattered throughout the card */}
+          <BodyDecorations decorations={tmpl.bodyDecorations} color={tmpl.accentColor} />
           
         </div>
         

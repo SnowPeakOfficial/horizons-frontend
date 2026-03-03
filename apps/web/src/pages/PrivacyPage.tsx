@@ -1,17 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
+import { theme } from '../styles/theme';
+import { typography } from '../styles/typography';
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div style={{ marginBottom: '36px' }}>
-    <h2 style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'Georgia, serif', color: '#3D3340', marginBottom: '12px' }}>
+    <h2 style={{ fontSize: '18px', fontWeight: 700, fontFamily: typography.fontFamily.serif, color: theme.text.primary, marginBottom: '12px' }}>
       {title}
     </h2>
-    <div style={{ fontSize: '15px', color: '#5A5060', lineHeight: 1.75 }}>{children}</div>
+    <div style={{ fontSize: '15px', color: theme.text.secondary, lineHeight: 1.75 }}>{children}</div>
   </div>
 );
 
 export const PrivacyPage: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
@@ -19,16 +24,16 @@ export const PrivacyPage: React.FC = () => {
         <div style={{ maxWidth: '760px', margin: '0 auto', padding: '48px 24px 64px' }}>
           {/* Header */}
           <div style={{ marginBottom: '40px' }}>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: '#D4909A', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+            <div style={{ fontSize: '13px', fontWeight: 700, color: theme.colors.rose[400], letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
               Legal
             </div>
-            <h1 style={{ fontSize: '36px', fontWeight: 700, fontFamily: 'Georgia, serif', color: '#3D3340', margin: '0 0 12px' }}>
+            <h1 style={{ fontSize: '36px', fontWeight: 700, fontFamily: typography.fontFamily.serif, color: theme.text.primary, margin: '0 0 12px' }}>
               Privacy Policy
             </h1>
-            <p style={{ fontSize: '14px', color: '#9D8F99' }}>Last updated: February 2026</p>
+            <p style={{ fontSize: '14px', color: theme.text.tertiary }}>Last updated: February 2026</p>
           </div>
 
-          <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '40px', border: '1.5px solid rgba(232, 180, 184, 0.3)', boxShadow: '0 4px 20px rgba(212, 144, 154, 0.08)' }}>
+          <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '40px', border: `1.5px solid rgba(232, 180, 184, 0.3)`, boxShadow: '0 4px 20px rgba(212, 144, 154, 0.08)' }}>
             <Section title="1. Introduction">
               <p>Welcome to Horizons ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.</p>
             </Section>

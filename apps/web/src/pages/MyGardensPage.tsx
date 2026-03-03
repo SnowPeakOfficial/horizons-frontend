@@ -48,6 +48,8 @@ export const MyGardensPage: React.FC = () => {
   // Premium styles with gradient background
   const containerStyle: React.CSSProperties = {
     minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
     background: 'linear-gradient(135deg, #FFF9F5 0%, #FFE8E8 50%, #FFF0F5 100%)',
   };
 
@@ -197,7 +199,7 @@ export const MyGardensPage: React.FC = () => {
     <div style={containerStyle}>
       <Navbar />
 
-      <main style={contentStyle}>
+      <main style={{ ...contentStyle, flex: 1, width: '100%', boxSizing: 'border-box' }}>
         {/* Page Header */}
         <div style={headerStyle}>
           <h1 style={titleStyle}>Your Memory Gardens</h1>

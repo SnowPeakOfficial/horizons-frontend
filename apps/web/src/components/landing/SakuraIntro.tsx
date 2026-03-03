@@ -125,16 +125,18 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             position: 'absolute', top: '88px', left: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
             letterSpacing: '0.25em', textTransform: 'uppercase' as const,
-            color: theme.text.tertiary, opacity: 1, zIndex: 10,
+            color: theme.text.tertiary, zIndex: 10,
             pointerEvents: 'none',
+            animation: 'heroContentFade 8s ease forwards',
           }}>EST. 2026</div>
 
           <div style={{
             position: 'absolute', top: '88px', right: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
-            letterSpacing: '0.1em', color: theme.text.tertiary, opacity: 1,
+            letterSpacing: '0.1em', color: theme.text.tertiary,
             zIndex: 10, pointerEvents: 'none',
             display: 'flex', alignItems: 'center', gap: '6px',
+            animation: 'heroContentFade 8s ease forwards',
           }}>
             <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
             <span>Private by design</span>
@@ -154,15 +156,36 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           >
             <div
               style={{
-                fontFamily: typography.fontFamily.serif,
-                fontSize: 'clamp(64px, 10vw, 128px)',
-                fontWeight: typography.fontWeight.medium,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: theme.text.tertiary,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'clamp(16px, 2vw, 32px)',
+                opacity: 0.7,
               }}
             >
-              HORIZONS
+              <img
+                src="/images/horizons-logo.svg"
+                alt="Horizons logo"
+                style={{
+                  height: 'clamp(64px, 10vw, 128px)',
+                  width: 'auto',
+                  display: 'block',
+                  userSelect: 'none',
+                  pointerEvents: 'none',
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(64px, 10vw, 128px)',
+                  fontWeight: typography.fontWeight.medium,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: theme.text.tertiary,
+                  textShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                }}
+              >
+                HORIZONS
+              </span>
             </div>
           </div>
 
@@ -182,18 +205,38 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             {/* Logo/Brand */}
             <div
               style={{
-                fontFamily: typography.fontFamily.serif,
-                fontSize: 'clamp(36px, 5vw, 60px)',
-                fontWeight: typography.fontWeight.medium,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: theme.text.tertiary,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '16px',
                 marginBottom: theme.spacing['2xl'],
                 opacity: 0.7,
-                textShadow: '0 1px 3px rgba(0,0,0,0.08)',
               }}
             >
-              Horizons
+              <img
+                src="/images/horizons-logo.svg"
+                alt="Horizons logo"
+                style={{
+                  height: 'clamp(36px, 5vw, 60px)',
+                  width: 'auto',
+                  display: 'block',
+                  userSelect: 'none',
+                  pointerEvents: 'none',
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: typography.fontFamily.serif,
+                  fontSize: 'clamp(36px, 5vw, 60px)',
+                  fontWeight: typography.fontWeight.medium,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: theme.text.tertiary,
+                  textShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                }}
+              >
+                Horizons
+              </span>
             </div>
 
             {/* Main Headline */}

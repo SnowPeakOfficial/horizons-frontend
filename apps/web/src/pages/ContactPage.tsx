@@ -4,6 +4,8 @@ import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { useAuthStore } from '../stores/authStore';
 import api from '../services/api';
+import { theme } from '../styles/theme';
+import { typography } from '../styles/typography';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import EmailOutlined from '@mui/icons-material/EmailOutlined';
 
@@ -13,6 +15,7 @@ export const ContactPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Pre-fill name/email for authenticated users
   useEffect(() => {
@@ -24,6 +27,13 @@ export const ContactPage: React.FC = () => {
       }));
     }
   }, [isAuthenticated, user]);
+
+  // Responsive listener
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -52,9 +62,9 @@ export const ContactPage: React.FC = () => {
     width: '100%',
     padding: '11px 14px',
     borderRadius: '10px',
-    border: '1.5px solid rgba(232, 180, 184, 0.5)',
+    border: `1.5px solid rgba(232, 180, 184, 0.5)`,
     fontSize: '15px',
-    color: '#3D3340',
+    color: theme.text.primary,
     background: '#FFFFFF',
     outline: 'none',
     boxSizing: 'border-box',
@@ -66,7 +76,7 @@ export const ContactPage: React.FC = () => {
     display: 'block',
     fontSize: '12px',
     fontWeight: 700,
-    color: '#9D8F99',
+    color: theme.text.tertiary,
     letterSpacing: '0.06em',
     marginBottom: '6px',
     textTransform: 'uppercase',
@@ -79,37 +89,42 @@ export const ContactPage: React.FC = () => {
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '48px 32px 64px' }}>
           {/* Header */}
           <div style={{ marginBottom: '40px' }}>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: '#D4909A', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+            <div style={{ fontSize: '13px', fontWeight: 700, color: theme.colors.rose[400], letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
               Get in Touch
             </div>
-            <h1 style={{ fontSize: '36px', fontWeight: 700, fontFamily: 'Georgia, serif', color: '#3D3340', margin: '0 0 12px' }}>
+            <h1 style={{ fontSize: '36px', fontWeight: 700, fontFamily: typography.fontFamily.serif, color: theme.text.primary, margin: '0 0 12px' }}>
               Contact Us
             </h1>
-            <p style={{ fontSize: '15px', color: '#7A6E78', lineHeight: 1.6, maxWidth: '540px' }}>
+            <p style={{ fontSize: '15px', color: theme.text.secondary, lineHeight: 1.6, maxWidth: '540px' }}>
               Have a question, feedback, or need support? We'd love to hear from you. Fill in the form below and we'll get back to you as soon as possible.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '28px', alignItems: 'start' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 300px',
+            gap: '28px',
+            alignItems: 'start',
+          }}>
             {/* Form card */}
-            <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '40px', border: '1.5px solid rgba(232, 180, 184, 0.3)', boxShadow: '0 4px 20px rgba(212, 144, 154, 0.08)' }}>
+            <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '40px', border: `1.5px solid rgba(232, 180, 184, 0.3)`, boxShadow: '0 4px 20px rgba(212, 144, 154, 0.08)' }}>
               {success ? (
                 <div style={{ textAlign: 'center', padding: '40px 0' }}>
                   <CheckCircle sx={{ fontSize: 56, color: '#6B8E6B' }} />
-                  <h2 style={{ fontFamily: 'Georgia, serif', color: '#3D3340', marginTop: '16px', marginBottom: '8px' }}>Message Sent!</h2>
-                  <p style={{ color: '#7A6E78', fontSize: '15px', lineHeight: 1.6 }}>
+                  <h2 style={{ fontFamily: typography.fontFamily.serif, color: theme.text.primary, marginTop: '16px', marginBottom: '8px' }}>Message Sent!</h2>
+                  <p style={{ color: theme.text.secondary, fontSize: '15px', lineHeight: 1.6 }}>
                     Thanks for reaching out. We'll get back to you within 1–2 business days.
                   </p>
                   <button
                     onClick={() => setSuccess(false)}
-                    style={{ marginTop: '24px', padding: '10px 28px', borderRadius: '10px', border: '1.5px solid rgba(232, 180, 184, 0.5)', background: 'transparent', color: '#D4909A', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
+                    style={{ marginTop: '24px', padding: '10px 28px', borderRadius: '10px', border: `1.5px solid rgba(232, 180, 184, 0.5)`, background: 'transparent', color: theme.colors.rose[400], cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
                   >
                     Send Another Message
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
                     <div>
                       <label style={labelStyle}>Name *</label>
                       <input style={inputStyle} name="name" value={form.name} onChange={handleChange} placeholder="Your name" required />
@@ -147,7 +162,7 @@ export const ContactPage: React.FC = () => {
                   </div>
 
                   {error && (
-                    <p style={{ color: '#D4909A', fontSize: '13px', marginBottom: '16px' }}>{error}</p>
+                    <p style={{ color: theme.colors.rose[400], fontSize: '13px', marginBottom: '16px' }}>{error}</p>
                   )}
 
                   <button
@@ -156,7 +171,7 @@ export const ContactPage: React.FC = () => {
                     style={{
                       width: '100%', padding: '14px', borderRadius: '12px', border: 'none',
                       background: submitting ? 'rgba(212,144,154,0.5)' : 'linear-gradient(135deg, #E8B4B8 0%, #D4909A 100%)',
-                      color: '#FFFFFF', fontWeight: 600, fontSize: '15px', fontFamily: 'Georgia, serif',
+                      color: '#FFFFFF', fontWeight: 600, fontSize: '15px', fontFamily: typography.fontFamily.serif,
                       cursor: submitting ? 'default' : 'pointer',
                       boxShadow: submitting ? 'none' : '0 4px 16px rgba(212, 144, 154, 0.35)',
                     }}
@@ -168,10 +183,10 @@ export const ContactPage: React.FC = () => {
             </div>
 
             {/* Info card */}
-            <div style={{ background: 'linear-gradient(135deg, #FFF0F2 0%, #FAE8EC 100%)', borderRadius: '20px', padding: '32px', border: '1.5px solid rgba(232, 180, 184, 0.3)' }}>
+            <div style={{ background: 'linear-gradient(135deg, #FFF0F2 0%, #FAE8EC 100%)', borderRadius: '20px', padding: '32px', border: `1.5px solid rgba(232, 180, 184, 0.3)` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-                <EmailOutlined sx={{ fontSize: 22, color: '#D4909A' }} />
-                <span style={{ fontWeight: 700, fontFamily: 'Georgia, serif', color: '#3D3340', fontSize: '15px' }}>Email</span>
+                <EmailOutlined sx={{ fontSize: 22, color: theme.colors.rose[400] }} />
+                <span style={{ fontWeight: 700, fontFamily: typography.fontFamily.serif, color: theme.text.primary, fontSize: '15px' }}>Email</span>
               </div>
               <p style={{ fontSize: '14px', color: '#7A6E78', lineHeight: 1.6, marginBottom: '24px', marginTop: '8px' }}>
                 horizons.memory.garden@gmail.com
@@ -179,16 +194,16 @@ export const ContactPage: React.FC = () => {
 
               <div style={{ height: '1px', background: 'rgba(232, 180, 184, 0.3)', marginBottom: '24px' }} />
 
-              <div style={{ fontSize: '13px', color: '#9D8F99', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>
+              <div style={{ fontSize: '13px', color: theme.text.tertiary, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>
                 Response Time
               </div>
-              <p style={{ fontSize: '14px', color: '#7A6E78', lineHeight: 1.6, marginBottom: '24px' }}>
+              <p style={{ fontSize: '14px', color: theme.text.secondary, lineHeight: 1.6, marginBottom: '24px' }}>
                 We typically respond within 1–2 business days.
               </p>
 
               <div style={{ height: '1px', background: 'rgba(232, 180, 184, 0.3)', marginBottom: '24px' }} />
 
-              <div style={{ fontSize: '13px', color: '#9D8F99', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '12px' }}>
+              <div style={{ fontSize: '13px', color: theme.text.tertiary, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '12px' }}>
                 Quick Links
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -200,7 +215,7 @@ export const ContactPage: React.FC = () => {
                   <Link
                     key={path}
                     to={path}
-                    style={{ fontSize: '14px', color: '#D4909A', textDecoration: 'none', fontWeight: 500 }}
+                    style={{ fontSize: '14px', color: theme.colors.rose[400], textDecoration: 'none', fontWeight: 500 }}
                     onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.textDecoration = 'underline'; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.textDecoration = 'none'; }}
                   >

@@ -58,18 +58,18 @@ export const Navbar: React.FC = () => {
   };
 
   const logoStyle: React.CSSProperties = {
-    ...typography.styles.h4,
-    fontWeight: 700,
     fontFamily: 'Georgia, serif',
-    background: 'linear-gradient(135deg, #D4909A 0%, #C48991 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
+    fontWeight: typography.fontWeight.medium,
+    fontSize: '18px',
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase',
+    color: theme.text.tertiary,
+    opacity: 0.7,
     cursor: 'pointer',
     textDecoration: 'none',
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing.xs,
+    gap: '10px',
   };
 
   const navLinksStyle: React.CSSProperties = {
@@ -181,8 +181,12 @@ export const Navbar: React.FC = () => {
         <div style={containerStyle}>
           {/* Logo */}
           <div style={logoStyle} onClick={() => navigate('/')}>
-            <span style={{ fontSize: '1.2em' }}>🌸</span>
-            Horizons
+            <img
+              src="/images/horizons-logo.svg"
+              alt="Horizons logo"
+              style={{ height: '28px', width: 'auto', display: 'block' }}
+            />
+            <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
           </div>
 
           {/* Right Side - Auth Buttons */}
@@ -213,8 +217,12 @@ export const Navbar: React.FC = () => {
       <div style={containerStyle}>
         {/* Logo */}
         <div style={logoStyle} onClick={() => navigate('/')}>
-          <span style={{ fontSize: '1.2em' }}>🌸</span>
-          Horizons
+          <img
+            src="/images/horizons-logo.svg"
+            alt="Horizons logo"
+            style={{ height: '28px', width: 'auto', display: 'block' }}
+          />
+          <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
         </div>
 
         {/* Right Side - Navigation Links + User Section */}
