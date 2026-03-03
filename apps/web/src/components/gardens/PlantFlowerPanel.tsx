@@ -32,6 +32,7 @@ import Nature from '@mui/icons-material/Nature';
 import Info from '@mui/icons-material/Info';
 import Lock from '@mui/icons-material/Lock';
 import AddAPhoto from '@mui/icons-material/AddAPhoto';
+import LightbulbOutlined from '@mui/icons-material/LightbulbOutlined';
 import Mic from '@mui/icons-material/Mic';
 import Videocam from '@mui/icons-material/Videocam';
 import MusicNote from '@mui/icons-material/MusicNote';
@@ -815,9 +816,14 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               label="Recipient's Email (Optional)"
               placeholder="recipient@example.com"
               error={errors.recipientEmail?.message}
-              helperText="💡 If provided, we'll invite them as a contributor to view this garden"
               fullWidth
             />
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginTop: '-10px', marginBottom: theme.spacing.lg }}>
+              <LightbulbOutlined sx={{ fontSize: 15, color: '#D4909A', marginTop: '1px', flexShrink: 0 }} />
+              <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>
+                If provided, we'll invite them as a contributor to view this garden
+              </span>
+            </div>
 
             {/* Seed Message */}
             <div style={{ 
@@ -1074,21 +1080,6 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                           {tmpl.previewSnippet}
                         </div>
                       </div>
-                      {isSelected && (
-                        <div style={{
-                          width: '22px',
-                          height: '22px',
-                          borderRadius: '50%',
-                          background: tmpl.accentColor,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          flexShrink: 0,
-                          fontSize: '13px',
-                          color: '#fff',
-                          fontWeight: 700,
-                        }}>✓</div>
-                      )}
                     </div>
                   </div>
                 );

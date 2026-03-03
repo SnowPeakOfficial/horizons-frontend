@@ -115,8 +115,8 @@ class AuthService {
   /**
    * Get user statistics (gardens count, flowers count, etc.)
    */
-  async getUserStats(): Promise<{ totalGardens: number; totalFlowers: number; memberSince: string }> {
-    const response = await api.get<{ totalGardens: number; totalFlowers: number; memberSince: string }>('/users/me/stats');
+  async getUserStats(): Promise<{ gardenCount: number; flowerCount: number; bloomingFlowerCount: number; memberSince: string }> {
+    const response = await api.get<{ gardenCount: number; flowerCount: number; bloomingFlowerCount: number; memberSince: string }>('/users/me/stats');
     return response.data;
   }
 }

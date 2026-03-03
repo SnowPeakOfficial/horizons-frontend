@@ -6,7 +6,7 @@ import authService from '../services/authService';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import PersonOutline from '@mui/icons-material/PersonOutline';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
-import Park from '@mui/icons-material/Park';
+import GrassOutlined from '@mui/icons-material/GrassOutlined';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 
@@ -30,7 +30,7 @@ export const ProfilePage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<{ totalGardens: number; totalFlowers: number } | null>(null);
+  const [stats, setStats] = useState<{ gardenCount: number; flowerCount: number } | null>(null);
 
   // Populate form from user
   useEffect(() => {
@@ -44,7 +44,7 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     loadUser();
     authService.getUserStats()
-      .then((s) => setStats({ totalGardens: s.totalGardens, totalFlowers: s.totalFlowers }))
+      .then((s) => setStats({ gardenCount: s.gardenCount, flowerCount: s.flowerCount }))
       .catch(() => {});
   }, [loadUser]);
 
@@ -235,16 +235,16 @@ export const ProfilePage: React.FC = () => {
           <div style={sectionTitleStyle}>Account Overview</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             {[
-              { icon: <Park sx={{ fontSize: 22, color: '#D4909A' }} />, label: 'Gardens', value: stats?.totalGardens ?? '—' },
-              { icon: <LocalFlorist sx={{ fontSize: 22, color: '#D4909A' }} />, label: 'Flowers', value: stats?.totalFlowers ?? '—' },
-              { icon: <CalendarToday sx={{ fontSize: 20, color: '#D4909A' }} />, label: 'Member Since', value: memberSince },
+              { icon: <GrassOutlined sx={{ fontSize: 22, color: '#D4909A' }} />, label: 'Gardens', value: stats?.gardenCount ?? '—' },
+              { icon: <LocalFlorist sx={{ fontSize: 22, color: '#D4909A' }} />, label: 'Flowers', value: stats?.flowerCount ?? '—' },
+              { icon: <CalendarToday sx={{ fontSize: 18, color: '#D4909A' }} />, label: 'Member Since', value: memberSince },
             ].map(({ icon, label, value }) => (
               <div key={label} style={{
                 background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF0F2 100%)',
                 borderRadius: '14px', padding: '18px 16px', textAlign: 'center',
                 border: '1px solid rgba(232, 180, 184, 0.25)',
               }}>
-                <div style={{ marginBottom: '6px' }}>{icon}</div>
+                <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 8px' }}>{icon}</div>
                 <div style={{ fontSize: '22px', fontWeight: 700, color: '#3D3340', fontFamily: 'Georgia, serif' }}>{value}</div>
                 <div style={{ fontSize: '12px', color: '#9D8F99', marginTop: '2px' }}>{label}</div>
               </div>
