@@ -17,36 +17,7 @@ interface LetterRevealOverlayProps {
   onDone: () => void;
 }
 
-// 24 particles for a full explosive burst
-const PETALS = [
-  '🌸','🌺','✨','🌷','💮','🌼','💫','🌸',
-  '🌺','✨','🌸','🌷','🌼','💫','🌺','✨',
-  '🌸','💮','🌷','🌼','🌺','✨','🌸','💫',
-];
-
 type Phase = 'logo' | 'envelope' | 'open' | 'fade';
-
-// Build per-petal keyframes: downward-biased gravity, large distances
-function buildPetalKeyframes(): string {
-  return PETALS.map((_, i) => {
-    const angle = (i / PETALS.length) * 360;
-    const rad   = (angle * Math.PI) / 180;
-    // Base horizontal/vertical travel
-    const baseDist = 180 + (i % 5) * 30; // 180–300px
-    const tx = Math.cos(rad) * baseDist;
-    let ty = Math.sin(rad) * baseDist;
-    // Gravity: add downward pull to all particles
-    const gravityPull = 60 + (i % 4) * 20; // 60–120px extra downward
-    ty += gravityPull;
-    return `
-      @keyframes lro-petal${i} {
-        0%   { opacity:1; transform:translate(-50%,-50%) translate(0,0) scale(1.3); }
-        60%  { opacity:0.85; }
-        100% { opacity:0; transform:translate(-50%,-50%) translate(${tx}px,${ty}px) scale(0.2) rotate(${angle * 2}deg); }
-      }
-    `;
-  }).join('');
-}
 
 export const LetterRevealOverlay: React.FC<LetterRevealOverlayProps> = ({ onDone }) => {
   const [phase, setPhase] = useState<Phase>('logo');
@@ -89,8 +60,6 @@ export const LetterRevealOverlay: React.FC<LetterRevealOverlayProps> = ({ onDone
           from { opacity: 0; transform: translateY(6px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        /* Petal keyframes */
-        ${buildPetalKeyframes()}
       `}</style>
 
       {/* Backdrop — light, matching SakuraIntro */}
@@ -172,96 +141,134 @@ export const LetterRevealOverlay: React.FC<LetterRevealOverlayProps> = ({ onDone
               animation: 'lro-envDrop 0.65s cubic-bezier(0.34,1.56,0.64,1) forwards',
             }}
           >
-            {/* Envelope SVG */}
-            <div style={{ position: 'relative', width: '340px', height: '240px' }}>
+            {/* Premium Envelope SVG */}
+            <div style={{ position: 'relative', width: '400px', height: '280px' }}>
               <svg
-                width="340"
-                height="240"
-                viewBox="0 0 340 240"
+                width="400"
+                height="280"
+                viewBox="0 0 400 280"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 style={{ display: 'block' }}
               >
                 <defs>
-                  <filter id="lro-envShadow" x="-10%" y="-10%" width="120%" height="130%">
-                    <feDropShadow dx="0" dy="6" stdDeviation="16" floodColor="#C09090" floodOpacity="0.18" />
+                  <filter id="lro-envShadow" x="-15%" y="-10%" width="130%" height="140%">
+                    <feDropShadow dx="0" dy="10" stdDeviation="22" floodColor="#B07070" floodOpacity="0.14" />
                   </filter>
-                  <filter id="lro-flapShadow" x="-5%" y="-5%" width="110%" height="120%">
-                    <feDropShadow dx="0" dy="3" stdDeviation="7" floodColor="#C09090" floodOpacity="0.12" />
+                  <filter id="lro-flapShadow" x="-5%" y="-5%" width="115%" height="125%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor="#B07070" floodOpacity="0.10" />
                   </filter>
-                  <linearGradient id="lro-envBody" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#FFF8F0" />
-                    <stop offset="100%" stopColor="#F5E8DC" />
+                  {/* Warm ivory paper — horizontal gradient for depth */}
+                  <linearGradient id="lro-envBody" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%"   stopColor="#FFFDF6" />
+                    <stop offset="45%"  stopColor="#FFF6EA" />
+                    <stop offset="100%" stopColor="#F8EBD8" />
                   </linearGradient>
+                  {/* Dusty-rose flap */}
                   <linearGradient id="lro-envFlap" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={theme.colors.rose[400]} />
-                    <stop offset="100%" stopColor={theme.colors.rose[600]} />
+                    <stop offset="0%"   stopColor="#E8A0B0" />
+                    <stop offset="100%" stopColor="#C87090" />
                   </linearGradient>
+                  {/* Gold accent for borders */}
+                  <linearGradient id="lro-gold" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%"   stopColor="#D4A060" />
+                    <stop offset="50%"  stopColor="#F0C880" />
+                    <stop offset="100%" stopColor="#D4A060" />
+                  </linearGradient>
+                  {/* Wax seal radial */}
+                  <radialGradient id="lro-seal" cx="50%" cy="35%" r="65%">
+                    <stop offset="0%"   stopColor="#D4708A" />
+                    <stop offset="100%" stopColor="#922048" />
+                  </radialGradient>
                 </defs>
 
-                {/* Envelope body */}
+                {/* ── Envelope body ── */}
                 <rect
-                  x="10" y="85" width="320" height="145" rx="8"
+                  x="12" y="100" width="376" height="168" rx="10"
                   fill="url(#lro-envBody)"
-                  stroke={theme.colors.rose[200]}
-                  strokeWidth="1.5"
                   filter="url(#lro-envShadow)"
                 />
+                {/* Gold border rule */}
+                <rect
+                  x="12" y="100" width="376" height="168" rx="10"
+                  fill="none"
+                  stroke="url(#lro-gold)"
+                  strokeWidth="1.2"
+                  opacity="0.7"
+                />
 
-                {/* Inner diagonal fold lines */}
-                <line x1="10" y1="230" x2="170" y2="158" stroke={theme.colors.rose[200]} strokeWidth="1" opacity="0.6" />
-                <line x1="330" y1="230" x2="170" y2="158" stroke={theme.colors.rose[200]} strokeWidth="1" opacity="0.6" />
+                {/* Subtle horizontal paper lines (texture) */}
+                {[130, 150, 170, 190, 210, 230, 250].map((y) => (
+                  <line key={y} x1="28" y1={y} x2="372" y2={y}
+                    stroke="#D4A06040" strokeWidth="0.5" />
+                ))}
 
-                {/* Envelope flap */}
+                {/* Inner decorative border */}
+                <rect
+                  x="22" y="110" width="356" height="148" rx="6"
+                  fill="none"
+                  stroke="#D4A06055"
+                  strokeWidth="0.8"
+                  strokeDasharray="4 3"
+                />
+
+                {/* Bottom inner V-fold lines */}
+                <line x1="12"  y1="268" x2="200" y2="185" stroke="#C8A08060" strokeWidth="1" />
+                <line x1="388" y1="268" x2="200" y2="185" stroke="#C8A08060" strokeWidth="1" />
+
+                {/* Left & right side fold triangles (subtle) */}
+                <path d="M12 100 L80 185 L12 268 Z" fill="#F0E4D0" opacity="0.45" />
+                <path d="M388 100 L320 185 L388 268 Z" fill="#F0E4D0" opacity="0.45" />
+
+                {/* ── Envelope flap ── */}
                 <g
                   style={phase === 'open' ? {
-                    animation: 'lro-flapOpen 0.55s cubic-bezier(0.4,0,0.2,1) forwards',
-                    transformOrigin: '170px 85px',
+                    animation: 'lro-flapOpen 0.6s cubic-bezier(0.4,0,0.2,1) forwards',
+                    transformOrigin: '200px 100px',
                   } : {}}
                   filter="url(#lro-flapShadow)"
                 >
+                  {/* Flap triangle */}
                   <path
-                    d="M10 85 L170 165 L330 85 Z"
+                    d="M12 100 L200 196 L388 100 Z"
                     fill="url(#lro-envFlap)"
-                    stroke={theme.colors.rose[300]}
-                    strokeWidth="1.5"
+                    stroke="none"
+                  />
+                  {/* Gold edge on flap */}
+                  <path
+                    d="M12 100 L200 196 L388 100"
+                    fill="none"
+                    stroke="url(#lro-gold)"
+                    strokeWidth="1.2"
+                    opacity="0.6"
                     strokeLinejoin="round"
                   />
-                  {/* Wax seal */}
-                  <circle cx="170" cy="122" r="20" fill={theme.colors.rose[600]} stroke={theme.colors.rose[300]} strokeWidth="1.5" />
-                  <circle cx="170" cy="122" r="14" fill={theme.colors.rose[700]} />
-                  <text
-                    x="170" y="127"
-                    textAnchor="middle"
-                    fontFamily="Georgia, serif"
-                    fontSize="15"
-                    fontWeight="bold"
-                    fill="rgba(255,230,235,0.95)"
-                  >H</text>
+
+                  {/* ── Premium wax seal ── */}
+                  {/* Outer ring */}
+                  <circle cx="200" cy="145" r="28" fill="url(#lro-seal)" />
+                  {/* Decorative ring */}
+                  <circle cx="200" cy="145" r="24" fill="none" stroke="rgba(255,200,215,0.35)" strokeWidth="1.5" />
+                  <circle cx="200" cy="145" r="20" fill="rgba(140,20,50,0.25)" />
+                  {/* Rose petals — 5-petal SVG rose motif */}
+                  {[0,72,144,216,288].map((deg, pi) => {
+                    const rad = (deg * Math.PI) / 180;
+                    const px = 200 + Math.cos(rad) * 9;
+                    const py = 145 + Math.sin(rad) * 9;
+                    return (
+                      <ellipse
+                        key={pi}
+                        cx={px} cy={py}
+                        rx="5.5" ry="3.5"
+                        fill="rgba(255,210,220,0.75)"
+                        transform={`rotate(${deg}, ${px}, ${py})`}
+                      />
+                    );
+                  })}
+                  {/* Centre dot */}
+                  <circle cx="200" cy="145" r="4" fill="rgba(255,225,232,0.9)" />
                 </g>
               </svg>
-
-              {/* Petal burst from envelope center */}
-              {phase === 'open' && (
-                <div style={{ position: 'absolute', top: '45%', left: '50%' }}>
-                  {PETALS.map((petal, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        position: 'absolute',
-                        fontSize: `${24 + (i % 5) * 8}px`, // 24–56px
-                        top: 0,
-                        left: 0,
-                        transform: 'translate(-50%,-50%)',
-                        display: 'block',
-                        animation: `lro-petal${i} 1.2s ease-out ${i * 30}ms forwards`,
-                      } as React.CSSProperties}
-                    >
-                      {petal}
-                    </span>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Hint text */}

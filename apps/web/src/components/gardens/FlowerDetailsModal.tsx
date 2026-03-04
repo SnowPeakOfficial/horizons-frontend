@@ -35,14 +35,26 @@ interface FlowerDetailsModalProps {
 }
 
 // ─── Confetti particle data (stable, computed once) ──────────────────────────
-const CONFETTI_PARTICLES = Array.from({ length: 32 }, (_, i) => ({
+// 60 particles, wide spread, strong downward fall with gravity
+const CONFETTI_COLORS = ['#E8B4B8', '#D4909A', '#FFB8C8', '#C8A0D0', '#FFD89B', '#B39DDB', '#80CBC4', '#F4A7B9', '#C2E0FF', '#FFE4B5'];
+const CONFETTI_PARTICLES = Array.from({ length: 60 }, (_, i) => ({
   id: i,
-  left: `${5 + ((i * 97) % 90)}%`,
-  delay: `${(i * 63) % 1800}ms`,
-  duration: `${1400 + (i * 137) % 800}ms`,
-  size: 6 + (i % 5) * 2,
-  color: ['#E8B4B8', '#D4909A', '#FFB8C8', '#C8E6C9', '#FFE082', '#B39DDB', '#80CBC4'][i % 7],
-  rotate: (i * 47) % 360,
+  // Spread across full width (0–98%)
+  left: `${(i * 163) % 98}%`,
+  // Stagger delays up to 900ms so it rains continuously
+  delay: `${(i * 47) % 900}ms`,
+  // Duration 2–3.5s
+  duration: `${2000 + (i * 89) % 1500}ms`,
+  // Sizes 8–22px
+  size: 8 + (i % 5) * 3,
+  color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+  // Random horizontal drift: -120 to +120px
+  driftX: ((i * 73) % 241) - 120,
+  // Downward travel: 380–600px (strong fall)
+  fallY: 380 + (i % 5) * 44,
+  rotate: (i * 47) % 720,
+  // Alternate between circle, rectangle, and thin bar
+  shape: i % 3,
 }));
 
 /**
@@ -531,36 +543,37 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         
       </div>
       
-      {/* ── Confetti burst (fromEmail only, auto-hides after 2.2s) ── */}
+      {/* ── Confetti burst (fromEmail only, auto-hides after 3.5s) ── */}
       {showConfetti && (
         <>
           <style>{`
-            @keyframes confettiFall {
-              0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
-              100% { opacity: 0; transform: translateY(220px) rotate(360deg); }
-            }
+            ${CONFETTI_PARTICLES.map((p) => `
+              @keyframes confettiFall${p.id} {
+                0%   { opacity: 1;    transform: translate(0, -10px)          rotate(0deg); }
+                70%  { opacity: 0.85; }
+                100% { opacity: 0;    transform: translate(${p.driftX}px, ${p.fallY}px) rotate(${p.rotate}deg); }
+              }
+            `).join('')}
           `}</style>
           <div style={{
-            position: 'absolute',
+            position: 'fixed',
             inset: 0,
             pointerEvents: 'none',
             overflow: 'hidden',
-            zIndex: 20,
-            borderRadius: '16px',
+            zIndex: 10000,
           }}>
             {CONFETTI_PARTICLES.map((p) => (
               <div
                 key={p.id}
                 style={{
                   position: 'absolute',
-                  top: '-10px',
+                  top: '0',
                   left: p.left,
-                  width: `${p.size}px`,
-                  height: `${p.size}px`,
+                  width: `${p.shape === 2 ? p.size * 0.4 : p.size}px`,
+                  height: `${p.shape === 0 ? p.size : p.size * (p.shape === 2 ? 2.2 : 1)}px`,
                   background: p.color,
-                  borderRadius: p.id % 3 === 0 ? '50%' : '2px',
-                  transform: `rotate(${p.rotate}deg)`,
-                  animation: `confettiFall ${p.duration} ${p.delay} ease-in forwards`,
+                  borderRadius: p.shape === 0 ? '50%' : p.shape === 1 ? '2px' : '1px',
+                  animation: `confettiFall${p.id} ${p.duration} ${p.delay} cubic-bezier(0.25,0.46,0.45,0.94) forwards`,
                 }}
               />
             ))}
