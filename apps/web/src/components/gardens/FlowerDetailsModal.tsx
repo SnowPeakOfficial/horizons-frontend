@@ -4,6 +4,7 @@
  */
 
 import React, { Suspense, useMemo } from 'react';
+import confetti from 'canvas-confetti';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Modal } from '../common/Modal';
@@ -34,28 +35,6 @@ interface FlowerDetailsModalProps {
   fromEmail?: boolean;
 }
 
-// ─── Confetti particle data (stable, computed once) ──────────────────────────
-// 60 particles, wide spread, strong downward fall with gravity
-const CONFETTI_COLORS = ['#E8B4B8', '#D4909A', '#FFB8C8', '#C8A0D0', '#FFD89B', '#B39DDB', '#80CBC4', '#F4A7B9', '#C2E0FF', '#FFE4B5'];
-const CONFETTI_PARTICLES = Array.from({ length: 60 }, (_, i) => ({
-  id: i,
-  // Spread across full width (0–98%)
-  left: `${(i * 163) % 98}%`,
-  // Stagger delays up to 900ms so it rains continuously
-  delay: `${(i * 47) % 900}ms`,
-  // Duration 2–3.5s
-  duration: `${2000 + (i * 89) % 1500}ms`,
-  // Sizes 8–22px
-  size: 8 + (i % 5) * 3,
-  color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-  // Random horizontal drift: -120 to +120px
-  driftX: ((i * 73) % 241) - 120,
-  // Downward travel: 380–600px (strong fall)
-  fallY: 380 + (i % 5) * 44,
-  rotate: (i * 47) % 720,
-  // Alternate between circle, rectangle, and thin bar
-  shape: i % 3,
-}));
 
 /**
  * 3D Flower Preview - Anchored to the letter
@@ -176,15 +155,51 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 }) => {
   const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
-  const [showConfetti, setShowConfetti] = React.useState(fromEmail);
+  const [showGlow, setShowGlow] = React.useState(false);
 
-  // Hide confetti after 2.2 seconds
+  // canvas-confetti: only when fromEmail AND modal is open. Resets on close.
   React.useEffect(() => {
-    if (!fromEmail) return;
-    setShowConfetti(true);
-    const t = setTimeout(() => setShowConfetti(false), 2200);
-    return () => clearTimeout(t);
-  }, [fromEmail, isOpen]);
+    if (!fromEmail || !isOpen || !flower || !definition) return;
+
+    const tmplLocal = resolveLetterTemplate(flower.letterTemplate);
+    const colors = [
+      tmplLocal.accentColor,
+      tmplLocal.frameColor,
+      '#F9C6D0',
+      '#E8D0F0',
+      '#FFF0C0',
+    ];
+
+    setShowGlow(true);
+    const glowTimer = setTimeout(() => setShowGlow(false), 900);
+
+    // Two bursts — left and right — like iMessage celebration
+    confetti({
+      particleCount: 60,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.5 },
+      colors,
+      scalar: 0.9,
+      gravity: 0.9,
+      ticks: 220,
+    });
+    confetti({
+      particleCount: 60,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.5 },
+      colors,
+      scalar: 0.9,
+      gravity: 0.9,
+      ticks: 220,
+    });
+
+    return () => {
+      clearTimeout(glowTimer);
+      confetti.reset();
+    };
+  }, [fromEmail, isOpen, flower, definition]);
 
   // Reset mediaRevealed when flower changes
   const prevFlowerIdRef = React.useRef<string | null>(null);
@@ -543,41 +558,27 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         
       </div>
       
-      {/* ── Confetti burst (fromEmail only, auto-hides after 3.5s) ── */}
-      {showConfetti && (
+      {/* ── Glow pulse behind flower anchor (fromEmail only) ── */}
+      {showGlow && (
         <>
           <style>{`
-            ${CONFETTI_PARTICLES.map((p) => `
-              @keyframes confettiFall${p.id} {
-                0%   { opacity: 1;    transform: translate(0, -10px)          rotate(0deg); }
-                70%  { opacity: 0.85; }
-                100% { opacity: 0;    transform: translate(${p.driftX}px, ${p.fallY}px) rotate(${p.rotate}deg); }
-              }
-            `).join('')}
+            @keyframes petalGlow {
+              0%   { box-shadow: 0 0 0 0 ${tmpl.accentColor}55; transform: scale(0.8); opacity: 0.8; }
+              50%  { box-shadow: 0 0 40px 20px ${tmpl.accentColor}33; }
+              100% { box-shadow: 0 0 60px 40px ${tmpl.accentColor}00; transform: scale(1.2); opacity: 0; }
+            }
           `}</style>
           <div style={{
-            position: 'fixed',
-            inset: 0,
+            position: 'absolute',
+            top: '-30px',
+            right: '32px',
+            width: '156px',
+            height: '156px',
+            borderRadius: '50%',
             pointerEvents: 'none',
-            overflow: 'hidden',
-            zIndex: 10000,
-          }}>
-            {CONFETTI_PARTICLES.map((p) => (
-              <div
-                key={p.id}
-                style={{
-                  position: 'absolute',
-                  top: '0',
-                  left: p.left,
-                  width: `${p.shape === 2 ? p.size * 0.4 : p.size}px`,
-                  height: `${p.shape === 0 ? p.size : p.size * (p.shape === 2 ? 2.2 : 1)}px`,
-                  background: p.color,
-                  borderRadius: p.shape === 0 ? '50%' : p.shape === 1 ? '2px' : '1px',
-                  animation: `confettiFall${p.id} ${p.duration} ${p.delay} cubic-bezier(0.25,0.46,0.45,0.94) forwards`,
-                }}
-              />
-            ))}
-          </div>
+            animation: 'petalGlow 900ms ease-out forwards',
+            zIndex: 15,
+          }} />
         </>
       )}
 
