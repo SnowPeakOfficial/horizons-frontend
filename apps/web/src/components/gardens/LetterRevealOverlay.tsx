@@ -180,6 +180,10 @@ export const LetterRevealOverlay: React.FC<LetterRevealOverlayProps> = ({ onDone
                     <stop offset="0%"   stopColor="#D4708A" />
                     <stop offset="100%" stopColor="#922048" />
                   </radialGradient>
+                  {/* Clip path for logo inside seal */}
+                  <clipPath id="lro-sealClip">
+                    <circle cx="200" cy="145" r="21" />
+                  </clipPath>
                 </defs>
 
                 {/* ── Envelope body ── */}
@@ -249,24 +253,16 @@ export const LetterRevealOverlay: React.FC<LetterRevealOverlayProps> = ({ onDone
                   <circle cx="200" cy="145" r="28" fill="url(#lro-seal)" />
                   {/* Decorative ring */}
                   <circle cx="200" cy="145" r="24" fill="none" stroke="rgba(255,200,215,0.35)" strokeWidth="1.5" />
-                  <circle cx="200" cy="145" r="20" fill="rgba(140,20,50,0.25)" />
-                  {/* Rose petals — 5-petal SVG rose motif */}
-                  {[0,72,144,216,288].map((deg, pi) => {
-                    const rad = (deg * Math.PI) / 180;
-                    const px = 200 + Math.cos(rad) * 9;
-                    const py = 145 + Math.sin(rad) * 9;
-                    return (
-                      <ellipse
-                        key={pi}
-                        cx={px} cy={py}
-                        rx="5.5" ry="3.5"
-                        fill="rgba(255,210,220,0.75)"
-                        transform={`rotate(${deg}, ${px}, ${py})`}
-                      />
-                    );
-                  })}
-                  {/* Centre dot */}
-                  <circle cx="200" cy="145" r="4" fill="rgba(255,225,232,0.9)" />
+                  <circle cx="200" cy="145" r="20" fill="rgba(80,0,25,0.18)" />
+                  {/* Horizons logo — clipped to seal circle */}
+                  <image
+                    href="/images/horizons-logo.svg"
+                    x="179" y="124"
+                    width="42" height="42"
+                    clipPath="url(#lro-sealClip)"
+                    opacity="0.88"
+                    style={{ mixBlendMode: 'screen' } as React.CSSProperties}
+                  />
                 </g>
               </svg>
             </div>
