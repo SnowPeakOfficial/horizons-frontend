@@ -732,6 +732,221 @@ export const LandingPage: React.FC = () => {
       </section>
 
 
+      {/* ========== USE CASES ========== */}
+      <section
+        style={{
+          padding: '120px 40px',
+          background: '#FFF9F7',
+        }}
+      >
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+
+          {/* Section header */}
+          <RevealOnScroll>
+            <p style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: '18px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase' as const,
+              color: theme.text.tertiary,
+              textAlign: 'center',
+              marginBottom: theme.spacing.lg,
+            }}>Use cases</p>
+            <h2 style={{
+              fontSize: 'clamp(40px, 5.5vw, 64px)',
+              fontFamily: typography.fontFamily.serif,
+              fontWeight: typography.fontWeight.normal,
+              textAlign: 'center',
+              marginBottom: '80px',
+              color: theme.text.primary,
+              letterSpacing: '-0.01em',
+              lineHeight: 1.15,
+            }}>
+              Every moment deserves a place to grow.
+            </h2>
+          </RevealOnScroll>
+
+          {/* Three-card panel row */}
+          <RevealOnScroll delay={80}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              border: `1px solid ${theme.border.light}`,
+              boxShadow: '0 4px 32px rgba(61, 51, 64, 0.06)',
+            }}>
+
+              {[
+                {
+                  bg: '#FFF0F3',
+                  accent: theme.colors.rose[400],
+                  accentText: theme.colors.rose[700],
+                  accentBg: '#FFE0E6',
+                  headline: 'For the ones who\nmatter most',
+                  quote: '"She opened it on the train home.\nI wasn\'t there —\nbut somehow, I was."',
+                  label: 'For loved ones',
+                  examples: ['Anniversaries', 'Long-distance', 'Just because'],
+                  borderColor: theme.colors.rose[200],
+                },
+                {
+                  bg: '#FFFBF0',
+                  accent: '#D4A96A',
+                  accentText: '#8B5E2A',
+                  accentBg: '#FFF3DC',
+                  headline: 'For the people\nyou build with',
+                  quote: '"He\'d been with us for five years.\nA card felt small.\nSo we planted something lasting."',
+                  label: 'For your team',
+                  examples: ['Milestones', 'Recognition', 'Achievements'],
+                  borderColor: '#E8D0A0',
+                },
+                {
+                  bg: '#F3FAF3',
+                  accent: '#4A7C59',
+                  accentText: '#2E5C3A',
+                  accentBg: '#DFF0DC',
+                  headline: 'For the person\nyou\'re becoming',
+                  quote: '"I planted it the day everything shifted.\nI open it when I forget\nhow far I\'ve come."',
+                  label: 'For yourself',
+                  examples: ['Growth', 'Milestones', 'Reflection'],
+                  borderColor: '#B8DDB0',
+                },
+              ].map((card, i) => (
+                <div
+                  key={i}
+                  style={{
+                    background: card.bg,
+                    padding: '52px 44px 48px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderLeft: i > 0 ? `1px solid ${card.borderColor}` : 'none',
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {/* Top accent border */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '3px',
+                    background: card.accent,
+                  }} />
+
+                  {/* Headline */}
+                  <h3 style={{
+                    fontFamily: typography.fontFamily.serif,
+                    fontSize: 'clamp(24px, 2.5vw, 32px)',
+                    fontWeight: typography.fontWeight.normal,
+                    color: theme.text.primary,
+                    lineHeight: 1.25,
+                    marginBottom: '32px',
+                    letterSpacing: '-0.01em',
+                    whiteSpace: 'pre-line',
+                    position: 'relative',
+                    zIndex: 1,
+                  }}>
+                    {card.headline}
+                  </h3>
+
+                  {/* Quote — the emotional core */}
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '16px',
+                    marginBottom: '40px',
+                    height: '96px',
+                  }}>
+                    {/* Accent bar — stretches to full height of text regardless of line count */}
+                    <div style={{
+                      width: '2px',
+                      flexShrink: 0,
+                      alignSelf: 'stretch',
+                      background: card.accent,
+                      borderRadius: '2px',
+                      opacity: 0.7,
+                    }} />
+                    <p style={{
+                      fontFamily: typography.fontFamily.serif,
+                      fontSize: '16px',
+                      fontStyle: 'italic',
+                      color: theme.text.secondary,
+                      lineHeight: 2.0,
+                      whiteSpace: 'pre-line',
+                      opacity: 0.85,
+                      margin: 0,
+                    }}>
+                      {card.quote}
+                    </p>
+                  </div>
+
+                  {/* Example tags */}
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap' as const,
+                    gap: '8px',
+                    marginBottom: '28px',
+                  }}>
+                    {card.examples.map((ex, j) => (
+                      <span key={j} style={{
+                        fontSize: '12px',
+                        color: card.accentText,
+                        background: card.accentBg,
+                        padding: '4px 12px',
+                        borderRadius: '100px',
+                        fontFamily: typography.fontFamily.serif,
+                        letterSpacing: '0.03em',
+                      }}>
+                        {ex}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Label chip */}
+                  <div style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase' as const,
+                    color: card.accentText,
+                    fontFamily: typography.fontFamily.serif,
+                  }}>
+                    <div style={{
+                      width: '20px',
+                      height: '1.5px',
+                      background: card.accent,
+                    }} />
+                    {card.label}
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          </RevealOnScroll>
+
+          {/* Pull-quote closer */}
+          <RevealOnScroll delay={120}>
+            <p style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: 'clamp(20px, 2.5vw, 28px)',
+              fontStyle: 'italic',
+              color: theme.text.tertiary,
+              textAlign: 'center',
+              marginTop: '72px',
+              letterSpacing: '0.01em',
+              lineHeight: 1.6,
+            }}>
+              "Some moments deserve forever."
+            </p>
+          </RevealOnScroll>
+
+        </div>
+      </section>
+
       {/* ========== FAQ ========== */}
       <section
         style={{

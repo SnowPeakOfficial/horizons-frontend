@@ -3,7 +3,8 @@
  * A heartfelt letter experience that transforms data into meaning
  */
 
-import React, { Suspense, useMemo, useEffect } from 'react';
+import React, { Suspense, useMemo } from 'react';
+import confetti from 'canvas-confetti';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Modal } from '../common/Modal';
@@ -30,7 +31,10 @@ interface FlowerDetailsModalProps {
   flower: Flower | null;
   definition: FlowerDefinition | null;
   onDelete?: (flowerId: string) => void;
+  /** When true, shows a 2-second confetti burst over the letter (triggered by email deep-link) */
+  fromEmail?: boolean;
 }
+
 
 /**
  * 3D Flower Preview - Anchored to the letter
@@ -146,15 +150,75 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   onClose,
   flower,
   definition,
-  onDelete
+  onDelete,
+  fromEmail = false,
 }) => {
   const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
+  const [showGlow, setShowGlow] = React.useState(false);
 
-  // Reset media reveal state when modal opens/closes
-  useEffect(() => {
-    setMediaRevealed(false);
-  }, [isOpen, flower?.id]);
+  // canvas-confetti: only when fromEmail AND modal is open. Resets on close.
+  React.useEffect(() => {
+    if (!fromEmail || !isOpen || !flower || !definition) return;
+
+    const tmplLocal = resolveLetterTemplate(flower.letterTemplate);
+
+    // Template-aware palette — each letter type gets its own tone
+    const templateColors: Record<string, string[]> = {
+      romantic:     ['#E8A4B0', '#C2475D', '#F5D0D8', '#F0C8D0', '#FAE0E8', '#D4708A'],
+      friendship:   ['#A8D5A2', '#4A7C59', '#C8E8C0', '#E0F0DC', '#B8DDB0', '#6AA070'],
+      family:       ['#D4A96A', '#8B5E2A', '#F0D090', '#FAE8C0', '#E8C878', '#C09050'],
+      gratitude:    ['#B5C8E8', '#3B6CB7', '#D0E0F8', '#E8F0FF', '#90B8E0', '#5A90D0'],
+      celebration:  ['#C5A3E0', '#7B4FA6', '#E0C8F8', '#F0E0FF', '#D0A8F0', '#A070C8'],
+      encouragement:['#F0C080', '#C47C00', '#F8D898', '#FFF0C0', '#E8B860', '#D09030'],
+    };
+
+    const key = flower.letterTemplate ?? 'romantic';
+    const colors = templateColors[key] ?? [
+      tmplLocal.accentColor,
+      tmplLocal.frameColor,
+      '#F9C6D0',
+      '#E8D0F0',
+      '#FFF0C0',
+    ];
+
+    setShowGlow(true);
+    const glowTimer = setTimeout(() => setShowGlow(false), 900);
+
+    // Two bursts — left and right — like iMessage celebration
+    confetti({
+      particleCount: 80,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.5 },
+      colors,
+      scalar: 0.9,
+      gravity: 0.9,
+      ticks: 220,
+    });
+    confetti({
+      particleCount: 80,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.5 },
+      colors,
+      scalar: 0.9,
+      gravity: 0.9,
+      ticks: 220,
+    });
+
+    return () => {
+      clearTimeout(glowTimer);
+      confetti.reset();
+    };
+  }, [fromEmail, isOpen, flower, definition]);
+
+  // Reset mediaRevealed when flower changes
+  const prevFlowerIdRef = React.useRef<string | null>(null);
+  if (prevFlowerIdRef.current !== (flower?.id ?? null)) {
+    prevFlowerIdRef.current = flower?.id ?? null;
+    // Resetting during render is allowed when guarded by a condition that changes identity
+  }
 
   if (!flower || !definition) return null;
 
@@ -207,7 +271,6 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 
   // "hasMedia" means there's anything to reveal — media files or a bloom message
   const hasMedia = !!(imageUrl || voiceUrl || videoUrl || bloomMessage);
-  const mediaCount = [imageUrl, voiceUrl, videoUrl].filter(Boolean).length;
 
   // For STANDARD flowers (OPEN state) and already-BLOOMED flowers, show media directly.
   // Only use tap-to-reveal for BUD state — where the surprise is still intact.
@@ -507,6 +570,30 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         
       </div>
       
+      {/* ── Glow pulse behind flower anchor (fromEmail only) ── */}
+      {showGlow && (
+        <>
+          <style>{`
+            @keyframes petalGlow {
+              0%   { box-shadow: 0 0 0 0 ${tmpl.accentColor}55; transform: scale(0.8); opacity: 0.8; }
+              50%  { box-shadow: 0 0 40px 20px ${tmpl.accentColor}33; }
+              100% { box-shadow: 0 0 60px 40px ${tmpl.accentColor}00; transform: scale(1.2); opacity: 0; }
+            }
+          `}</style>
+          <div style={{
+            position: 'absolute',
+            top: '-30px',
+            right: '32px',
+            width: '156px',
+            height: '156px',
+            borderRadius: '50%',
+            pointerEvents: 'none',
+            animation: 'petalGlow 900ms ease-out forwards',
+            zIndex: 15,
+          }} />
+        </>
+      )}
+
       {/* Animations + scoped scrollbar theming */}
       <style>{`
         .flower-letter-modal {

@@ -63,6 +63,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: '/garden/:gardenId/flower/:flowerId',
+        element: (
+          <ProtectedRoute>
+            <GardenPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // Pricing (public)
       {
