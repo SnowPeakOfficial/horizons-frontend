@@ -762,7 +762,7 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '-0.01em',
               lineHeight: 1.15,
             }}>
-              A garden for every kind of moment
+              Every moment deserves a place to grow.
             </h2>
           </RevealOnScroll>
 
@@ -783,8 +783,8 @@ export const LandingPage: React.FC = () => {
                   accent: theme.colors.rose[400],
                   accentText: theme.colors.rose[700],
                   accentBg: '#FFE0E6',
-                  headline: 'For the people\nyou love',
-                  quote: '"She opened it on the train home.\nI wasn\'t there.\nBut somehow it felt like I was."',
+                  headline: 'For the ones who\nmatter most',
+                  quote: '"She opened it on the train home.\nI wasn\'t there —\nbut somehow, I was."',
                   label: 'For loved ones',
                   examples: ['Anniversaries', 'Long-distance', 'Just because'],
                   borderColor: theme.colors.rose[200],
@@ -794,8 +794,8 @@ export const LandingPage: React.FC = () => {
                   accent: '#D4A96A',
                   accentText: '#8B5E2A',
                   accentBg: '#FFF3DC',
-                  headline: 'For teams\nworth celebrating',
-                  quote: '"He\'d been with us for five years.\nWe didn\'t send a card.\nWe sent a garden."',
+                  headline: 'For the people\nyou build with',
+                  quote: '"He\'d been with us for five years.\nA card felt small.\nSo we planted something that would last."',
                   label: 'For your team',
                   examples: ['Milestones', 'Recognition', 'Achievements'],
                   borderColor: '#E8D0A0',
@@ -805,8 +805,8 @@ export const LandingPage: React.FC = () => {
                   accent: '#4A7C59',
                   accentText: '#2E5C3A',
                   accentBg: '#DFF0DC',
-                  headline: 'For the story\nyou\'re writing',
-                  quote: '"I planted it the day I got sober.\nI open it when I forget\nwhy I started."',
+                  headline: 'For the person\nyou\'re becoming',
+                  quote: '"I planted it the day everything shifted.\nI open it when I forget\nhow far I\'ve come."',
                   label: 'For yourself',
                   examples: ['Growth', 'Milestones', 'Reflection'],
                   borderColor: '#B8DDB0',
@@ -926,7 +926,7 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '0.01em',
               lineHeight: 1.6,
             }}>
-              "One place. Every kind of moment."
+              "Not everything should disappear."
             </p>
           </RevealOnScroll>
 
