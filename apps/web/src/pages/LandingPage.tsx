@@ -795,7 +795,7 @@ export const LandingPage: React.FC = () => {
                   accentText: '#8B5E2A',
                   accentBg: '#FFF3DC',
                   headline: 'For the people\nyou build with',
-                  quote: '"He\'d been with us for five years.\nA card felt small.\nSo we planted something that would last."',
+                  quote: '"He\'d been with us for five years.\nA card felt small.\nSo we planted something lasting."',
                   label: 'For your team',
                   examples: ['Milestones', 'Recognition', 'Achievements'],
                   borderColor: '#E8D0A0',
@@ -851,21 +851,35 @@ export const LandingPage: React.FC = () => {
                   </h3>
 
                   {/* Quote — the emotional core */}
-                  <p style={{
-                    fontFamily: typography.fontFamily.serif,
-                    fontSize: '16px',
-                    fontStyle: 'italic',
-                    color: theme.text.secondary,
-                    lineHeight: 2.0,
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '16px',
                     marginBottom: '40px',
-                    whiteSpace: 'pre-line',
-                    borderLeft: `2px solid ${card.accent}`,
-                    paddingLeft: '16px',
-                    opacity: 0.85,
-                    flexGrow: 1,
+                    height: '96px',
                   }}>
-                    {card.quote}
-                  </p>
+                    {/* Accent bar — stretches to full height of text regardless of line count */}
+                    <div style={{
+                      width: '2px',
+                      flexShrink: 0,
+                      alignSelf: 'stretch',
+                      background: card.accent,
+                      borderRadius: '2px',
+                      opacity: 0.7,
+                    }} />
+                    <p style={{
+                      fontFamily: typography.fontFamily.serif,
+                      fontSize: '16px',
+                      fontStyle: 'italic',
+                      color: theme.text.secondary,
+                      lineHeight: 2.0,
+                      whiteSpace: 'pre-line',
+                      opacity: 0.85,
+                      margin: 0,
+                    }}>
+                      {card.quote}
+                    </p>
+                  </div>
 
                   {/* Example tags */}
                   <div style={{
@@ -926,7 +940,7 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '0.01em',
               lineHeight: 1.6,
             }}>
-              "Not everything should disappear."
+              "Some moments deserve forever."
             </p>
           </RevealOnScroll>
 
