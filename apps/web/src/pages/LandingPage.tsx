@@ -782,7 +782,7 @@ export const LandingPage: React.FC = () => {
                   bg: '#FFF0F3',
                   accent: theme.colors.rose[400],
                   accentText: theme.colors.rose[700],
-                  accentBg: `${theme.colors.rose[100]}`,
+                  accentBg: '#FFE0E6',
                   headline: 'For the people\nyou love',
                   quote: '"She opened it on the train home.\nI wasn\'t there.\nBut somehow it felt like I was."',
                   label: 'For loved ones',
