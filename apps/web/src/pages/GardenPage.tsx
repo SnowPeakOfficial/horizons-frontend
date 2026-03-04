@@ -4,7 +4,8 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { LetterRevealOverlay } from '../components/gardens/LetterRevealOverlay';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -31,7 +32,9 @@ import CalendarToday from '@mui/icons-material/CalendarToday';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 
 export const GardenPage: React.FC = () => {
-  const { gardenId } = useParams<{ gardenId: string }>();
+  const { gardenId, flowerId } = useParams<{ gardenId: string; flowerId?: string }>();
+  const [searchParams] = useSearchParams();
+  const fromEmail = searchParams.get('from') === 'email';
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const { currentGarden, fetchGardenById } = useGardenStore();
@@ -43,8 +46,11 @@ export const GardenPage: React.FC = () => {
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  // Email deep-link: show reveal overlay before opening the modal
+  const [showRevealOverlay, setShowRevealOverlay] = useState(fromEmail && !!flowerId);
+  // Ref guard: prevents the deep-link flower from opening more than once
+  const deepLinkOpenedRef = useRef(false);
   const orbitRef = useRef<OrbitControlsImpl>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
   const [hoveredFlowerTooltip, setHoveredFlowerTooltip] = useState<{
     flower: PlacedFlower;
     definition: FlowerDefinition;
@@ -58,6 +64,20 @@ export const GardenPage: React.FC = () => {
       fetchFlowersByGarden(gardenId);
     }
   }, [gardenId, fetchGardenById, fetchFlowersByGarden]);
+
+  // Auto-open the deep-link flower once flowers are loaded
+  useEffect(() => {
+    if (!flowerId || deepLinkOpenedRef.current || flowers.length === 0) return;
+    const target = flowers.find((f) => f.id === flowerId);
+    if (target) {
+      deepLinkOpenedRef.current = true;
+      if (!fromEmail) {
+        // Defer to avoid synchronous setState inside effect
+        setTimeout(() => setSelectedFlower(target), 0);
+      }
+      // fromEmail: overlay already showing; modal opens via onDone callback
+    }
+  }, [flowerId, flowers, fromEmail]);
 
   const handlePlantSuccess = () => {
     if (gardenId) {
@@ -269,7 +289,10 @@ export const GardenPage: React.FC = () => {
               setIsDraggingFlower(isDragging);
               if (isDragging) setHoveredFlowerTooltip(null);
             }}
-            onFlowerClick={(flower: Flower) => setSelectedFlower(flower)}
+            onFlowerClick={(flower: Flower) => {
+              setSelectedFlower(flower);
+              navigate(`/garden/${gardenId}/flower/${flower.id}`, { replace: false });
+            }}
             onFlowerHover={(info) => {
               if (info) {
                 setHoveredFlowerTooltip({
@@ -341,17 +364,15 @@ export const GardenPage: React.FC = () => {
         const displayEmoji = shouldHideIdentity ? '\u{1F331}' : definition.emoji;
 
         const TOOLTIP_W = 450;
+        const TOOLTIP_H = 220;
         const PAD = 12;
-        // Position above cursor; clamp after measuring via ref
-        const tooltipH = tooltipRef.current?.offsetHeight ?? 220;
         let left = screenX - TOOLTIP_W / 2;
-        let top = screenY - tooltipH - 16;
+        let top = screenY - TOOLTIP_H - 16;
         left = Math.max(PAD, Math.min(window.innerWidth - TOOLTIP_W - PAD, left));
-        top = Math.max(PAD, Math.min(window.innerHeight - tooltipH - PAD, top));
+        top = Math.max(PAD, Math.min(window.innerHeight - TOOLTIP_H - PAD, top));
 
         return (
           <div
-            ref={tooltipRef}
             style={{
               position: 'fixed',
               left,
@@ -394,15 +415,33 @@ export const GardenPage: React.FC = () => {
         );
       })()}
 
+      {/* Email deep-link: cinematic reveal overlay */}
+      {showRevealOverlay && (
+        <LetterRevealOverlay
+          onDone={() => {
+            setShowRevealOverlay(false);
+            if (flowerId) {
+              const target = flowers.find((f) => f.id === flowerId);
+              if (target) setSelectedFlower(target);
+            }
+          }}
+        />
+      )}
+
       {/* Flower Details Modal - Beautiful Letter Style */}
       <FlowerDetailsModal
         isOpen={!!selectedFlower}
-        onClose={() => setSelectedFlower(null)}
+        onClose={() => {
+          setSelectedFlower(null);
+          // Return URL to garden level (no flower ID)
+          navigate(`/garden/${gardenId}`, { replace: true });
+        }}
         flower={selectedFlower}
         definition={selectedFlower ? FLOWER_DEFINITIONS[selectedFlower.flowerDefinition?.key?.toLowerCase() || 'daisy'] : null}
-        onDelete={async (flowerId) => {
+        fromEmail={fromEmail && !!flowerId}
+        onDelete={async (fid) => {
           // TODO: Implement flower deletion
-          console.log('Delete flower:', flowerId);
+          console.log('Delete flower:', fid);
         }}
       />
 

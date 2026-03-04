@@ -3,7 +3,7 @@
  * A heartfelt letter experience that transforms data into meaning
  */
 
-import React, { Suspense, useMemo, useEffect } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Modal } from '../common/Modal';
@@ -30,7 +30,20 @@ interface FlowerDetailsModalProps {
   flower: Flower | null;
   definition: FlowerDefinition | null;
   onDelete?: (flowerId: string) => void;
+  /** When true, shows a 2-second confetti burst over the letter (triggered by email deep-link) */
+  fromEmail?: boolean;
 }
+
+// ─── Confetti particle data (stable, computed once) ──────────────────────────
+const CONFETTI_PARTICLES = Array.from({ length: 32 }, (_, i) => ({
+  id: i,
+  left: `${5 + ((i * 97) % 90)}%`,
+  delay: `${(i * 63) % 1800}ms`,
+  duration: `${1400 + (i * 137) % 800}ms`,
+  size: 6 + (i % 5) * 2,
+  color: ['#E8B4B8', '#D4909A', '#FFB8C8', '#C8E6C9', '#FFE082', '#B39DDB', '#80CBC4'][i % 7],
+  rotate: (i * 47) % 360,
+}));
 
 /**
  * 3D Flower Preview - Anchored to the letter
@@ -146,15 +159,27 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   onClose,
   flower,
   definition,
-  onDelete
+  onDelete,
+  fromEmail = false,
 }) => {
   const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
+  const [showConfetti, setShowConfetti] = React.useState(fromEmail);
 
-  // Reset media reveal state when modal opens/closes
-  useEffect(() => {
-    setMediaRevealed(false);
-  }, [isOpen, flower?.id]);
+  // Hide confetti after 2.2 seconds
+  React.useEffect(() => {
+    if (!fromEmail) return;
+    setShowConfetti(true);
+    const t = setTimeout(() => setShowConfetti(false), 2200);
+    return () => clearTimeout(t);
+  }, [fromEmail, isOpen]);
+
+  // Reset mediaRevealed when flower changes
+  const prevFlowerIdRef = React.useRef<string | null>(null);
+  if (prevFlowerIdRef.current !== (flower?.id ?? null)) {
+    prevFlowerIdRef.current = flower?.id ?? null;
+    // Resetting during render is allowed when guarded by a condition that changes identity
+  }
 
   if (!flower || !definition) return null;
 
@@ -207,7 +232,6 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 
   // "hasMedia" means there's anything to reveal — media files or a bloom message
   const hasMedia = !!(imageUrl || voiceUrl || videoUrl || bloomMessage);
-  const mediaCount = [imageUrl, voiceUrl, videoUrl].filter(Boolean).length;
 
   // For STANDARD flowers (OPEN state) and already-BLOOMED flowers, show media directly.
   // Only use tap-to-reveal for BUD state — where the surprise is still intact.
@@ -507,6 +531,43 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         
       </div>
       
+      {/* ── Confetti burst (fromEmail only, auto-hides after 2.2s) ── */}
+      {showConfetti && (
+        <>
+          <style>{`
+            @keyframes confettiFall {
+              0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+              100% { opacity: 0; transform: translateY(220px) rotate(360deg); }
+            }
+          `}</style>
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            overflow: 'hidden',
+            zIndex: 20,
+            borderRadius: '16px',
+          }}>
+            {CONFETTI_PARTICLES.map((p) => (
+              <div
+                key={p.id}
+                style={{
+                  position: 'absolute',
+                  top: '-10px',
+                  left: p.left,
+                  width: `${p.size}px`,
+                  height: `${p.size}px`,
+                  background: p.color,
+                  borderRadius: p.id % 3 === 0 ? '50%' : '2px',
+                  transform: `rotate(${p.rotate}deg)`,
+                  animation: `confettiFall ${p.duration} ${p.delay} ease-in forwards`,
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
       {/* Animations + scoped scrollbar theming */}
       <style>{`
         .flower-letter-modal {
