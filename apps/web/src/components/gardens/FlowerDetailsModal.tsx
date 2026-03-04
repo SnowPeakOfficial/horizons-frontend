@@ -162,7 +162,19 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
     if (!fromEmail || !isOpen || !flower || !definition) return;
 
     const tmplLocal = resolveLetterTemplate(flower.letterTemplate);
-    const colors = [
+
+    // Template-aware palette — each letter type gets its own tone
+    const templateColors: Record<string, string[]> = {
+      romantic:     ['#E8A4B0', '#C2475D', '#F5D0D8', '#F0C8D0', '#FAE0E8', '#D4708A'],
+      friendship:   ['#A8D5A2', '#4A7C59', '#C8E8C0', '#E0F0DC', '#B8DDB0', '#6AA070'],
+      family:       ['#D4A96A', '#8B5E2A', '#F0D090', '#FAE8C0', '#E8C878', '#C09050'],
+      gratitude:    ['#B5C8E8', '#3B6CB7', '#D0E0F8', '#E8F0FF', '#90B8E0', '#5A90D0'],
+      celebration:  ['#C5A3E0', '#7B4FA6', '#E0C8F8', '#F0E0FF', '#D0A8F0', '#A070C8'],
+      encouragement:['#F0C080', '#C47C00', '#F8D898', '#FFF0C0', '#E8B860', '#D09030'],
+    };
+
+    const key = flower.letterTemplate ?? 'romantic';
+    const colors = templateColors[key] ?? [
       tmplLocal.accentColor,
       tmplLocal.frameColor,
       '#F9C6D0',
@@ -175,7 +187,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 
     // Two bursts — left and right — like iMessage celebration
     confetti({
-      particleCount: 60,
+      particleCount: 80,
       angle: 60,
       spread: 55,
       origin: { x: 0, y: 0.5 },
@@ -185,7 +197,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
       ticks: 220,
     });
     confetti({
-      particleCount: 60,
+      particleCount: 80,
       angle: 120,
       spread: 55,
       origin: { x: 1, y: 0.5 },

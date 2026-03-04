@@ -24,10 +24,10 @@ export const LetterRevealOverlay: React.FC<LetterRevealOverlayProps> = ({ onDone
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase('envelope'), 2000);
-    const t2 = setTimeout(() => setPhase('open'),     3600);
-    const t3 = setTimeout(() => { setPhase('fade'); setFading(true); }, 4600);
-    const t4 = setTimeout(() => onDone(), 5150);
+    const t1 = setTimeout(() => setPhase('envelope'), 1200);
+    const t2 = setTimeout(() => setPhase('open'),     2800);
+    const t3 = setTimeout(() => { setPhase('fade'); setFading(true); }, 3800);
+    const t4 = setTimeout(() => onDone(), 4350);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, [onDone]);
 
