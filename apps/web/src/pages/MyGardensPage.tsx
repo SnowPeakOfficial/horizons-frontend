@@ -125,7 +125,7 @@ export const MyGardensPage: React.FC = () => {
 
   const gardensGridStyle: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
     gap: theme.spacing.lg,
   };
 
