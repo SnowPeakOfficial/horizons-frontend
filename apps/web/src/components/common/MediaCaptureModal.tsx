@@ -376,13 +376,22 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
                 <CameraAlt sx={{ fontSize: 20 }} /> Take Photo
               </button>
             )}
-            {phase === 'preview' && mode !== 'photo' && (
+            {phase === 'preview' && mode === 'voice' && (
               <button
                 onClick={handleStartRecording}
                 disabled={Boolean(permissionError)}
                 style={permissionError ? { ...captureBtn, opacity: 0.45, cursor: 'not-allowed' } : captureBtn}
               >
-                <FiberManualRecord sx={{ fontSize: 18, color: theme.semantic.error }} /> Record
+                <Mic sx={{ fontSize: 18 }} /> Record
+              </button>
+            )}
+            {phase === 'preview' && mode === 'video' && (
+              <button
+                onClick={handleStartRecording}
+                disabled={Boolean(permissionError)}
+                style={permissionError ? { ...captureBtn, opacity: 0.45, cursor: 'not-allowed' } : captureBtn}
+              >
+                <Videocam sx={{ fontSize: 18 }} /> Record
               </button>
             )}
             {phase === 'recording' && (
