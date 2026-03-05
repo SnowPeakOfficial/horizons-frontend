@@ -385,6 +385,18 @@ ul, ol {
     padding-right: 16px !important;
   }
 
+  /* Pricing page — more breathing room between stacked cards on mobile */
+  .pricing-cards-grid {
+    gap: 36px !important;
+    padding-bottom: 24px !important;
+  }
+
+  /* Pricing page — tighten gap between last card and footer note */
+  .pricing-footer-note {
+    padding-top: 8px !important;
+    padding-bottom: 20px !important;
+  }
+
   /* Navbar — hide full nav on mobile, show hamburger */
   .navbar-desktop-links { display: none !important; }
   .navbar-hamburger { display: flex !important; }

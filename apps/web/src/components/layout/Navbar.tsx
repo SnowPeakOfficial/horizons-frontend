@@ -458,20 +458,32 @@ export const Navbar: React.FC = () => {
         >
           {/* Nav links */}
           <div
-            style={{ ...dropdownItemStyle, marginBottom: '4px', fontWeight: location.pathname === '/my-gardens' ? 600 : 400, color: location.pathname === '/my-gardens' ? theme.colors.rose[700] : theme.text.primary }}
+            style={{ ...dropdownItemStyle, marginBottom: '6px', fontWeight: location.pathname === '/my-gardens' ? 600 : 400, color: location.pathname === '/my-gardens' ? theme.colors.rose[700] : theme.text.primary }}
             onClick={() => { navigate('/my-gardens'); setIsMobileMenuOpen(false); }}
           >
             My Gardens
           </div>
           <div
-            style={{ ...dropdownItemStyle, marginBottom: '12px', fontWeight: location.pathname === '/pricing' ? 600 : 400, color: location.pathname === '/pricing' ? theme.colors.rose[700] : theme.text.primary }}
+            style={{ ...dropdownItemStyle, marginBottom: '6px', fontWeight: location.pathname === '/pricing' ? 600 : 400, color: location.pathname === '/pricing' ? theme.colors.rose[700] : theme.text.primary }}
             onClick={() => { navigate('/pricing'); setIsMobileMenuOpen(false); }}
           >
             Pricing
           </div>
-          <div style={{ height: '1px', background: theme.border.light, marginBottom: '12px' }} />
+          {/* User actions */}
+          <div
+            style={{ ...dropdownItemStyle, marginBottom: '6px' }}
+            onClick={() => { navigate('/profile'); setIsMobileMenuOpen(false); }}
+          >
+            Profile
+          </div>
+          <div
+            style={{ ...dropdownItemStyle, marginBottom: '6px', color: theme.text.tertiary }}
+            onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+          >
+            <Logout sx={{ fontSize: 18 }} />Sign Out
+          </div>
           {/* Tier badge + DEV switcher row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
             <div style={tierBadgeStyle}>{user?.tier || 'FREE'}</div>
             <div
               style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: theme.radius.md, background: 'rgba(255,200,100,0.15)', border: '1px dashed rgba(200,150,50,0.4)', cursor: 'pointer', fontSize: '11px', fontWeight: 700, color: '#9B7B30' }}
@@ -482,7 +494,7 @@ export const Navbar: React.FC = () => {
             </div>
           </div>
           {isDevMenuOpen && (
-            <div style={{ marginBottom: '12px', paddingLeft: '8px' }}>
+            <div style={{ marginTop: '8px', paddingLeft: '8px' }}>
               {(['FREE', 'PRO', 'PREMIUM'] as const).map((tier) => (
                 <div
                   key={tier}
@@ -494,10 +506,6 @@ export const Navbar: React.FC = () => {
               ))}
             </div>
           )}
-          <div style={{ height: '1px', background: theme.border.light, marginBottom: '12px' }} />
-          {/* User actions */}
-          <div style={{ ...dropdownItemStyle }} onClick={() => { navigate('/profile'); setIsMobileMenuOpen(false); }}><Person sx={{ fontSize: 18 }} />Profile</div>
-          <div style={{ ...dropdownItemStyle, color: theme.text.tertiary }} onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}><Logout sx={{ fontSize: 18 }} />Sign Out</div>
         </div>
       )}
 
