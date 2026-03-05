@@ -126,21 +126,6 @@ export const MyGardensPage: React.FC = () => {
     fontWeight: 500,
   };
 
-  // Garden themes — derived from garden ID for stable unique identity per garden
-  const gardenThemes = [
-    { gradient: 'linear-gradient(135deg, #FFE5EC 0%, #F48FB1 100%)', emoji: '🌸' },
-    { gradient: 'linear-gradient(135deg, #E8F0FF 0%, #7BAFF5 100%)', emoji: '🌷' },
-    { gradient: 'linear-gradient(135deg, #F5E8FF 0%, #C77DDE 100%)', emoji: '🌺' },
-    { gradient: 'linear-gradient(135deg, #FFF3E0 0%, #FFB347 100%)', emoji: '🌼' },
-    { gradient: 'linear-gradient(135deg, #E8F5E9 0%, #66BB6A 100%)', emoji: '🌿' },
-    { gradient: 'linear-gradient(135deg, #FCE4EC 0%, #E57498 100%)', emoji: '🌻' },
-  ];
-
-  const getGardenTheme = (id: string) => {
-    const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    return gardenThemes[hash % gardenThemes.length];
-  };
-
   const mostLovedId = gardens.length > 0
     ? gardens.reduce((max, g) =>
         (g._count?.flowers || 0) > (max._count?.flowers || 0) ? g : max
@@ -281,7 +266,6 @@ export const MyGardensPage: React.FC = () => {
         ) : (
           <div style={gardensGridStyle}>
             {gardens.map((garden) => {
-              const gTheme = getGardenTheme(garden.id);
               const bloomCount = garden._count?.flowers || 0;
               const isTopGarden = garden.id === mostLovedId && gardens.length > 1;
               return (
@@ -300,12 +284,12 @@ export const MyGardensPage: React.FC = () => {
                     (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.8)';
                   }}
                 >
-                  {/* Header: unique gradient per garden + radial glow */}
+                  {/* Header: pink gradient + radial glow */}
                   <div style={{
                     ...gardenHeaderStyle,
-                    background: `radial-gradient(circle at 80% 20%, rgba(255,255,255,0.55), transparent 45%), ${gTheme.gradient}`,
+                    background: `radial-gradient(circle at 80% 20%, rgba(255,255,255,0.55), transparent 45%), linear-gradient(135deg, #FFE5EC 0%, #FFC9D9 50%, #FFB3C7 100%)`,
                   }}>
-                    {gTheme.emoji}
+                    🌸
                     {isTopGarden && (
                       <span style={{
                         position: 'absolute',
@@ -323,7 +307,7 @@ export const MyGardensPage: React.FC = () => {
                         gap: '3px',
                       }}>
                         <StarRoundedIcon style={{ fontSize: '13px', color: '#C48991' }} />
-                        Most Loved
+                        Most Active
                       </span>
                     )}
                   </div>
