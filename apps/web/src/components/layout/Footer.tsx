@@ -133,11 +133,10 @@ export const Footer: React.FC = () => {
           <div>
             <div style={logoStyle} onClick={() => navigate('/')}>
               <img
-                src="/images/horizons-logo.svg"
-                alt="Horizons logo"
+                src="/images/horizons-logo-wordmark.svg"
+                alt="Horizons"
                 style={{ height: '24px', width: 'auto', display: 'block' }}
               />
-              <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
             </div>
             <p style={taglineStyle}>
               A digital garden to grow and share meaningful moments.
