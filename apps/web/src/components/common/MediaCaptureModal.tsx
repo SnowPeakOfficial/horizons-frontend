@@ -163,9 +163,9 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
         onClick={onClose}
         style={{
           position: 'fixed', inset: 0,
-          background: 'rgba(0,0,0,0.72)',
+          background: 'rgba(61,51,64,0.55)',
           zIndex: 2000,
-          backdropFilter: 'blur(4px)',
+          backdropFilter: 'blur(6px)',
         }}
       />
 
@@ -174,52 +174,70 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
         position: 'fixed',
         top: '50%', left: '50%',
         transform: 'translate(-50%,-50%)',
-        width: '480px',
-        maxWidth: '95vw',
-        background: '#1a1a2e',
-        borderRadius: '20px',
-        boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
+        width: 'min(460px, 94vw)',
+        maxHeight: '90vh',
+        background: theme.bg.elevated,
+        borderRadius: theme.radius.xl,
+        boxShadow: theme.shadow['2xl'],
         zIndex: 2001,
-        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'hidden',
       }}>
         {/* Header */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '16px 20px',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          padding: `${theme.spacing.lg} ${theme.spacing.xl}`,
+          borderBottom: `1px solid ${theme.border.light}`,
+          background: theme.colors.rose[50],
+          flexShrink: 0,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <ModeIcon sx={{ fontSize: 20, color: theme.colors.rose[400] }} />
-            <span style={{ ...typography.styles.body, fontWeight: 600, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: theme.radius.md,
+              background: theme.colors.rose[100],
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <ModeIcon sx={{ fontSize: 18, color: theme.colors.rose[600] }} />
+            </div>
+            <span style={{ ...typography.styles.body, fontWeight: 600, color: theme.text.primary }}>
               {phase === 'review' ? `Use this ${modeLabel.toLowerCase()}?` : `Capture ${modeLabel}`}
             </span>
           </div>
           <button
             onClick={onClose}
             style={{
-              background: 'rgba(255,255,255,0.08)', border: 'none', borderRadius: '50%',
+              background: theme.colors.rose[100],
+              border: 'none',
+              borderRadius: '50%',
               width: 32, height: 32, cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: theme.transition.fast,
             }}
           >
-            <Close sx={{ fontSize: 18, color: '#fff' }} />
+            <Close sx={{ fontSize: 16, color: theme.text.secondary }} />
           </button>
         </div>
 
         {/* Body */}
-        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{
+          padding: theme.spacing.xl,
+          display: 'flex', flexDirection: 'column', gap: theme.spacing.lg,
+          overflowY: 'auto', flex: 1,
+        }}>
 
           {/* Permission error */}
           {permissionError && (
             <div style={{
-              padding: '12px 16px', borderRadius: 10,
-              background: 'rgba(212,144,154,0.15)',
-              border: '1px solid rgba(212,144,154,0.4)',
-              color: theme.colors.rose[300],
+              padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+              borderRadius: theme.radius.md,
+              background: theme.colors.rose[50],
+              border: `1px solid ${theme.border.dark}`,
+              color: theme.text.secondary,
               ...typography.styles.caption,
+              display: 'flex', gap: 8, alignItems: 'flex-start',
             }}>
+              <span style={{ color: theme.colors.rose[600], flexShrink: 0 }}>⚠️</span>
               {permissionError}
             </div>
           )}
@@ -227,9 +245,13 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
           {/* Live viewfinder — photo & video */}
           {mode !== 'voice' && phase !== 'review' && (
             <div style={{
-              borderRadius: 12, overflow: 'hidden',
-              background: '#000', aspectRatio: '4/3',
+              borderRadius: theme.radius.lg,
+              overflow: 'hidden',
+              background: '#111',
+              aspectRatio: '4/3',
               position: 'relative',
+              boxShadow: theme.shadow.md,
+              maxHeight: '42vh',
             }}>
               <video
                 ref={videoRef}
@@ -240,12 +262,14 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
               {phase === 'recording' && (
                 <div style={{
                   position: 'absolute', top: 12, left: 12,
-                  background: 'rgba(0,0,0,0.55)', borderRadius: 20,
-                  padding: '4px 10px',
+                  background: 'rgba(61,51,64,0.72)',
+                  backdropFilter: 'blur(4px)',
+                  borderRadius: theme.radius.full,
+                  padding: '5px 12px',
                   display: 'flex', alignItems: 'center', gap: 6,
                   color: '#fff', fontSize: 13, fontWeight: 600,
                 }}>
-                  <FiberManualRecord sx={{ fontSize: 12, color: '#f44' }} />
+                  <FiberManualRecord sx={{ fontSize: 12, color: theme.semantic.error }} />
                   {fmt(recordingSeconds)}
                 </div>
               )}
@@ -255,70 +279,124 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
           {/* Voice recorder UI */}
           {mode === 'voice' && phase !== 'review' && (
             <div style={{
-              borderRadius: 12, background: 'rgba(255,255,255,0.04)',
-              padding: '32px', textAlign: 'center',
+              borderRadius: theme.radius.lg,
+              background: theme.colors.rose[50],
+              border: `1px solid ${theme.border.medium}`,
+              padding: '36px 24px', textAlign: 'center',
             }}>
               <div style={{
-                width: 80, height: 80, borderRadius: '50%',
-                background: phase === 'recording' ? 'rgba(244,68,68,0.2)' : 'rgba(212,144,154,0.15)',
+                width: 88, height: 88, borderRadius: '50%',
+                background: phase === 'recording'
+                  ? `${theme.semantic.error}20`
+                  : theme.colors.rose[100],
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                margin: '0 auto 16px',
-                transition: 'background 0.3s',
+                margin: '0 auto 20px',
+                transition: theme.transition.base,
+                boxShadow: phase === 'recording'
+                  ? `0 0 0 8px ${theme.semantic.error}15`
+                  : 'none',
               }}>
-                <Mic sx={{ fontSize: 36, color: phase === 'recording' ? '#f44' : theme.colors.rose[400] }} />
+                <Mic sx={{ fontSize: 38, color: phase === 'recording' ? theme.semantic.error : theme.colors.rose[500] }} />
               </div>
               {phase === 'recording' ? (
-                <div style={{ color: '#f44', fontWeight: 700, fontSize: 22 }}>{fmt(recordingSeconds)}</div>
+                <div style={{
+                  ...typography.styles.h4,
+                  color: theme.semantic.error,
+                  fontVariantNumeric: 'tabular-nums',
+                }}>
+                  {fmt(recordingSeconds)}
+                </div>
               ) : (
-                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>Press record to start</div>
+                <div style={{ ...typography.styles.body, color: theme.text.secondary }}>
+                  Press <strong>Record</strong> to start
+                </div>
               )}
             </div>
           )}
 
           {/* Review — captured photo */}
           {phase === 'review' && mode === 'photo' && capturedUrl && (
-            <img src={capturedUrl} alt="Captured" style={{ width: '100%', borderRadius: 12, display: 'block' }} />
+            <img
+              src={capturedUrl}
+              alt="Captured"
+              style={{
+                width: '100%',
+                borderRadius: theme.radius.lg,
+                display: 'block',
+                boxShadow: theme.shadow.md,
+                maxHeight: '42vh',
+                objectFit: 'contain',
+              }}
+            />
           )}
 
           {/* Review — captured audio */}
           {phase === 'review' && mode === 'voice' && capturedUrl && (
-            <div style={{ padding: '24px', textAlign: 'center' }}>
+            <div style={{
+              padding: theme.spacing.xl,
+              borderRadius: theme.radius.lg,
+              background: theme.colors.rose[50],
+              border: `1px solid ${theme.border.medium}`,
+              textAlign: 'center',
+            }}>
+              <Mic sx={{ fontSize: 32, color: theme.colors.rose[500], marginBottom: 12 }} />
               <audio controls src={capturedUrl} style={{ width: '100%' }} />
             </div>
           )}
 
           {/* Review — captured video */}
           {phase === 'review' && mode === 'video' && capturedUrl && (
-            <video controls src={capturedUrl} style={{ width: '100%', borderRadius: 12 }} />
+            <video
+              controls
+              src={capturedUrl}
+              style={{
+                width: '100%',
+                borderRadius: theme.radius.lg,
+                boxShadow: theme.shadow.md,
+                maxHeight: '42vh',
+              }}
+            />
           )}
 
           {/* Hidden canvas for photo capture */}
           <canvas ref={canvasRef} style={{ display: 'none' }} />
 
           {/* Action buttons */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+          <div style={{
+            display: 'flex', gap: theme.spacing.md,
+            justifyContent: 'center',
+            paddingTop: theme.spacing.sm,
+          }}>
             {phase === 'preview' && mode === 'photo' && (
-              <button onClick={handleTakePhoto} disabled={!!permissionError} style={captureBtn}>
-                <CameraAlt sx={{ fontSize: 22 }} /> Take Photo
+              <button
+                onClick={handleTakePhoto}
+                disabled={!!permissionError}
+                style={permissionError ? { ...captureBtn, opacity: 0.45, cursor: 'not-allowed' } : captureBtn}
+              >
+                <CameraAlt sx={{ fontSize: 20 }} /> Take Photo
               </button>
             )}
             {phase === 'preview' && mode !== 'photo' && (
-              <button onClick={handleStartRecording} disabled={!!permissionError} style={captureBtn}>
-                <FiberManualRecord sx={{ fontSize: 22, color: '#f44' }} /> Record
+              <button
+                onClick={handleStartRecording}
+                disabled={Boolean(permissionError)}
+                style={permissionError ? { ...captureBtn, opacity: 0.45, cursor: 'not-allowed' } : captureBtn}
+              >
+                <FiberManualRecord sx={{ fontSize: 18, color: theme.semantic.error }} /> Record
               </button>
             )}
             {phase === 'recording' && (
-              <button onClick={handleStopRecording} style={{ ...captureBtn, background: '#f44' }}>
-                <Stop sx={{ fontSize: 22 }} /> Stop
+              <button onClick={handleStopRecording} style={stopBtn}>
+                <Stop sx={{ fontSize: 20 }} /> Stop Recording
               </button>
             )}
             {phase === 'review' && (
               <>
                 <button onClick={handleRetake} style={ghostBtn}>
-                  <Replay sx={{ fontSize: 20 }} /> Retake
+                  <Replay sx={{ fontSize: 18 }} /> Retake
                 </button>
                 <button onClick={handleUse} style={captureBtn}>
-                  <Check sx={{ fontSize: 20 }} /> Use this
+                  <Check sx={{ fontSize: 18 }} /> Use this
                 </button>
               </>
             )}
@@ -329,21 +407,36 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
   );
 };
 
-// Styles
-const captureBtn: React.CSSProperties = {
+// ── Shared button base ──────────────────────────────────────────
+const btnBase: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: 8,
-  padding: '10px 22px', borderRadius: 40,
-  background: theme.colors.rose[500], color: '#fff',
+  padding: '11px 24px',
+  borderRadius: theme.radius.full,
   border: 'none', cursor: 'pointer',
-  fontWeight: 600, fontSize: 15,
+  fontWeight: 600, fontSize: 14,
   fontFamily: 'inherit',
+  transition: 'all 200ms ease',
+  whiteSpace: 'nowrap',
+};
+
+const captureBtn: React.CSSProperties = {
+  ...btnBase,
+  background: theme.colors.rose[600],
+  color: theme.text.inverse,
+  boxShadow: `0 4px 12px ${theme.colors.rose[300]}`,
+};
+
+const stopBtn: React.CSSProperties = {
+  ...btnBase,
+  background: theme.semantic.error,
+  color: theme.text.inverse,
+  boxShadow: `0 4px 12px ${theme.colors.rose[300]}`,
 };
 
 const ghostBtn: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: 8,
-  padding: '10px 22px', borderRadius: 40,
-  background: 'rgba(255,255,255,0.1)', color: '#fff',
-  border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer',
-  fontWeight: 600, fontSize: 15,
-  fontFamily: 'inherit',
+  ...btnBase,
+  background: theme.colors.rose[50],
+  color: theme.text.secondary,
+  border: `1px solid ${theme.border.dark}`,
+  boxShadow: 'none',
 };
