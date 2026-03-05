@@ -187,24 +187,24 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 
     // Two bursts — left and right — like iMessage celebration
     confetti({
-      particleCount: 80,
+      particleCount: 160,
       angle: 60,
-      spread: 55,
+      spread: 80,
       origin: { x: 0, y: 0.5 },
       colors,
       scalar: 0.9,
       gravity: 0.9,
-      ticks: 220,
+      ticks: 280,
     });
     confetti({
-      particleCount: 80,
+      particleCount: 160,
       angle: 120,
-      spread: 55,
+      spread: 80,
       origin: { x: 1, y: 0.5 },
       colors,
       scalar: 0.9,
       gravity: 0.9,
-      ticks: 220,
+      ticks: 280,
     });
 
     return () => {
