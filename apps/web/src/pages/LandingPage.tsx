@@ -94,7 +94,7 @@ export const LandingPage: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'flex-start',
           overflow: 'hidden',
-          paddingTop: '0px',
+          paddingTop: '80px',
           background: `linear-gradient(180deg, 
             #FDFCFA 0%, 
             #FFF9F7 50%,
