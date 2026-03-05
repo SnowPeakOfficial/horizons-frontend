@@ -271,9 +271,9 @@ export const LandingPage: React.FC = () => {
               height: 'auto',
               userSelect: 'none',
               pointerEvents: 'none',
-              // Fade bottom edge into the background
-              WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-              maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+              // Fade top edge into hero background, bottom edge into section below
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
             }}
           />
         </div>
