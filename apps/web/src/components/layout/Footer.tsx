@@ -128,7 +128,7 @@ export const Footer: React.FC = () => {
   return (
     <footer style={footerStyle}>
       <div style={containerStyle}>
-        <div style={topRowStyle}>
+        <div className="footer-top-row" style={topRowStyle}>
           {/* Brand */}
           <div>
             <div style={logoStyle} onClick={() => navigate('/')}>
@@ -219,7 +219,7 @@ export const Footer: React.FC = () => {
 
         <div style={dividerStyle} />
 
-        <div style={bottomRowStyle}>
+        <div className="footer-bottom-row" style={bottomRowStyle}>
           <span style={copyrightStyle}>
             © {year} Horizons. All rights reserved.
           </span>

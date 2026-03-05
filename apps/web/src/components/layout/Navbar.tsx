@@ -14,6 +14,8 @@ import Person from '@mui/icons-material/Person';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import BugReport from '@mui/icons-material/BugReport';
+import MenuOutlined from '@mui/icons-material/MenuOutlined';
+import CloseOutlined from '@mui/icons-material/CloseOutlined';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ export const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isDevMenuOpen, setIsDevMenuOpen] = useState(false);
   const [devLoading, setDevLoading] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Refresh user tier from API on mount so badge is always current
   useEffect(() => {
@@ -189,24 +192,40 @@ export const Navbar: React.FC = () => {
             <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
           </div>
 
-          {/* Right Side - Auth Buttons */}
-          <div style={{ display: 'flex', gap: theme.spacing.sm, alignItems: 'center' }}>
-            <Button
-              variant="ghost"
-              size="small"
-              onClick={() => navigate('/auth/login')}
-            >
-              Login
-            </Button>
-            <Button
-              variant="primary"
-              size="small"
-              onClick={() => navigate('/auth/register')}
-            >
-              Sign Up
-            </Button>
+          {/* Desktop: Auth Buttons */}
+          <div className="navbar-desktop-links" style={{ display: 'flex', gap: theme.spacing.sm, alignItems: 'center' }}>
+            <Button variant="ghost" size="small" onClick={() => navigate('/auth/login')}>Login</Button>
+            <Button variant="primary" size="small" onClick={() => navigate('/auth/register')}>Sign Up</Button>
+          </div>
+
+          {/* Mobile: Hamburger */}
+          <div
+            className="navbar-hamburger"
+            style={{ display: 'none', alignItems: 'center', cursor: 'pointer', color: theme.colors.rose[500] }}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen
+              ? <CloseOutlined sx={{ fontSize: 28, color: theme.colors.rose[500] }} />
+              : <MenuOutlined sx={{ fontSize: 28, color: theme.colors.rose[500] }} />
+            }
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div
+            className="navbar-mobile-menu"
+            style={{
+              display: 'block',
+              padding: '12px 24px 20px',
+              borderTop: `1px solid rgba(232, 180, 184, 0.2)`,
+              background: 'rgba(255,255,255,0.97)',
+            }}
+          >
+            <Button variant="ghost" size="small" style={{ width: '100%', marginBottom: '8px' }} onClick={() => { navigate('/auth/login'); setIsMobileMenuOpen(false); }}>Login</Button>
+            <Button variant="primary" size="small" style={{ width: '100%' }} onClick={() => { navigate('/auth/register'); setIsMobileMenuOpen(false); }}>Sign Up</Button>
+          </div>
+        )}
       </nav>
     );
   }
@@ -225,8 +244,20 @@ export const Navbar: React.FC = () => {
           <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
         </div>
 
-        {/* Right Side - Navigation Links + User Section */}
-        <div style={{ display: 'flex', gap: theme.spacing.md, alignItems: 'center' }}>
+        {/* Mobile: Hamburger button */}
+        <div
+          className="navbar-hamburger"
+          style={{ display: 'none', alignItems: 'center', cursor: 'pointer' }}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen
+            ? <CloseOutlined sx={{ fontSize: 28, color: theme.colors.rose[500] }} />
+            : <MenuOutlined sx={{ fontSize: 28, color: theme.colors.rose[500] }} />
+          }
+        </div>
+
+        {/* Desktop Right Side - Navigation Links + User Section */}
+        <div className="navbar-desktop-links" style={{ display: 'flex', gap: theme.spacing.md, alignItems: 'center' }}>
           {/* Navigation Links */}
           <div style={navLinksStyle}>
             <div
@@ -413,6 +444,62 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu — authenticated */}
+      {isMobileMenuOpen && (
+        <div
+          className="navbar-mobile-menu"
+          style={{
+            display: 'block',
+            padding: '12px 24px 20px',
+            borderTop: `1px solid rgba(232, 180, 184, 0.2)`,
+            background: 'rgba(255,255,255,0.97)',
+          }}
+        >
+          {/* Nav links */}
+          <div
+            style={{ ...dropdownItemStyle, marginBottom: '4px', fontWeight: location.pathname === '/my-gardens' ? 600 : 400, color: location.pathname === '/my-gardens' ? theme.colors.rose[700] : theme.text.primary }}
+            onClick={() => { navigate('/my-gardens'); setIsMobileMenuOpen(false); }}
+          >
+            My Gardens
+          </div>
+          <div
+            style={{ ...dropdownItemStyle, marginBottom: '12px', fontWeight: location.pathname === '/pricing' ? 600 : 400, color: location.pathname === '/pricing' ? theme.colors.rose[700] : theme.text.primary }}
+            onClick={() => { navigate('/pricing'); setIsMobileMenuOpen(false); }}
+          >
+            Pricing
+          </div>
+          <div style={{ height: '1px', background: theme.border.light, marginBottom: '12px' }} />
+          {/* Tier badge + DEV switcher row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+            <div style={tierBadgeStyle}>{user?.tier || 'FREE'}</div>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: theme.radius.md, background: 'rgba(255,200,100,0.15)', border: '1px dashed rgba(200,150,50,0.4)', cursor: 'pointer', fontSize: '11px', fontWeight: 700, color: '#9B7B30' }}
+              onClick={() => setIsDevMenuOpen(!isDevMenuOpen)}
+            >
+              <BugReport sx={{ fontSize: 14 }} />
+              DEV
+            </div>
+          </div>
+          {isDevMenuOpen && (
+            <div style={{ marginBottom: '12px', paddingLeft: '8px' }}>
+              {(['FREE', 'PRO', 'PREMIUM'] as const).map((tier) => (
+                <div
+                  key={tier}
+                  style={{ ...dropdownItemStyle, fontWeight: user?.tier === tier ? 700 : 400, color: user?.tier === tier ? theme.colors.rose[700] : theme.text.primary, fontSize: '13px' }}
+                  onClick={() => { devLoading ? undefined : handleDevChangeTier(tier); }}
+                >
+                  {devLoading === tier ? '...' : tier}{user?.tier === tier && ' ✓'}
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{ height: '1px', background: theme.border.light, marginBottom: '12px' }} />
+          {/* User actions */}
+          <div style={{ ...dropdownItemStyle }} onClick={() => { navigate('/profile'); setIsMobileMenuOpen(false); }}><Person sx={{ fontSize: 18 }} />Profile</div>
+          <div style={{ ...dropdownItemStyle, color: theme.text.tertiary }} onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}><Logout sx={{ fontSize: 18 }} />Sign Out</div>
+        </div>
+      )}
 
       {/* Click outside to close menus */}
       {(isUserMenuOpen || isDevMenuOpen) && (

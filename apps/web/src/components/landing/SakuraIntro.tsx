@@ -120,8 +120,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             }}
           />
 
-          {/* Bloomory-style peripheral labels */}
-          <div style={{
+          {/* Bloomory-style peripheral labels — desktop only (absolute positioned) */}
+          <div className="sakura-label-desktop" style={{
             position: 'absolute', top: '88px', left: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
             letterSpacing: '0.25em', textTransform: 'uppercase' as const,
@@ -130,7 +130,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             animation: 'heroContentFade 8s ease forwards',
           }}>EST. 2026</div>
 
-          <div style={{
+          <div className="sakura-label-desktop" style={{
             position: 'absolute', top: '88px', right: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
             letterSpacing: '0.1em', color: theme.text.tertiary,
@@ -209,7 +209,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '16px',
-                marginBottom: theme.spacing['2xl'],
+                marginBottom: theme.spacing.md,
                 opacity: 0.7,
               }}
             >
@@ -237,6 +237,28 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               >
                 Horizons
               </span>
+            </div>
+
+            {/* Mobile-only labels row — shown below logo on small screens */}
+            <div className="sakura-labels-mobile" style={{
+              display: 'none',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '20px',
+              marginBottom: theme.spacing['2xl'],
+              animation: 'heroContentFade 8s ease forwards',
+              pointerEvents: 'none',
+            }}>
+              <span style={{
+                fontFamily: typography.fontFamily.serif, fontSize: '13px',
+                letterSpacing: '0.25em', textTransform: 'uppercase' as const,
+                color: theme.text.tertiary,
+              }}>EST. 2026</span>
+              <span style={{ fontSize: '8px', color: theme.colors.rose[400] }}>✦</span>
+              <span style={{
+                fontFamily: typography.fontFamily.serif, fontSize: '13px',
+                letterSpacing: '0.1em', color: theme.text.tertiary,
+              }}>Private by design</span>
             </div>
 
             {/* Main Headline */}
@@ -379,6 +401,12 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           25% { opacity: 0; }      /* Hidden until 2s */
           43.75% { opacity: 1; }   /* Fade in by 3.5s */
           100% { opacity: 1; }
+        }
+
+        /* On mobile: hide desktop side labels, show inline centered row */
+        @media (max-width: 768px) {
+          .sakura-label-desktop { display: none !important; }
+          .sakura-labels-mobile { display: flex !important; }
         }
 
         /* Video: Fade out gradually */

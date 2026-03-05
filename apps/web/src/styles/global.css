@@ -335,6 +335,76 @@ ul, ol {
   body {
     font-size: 16px;
   }
+
+  /* Why Horizons panel grid — stack vertically on mobile */
+  .why-horizons-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Remove left borders on stacked panels */
+  .why-horizons-grid > div {
+    border-left: none !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .why-horizons-grid > div:first-child {
+    border-top: none;
+    min-height: 240px;
+  }
+
+  /* Give manifesto panel comfortable padding on mobile */
+  .why-horizons-grid > div:nth-child(2) {
+    padding: 40px 28px !important;
+  }
+
+  /* Give trust panel comfortable padding on mobile */
+  .why-horizons-grid > div:nth-child(3) {
+    padding: 32px 28px !important;
+  }
+
+  /* Hide desktop absolute labels on mobile */
+  .landing-label-left,
+  .landing-label-right {
+    display: none !important;
+  }
+
+  /* Show mobile inline labels row (between logo and headline) */
+  .landing-labels-mobile-row {
+    display: flex !important;
+  }
+
+  /* Reduce gap between HORIZONS logo and the labels row on mobile */
+  .landing-logo-row {
+    margin-bottom: 0px !important;
+  }
+
+  /* Hero content — minimal top nudge, reduce side padding on mobile */
+  .hero-content {
+    padding-top: 16px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Navbar — hide full nav on mobile, show hamburger */
+  .navbar-desktop-links { display: none !important; }
+  .navbar-hamburger { display: flex !important; }
+  .navbar-mobile-menu { display: block !important; }
+
+  /* Footer — single column on mobile */
+  .footer-top-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .footer-top-row > div {
+    width: 100% !important;
+  }
+
+  .footer-bottom-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
 }
 
 /* Print Styles */
