@@ -23,11 +23,11 @@ const SocialIconButton: React.FC<{ href: string; label: string; children: React.
         width: '34px',
         height: '34px',
         borderRadius: '50%',
-        background: hovered ? 'rgba(212, 144, 154, 0.15)' : 'rgba(212, 144, 154, 0.08)',
-        color: hovered ? '#B87580' : '#D4909A',
+      background: hovered ? 'rgba(212, 112, 126, 0.18)' : 'rgba(212, 112, 126, 0.10)',
+        color: hovered ? '#B85060' : '#D4707E',
         transition: 'all 0.2s ease',
         textDecoration: 'none',
-        border: '1px solid rgba(212, 144, 154, 0.2)',
+        border: '1px solid rgba(212, 112, 126, 0.25)',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -77,7 +77,7 @@ export const Footer: React.FC = () => {
 
   const taglineStyle: React.CSSProperties = {
     fontSize: '13px',
-    color: '#B0A0AC',
+    color: '#6B5B6E',
     marginTop: '6px',
     lineHeight: 1.5,
     maxWidth: '220px',
@@ -87,7 +87,7 @@ export const Footer: React.FC = () => {
     fontSize: '11px',
     fontWeight: 700,
     letterSpacing: '0.08em',
-    color: '#9D8F99',
+    color: '#6B5B6E',
     textTransform: 'uppercase',
     marginBottom: '14px',
   };
@@ -118,7 +118,7 @@ export const Footer: React.FC = () => {
 
   const copyrightStyle: React.CSSProperties = {
     fontSize: '13px',
-    color: '#B0A0AC',
+    color: '#6B5B6E',
   };
 
   const handleLinkHover = (e: React.MouseEvent<HTMLSpanElement>, entering: boolean) => {
