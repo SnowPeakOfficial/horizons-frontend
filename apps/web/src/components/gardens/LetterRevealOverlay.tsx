@@ -101,33 +101,16 @@ export const LetterRevealOverlay: React.FC<LetterRevealOverlayProps> = ({ onDone
               : 'lro-logoOut 0.45s ease forwards',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px, 2.5vw, 40px)' }}>
-            <img
-              src="/images/horizons-logo.svg"
-              alt="Horizons"
-              style={{
-                height: 'clamp(80px, 12vw, 140px)',
-                width: 'auto',
-                userSelect: 'none',
-                pointerEvents: 'none',
-              }}
-            />
-            <span
-              style={{
-                fontFamily: typography.fontFamily.serif,
-                fontSize: 'clamp(80px, 12vw, 140px)',
-                fontWeight: typography.fontWeight.medium,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase' as const,
-                color: theme.text.tertiary,
-                textShadow: '0 1px 3px rgba(0,0,0,0.08)',
-                lineHeight: 1,
-                userSelect: 'none',
-              }}
-            >
-              HORIZONS
-            </span>
-          </div>
+          <img
+            src="/images/horizons-logo-wordmark.svg"
+            alt="Horizons"
+            style={{
+              height: 'clamp(138px, 20vw, 240px)',
+              width: 'auto',
+              userSelect: 'none',
+              pointerEvents: 'none',
+            }}
+          />
         </div>
 
         {/* ═══ PHASES 1 & 2 — Envelope ═══ */}

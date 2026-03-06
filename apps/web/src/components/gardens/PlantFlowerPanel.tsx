@@ -36,6 +36,9 @@ import LightbulbOutlined from '@mui/icons-material/LightbulbOutlined';
 import Mic from '@mui/icons-material/Mic';
 import Videocam from '@mui/icons-material/Videocam';
 import MusicNote from '@mui/icons-material/MusicNote';
+import CameraAlt from '@mui/icons-material/CameraAlt';
+import { MediaCaptureModal } from '../common/MediaCaptureModal';
+import type { CaptureMode } from '../common/MediaCaptureModal';
 
 /**
  * 3D Flower Preview Component
@@ -124,6 +127,21 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   const [imageError, setImageError] = useState('');
   const [voiceError, setVoiceError] = useState('');
   const [videoError, setVideoError] = useState('');
+
+  // Capture modal state
+  const [captureMode, setCaptureMode] = useState<CaptureMode | null>(null);
+
+  // Handle a file captured live from camera/mic
+  const handleCapturedFile = (file: File, type: 'image' | 'voice' | 'video') => {
+    if (type === 'image') setImageError('');
+    if (type === 'voice') setVoiceError('');
+    if (type === 'video') setVideoError('');
+    const previewUrl = URL.createObjectURL(file);
+    const mediaFile = { file, previewUrl };
+    if (type === 'image') { setImageFile(mediaFile); setImageProgress(null); }
+    if (type === 'voice') { setVoiceFile(mediaFile); setVoiceProgress(null); }
+    if (type === 'video') { setVideoFile(mediaFile); setVideoProgress(null); }
+  };
 
   // Hidden file input refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -923,19 +941,30 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 <AddAPhoto sx={{ fontSize: 18, color: theme.colors.rose[400] }} /> Photo {flowerType === 'BLOOMING' && <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>(revealed when flower blooms)</span>}
               </label>
               {imageFile ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>
-                  <img src={imageFile.previewUrl} alt="preview" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: theme.radius.md }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ ...typography.styles.caption, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{imageFile.file.name}</div>
-                    <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{(imageFile.file.size / 1024 / 1024).toFixed(1)} MB</div>
-                    {imageProgress !== null && <div style={{ marginTop: 4, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${imageProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
+                <div style={{ padding: theme.spacing.md, border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50] }}>
+                  {/* Filename + size row */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md, marginBottom: theme.spacing.md }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ ...typography.styles.caption, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{imageFile.file.name}</div>
+                      <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{(imageFile.file.size / 1024 / 1024).toFixed(1)} MB</div>
+                    </div>
                   </div>
-                  <button onClick={() => clearFile('image')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.text.secondary, padding: 4, fontSize: 18, lineHeight: 1 }}>✕</button>
+                  {/* Full-width image preview */}
+                  <img src={imageFile.previewUrl} alt="preview" style={{ width: '100%', borderRadius: theme.radius.md, maxHeight: 160, objectFit: 'contain', display: 'block' }} />
+                  {imageProgress !== null && <div style={{ marginTop: 8, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${imageProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: theme.spacing.sm }}>
+                    <button onClick={() => clearFile('image')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.text.secondary, padding: 4, fontSize: 18, lineHeight: 1 }}>✕</button>
+                  </div>
                 </div>
               ) : (
-                <button onClick={() => imageInputRef.current?.click()} style={{ width: '100%', padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${imageError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
-                  + Choose photo
-                </button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => imageInputRef.current?.click()} style={{ flex: 1, padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${imageError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
+                    + Choose photo
+                  </button>
+                  <button onClick={() => setCaptureMode('photo')} title="Take photo" style={{ padding: '0 14px', border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50], cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                    <CameraAlt sx={{ fontSize: 20, color: theme.colors.rose[500] }} />
+                  </button>
+                </div>
               )}
               {imageError ? (
                 <div style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'flex', alignItems: 'center', gap: 4 }}>⚠️ {imageError}</div>
@@ -963,9 +992,14 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                   {voiceProgress !== null && <div style={{ marginTop: 4, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${voiceProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
                 </div>
               ) : (
-                <button onClick={() => voiceInputRef.current?.click()} style={{ width: '100%', padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${voiceError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
-                  + Choose audio file
-                </button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => voiceInputRef.current?.click()} style={{ flex: 1, padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${voiceError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
+                    + Choose audio file
+                  </button>
+                  <button onClick={() => setCaptureMode('voice')} title="Record voice" style={{ padding: '0 14px', border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50], cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                    <Mic sx={{ fontSize: 20, color: theme.colors.rose[500] }} />
+                  </button>
+                </div>
               )}
               {voiceError ? (
                 <div style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'flex', alignItems: 'center', gap: 4 }}>⚠️ {voiceError}</div>
@@ -993,9 +1027,14 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                   {videoProgress !== null && <div style={{ marginTop: 4, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${videoProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
                 </div>
               ) : (
-                <button onClick={() => videoInputRef.current?.click()} style={{ width: '100%', padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${videoError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
-                  + Choose video
-                </button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => videoInputRef.current?.click()} style={{ flex: 1, padding: `${theme.spacing.md} ${theme.spacing.lg}`, border: `2px dashed ${videoError ? theme.semantic.error : theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: 'transparent', cursor: 'pointer', color: theme.text.secondary, ...typography.styles.body, textAlign: 'center' }}>
+                    + Choose video
+                  </button>
+                  <button onClick={() => setCaptureMode('video')} title="Record video" style={{ padding: '0 14px', border: `2px solid ${theme.colors.rose[300]}`, borderRadius: theme.radius.lg, background: theme.colors.rose[50], cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                    <Videocam sx={{ fontSize: 20, color: theme.colors.rose[500] }} />
+                  </button>
+                </div>
               )}
               {videoError ? (
                 <div style={{ ...typography.styles.caption, color: theme.semantic.error, marginTop: theme.spacing.xs, display: 'flex', alignItems: 'center', gap: 4 }}>⚠️ {videoError}</div>
@@ -1283,6 +1322,18 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           </>
         )}
       </div>
+
+      {/* Media Capture Modal */}
+      <MediaCaptureModal
+        isOpen={captureMode !== null}
+        mode={captureMode ?? 'photo'}
+        onCapture={(file) => {
+          if (captureMode === 'photo') handleCapturedFile(file, 'image');
+          else if (captureMode === 'voice') handleCapturedFile(file, 'voice');
+          else if (captureMode === 'video') handleCapturedFile(file, 'video');
+        }}
+        onClose={() => setCaptureMode(null)}
+      />
     </div>
   );
 };

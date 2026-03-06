@@ -4,6 +4,9 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import LocalFloristRoundedIcon from '@mui/icons-material/LocalFloristRounded';
+import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
@@ -123,9 +126,15 @@ export const MyGardensPage: React.FC = () => {
     fontWeight: 500,
   };
 
+  const mostLovedId = gardens.length > 0
+    ? gardens.reduce((max, g) =>
+        (g._count?.flowers || 0) > (max._count?.flowers || 0) ? g : max
+      ).id
+    : null;
+
   const gardensGridStyle: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
     gap: theme.spacing.lg,
   };
 
@@ -256,33 +265,70 @@ export const MyGardensPage: React.FC = () => {
           </div>
         ) : (
           <div style={gardensGridStyle}>
-            {gardens.map((garden) => (
-              <div
-                key={garden.id}
-                style={gardenCardStyle}
-                onClick={() => handleOpenGarden(garden)}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-8px) scale(1.02)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(212, 144, 154, 0.25), 0 8px 16px rgba(0, 0, 0, 0.1)';
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 1)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.8)';
-                }}
-              >
-                <div style={gardenHeaderStyle}>🌸</div>
-                <div style={gardenContentStyle}>
-                  <h3 style={gardenTitleStyle}>{garden.title}</h3>
-                  <div style={gardenMetaStyle}>{formatDate(garden.createdAt)}</div>
-                  <div style={gardenStatsStyle}>
-                    <span style={gardenStatStyle}>{garden._count?.flowers || 0} flowers</span>
-                    <span style={gardenStatStyle}>{garden._count?.members || 1} members</span>
+            {gardens.map((garden) => {
+              const bloomCount = garden._count?.flowers || 0;
+              const isTopGarden = garden.id === mostLovedId && gardens.length > 1;
+              return (
+                <div
+                  key={garden.id}
+                  style={gardenCardStyle}
+                  onClick={() => handleOpenGarden(garden)}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-8px) scale(1.02)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(212, 144, 154, 0.25), 0 8px 16px rgba(0, 0, 0, 0.1)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.8)';
+                  }}
+                >
+                  {/* Header: pink gradient + radial glow */}
+                  <div style={{
+                    ...gardenHeaderStyle,
+                    background: `radial-gradient(circle at 80% 20%, rgba(255,255,255,0.55), transparent 45%), linear-gradient(135deg, #FFE5EC 0%, #FFC9D9 50%, #FFB3C7 100%)`,
+                  }}>
+                    🌸
+                    {isTopGarden && (
+                      <span style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 12,
+                        padding: '3px 9px',
+                        borderRadius: 999,
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        background: 'rgba(255,255,255,0.85)',
+                        color: '#C48991',
+                        letterSpacing: '0.02em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                      }}>
+                        <StarRoundedIcon style={{ fontSize: '13px', color: '#C48991' }} />
+                        Most Active
+                      </span>
+                    )}
+                  </div>
+
+                  <div style={gardenContentStyle}>
+                    <h3 style={{ ...gardenTitleStyle, fontWeight: 700 }}>{garden.title}</h3>
+                    <div style={gardenMetaStyle}>Planted {formatDate(garden.createdAt)}</div>
+                    <div style={gardenStatsStyle}>
+                      <span style={{ ...gardenStatStyle, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <LocalFloristRoundedIcon style={{ fontSize: '15px', color: '#D4909A' }} />
+                        {bloomCount} blooms
+                      </span>
+                      <span style={{ ...gardenStatStyle, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <PeopleRoundedIcon style={{ fontSize: '15px', color: '#D4909A' }} />
+                        {garden._count?.members || 1} gardeners
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

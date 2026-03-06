@@ -12,7 +12,7 @@ export const theme = {
       100: '#FFEEF2',
       200: '#FFE0E8',
       300: '#FFC9D9',
-      400: '#FFB0C8',
+      400: '#D4707E',
       500: '#E8B4B8',  // Primary dusty rose
       600: '#D4909A',  // Deeper rose for CTAs
       700: '#B87580',
@@ -103,7 +103,7 @@ export const theme = {
   text: {
     primary: '#3D3340',         // Charcoal
     secondary: '#6B5F68',       // Muted charcoal
-    tertiary: '#9D8F99',        // Light gray
+    tertiary: '#6B5B6E',        // Medium warm mauve
     inverse: '#FFFFFF',
     accent: '#D4909A',          // Rose accent
     gold: '#D4AF6A',           // Premium

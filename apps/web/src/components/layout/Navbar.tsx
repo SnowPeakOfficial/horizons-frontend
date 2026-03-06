@@ -182,11 +182,10 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <div style={logoStyle} onClick={() => navigate('/')}>
             <img
-              src="/images/horizons-logo.svg"
-              alt="Horizons logo"
+              src="/images/horizons-logo-wordmark.svg"
+              alt="Horizons"
               style={{ height: '28px', width: 'auto', display: 'block' }}
             />
-            <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
           </div>
 
           {/* Right Side - Auth Buttons */}
@@ -218,11 +217,10 @@ export const Navbar: React.FC = () => {
         {/* Logo */}
         <div style={logoStyle} onClick={() => navigate('/')}>
           <img
-            src="/images/horizons-logo.svg"
-            alt="Horizons logo"
+            src="/images/horizons-logo-wordmark.svg"
+            alt="Horizons"
             style={{ height: '28px', width: 'auto', display: 'block' }}
           />
-          <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase' }}>Horizons</span>
         </div>
 
         {/* Right Side - Navigation Links + User Section */}

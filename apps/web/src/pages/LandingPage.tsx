@@ -94,7 +94,7 @@ export const LandingPage: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'flex-start',
           overflow: 'hidden',
-          paddingTop: '0px',
+          paddingTop: '80px',
           background: `linear-gradient(180deg, 
             #FDFCFA 0%, 
             #FFF9F7 50%,
@@ -150,35 +150,21 @@ export const LandingPage: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '16px',
               marginBottom: theme.spacing['2xl'],
               opacity: 0.7,
             }}
           >
             <img
-              src="/images/horizons-logo.svg"
-              alt="Horizons logo"
+              src="/images/horizons-logo-wordmark.svg"
+              alt="Horizons"
               style={{
-                height: 'clamp(36px, 5vw, 60px)',
+                height: 'clamp(60px, 8.5vw, 108px)',
                 width: 'auto',
                 display: 'block',
                 userSelect: 'none',
                 pointerEvents: 'none',
               }}
             />
-            <span
-              style={{
-                fontFamily: typography.fontFamily.serif,
-                fontSize: 'clamp(36px, 5vw, 60px)',
-                fontWeight: typography.fontWeight.medium,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: theme.text.tertiary,
-                textShadow: '0 1px 3px rgba(0,0,0,0.08)',
-              }}
-            >
-              Horizons
-            </span>
           </div>
 
           {/* Main Headline - Large & Bold */}
@@ -285,9 +271,9 @@ export const LandingPage: React.FC = () => {
               height: 'auto',
               userSelect: 'none',
               pointerEvents: 'none',
-              // Fade bottom edge into the background
-              WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-              maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+              // Fade top edge into hero background, bottom edge into section below
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
             }}
           />
         </div>
@@ -571,172 +557,11 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ========== WHY HORIZONS — Orix-style panel row ========== */}
-      <section
-        style={{
-          padding: '120px 40px 0 40px',
-          background: '#FFFFFF',
-        }}
-      >
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-
-          {/* Section header — matches "How it works" style exactly */}
-          <RevealOnScroll>
-            <p style={{
-              fontFamily: typography.fontFamily.serif,
-              fontSize: '18px',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase' as const,
-              color: theme.text.tertiary,
-              textAlign: 'center',
-              marginBottom: theme.spacing.lg,
-            }}>Why Horizons</p>
-            <h2 style={{
-              fontSize: 'clamp(40px, 5.5vw, 64px)',
-              fontFamily: typography.fontFamily.serif,
-              fontWeight: typography.fontWeight.normal,
-              textAlign: 'center',
-              marginBottom: '64px',
-              color: theme.text.primary,
-              letterSpacing: '-0.01em',
-              lineHeight: 1.15,
-            }}>
-              Where moments are kept with care
-            </h2>
-          </RevealOnScroll>
-
-          {/* Panel row — 3 columns: Flower | Manifesto (wide) | Trust (slim) */}
-          <RevealOnScroll delay={100}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1.6fr 0.9fr',
-              minHeight: '420px',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              border: `1px solid ${theme.border.light}`,
-            }}>
-
-              {/* Panel 1 — Flower image, anchored to bottom */}
-              <div style={{
-                position: 'relative',
-                overflow: 'hidden',
-                background: '#F5ECE8',
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-                padding: '0 16px',
-              }}>
-                <img
-                  src="/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_1_1e7015ea-9d7e-4641-a544-8aadfba8a958_0.png"
-                  alt=""
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    userSelect: 'none',
-                    pointerEvents: 'none',
-                    display: 'block',
-                  }}
-                />
-              </div>
-
-              {/* Panel 2 — Merged manifesto: the emotional hero */}
-              <div style={{
-                background: '#FFFFFF',
-                padding: '56px 52px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderLeft: `1px solid ${theme.border.light}`,
-              }}>
-                {/* Inner wrapper — both texts share this same bounding box */}
-                <div style={{ width: 'fit-content' }}>
-                  {/* Muted setup lines — top, left-aligned */}
-                  <p style={{
-                    fontFamily: typography.fontFamily.serif,
-                    fontSize: 'clamp(16px, 1.5vw, 20px)',
-                    lineHeight: 2,
-                    color: theme.text.tertiary,
-                    fontWeight: typography.fontWeight.normal,
-                    marginBottom: '40px',
-                    letterSpacing: '0.01em',
-                    textAlign: 'left',
-                  }}>
-                    No feeds.<br />
-                    No numbers.<br />
-                    No pressure.
-                  </p>
-                  {/* Dominant payoff — bottom, centered */}
-                  <p style={{
-                    fontFamily: typography.fontFamily.serif,
-                    fontSize: 'clamp(28px, 3vw, 42px)',
-                    lineHeight: 1.35,
-                    color: theme.text.primary,
-                    fontWeight: typography.fontWeight.normal,
-                    letterSpacing: '-0.02em',
-                    textAlign: 'left',
-                  }}>
-                    Only the people<br />
-                    you invite.<br />
-                    Only the moments<br />
-                    you choose to keep.
-                  </p>
-                </div>
-              </div>
-
-              {/* Panel 3 — Trust signals, slim with dividers */}
-              <div style={{
-                background: '#F8F4F2',
-                padding: '48px 36px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                borderLeft: `1px solid ${theme.border.light}`,
-              }}>
-                {[
-                  { icon: LockOutlinedIcon, headline: 'Your garden is private', body: 'No one enters unless you invite them.' },
-                  { icon: VisibilityOffOutlinedIcon, headline: 'Nothing is indexed', body: "Your memories aren't searchable or public." },
-                  { icon: SendOutlinedIcon, headline: 'Sharing is intentional', body: 'Nothing leaves without your choice.' },
-                ].map((item, i) => (
-                  <div key={i} style={{
-                    paddingTop: i === 0 ? '0' : '24px',
-                    paddingBottom: i < 2 ? '24px' : '0',
-                    borderTop: i === 0 ? 'none' : `1px solid ${theme.border.light}`,
-                  }}>
-                    <item.icon sx={{ fontSize: 20, color: theme.colors.rose[400], mb: '10px', display: 'block' }} />
-                    <p style={{
-                      fontFamily: typography.fontFamily.serif,
-                      fontSize: 'clamp(13px, 1.2vw, 15px)',
-                      fontWeight: typography.fontWeight.medium,
-                      color: theme.text.primary,
-                      marginBottom: '6px',
-                      lineHeight: 1.4,
-                    }}>
-                      {item.headline}
-                    </p>
-                    <p style={{
-                      fontSize: 'clamp(12px, 1vw, 14px)',
-                      lineHeight: 1.7,
-                      color: theme.text.tertiary,
-                    }}>
-                      {item.body}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-
       {/* ========== USE CASES ========== */}
       <section
         style={{
           padding: '120px 40px',
-          background: '#FFF9F7',
+          background: '#FFFFFF',
         }}
       >
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -944,6 +769,166 @@ export const LandingPage: React.FC = () => {
             </p>
           </RevealOnScroll>
 
+        </div>
+      </section>
+
+      {/* ========== WHY HORIZONS — Orix-style panel row ========== */}
+      <section
+        style={{
+          padding: '120px 40px',
+          background: '#FFF9F7',
+        }}
+      >
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+
+          {/* Section header — matches "How it works" style exactly */}
+          <RevealOnScroll>
+            <p style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: '18px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase' as const,
+              color: theme.text.tertiary,
+              textAlign: 'center',
+              marginBottom: theme.spacing.lg,
+            }}>Why Horizons</p>
+            <h2 style={{
+              fontSize: 'clamp(40px, 5.5vw, 64px)',
+              fontFamily: typography.fontFamily.serif,
+              fontWeight: typography.fontWeight.normal,
+              textAlign: 'center',
+              marginBottom: '64px',
+              color: theme.text.primary,
+              letterSpacing: '-0.01em',
+              lineHeight: 1.15,
+            }}>
+              Where moments are kept with care
+            </h2>
+          </RevealOnScroll>
+
+          {/* Panel row — 3 columns: Flower | Manifesto (wide) | Trust (slim) */}
+          <RevealOnScroll delay={100}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1.6fr 0.9fr',
+              minHeight: '420px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              border: `1px solid ${theme.border.light}`,
+            }}>
+
+              {/* Panel 1 — Flower image, anchored to bottom */}
+              <div style={{
+                position: 'relative',
+                overflow: 'hidden',
+                background: '#F5ECE8',
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                padding: '0 16px',
+              }}>
+                <img
+                  src="/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_1_1e7015ea-9d7e-4641-a544-8aadfba8a958_0.png"
+                  alt=""
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                    display: 'block',
+                  }}
+                />
+              </div>
+
+              {/* Panel 2 — Merged manifesto: the emotional hero */}
+              <div style={{
+                background: '#FFFFFF',
+                padding: '56px 52px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderLeft: `1px solid ${theme.border.light}`,
+              }}>
+                {/* Inner wrapper — both texts share this same bounding box */}
+                <div style={{ width: 'fit-content' }}>
+                  {/* Muted setup lines — top, left-aligned */}
+                  <p style={{
+                    fontFamily: typography.fontFamily.serif,
+                    fontSize: 'clamp(16px, 1.5vw, 20px)',
+                    lineHeight: 2,
+                    color: theme.text.tertiary,
+                    fontWeight: typography.fontWeight.normal,
+                    marginBottom: '40px',
+                    letterSpacing: '0.01em',
+                    textAlign: 'left',
+                  }}>
+                    No feeds.<br />
+                    No numbers.<br />
+                    No pressure.
+                  </p>
+                  {/* Dominant payoff — bottom, centered */}
+                  <p style={{
+                    fontFamily: typography.fontFamily.serif,
+                    fontSize: 'clamp(28px, 3vw, 42px)',
+                    lineHeight: 1.35,
+                    color: theme.text.primary,
+                    fontWeight: typography.fontWeight.normal,
+                    letterSpacing: '-0.02em',
+                    textAlign: 'left',
+                  }}>
+                    Only the people<br />
+                    you invite.<br />
+                    Only the moments<br />
+                    you choose to keep.
+                  </p>
+                </div>
+              </div>
+
+              {/* Panel 3 — Trust signals, slim with dividers */}
+              <div style={{
+                background: '#F8F4F2',
+                padding: '48px 36px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                borderLeft: `1px solid ${theme.border.light}`,
+              }}>
+                {[
+                  { icon: LockOutlinedIcon, headline: 'Your garden is private', body: 'No one enters unless you invite them.' },
+                  { icon: VisibilityOffOutlinedIcon, headline: 'Nothing is indexed', body: "Your memories aren't searchable or public." },
+                  { icon: SendOutlinedIcon, headline: 'Sharing is intentional', body: 'Nothing leaves without your choice.' },
+                ].map((item, i) => (
+                  <div key={i} style={{
+                    paddingTop: i === 0 ? '0' : '24px',
+                    paddingBottom: i < 2 ? '24px' : '0',
+                    borderTop: i === 0 ? 'none' : `1px solid ${theme.border.light}`,
+                  }}>
+                    <item.icon sx={{ fontSize: 20, color: theme.colors.rose[400], mb: '10px', display: 'block' }} />
+                    <p style={{
+                      fontFamily: typography.fontFamily.serif,
+                      fontSize: 'clamp(13px, 1.2vw, 15px)',
+                      fontWeight: typography.fontWeight.medium,
+                      color: theme.text.primary,
+                      marginBottom: '6px',
+                      lineHeight: 1.4,
+                    }}>
+                      {item.headline}
+                    </p>
+                    <p style={{
+                      fontSize: 'clamp(12px, 1vw, 14px)',
+                      lineHeight: 1.7,
+                      color: theme.text.tertiary,
+                    }}>
+                      {item.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 
