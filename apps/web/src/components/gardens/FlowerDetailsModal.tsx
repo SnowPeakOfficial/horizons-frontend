@@ -150,6 +150,8 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
 }) => {
   const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
+  // On touch-only devices, flower moves to top-center (in-flow) instead of top-right absolute
+  const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   // Reset media reveal state when modal opens/closes
   useEffect(() => {
@@ -288,35 +290,52 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         <HorizonsBranding />
         
         {/* White Letter Card - gradient driven by letter template */}
-        <div style={{ ...whiteCardStyle, background: tmpl.cardGradient }}>
-          
-          {/* 3D Flower - Anchored to top-right edge */}
-          <div style={{ ...flowerAnchorStyle, border: `3px solid ${tmpl.frameColor}` }}>
-            <Canvas
-              camera={{ position: [0, 0, 8], fov: 45 }}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <ambientLight intensity={0.9} />
-              <directionalLight position={[5, 5, 5]} intensity={1.2} />
-              <Suspense fallback={null}>
-                {shouldHideIdentity ? (
-                  <FlowerBud 
-                    scale={2.64} 
-                    color={definition.color}
-                    position={[0, -1.5, 0]}
-                  />
-                ) : (
-                  <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
-                )}
-              </Suspense>
-              <OrbitControls 
-                enableZoom={false}
-                enablePan={false}
-                autoRotate
-                autoRotateSpeed={1.5}
-              />
-            </Canvas>
-          </div>
+        <div style={{ ...whiteCardStyle, background: tmpl.cardGradient, ...(isMobile ? { paddingTop: '20px' } : {}) }}>
+
+          {/* 3D Flower — on mobile: top-center in-flow above "Dear,"; on desktop: top-right absolute */}
+          {isMobile ? (
+            /* Mobile: centered, in normal document flow, above the letter content */
+            <div style={{
+              width: '130px',
+              height: '130px',
+              borderRadius: '50%',
+              overflow: 'hidden',
+              background: '#FFFFFF',
+              boxShadow: '0 8px 24px rgba(61, 51, 64, 0.12)',
+              border: `3px solid ${tmpl.frameColor}`,
+              margin: '0 auto 20px',
+              animation: 'gentleRotateIn 0.6s ease-out 0.2s both',
+            }}>
+              <Canvas camera={{ position: [0, 0, 8], fov: 45 }} style={{ width: '100%', height: '100%' }}>
+                <ambientLight intensity={0.9} />
+                <directionalLight position={[5, 5, 5]} intensity={1.2} />
+                <Suspense fallback={null}>
+                  {shouldHideIdentity ? (
+                    <FlowerBud scale={2.64} color={definition.color} position={[0, -1.5, 0]} />
+                  ) : (
+                    <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
+                  )}
+                </Suspense>
+                <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={1.5} />
+              </Canvas>
+            </div>
+          ) : (
+            /* Desktop: absolute top-right, overlapping the card edge */
+            <div style={{ ...flowerAnchorStyle, border: `3px solid ${tmpl.frameColor}` }}>
+              <Canvas camera={{ position: [0, 0, 8], fov: 45 }} style={{ width: '100%', height: '100%' }}>
+                <ambientLight intensity={0.9} />
+                <directionalLight position={[5, 5, 5]} intensity={1.2} />
+                <Suspense fallback={null}>
+                  {shouldHideIdentity ? (
+                    <FlowerBud scale={2.64} color={definition.color} position={[0, -1.5, 0]} />
+                  ) : (
+                    <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
+                  )}
+                </Suspense>
+                <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={1.5} />
+              </Canvas>
+            </div>
+          )}
           
           {/* Letter Content */}
           <div style={letterContentStyle}>

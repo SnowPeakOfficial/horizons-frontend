@@ -90,6 +90,8 @@ interface PlantFlowerPanelProps {
   onPlacementModeChange?: (active: boolean, definition: FlowerDefinition | null) => void;
   onClearPosition?: () => void;
   placedPosition: { x: number; y: number; z: number } | null;
+  /** Called by mobile overlay Back button to return to step 1 */
+  onCancelPlacementStep?: () => void;
 }
 
 export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
@@ -416,7 +418,12 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     }
   };
 
+  const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
   if (!isOpen) return null;
+
+  // On mobile, hide the panel during step 2 so the full garden is visible for tapping
+  const isPanelHidden = isMobile && step === 2;
 
   return (
     <div
@@ -424,7 +431,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         position: 'fixed',
         top: 0,
         right: 0,
-        width: '420px',
+        width: isMobile ? '100%' : '420px',
         height: '100vh',
         background: 'rgba(255, 255, 255, 0.98)',
         backdropFilter: 'blur(20px)',
@@ -434,8 +441,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         zIndex: 1000,
         display: 'flex',
         flexDirection: 'column',
-        transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+        transform: isPanelHidden ? 'translateX(100%)' : 'translateX(0)',
         transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        pointerEvents: isPanelHidden ? 'none' : 'auto',
       }}
     >
       {/* Header */}

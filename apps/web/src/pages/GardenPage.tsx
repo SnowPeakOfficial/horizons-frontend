@@ -29,6 +29,7 @@ import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import People from '@mui/icons-material/People';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
+import TouchApp from '@mui/icons-material/TouchApp';
 
 export const GardenPage: React.FC = () => {
   const { gardenId } = useParams<{ gardenId: string }>();
@@ -51,6 +52,14 @@ export const GardenPage: React.FC = () => {
     screenX: number;
     screenY: number;
   } | null>(null);
+  const [mobilePeekFlower, setMobilePeekFlower] = useState<{
+    flower: PlacedFlower;
+    definition: FlowerDefinition;
+    apiFlower: Flower;
+  } | null>(null);
+
+  // True on touch-only devices (phones/tablets) — hover doesn't exist there
+  const isMobile = window.matchMedia('(hover: none)').matches;
 
   useEffect(() => {
     if (gardenId) {
@@ -195,13 +204,13 @@ export const GardenPage: React.FC = () => {
           </Button>
 
           {/* Garden Title */}
-          <div style={headerTitleStyle}>
+          <div className="garden-title" style={headerTitleStyle}>
             {currentGarden?.title || 'Loading...'}
           </div>
 
           {/* Garden Stats */}
           {currentGarden && (
-            <div style={headerStatsStyle}>
+            <div className="garden-stats" style={headerStatsStyle}>
               <div style={statItemStyle}>
                 <LocalFlorist sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
                 <span>{flowers.length} flowers</span>
@@ -219,7 +228,7 @@ export const GardenPage: React.FC = () => {
         </div>
 
         {/* Action Buttons */}
-        <div style={headerRightStyle}>
+        <div className="garden-header-actions" style={headerRightStyle}>
           <Button
             variant="primary"
             size="medium"
@@ -231,7 +240,8 @@ export const GardenPage: React.FC = () => {
             }}
           >
             <SettingsOutlined sx={{ fontSize: 18 }} />
-            Garden Details
+            <span className="garden-btn-label-full">Garden Details</span>
+            <span className="garden-btn-label-short">Details</span>
           </Button>
           <Button
             variant="primary"
@@ -244,7 +254,8 @@ export const GardenPage: React.FC = () => {
             }}
           >
             <LocalFlorist sx={{ fontSize: 18 }} />
-            Plant Flower
+            <span className="garden-btn-label-full">Plant Flower</span>
+            <span className="garden-btn-label-short">Plant</span>
           </Button>
         </div>
       </div>
@@ -269,8 +280,30 @@ export const GardenPage: React.FC = () => {
               setIsDraggingFlower(isDragging);
               if (isDragging) setHoveredFlowerTooltip(null);
             }}
-            onFlowerClick={(flower: Flower) => setSelectedFlower(flower)}
+            onFlowerClick={(flower: Flower) => {
+              if (isMobile) {
+                // On mobile: show a compact peek card instead of jumping to the full modal
+                const defKey = flower.flowerDefinition?.key?.toLowerCase() || 'daisy';
+                const def = FLOWER_DEFINITIONS[defKey] ?? {
+                  id: 0,
+                  name: flower.flowerDefinition?.name || flower.flowerDefinition?.key || 'Flower',
+                  emoji: '🌸',
+                  color: '#E8A5C0',
+                  description: '',
+                  symbolism: '',
+                  defaultScale: 1,
+                  previewScale: 1,
+                  modelPath: '',
+                  tier: 'FREE' as const,
+                };
+                setMobilePeekFlower({ flower: flower as unknown as PlacedFlower, definition: def, apiFlower: flower });
+              } else {
+                setSelectedFlower(flower);
+              }
+            }}
             onFlowerHover={(info) => {
+              // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
+              if (isMobile) return;
               if (info) {
                 setHoveredFlowerTooltip({
                   flower: info.flower,
@@ -307,6 +340,77 @@ export const GardenPage: React.FC = () => {
           {/* Clamp pan target every frame to keep camera inside the garden */}
         </Canvas>
       </div>
+
+      {/* Mobile Placement Hint — compact toast shown when step 2 is active on mobile */}
+      {isMobile && isPlacementMode && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '48px',
+            left: 0,
+            right: 0,
+            zIndex: 999,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '10px',
+            pointerEvents: 'none',
+            animation: 'floatUp 0.3s ease-out both',
+          }}
+        >
+          {/* Compact hint pill */}
+          <div
+            style={{
+              pointerEvents: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              background: 'rgba(0, 0, 0, 0.45)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderRadius: '999px',
+              padding: '10px 20px 10px 14px',
+              whiteSpace: 'nowrap',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+            }}
+          >
+            <TouchApp sx={{ fontSize: 22, color: '#E8A4B8' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '13px', fontWeight: 600, color: '#FFFFFF', lineHeight: 1.3 }}>
+                Tap anywhere to place
+              </span>
+              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '11px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.3 }}>
+                You can move it anywhere later
+              </span>
+            </div>
+          </div>
+
+          {/* Back pill */}
+          <button
+            onClick={() => {
+              setIsPlacementMode(false);
+              setSelectedFlowerForPlacement(null);
+            }}
+            style={{
+              pointerEvents: 'auto',
+              padding: '9px 28px',
+              borderRadius: '999px',
+              background: 'rgba(0, 0, 0, 0.35)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              color: '#FFFFFF',
+              fontSize: '13px',
+              fontWeight: 500,
+              fontFamily: '"Inter", sans-serif',
+              cursor: 'pointer',
+              letterSpacing: '0.02em',
+            }}
+          >
+            ← Back
+          </button>
+        </div>
+      )}
 
       {/* Plant Flower Panel */}
       <PlantFlowerPanel
@@ -391,6 +495,111 @@ export const GardenPage: React.FC = () => {
               Click flower to open
             </div>
           </div>
+        );
+      })()}
+
+      {/* Mobile Flower Peek Card — shown on tap instead of hover tooltip */}
+      {mobilePeekFlower && (() => {
+        const { definition, apiFlower } = mobilePeekFlower;
+        const isBud = apiFlower.state === 'BUD';
+        const shouldHideIdentity = apiFlower.type === 'BLOOMING' && isBud;
+        const displayName = shouldHideIdentity ? 'Mystery Flower' : definition.name;
+        const displayEmoji = shouldHideIdentity ? '🌱' : definition.emoji;
+
+        return (
+          <>
+            {/* Backdrop */}
+            <div
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 9998,
+                background: 'rgba(0,0,0,0.25)',
+              }}
+              onClick={() => setMobilePeekFlower(null)}
+            />
+            {/* Peek card */}
+            <div
+              style={{
+                position: 'fixed',
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 9999,
+                background: '#FFFFFF',
+                borderRadius: '20px 20px 0 0',
+                padding: '20px 20px 32px',
+                boxShadow: '0 -8px 32px rgba(61,51,64,0.18)',
+                border: '2px solid #FFC9D9',
+                borderBottom: 'none',
+              }}
+            >
+              {/* Handle + close */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div style={{ width: '40px', height: '4px', borderRadius: '2px', background: 'rgba(232,180,184,0.5)', margin: '0 auto' }} />
+                <button
+                  onClick={() => setMobilePeekFlower(null)}
+                  style={{
+                    position: 'absolute',
+                    right: '16px',
+                    top: '16px',
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    color: '#9D8F99',
+                    lineHeight: 1,
+                    padding: '4px 8px',
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Flower info row */}
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
+                <div style={{ fontSize: '44px', lineHeight: 1 }}>{displayEmoji}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 700, color: '#3D3340', fontFamily: 'Georgia, serif', marginBottom: '4px' }}>
+                    {displayName}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#9D8F99', fontFamily: 'Georgia, serif', marginBottom: '6px' }}>
+                    {isBud ? '🌱 Waiting to bloom' : '🌸 In bloom'}
+                  </div>
+                  <div style={{ fontSize: '13px', color: '#3D3340', fontFamily: 'Georgia, serif' }}>
+                    <span style={{ color: '#9D8F99' }}>From: </span>
+                    <span style={{ fontWeight: 500 }}>{apiFlower.plantedBy?.name || 'A friend'}</span>
+                    {'  ·  '}
+                    <span style={{ color: '#9D8F99' }}>For: </span>
+                    <span style={{ fontWeight: 500 }}>{apiFlower.recipientName || 'you'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Open button */}
+              <button
+                onClick={() => {
+                  setMobilePeekFlower(null);
+                  setSelectedFlower(apiFlower);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #E8B4B8 0%, #D4909A 100%)',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'Georgia, serif',
+                  letterSpacing: '0.03em',
+                }}
+              >
+                Open Flower →
+              </button>
+            </div>
+          </>
         );
       })()}
 

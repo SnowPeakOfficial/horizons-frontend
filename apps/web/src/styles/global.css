@@ -236,6 +236,17 @@ ul, ol {
   }
 }
 
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Utility Classes */
 .container {
   max-width: 1280px;
@@ -307,6 +318,9 @@ ul, ol {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* Garden page button label variants — short hidden by default, shown on mobile */
+.garden-btn-label-short { display: none; }
 
 /* Loading shimmer utility */
 .loading-shimmer {
@@ -401,6 +415,18 @@ ul, ol {
   .navbar-desktop-links { display: none !important; }
   .navbar-hamburger { display: flex !important; }
   .navbar-mobile-menu { display: block !important; }
+
+  /* Garden page — hide title & stats pill row on mobile; swap full/short button labels */
+  .garden-title { display: none !important; }
+  .garden-stats { display: none !important; }
+  .garden-btn-label-full { display: none !important; }
+  .garden-btn-label-short { display: inline !important; }
+
+  /* Garden page — right-align action buttons on mobile */
+  .garden-header-actions {
+    position: absolute !important;
+    right: 16px !important;
+  }
 
   /* Footer — single column on mobile */
   .footer-top-row {
