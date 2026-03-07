@@ -68,7 +68,7 @@ export const CreateGardenModal: React.FC<CreateGardenModalProps> = ({
             Create New Garden
           </h2>
           <p style={{ ...typography.styles.body, color: theme.text.secondary }}>
-            Your RS3-inspired garden with cabana, fountain &amp; more
+            Your personal space to plant meaningful moments
           </p>
         </div>
 

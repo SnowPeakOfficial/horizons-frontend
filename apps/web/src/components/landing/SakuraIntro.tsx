@@ -154,38 +154,18 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               animation: 'logoFade 8s ease forwards',
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'clamp(16px, 2vw, 32px)',
-                opacity: 0.7,
-              }}
-            >
+            <div style={{ opacity: 0.7 }}>
               <img
-                src="/images/horizons-logo.svg"
-                alt="Horizons logo"
+                src="/images/horizons-logo-wordmark.svg"
+                alt="Horizons"
                 style={{
-                  height: 'clamp(64px, 10vw, 128px)',
+                  height: 'clamp(110px, 17vw, 220px)',
                   width: 'auto',
                   display: 'block',
                   userSelect: 'none',
                   pointerEvents: 'none',
                 }}
               />
-              <span
-                style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(64px, 10vw, 128px)',
-                  fontWeight: typography.fontWeight.medium,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: theme.text.tertiary,
-                  textShadow: '0 1px 3px rgba(0,0,0,0.08)',
-                }}
-              >
-                HORIZONS
-              </span>
             </div>
           </div>
 
@@ -208,35 +188,21 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '16px',
-                marginBottom: theme.spacing.md,
+                marginBottom: theme.spacing['2xl'],
                 opacity: 0.7,
               }}
             >
               <img
-                src="/images/horizons-logo.svg"
-                alt="Horizons logo"
+                src="/images/horizons-logo-wordmark.svg"
+                alt="Horizons"
                 style={{
-                  height: 'clamp(36px, 5vw, 60px)',
+                  height: 'clamp(60px, 8.5vw, 108px)',
                   width: 'auto',
                   display: 'block',
                   userSelect: 'none',
                   pointerEvents: 'none',
                 }}
               />
-              <span
-                style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(36px, 5vw, 60px)',
-                  fontWeight: typography.fontWeight.medium,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: theme.text.tertiary,
-                  textShadow: '0 1px 3px rgba(0,0,0,0.08)',
-                }}
-              >
-                Horizons
-              </span>
             </div>
 
             {/* Mobile-only labels row — shown below logo on small screens */}

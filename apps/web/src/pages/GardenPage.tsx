@@ -4,7 +4,8 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { LetterRevealOverlay } from '../components/gardens/LetterRevealOverlay';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -32,7 +33,9 @@ import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import TouchApp from '@mui/icons-material/TouchApp';
 
 export const GardenPage: React.FC = () => {
-  const { gardenId } = useParams<{ gardenId: string }>();
+  const { gardenId, flowerId } = useParams<{ gardenId: string; flowerId?: string }>();
+  const [searchParams] = useSearchParams();
+  const fromEmail = searchParams.get('from') === 'email';
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const { currentGarden, fetchGardenById } = useGardenStore();
@@ -44,8 +47,11 @@ export const GardenPage: React.FC = () => {
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  // Email deep-link: show reveal overlay before opening the modal
+  const [showRevealOverlay, setShowRevealOverlay] = useState(fromEmail && !!flowerId);
+  // Ref guard: prevents the deep-link flower from opening more than once
+  const deepLinkOpenedRef = useRef(false);
   const orbitRef = useRef<OrbitControlsImpl>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
   const [hoveredFlowerTooltip, setHoveredFlowerTooltip] = useState<{
     flower: PlacedFlower;
     definition: FlowerDefinition;
@@ -67,6 +73,20 @@ export const GardenPage: React.FC = () => {
       fetchFlowersByGarden(gardenId);
     }
   }, [gardenId, fetchGardenById, fetchFlowersByGarden]);
+
+  // Auto-open the deep-link flower once flowers are loaded
+  useEffect(() => {
+    if (!flowerId || deepLinkOpenedRef.current || flowers.length === 0) return;
+    const target = flowers.find((f) => f.id === flowerId);
+    if (target) {
+      deepLinkOpenedRef.current = true;
+      if (!fromEmail) {
+        // Defer to avoid synchronous setState inside effect
+        setTimeout(() => setSelectedFlower(target), 0);
+      }
+      // fromEmail: overlay already showing; modal opens via onDone callback
+    }
+  }, [flowerId, flowers, fromEmail]);
 
   const handlePlantSuccess = () => {
     if (gardenId) {
@@ -281,25 +301,8 @@ export const GardenPage: React.FC = () => {
               if (isDragging) setHoveredFlowerTooltip(null);
             }}
             onFlowerClick={(flower: Flower) => {
-              if (isMobile) {
-                // On mobile: show a compact peek card instead of jumping to the full modal
-                const defKey = flower.flowerDefinition?.key?.toLowerCase() || 'daisy';
-                const def = FLOWER_DEFINITIONS[defKey] ?? {
-                  id: 0,
-                  name: flower.flowerDefinition?.name || flower.flowerDefinition?.key || 'Flower',
-                  emoji: '🌸',
-                  color: '#E8A5C0',
-                  description: '',
-                  symbolism: '',
-                  defaultScale: 1,
-                  previewScale: 1,
-                  modelPath: '',
-                  tier: 'FREE' as const,
-                };
-                setMobilePeekFlower({ flower: flower as unknown as PlacedFlower, definition: def, apiFlower: flower });
-              } else {
-                setSelectedFlower(flower);
-              }
+              setSelectedFlower(flower);
+              navigate(`/garden/${gardenId}/flower/${flower.id}`, { replace: false });
             }}
             onFlowerHover={(info) => {
               // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
@@ -445,17 +448,15 @@ export const GardenPage: React.FC = () => {
         const displayEmoji = shouldHideIdentity ? '\u{1F331}' : definition.emoji;
 
         const TOOLTIP_W = 450;
+        const TOOLTIP_H = 220;
         const PAD = 12;
-        // Position above cursor; clamp after measuring via ref
-        const tooltipH = tooltipRef.current?.offsetHeight ?? 220;
         let left = screenX - TOOLTIP_W / 2;
-        let top = screenY - tooltipH - 16;
+        let top = screenY - TOOLTIP_H - 16;
         left = Math.max(PAD, Math.min(window.innerWidth - TOOLTIP_W - PAD, left));
-        top = Math.max(PAD, Math.min(window.innerHeight - tooltipH - PAD, top));
+        top = Math.max(PAD, Math.min(window.innerHeight - TOOLTIP_H - PAD, top));
 
         return (
           <div
-            ref={tooltipRef}
             style={{
               position: 'fixed',
               left,
@@ -498,120 +499,33 @@ export const GardenPage: React.FC = () => {
         );
       })()}
 
-      {/* Mobile Flower Peek Card — shown on tap instead of hover tooltip */}
-      {mobilePeekFlower && (() => {
-        const { definition, apiFlower } = mobilePeekFlower;
-        const isBud = apiFlower.state === 'BUD';
-        const shouldHideIdentity = apiFlower.type === 'BLOOMING' && isBud;
-        const displayName = shouldHideIdentity ? 'Mystery Flower' : definition.name;
-        const displayEmoji = shouldHideIdentity ? '🌱' : definition.emoji;
-
-        return (
-          <>
-            {/* Backdrop */}
-            <div
-              style={{
-                position: 'fixed',
-                inset: 0,
-                zIndex: 9998,
-                background: 'rgba(0,0,0,0.25)',
-              }}
-              onClick={() => setMobilePeekFlower(null)}
-            />
-            {/* Peek card */}
-            <div
-              style={{
-                position: 'fixed',
-                left: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 9999,
-                background: '#FFFFFF',
-                borderRadius: '20px 20px 0 0',
-                padding: '20px 20px 32px',
-                boxShadow: '0 -8px 32px rgba(61,51,64,0.18)',
-                border: '2px solid #FFC9D9',
-                borderBottom: 'none',
-              }}
-            >
-              {/* Handle + close */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <div style={{ width: '40px', height: '4px', borderRadius: '2px', background: 'rgba(232,180,184,0.5)', margin: '0 auto' }} />
-                <button
-                  onClick={() => setMobilePeekFlower(null)}
-                  style={{
-                    position: 'absolute',
-                    right: '16px',
-                    top: '16px',
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '20px',
-                    cursor: 'pointer',
-                    color: '#9D8F99',
-                    lineHeight: 1,
-                    padding: '4px 8px',
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Flower info row */}
-              <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
-                <div style={{ fontSize: '44px', lineHeight: 1 }}>{displayEmoji}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '18px', fontWeight: 700, color: '#3D3340', fontFamily: 'Georgia, serif', marginBottom: '4px' }}>
-                    {displayName}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#9D8F99', fontFamily: 'Georgia, serif', marginBottom: '6px' }}>
-                    {isBud ? '🌱 Waiting to bloom' : '🌸 In bloom'}
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#3D3340', fontFamily: 'Georgia, serif' }}>
-                    <span style={{ color: '#9D8F99' }}>From: </span>
-                    <span style={{ fontWeight: 500 }}>{apiFlower.plantedBy?.name || 'A friend'}</span>
-                    {'  ·  '}
-                    <span style={{ color: '#9D8F99' }}>For: </span>
-                    <span style={{ fontWeight: 500 }}>{apiFlower.recipientName || 'you'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Open button */}
-              <button
-                onClick={() => {
-                  setMobilePeekFlower(null);
-                  setSelectedFlower(apiFlower);
-                }}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #E8B4B8 0%, #D4909A 100%)',
-                  border: 'none',
-                  color: '#FFFFFF',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontFamily: 'Georgia, serif',
-                  letterSpacing: '0.03em',
-                }}
-              >
-                Open Flower →
-              </button>
-            </div>
-          </>
-        );
-      })()}
+      {/* Email deep-link: cinematic reveal overlay */}
+      {showRevealOverlay && (
+        <LetterRevealOverlay
+          onDone={() => {
+            setShowRevealOverlay(false);
+            if (flowerId) {
+              const target = flowers.find((f) => f.id === flowerId);
+              if (target) setSelectedFlower(target);
+            }
+          }}
+        />
+      )}
 
       {/* Flower Details Modal - Beautiful Letter Style */}
       <FlowerDetailsModal
         isOpen={!!selectedFlower}
-        onClose={() => setSelectedFlower(null)}
+        onClose={() => {
+          setSelectedFlower(null);
+          // Return URL to garden level (no flower ID)
+          navigate(`/garden/${gardenId}`, { replace: true });
+        }}
         flower={selectedFlower}
         definition={selectedFlower ? FLOWER_DEFINITIONS[selectedFlower.flowerDefinition?.key?.toLowerCase() || 'daisy'] : null}
-        onDelete={async (flowerId) => {
+        fromEmail={fromEmail && !!flowerId}
+        onDelete={async (fid) => {
           // TODO: Implement flower deletion
-          console.log('Delete flower:', flowerId);
+          console.log('Delete flower:', fid);
         }}
       />
 
