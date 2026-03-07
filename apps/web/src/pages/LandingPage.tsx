@@ -86,6 +86,7 @@ export const LandingPage: React.FC = () => {
       
       {/* ========== HERO SECTION ========== */}
       <section
+        className="hero-section"
         style={{
           position: 'relative',
           minHeight: 'auto',
@@ -129,6 +130,28 @@ export const LandingPage: React.FC = () => {
           display: 'flex', alignItems: 'center', gap: '6px',
         }}>
           <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
+          <span>Private by design</span>
+        </div>
+
+        {/* Mobile-only labels — absolutely positioned just below the logo, left/right edges */}
+        <div className="landing-label-mobile-left" style={{
+          display: 'none',
+          position: 'absolute', top: '148px', left: '20px',
+          fontFamily: typography.fontFamily.serif, fontSize: '11px',
+          letterSpacing: '0.2em', textTransform: 'uppercase' as const,
+          color: theme.text.tertiary, zIndex: 10,
+          pointerEvents: 'none',
+        }}>EST. 2026</div>
+
+        <div className="landing-label-mobile-right" style={{
+          display: 'none',
+          position: 'absolute', top: '148px', right: '20px',
+          fontFamily: typography.fontFamily.serif, fontSize: '11px',
+          letterSpacing: '0.08em', color: theme.text.tertiary,
+          zIndex: 10, pointerEvents: 'none',
+          alignItems: 'center', gap: '5px',
+        }}>
+          <span style={{ fontSize: '8px', color: theme.colors.rose[400] }}>✦</span>
           <span>Private by design</span>
         </div>
 
@@ -626,7 +649,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Three-card panel row */}
           <RevealOnScroll delay={80}>
-            <div style={{
+            <div className="use-cases-cards-grid" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
               borderRadius: '16px',

@@ -12,6 +12,7 @@
 /* CSS Reset & Base Styles */
 *,
 *::before,
+
 *::after {
   box-sizing: border-box;
   margin: 0;
@@ -382,21 +383,67 @@ ul, ol {
     display: none !important;
   }
 
-  /* Show mobile inline labels row (between logo and headline) */
-  .landing-labels-mobile-row {
-    display: flex !important;
+  /* Show mobile absolutely-positioned labels */
+  .landing-label-mobile-left { display: block !important; }
+  .landing-label-mobile-right { display: flex !important; }
+
+  /* Reduce hero section top padding on mobile (less whitespace above logo) */
+  .hero-section {
+    padding-top: 52px !important;
   }
 
-  /* Reduce gap between HORIZONS logo and the labels row on mobile */
-  .landing-logo-row {
-    margin-bottom: 0px !important;
-  }
-
-  /* Hero content — minimal top nudge, reduce side padding on mobile */
+  /* Hero content — reduce side padding on mobile */
   .hero-content {
-    padding-top: 16px !important;
     padding-left: 16px !important;
     padding-right: 16px !important;
+  }
+
+  /* Position mobile labels above the HORIZONS logo (section paddingTop = 40px) */
+  .landing-label-mobile-left,
+  .landing-label-mobile-right,
+  .sakura-label-mobile-left,
+  .sakura-label-mobile-right {
+    top: 40px !important;
+  }
+
+  /* Flower letter modal — fullscreen on mobile */
+  /* Target the backdrop div that wraps the .flower-letter-modal */
+  :has(> .flower-letter-modal) {
+    padding: 0 !important;
+    align-items: flex-start !important;
+  }
+
+  .flower-letter-modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Use cases cards — stack vertically on mobile */
+  .use-cases-cards-grid {
+    grid-template-columns: 1fr !important;
+    border-radius: 12px !important;
+    overflow: visible !important;
+    border: none !important;
+    gap: 16px !important;
+    box-shadow: none !important;
+  }
+
+  /* Each use-case card: restore individual borders/radius on mobile */
+  .use-cases-cards-grid > div {
+    border-left: none !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(0,0,0,0.07) !important;
+    overflow: hidden !important;
+    padding: 36px 28px 32px !important;
+  }
+
+  /* Remove fixed height on quote block so it wraps naturally */
+  .use-cases-cards-grid > div > div[style*="height: 96px"] {
+    height: auto !important;
   }
 
   /* Pricing page — more breathing room between stacked cards on mobile */

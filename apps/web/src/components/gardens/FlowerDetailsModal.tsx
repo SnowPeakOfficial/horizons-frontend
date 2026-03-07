@@ -109,7 +109,7 @@ function HorizonsBranding() {
  * Body Decorations - Template-specific symbols placed at fixed positions inside the white card.
  * Positions are fully hardcoded in letterTemplates.ts so the layout is identical on every open.
  */
-function BodyDecorations({ decorations, color }: {
+function BodyDecorations({ decorations, color, isMobile }: {
   decorations: Array<{
     symbol: string;
     fontSize: string;
@@ -119,6 +119,7 @@ function BodyDecorations({ decorations, color }: {
     inset: number;
   }>;
   color: string;
+  isMobile?: boolean;
 }) {
   return (
     <>
@@ -128,9 +129,9 @@ function BodyDecorations({ decorations, color }: {
           style={{
             position: 'absolute',
             top: d.top,
-            left: d.side === 'left' ? `${d.inset}px` : undefined,
-            right: d.side === 'right' ? `${d.inset}px` : undefined,
-            fontSize: d.fontSize,
+            left: d.side === 'left' ? `${isMobile ? 4 : d.inset}px` : undefined,
+            right: d.side === 'right' ? `${isMobile ? 4 : d.inset}px` : undefined,
+            fontSize: isMobile ? `${Math.round(parseFloat(d.fontSize) * 0.9)}px` : d.fontSize,
             color,
             opacity: d.opacity,
             pointerEvents: 'none',
@@ -156,6 +157,9 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
   const [showGlow, setShowGlow] = React.useState(false);
+  const isMobile = window.innerWidth <= 768;
+  const mobileFramePadding = isMobile ? '16px' : '40px';
+  const mobileCardMarginTop = isMobile ? '56px' : '48px';
 
   // canvas-confetti: only when fromEmail AND modal is open. Resets on close.
   React.useEffect(() => {
@@ -327,7 +331,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
       className="flower-letter-modal"
     >
       {/* Outer Frame - color driven by letter template */}
-      <div style={{ ...outerFrameStyle, background: tmpl.frameColor }}>
+      <div style={{ ...outerFrameStyle, background: tmpl.frameColor, padding: mobileFramePadding, ...(isMobile ? { borderRadius: '0', minHeight: '100dvh', boxSizing: 'border-box' } : {}) }}>
         
         {/* Close Button */}
         <button
@@ -351,52 +355,32 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         <HorizonsBranding />
         
         {/* White Letter Card - gradient driven by letter template */}
-        <div style={{ ...whiteCardStyle, background: tmpl.cardGradient, ...(isMobile ? { paddingTop: '20px' } : {}) }}>
+        <div style={{
+          ...whiteCardStyle,
+          background: tmpl.cardGradient,
+          marginTop: mobileCardMarginTop,
+          ...(isMobile ? { padding: '48px 20px 32px 20px', borderRadius: '0', minHeight: 'calc(100dvh - 56px)' } : {}),
+        }}>
 
-          {/* 3D Flower — on mobile: top-center in-flow above "Dear,"; on desktop: top-right absolute */}
-          {isMobile ? (
-            /* Mobile: centered, in normal document flow, above the letter content */
-            <div style={{
-              width: '130px',
-              height: '130px',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              background: '#FFFFFF',
-              boxShadow: '0 8px 24px rgba(61, 51, 64, 0.12)',
-              border: `3px solid ${tmpl.frameColor}`,
-              margin: '0 auto 20px',
-              animation: 'gentleRotateIn 0.6s ease-out 0.2s both',
-            }}>
-              <Canvas camera={{ position: [0, 0, 8], fov: 45 }} style={{ width: '100%', height: '100%' }}>
-                <ambientLight intensity={0.9} />
-                <directionalLight position={[5, 5, 5]} intensity={1.2} />
-                <Suspense fallback={null}>
-                  {shouldHideIdentity ? (
-                    <FlowerBud scale={2.64} color={definition.color} position={[0, -1.5, 0]} />
-                  ) : (
-                    <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
-                  )}
-                </Suspense>
-                <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={1.5} />
-              </Canvas>
-            </div>
-          ) : (
-            /* Desktop: absolute top-right, overlapping the card edge */
-            <div style={{ ...flowerAnchorStyle, border: `3px solid ${tmpl.frameColor}` }}>
-              <Canvas camera={{ position: [0, 0, 8], fov: 45 }} style={{ width: '100%', height: '100%' }}>
-                <ambientLight intensity={0.9} />
-                <directionalLight position={[5, 5, 5]} intensity={1.2} />
-                <Suspense fallback={null}>
-                  {shouldHideIdentity ? (
-                    <FlowerBud scale={2.64} color={definition.color} position={[0, -1.5, 0]} />
-                  ) : (
-                    <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
-                  )}
-                </Suspense>
-                <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={1.5} />
-              </Canvas>
-            </div>
-          )}
+          {/* 3D Flower — always absolute top-right; smaller on mobile */}
+          <div style={{
+            ...flowerAnchorStyle,
+            border: `3px solid ${tmpl.frameColor}`,
+            ...(isMobile ? { width: '90px', height: '90px', top: '-18px', right: '12px' } : {}),
+          }}>
+            <Canvas camera={{ position: [0, 0, 8], fov: 45 }} style={{ width: '100%', height: '100%' }}>
+              <ambientLight intensity={0.9} />
+              <directionalLight position={[5, 5, 5]} intensity={1.2} />
+              <Suspense fallback={null}>
+                {shouldHideIdentity ? (
+                  <FlowerBud scale={2.64} color={definition.color} position={[0, -1.5, 0]} />
+                ) : (
+                  <FlowerPreview modelPath={modelPath} scale={previewScale} offset={previewOffset} />
+                )}
+              </Suspense>
+              <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={1.5} />
+            </Canvas>
+          </div>
           
           {/* Letter Content */}
           <div style={letterContentStyle}>
@@ -556,7 +540,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
           </div>
           
           {/* Body Decorations - template-specific symbols scattered throughout the card */}
-          <BodyDecorations decorations={tmpl.bodyDecorations} color={tmpl.accentColor} />
+          <BodyDecorations decorations={tmpl.bodyDecorations} color={tmpl.accentColor} isMobile={isMobile} />
           
         </div>
         
