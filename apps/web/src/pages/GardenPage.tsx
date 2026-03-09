@@ -52,6 +52,8 @@ export const GardenPage: React.FC = () => {
   // Ref guard: prevents the deep-link flower from opening more than once
   const deepLinkOpenedRef = useRef(false);
   const orbitRef = useRef<OrbitControlsImpl>(null);
+  // Ref to the PlantFlowerPanel's cancel-placement callback (set via onCancelPlacementStep prop)
+  const cancelPlacementStepRef = useRef<(() => void) | null>(null);
   const [hoveredFlowerTooltip, setHoveredFlowerTooltip] = useState<{
     flower: PlacedFlower;
     definition: FlowerDefinition;
@@ -64,8 +66,13 @@ export const GardenPage: React.FC = () => {
     apiFlower: Flower;
   } | null>(null);
 
-  // True on touch-only devices (phones/tablets) — hover doesn't exist there
-  const isMobile = window.matchMedia('(hover: none)').matches;
+  // True when the viewport is mobile-width (≤768px)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (gardenId) {
@@ -224,7 +231,7 @@ export const GardenPage: React.FC = () => {
           </Button>
 
           {/* Garden Title */}
-          <div className="garden-title" style={headerTitleStyle}>
+          <div style={{ ...headerTitleStyle, ...(isMobile ? { fontSize: '1.1rem' } : {}) }}>
             {currentGarden?.title || 'Loading...'}
           </div>
 
@@ -249,34 +256,77 @@ export const GardenPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="garden-header-actions" style={headerRightStyle}>
-          <Button
-            variant="primary"
-            size="medium"
-            onClick={() => setIsSettingsOpen(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: theme.spacing.xs,
-            }}
-          >
-            <SettingsOutlined sx={{ fontSize: 18 }} />
-            <span className="garden-btn-label-full">Garden Details</span>
-            <span className="garden-btn-label-short">Details</span>
-          </Button>
-          <Button
-            variant="primary"
-            size="medium"
-            onClick={() => setIsPlantPanelOpen(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: theme.spacing.xs,
-            }}
-          >
-            <LocalFlorist sx={{ fontSize: 18 }} />
-            <span className="garden-btn-label-full">Plant Flower</span>
-            <span className="garden-btn-label-short">Plant</span>
-          </Button>
+          {isMobile ? (
+            <>
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                title="Garden Details"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: '#E8A4B0',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
+                  transition: 'background 0.2s ease',
+                }}
+              >
+                <SettingsOutlined sx={{ fontSize: 22, color: '#FFFFFF' }} />
+              </button>
+              <button
+                onClick={() => setIsPlantPanelOpen(true)}
+                title="Plant Flower"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: '#E8A4B0',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
+                  transition: 'background 0.2s ease',
+                }}
+              >
+                <LocalFlorist sx={{ fontSize: 22, color: '#FFFFFF' }} />
+              </button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={() => setIsSettingsOpen(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.spacing.xs,
+                }}
+              >
+                <SettingsOutlined sx={{ fontSize: 18 }} />
+                Garden Details
+              </Button>
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={() => setIsPlantPanelOpen(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.spacing.xs,
+                }}
+              >
+                <LocalFlorist sx={{ fontSize: 18 }} />
+                Plant Flower
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -344,73 +394,85 @@ export const GardenPage: React.FC = () => {
         </Canvas>
       </div>
 
-      {/* Mobile Placement Hint — compact toast shown when step 2 is active on mobile */}
+      {/* Mobile Placement Hint — compact card shown when step 2 is active on mobile */}
       {isMobile && isPlacementMode && (
         <div
           style={{
             position: 'fixed',
-            bottom: '48px',
-            left: 0,
-            right: 0,
+            bottom: '32px',
+            left: '16px',
+            right: '16px',
             zIndex: 999,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
             gap: '10px',
             pointerEvents: 'none',
-            animation: 'floatUp 0.3s ease-out both',
           }}
         >
-          {/* Compact hint pill */}
+          {/* Hint card */}
           <div
             style={{
               pointerEvents: 'none',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: '10px',
-              background: 'rgba(0, 0, 0, 0.45)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              borderRadius: '999px',
-              padding: '10px 20px 10px 14px',
-              whiteSpace: 'nowrap',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
+              justifyContent: 'center',
+              gap: '6px',
+              background: '#FFFFFF',
+              borderRadius: '14px',
+              padding: '12px 16px',
+              border: '1px solid rgba(232, 164, 176, 0.4)',
+              boxShadow: '0 4px 16px rgba(212, 144, 154, 0.18)',
+              textAlign: 'center',
             }}
           >
-            <TouchApp sx={{ fontSize: 22, color: '#E8A4B8' }} />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '13px', fontWeight: 600, color: '#FFFFFF', lineHeight: 1.3 }}>
+            <div style={{
+              width: '34px',
+              height: '34px',
+              borderRadius: '50%',
+              background: '#FFF0F3',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <TouchApp sx={{ fontSize: 18, color: '#D4909A' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '13px', fontWeight: 600, color: '#3D3340', lineHeight: 1.3 }}>
                 Tap anywhere to place
               </span>
-              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '11px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.3 }}>
+              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '11px', color: '#9D8F99', lineHeight: 1.3 }}>
                 You can move it anywhere later
               </span>
             </div>
           </div>
 
-          {/* Back pill */}
+          {/* Back button */}
           <button
             onClick={() => {
               setIsPlacementMode(false);
               setSelectedFlowerForPlacement(null);
+              cancelPlacementStepRef.current?.();
             }}
             style={{
               pointerEvents: 'auto',
-              padding: '9px 28px',
-              borderRadius: '999px',
-              background: 'rgba(0, 0, 0, 0.35)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255,255,255,0.18)',
-              color: '#FFFFFF',
+              padding: '9px',
+              borderRadius: '10px',
+              background: '#FFFFFF',
+              border: '1px solid rgba(232, 164, 176, 0.4)',
+              boxShadow: '0 2px 8px rgba(212, 144, 154, 0.12)',
+              color: '#D4909A',
               fontSize: '13px',
-              fontWeight: 500,
+              fontWeight: 600,
               fontFamily: '"Inter", sans-serif',
               cursor: 'pointer',
-              letterSpacing: '0.02em',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '5px',
             }}
           >
-            ← Back
+            ← Back to flower selection
           </button>
         </div>
       )}
@@ -437,6 +499,7 @@ export const GardenPage: React.FC = () => {
         }}
         onClearPosition={() => setPlacedPosition(null)}
         placedPosition={placedPosition}
+        onCancelPlacementStep={(fn: () => void) => { cancelPlacementStepRef.current = fn; }}
       />
 
       {/* Flower Hover Tooltip - DOM overlay, always visible */}

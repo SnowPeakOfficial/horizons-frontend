@@ -84,8 +84,45 @@ function HeartGarland({ garland, color }: { garland: string; color: string }) {
 
 /**
  * Horizons Branding - Top center
+ * On mobile: shows the Horizons logo SVG prominently in the pink header strip.
+ * On desktop: subtle text-only branding.
  */
-function HorizonsBranding() {
+function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
+  if (isMobile) {
+    // Pink header strip is 72px tall; center the logo+text within it
+    return (
+      <div style={{
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        right: '0',
+        height: '72px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '3px',
+        pointerEvents: 'none',
+      }}>
+        <img
+          src="/images/horizons-logo.svg"
+          alt="Horizons"
+          style={{ width: '28px', height: '28px', opacity: 0.9, filter: 'brightness(0) invert(1)' }}
+        />
+        <span style={{
+          fontFamily: typography.fontFamily.serif,
+          fontSize: '10px',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.9)',
+          fontWeight: 500,
+        }}>
+          HORIZONS
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       position: 'absolute',
@@ -158,8 +195,11 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
   const [showGlow, setShowGlow] = React.useState(false);
   const isMobile = window.innerWidth <= 768;
-  const mobileFramePadding = isMobile ? '16px' : '40px';
-  const mobileCardMarginTop = isMobile ? '56px' : '48px';
+  // On mobile: use paddingTop on the outer frame so the pink header is always visible
+  // (not scrollable away like margin-based approach)
+  const mobileFramePadding = isMobile ? '72px 14px 24px 14px' : '40px';
+  // Card margin: 0 on mobile (frame's paddingTop handles the spacing), 48px on desktop
+  const mobileCardMarginTop = isMobile ? '0' : '48px';
 
   // canvas-confetti: only when fromEmail AND modal is open. Resets on close.
   React.useEffect(() => {
@@ -352,14 +392,14 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
         <HeartGarland garland={tmpl.garland} color={tmpl.accentColor} />
         
         {/* Horizons Branding */}
-        <HorizonsBranding />
+        <HorizonsBranding isMobile={isMobile} />
         
         {/* White Letter Card - gradient driven by letter template */}
         <div style={{
           ...whiteCardStyle,
           background: tmpl.cardGradient,
           marginTop: mobileCardMarginTop,
-          ...(isMobile ? { padding: '48px 20px 32px 20px', borderRadius: '0', minHeight: 'calc(100dvh - 56px)' } : {}),
+          ...(isMobile ? { padding: '48px 20px 32px 20px', borderRadius: '0' } : {}),
         }}>
 
           {/* 3D Flower — always absolute top-right; smaller on mobile */}

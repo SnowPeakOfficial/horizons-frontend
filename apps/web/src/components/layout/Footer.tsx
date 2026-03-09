@@ -40,11 +40,12 @@ const SocialIconButton: React.FC<{ href: string; label: string; children: React.
 export const Footer: React.FC = () => {
   const navigate = useNavigate();
   const year = new Date().getFullYear();
+  const isMobile = window.innerWidth <= 768;
 
   const footerStyle: React.CSSProperties = {
     background: 'linear-gradient(180deg, #FFF5F7 0%, #FAF0F2 100%)',
     borderTop: '1px solid rgba(232, 180, 184, 0.3)',
-    padding: '48px 24px 32px',
+    padding: isMobile ? '28px 16px 20px' : '48px 24px 32px',
   };
 
   const containerStyle: React.CSSProperties = {
@@ -57,8 +58,8 @@ export const Footer: React.FC = () => {
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexWrap: 'wrap',
-    gap: '32px',
-    marginBottom: '40px',
+    gap: isMobile ? '20px' : '32px',
+    marginBottom: isMobile ? '24px' : '40px',
   };
 
   const logoStyle: React.CSSProperties = {
@@ -160,60 +161,50 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Product */}
-          <div>
-            <div style={columnTitleStyle}>Product</div>
-            <span
-              style={linkStyle}
-              onClick={() => navigate('/my-gardens')}
-              onMouseEnter={(e) => handleLinkHover(e, true)}
-              onMouseLeave={(e) => handleLinkHover(e, false)}
-            >
-              My Gardens
-            </span>
-            <span
-              style={linkStyle}
-              onClick={() => navigate('/pricing')}
-              onMouseEnter={(e) => handleLinkHover(e, true)}
-              onMouseLeave={(e) => handleLinkHover(e, false)}
-            >
-              Pricing
-            </span>
-          </div>
+          {/* Link columns — on mobile: 2-column grid; on desktop: 3 separate flex items */}
+          {isMobile ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', width: '100%' }}>
+              {/* Col 1: Product */}
+              <div>
+                <div style={columnTitleStyle}>Product</div>
+                <span style={linkStyle} onClick={() => navigate('/my-gardens')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>My Gardens</span>
+                <span style={linkStyle} onClick={() => navigate('/pricing')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Pricing</span>
+              </div>
+              {/* Col 2: Legal */}
+              <div>
+                <div style={columnTitleStyle}>Legal</div>
+                <span style={linkStyle} onClick={() => navigate('/privacy')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Privacy Policy</span>
+                <span style={linkStyle} onClick={() => navigate('/terms')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Terms of Service</span>
+              </div>
+              {/* Col 3: Support */}
+              <div>
+                <div style={columnTitleStyle}>Support</div>
+                <span style={linkStyle} onClick={() => navigate('/contact')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Contact Us</span>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Product */}
+              <div>
+                <div style={columnTitleStyle}>Product</div>
+                <span style={linkStyle} onClick={() => navigate('/my-gardens')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>My Gardens</span>
+                <span style={linkStyle} onClick={() => navigate('/pricing')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Pricing</span>
+              </div>
 
-          {/* Legal */}
-          <div>
-            <div style={columnTitleStyle}>Legal</div>
-            <span
-              style={linkStyle}
-              onClick={() => navigate('/privacy')}
-              onMouseEnter={(e) => handleLinkHover(e, true)}
-              onMouseLeave={(e) => handleLinkHover(e, false)}
-            >
-              Privacy Policy
-            </span>
-            <span
-              style={linkStyle}
-              onClick={() => navigate('/terms')}
-              onMouseEnter={(e) => handleLinkHover(e, true)}
-              onMouseLeave={(e) => handleLinkHover(e, false)}
-            >
-              Terms of Service
-            </span>
-          </div>
+              {/* Legal */}
+              <div>
+                <div style={columnTitleStyle}>Legal</div>
+                <span style={linkStyle} onClick={() => navigate('/privacy')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Privacy Policy</span>
+                <span style={linkStyle} onClick={() => navigate('/terms')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Terms of Service</span>
+              </div>
 
-          {/* Support */}
-          <div>
-            <div style={columnTitleStyle}>Support</div>
-            <span
-              style={linkStyle}
-              onClick={() => navigate('/contact')}
-              onMouseEnter={(e) => handleLinkHover(e, true)}
-              onMouseLeave={(e) => handleLinkHover(e, false)}
-            >
-              Contact Us
-            </span>
-          </div>
+              {/* Support */}
+              <div>
+                <div style={columnTitleStyle}>Support</div>
+                <span style={linkStyle} onClick={() => navigate('/contact')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Contact Us</span>
+              </div>
+            </>
+          )}
         </div>
 
         <div style={dividerStyle} />

@@ -93,8 +93,8 @@ interface PlantFlowerPanelProps {
   onPlacementModeChange?: (active: boolean, definition: FlowerDefinition | null) => void;
   onClearPosition?: () => void;
   placedPosition: { x: number; y: number; z: number } | null;
-  /** Called by mobile overlay Back button to return to step 1 */
-  onCancelPlacementStep?: () => void;
+  /** Registration fn: parent passes a setter; panel calls it with its cancel handler */
+  onCancelPlacementStep?: (registerFn: () => void) => void;
 }
 
 export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
@@ -106,6 +106,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onPlacementModeChange,
   onClearPosition,
   placedPosition,
+  onCancelPlacementStep,
 }) => {
   const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
   const [step, setStep] = useState(1);
@@ -279,6 +280,23 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     };
     return tierOrder[a.tierAccess] - tierOrder[b.tierAccess];
   });
+
+  // Called by the mobile overlay Back button — returns to step 1.
+  // We expose this via a ref so GardenPage can call it from the overlay button.
+  const handleCancelPlacementRef = useRef<() => void>(() => {});
+  handleCancelPlacementRef.current = () => {
+    setStep(1);
+    if (onPlacementModeChange) {
+      onPlacementModeChange(false, null);
+    }
+  };
+
+  // Register the cancel handler with the parent whenever it changes
+  useEffect(() => {
+    if (onCancelPlacementStep) {
+      onCancelPlacementStep(handleCancelPlacementRef.current);
+    }
+  }, [onCancelPlacementStep]);
 
   const handleNextToPlacement = () => {
     if (!selectedDefinition) {

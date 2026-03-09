@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { useAuthStore } from '../stores/authStore';
 import authService from '../services/authService';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -219,6 +220,7 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

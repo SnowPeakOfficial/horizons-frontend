@@ -463,11 +463,8 @@ ul, ol {
   .navbar-hamburger { display: flex !important; }
   .navbar-mobile-menu { display: block !important; }
 
-  /* Garden page — hide title & stats pill row on mobile; swap full/short button labels */
-  .garden-title { display: none !important; }
+  /* Garden page — hide stats pill row on mobile */
   .garden-stats { display: none !important; }
-  .garden-btn-label-full { display: none !important; }
-  .garden-btn-label-short { display: inline !important; }
 
   /* Garden page — right-align action buttons on mobile */
   .garden-header-actions {
