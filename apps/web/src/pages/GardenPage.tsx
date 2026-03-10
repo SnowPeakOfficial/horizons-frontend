@@ -37,15 +37,16 @@ export const GardenPage: React.FC = () => {
   const { gardenId, flowerId: routeFlowerId } = useParams<{ gardenId: string; flowerId?: string }>();
   const [searchParams] = useSearchParams();
   const fromEmail = searchParams.get('from') === 'email';
-  // Guest mode: token from email link
+  // Guest mode: token from email link — only active when NOT already authenticated.
+  // If the user signed up after receiving the link, treat them as a normal auth user.
   const guestToken = searchParams.get('token');
   const guestFlowerId = searchParams.get('flower');
-  const isGuestMode = !!guestToken;
+  const { user, isAuthenticated } = useAuthStore();
+  const isGuestMode = !!guestToken && !isAuthenticated;
   // For deep-link logic, prefer route param, fall back to ?flower= query param
   const flowerId = routeFlowerId || guestFlowerId || undefined;
 
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   const { currentGarden, fetchGardenById } = useGardenStore();
   const { flowers, fetchFlowersByGarden } = useFlowerStore();
 
@@ -60,7 +61,9 @@ export const GardenPage: React.FC = () => {
 
   const [isPlantPanelOpen, setIsPlantPanelOpen] = useState(false);
   const [isPlacementMode, setIsPlacementMode] = useState(false);
-  const [_selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<{ key: string } | null>(null);
+  // Write-only — value is not read directly; placement is driven by isPlacementMode
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setSelectedFlowerForPlacement] = useState<{ key: string } | null>(null);
   const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
