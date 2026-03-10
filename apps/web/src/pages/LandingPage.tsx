@@ -86,6 +86,7 @@ export const LandingPage: React.FC = () => {
       
       {/* ========== HERO SECTION ========== */}
       <section
+        className="hero-section"
         style={{
           position: 'relative',
           minHeight: 'auto',
@@ -112,8 +113,8 @@ export const LandingPage: React.FC = () => {
           }}
         />
 
-        {/* Bloomory-style peripheral labels */}
-        <div style={{
+        {/* Bloomory-style peripheral labels — desktop only (hidden on mobile via CSS) */}
+        <div className="landing-label-left" style={{
           position: 'absolute', top: '88px', left: '52px',
           fontFamily: typography.fontFamily.serif, fontSize: '18px',
           letterSpacing: '0.25em', textTransform: 'uppercase' as const,
@@ -121,7 +122,7 @@ export const LandingPage: React.FC = () => {
           pointerEvents: 'none',
         }}>EST. 2026</div>
 
-        <div style={{
+        <div className="landing-label-right" style={{
           position: 'absolute', top: '88px', right: '52px',
           fontFamily: typography.fontFamily.serif, fontSize: '18px',
           letterSpacing: '0.1em', color: theme.text.tertiary, opacity: 1,
@@ -132,8 +133,31 @@ export const LandingPage: React.FC = () => {
           <span>Private by design</span>
         </div>
 
+        {/* Mobile-only labels — absolutely positioned just below the logo, left/right edges */}
+        <div className="landing-label-mobile-left" style={{
+          display: 'none',
+          position: 'absolute', top: '148px', left: '20px',
+          fontFamily: typography.fontFamily.serif, fontSize: '11px',
+          letterSpacing: '0.2em', textTransform: 'uppercase' as const,
+          color: theme.text.tertiary, zIndex: 10,
+          pointerEvents: 'none',
+        }}>EST. 2026</div>
+
+        <div className="landing-label-mobile-right" style={{
+          display: 'none',
+          position: 'absolute', top: '148px', right: '20px',
+          fontFamily: typography.fontFamily.serif, fontSize: '11px',
+          letterSpacing: '0.08em', color: theme.text.tertiary,
+          zIndex: 10, pointerEvents: 'none',
+          alignItems: 'center', gap: '5px',
+        }}>
+          <span style={{ fontSize: '8px', color: theme.colors.rose[400] }}>✦</span>
+          <span>Private by design</span>
+        </div>
+
         {/* Hero Content */}
         <div
+          className="hero-content"
           style={{
             position: 'relative',
             zIndex: 2,
@@ -146,6 +170,7 @@ export const LandingPage: React.FC = () => {
         >
           {/* Logo/Brand */}
           <div
+            className="landing-logo-row"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -167,10 +192,42 @@ export const LandingPage: React.FC = () => {
             />
           </div>
 
+          {/* Mobile-only: inline labels row between logo and headline */}
+          <div className="landing-labels-mobile-row" style={{
+            display: 'none',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+            padding: '0',
+            marginTop: '-8px',
+            marginBottom: theme.spacing.lg,
+            pointerEvents: 'none',
+          }}>
+            <span style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: '11px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase' as const,
+              color: theme.text.tertiary,
+            }}>EST. 2026</span>
+            <span style={{
+              fontFamily: typography.fontFamily.serif,
+              fontSize: '11px',
+              letterSpacing: '0.08em',
+              color: theme.text.tertiary,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+            }}>
+              <span style={{ fontSize: '8px', color: theme.colors.rose[400] }}>✦</span>
+              Private by design
+            </span>
+          </div>
+
           {/* Main Headline - Large & Bold */}
           <h1
             style={{
-              fontSize: 'clamp(48px, 8vw, 96px)',
+              fontSize: 'clamp(36px, 8vw, 96px)',
               fontFamily: typography.fontFamily.serif,
               fontWeight: typography.fontWeight.normal,
               color: theme.text.primary,
@@ -227,7 +284,7 @@ export const LandingPage: React.FC = () => {
             >
               Enter your garden
             </Button>
-            
+
             <Button
               variant="ghost"
               size="large"
@@ -259,7 +316,6 @@ export const LandingPage: React.FC = () => {
             display: 'flex',
             justifyContent: 'center',
             marginTop: '-200px',
-            // Overflow the section bottom so image peeks below fold
             marginBottom: '0px',
           }}
         >
@@ -267,7 +323,7 @@ export const LandingPage: React.FC = () => {
             src="/images/Default_A_delicate_intricately_detailed_3D_hydrangea_blooms_ag_1_5608c5bf-c46a-46b8-b9a4-6f3a3aeb05dc_0.png"
             alt=""
             style={{
-              width: 'clamp(700px, 80vw, 1100px)',
+              width: 'clamp(300px, 90vw, 1100px)',
               height: 'auto',
               userSelect: 'none',
               pointerEvents: 'none',
@@ -593,7 +649,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Three-card panel row */}
           <RevealOnScroll delay={80}>
-            <div style={{
+            <div className="use-cases-cards-grid" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
               borderRadius: '16px',
@@ -808,7 +864,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Panel row — 3 columns: Flower | Manifesto (wide) | Trust (slim) */}
           <RevealOnScroll delay={100}>
-            <div style={{
+            <div className="why-horizons-grid" style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1.6fr 0.9fr',
               minHeight: '420px',

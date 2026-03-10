@@ -53,6 +53,10 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
+  const isMobileViewport = window.innerWidth <= 768;
+  // On mobile fullscreen (flower letter), remove backdrop padding so content fills the screen
+  const isFullscreenMobile = !showCloseButton && isMobileViewport;
+
   const backdropStyle: React.CSSProperties = {
     position: 'fixed',
     top: 0,
@@ -62,9 +66,9 @@ export const Modal: React.FC<ModalProps> = ({
     background: 'rgba(47, 47, 47, 0.6)',
     backdropFilter: 'blur(4px)',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: isFullscreenMobile ? 'flex-start' : 'center',
     justifyContent: 'center',
-    padding: theme.spacing.lg,
+    padding: isFullscreenMobile ? '0' : theme.spacing.lg,
     zIndex: theme.zIndex.modal,
     animation: 'fadeIn 250ms cubic-bezier(0.4, 0, 0.2, 1)',
   };
@@ -74,11 +78,14 @@ export const Modal: React.FC<ModalProps> = ({
     backdropFilter: showCloseButton ? 'blur(24px)' : 'none',
     WebkitBackdropFilter: showCloseButton ? 'blur(24px)' : 'none',
     border: showCloseButton ? `1px solid ${theme.border.light}` : 'none',
-    borderRadius: theme.radius['2xl'], // 32px for softer feel
+    // On mobile, remove rounded corners so fullscreen modals (like the flower letter)
+    // don't show grey backdrop peeking through the corners
+    borderRadius: (!showCloseButton && isMobileViewport) ? '0' : theme.radius['2xl'],
     boxShadow: showCloseButton ? '0 24px 64px rgba(212, 144, 154, 0.15)' : 'none',
     maxWidth,
     width: '100%',
-    maxHeight: '90vh',
+    // On mobile without a close button (flower letter), let it fill the full screen height
+    maxHeight: (!showCloseButton && isMobileViewport) ? '100dvh' : '90vh',
     overflow: 'auto',
     position: 'relative',
     animation: 'gentleScale 300ms cubic-bezier(0.4, 0, 0.2, 1)',
