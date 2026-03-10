@@ -737,7 +737,6 @@ export const LandingPage: React.FC = () => {
                 display: 'flex',
                 alignItems: 'flex-end',
                 justifyContent: 'center',
-                padding: '0 16px',
               }}>
                 <img
                   src="/images/Default_A_mesmerizing_3D_illustration_of_a_delicate_cornflower_0_19deed4c-65ec-411d-8afd-76a72577a397_0.png"
