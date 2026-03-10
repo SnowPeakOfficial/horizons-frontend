@@ -349,6 +349,7 @@ export const LandingPage: React.FC = () => {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealOnScroll>
             <div
+              className="founder-note-card"
               style={{
                 position: 'relative',
                 borderRadius: '20px',

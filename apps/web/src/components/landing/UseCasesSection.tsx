@@ -80,7 +80,7 @@ const cards = [
 ];
 
 export const UseCasesSection: React.FC = () => (
-  <section style={{ padding: '120px 40px', background: '#FFFFFF' }}>
+  <section className="use-cases-section" style={{ padding: '120px 40px', background: '#FFFFFF' }}>
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
       {/* Header — matches How It Works / Why Horizons style */}
@@ -110,7 +110,7 @@ export const UseCasesSection: React.FC = () => (
 
       {/* Card grid */}
       <Reveal delay={80}>
-        <div style={{
+        <div className="use-cases-card-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '16px',
