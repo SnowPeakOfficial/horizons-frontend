@@ -364,7 +364,7 @@ export const LandingPage: React.FC = () => {
             >
               {/* Layer 1 — Sharp, vibrant base */}
               <img
-                src="/images/flower-field.jpg"
+                src="/images/flower-field1.jpg"
                 alt=""
                 style={{
                   position: 'absolute',
