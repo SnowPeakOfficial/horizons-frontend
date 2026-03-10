@@ -412,62 +412,36 @@ export const LandingPage: React.FC = () => {
                   alignItems: 'flex-start',
                 }}
               >
-                {/* Decorative open-quote — large serif */}
-                <div
-                  style={{
-                    fontFamily: typography.fontFamily.serif,
-                    fontSize: 'clamp(52px, 5.5vw, 72px)',
-                    lineHeight: 0.75,
-                    color: '#FFFFFF',
-                    opacity: 0.90,
-                    marginBottom: '20px',
-                    userSelect: 'none',
-                  }}
-                >
-                  ❝
-                </div>
-
-                {/* Quote — app serif, generous size */}
+                {/* Quote — large, prominent */}
                 <p
                   style={{
                     fontFamily: typography.fontFamily.serif,
-                    fontSize: 'clamp(20px, 2.4vw, 32px)',
+                    fontSize: 'clamp(28px, 3.2vw, 44px)',
                     fontWeight: typography.fontWeight.normal,
                     color: '#FFFFFF',
-                    lineHeight: 1.5,
+                    lineHeight: 1.4,
                     letterSpacing: '-0.01em',
                     marginBottom: '32px',
-                    textShadow: '0 1px 8px rgba(0,0,0,0.25)',
+                    textShadow: '0 2px 12px rgba(0,0,0,0.35)',
                   }}
                 >
                   We built this because we kept losing things.
                   Not physical things — but moments that mattered.
                 </p>
 
-                {/* Attribution — semibold serif, app typography */}
+                {/* Attribution */}
                 <p
                   style={{
                     fontFamily: typography.fontFamily.serif,
                     fontWeight: typography.fontWeight.semibold,
-                    fontSize: '15px',
+                    fontSize: '18px',
                     color: '#FFFFFF',
                     letterSpacing: '0.03em',
-                    marginBottom: '3px',
+                    marginBottom: '36px',
                     textShadow: '0 1px 4px rgba(0,0,0,0.20)',
                   }}
                 >
                   The Horizons Team
-                </p>
-                <p
-                  style={{
-                    fontFamily: typography.fontFamily.serif,
-                    fontSize: '13px',
-                    color: 'rgba(255,255,255,0.55)',
-                    letterSpacing: '0.01em',
-                    marginBottom: '36px',
-                  }}
-                >
-                  Founders of Horizons
                 </p>
 
                 {/* Primary pink button — same as hero CTA */}
