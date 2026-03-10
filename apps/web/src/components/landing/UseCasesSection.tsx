@@ -45,18 +45,18 @@ const GRAIN_SVG_B = `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns=
 
 const cards = [
   {
-    // Warm rose — loved ones
-    bg: 'linear-gradient(160deg, #f5dce4 0%, #edbed0 40%, #e0a0b8 100%)',
-    glowColor: 'rgba(224, 120, 152, 0.55)',
-    shadowColor: 'rgba(200, 80, 120, 0.40)',
-    flowerSrc: '/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_0_6a5c6c2e-1e5d-4720-9250-3614d67b28b3_0.png',
+    // Pearl-rose — delicate glass flower, cool crystal with pink highlights
+    bg: 'linear-gradient(160deg, #faf4f6 0%, #f0dce6 40%, #e4c4d8 100%)',
+    glowColor: 'rgba(230, 160, 190, 0.60)',
+    shadowColor: 'rgba(210, 120, 160, 0.38)',
+    flowerSrc: '/images/Default_A_delicate_intricately_designed_3D_glass_flower_with_s_3_0df29597-2de3-4b9b-b21e-b189c6a4b42c_0.png',
     tags: ['Anniversaries', 'Long-distance', 'Just because'],
     headline: 'For the ones who matter most',
     quote: '"She opened it on the train home. I wasn\'t there — but somehow, I was."',
     label: 'FOR LOVED ONES',
   },
   {
-    // Soft lavender-pink — teams
+    // Soft lavender-pink — teams (unchanged)
     bg: 'linear-gradient(160deg, #ede8f8 0%, #d8ccf0 40%, #c4b0e4 100%)',
     glowColor: 'rgba(180, 150, 220, 0.55)',
     shadowColor: 'rgba(140, 100, 200, 0.40)',
@@ -67,11 +67,11 @@ const cards = [
     label: 'FOR YOUR TEAM',
   },
   {
-    // Blush — yourself
-    bg: 'linear-gradient(160deg, #fdeef2 0%, #f8d4dc 40%, #f0b8c4 100%)',
-    glowColor: 'rgba(220, 140, 160, 0.55)',
-    shadowColor: 'rgba(180, 100, 130, 0.40)',
-    flowerSrc: '/images/Default_A_mesmerizing_3D_illustration_of_a_delicate_cornflower_0_19deed4c-65ec-411d-8afd-76a72577a397_0.png',
+    // Warm champagne-blush — intricate glass flower with warm crystal/gold tones
+    bg: 'linear-gradient(160deg, #fdf6ee 0%, #f5e0c8 40%, #ead0b0 100%)',
+    glowColor: 'rgba(240, 180, 120, 0.55)',
+    shadowColor: 'rgba(200, 140, 80, 0.38)',
+    flowerSrc: '/images/Default_A_highly_detailed_intricately_designed_3D_glass_flower_4_713d0b00-a8e9-41b7-9d42-166af3c21d76_0 1.png',
     tags: ['Growth', 'Milestones', 'Reflection'],
     headline: "For the person you're becoming",
     quote: '"I planted it the day everything shifted. I open it when I forget how far I\'ve come."',
