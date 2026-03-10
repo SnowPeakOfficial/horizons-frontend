@@ -17,7 +17,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { CurvedDivider } from '../components/landing/CurvedDivider';
 import { UseCasesSection } from '../components/landing/UseCasesSection';
 import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -287,7 +286,7 @@ export const LandingPage: React.FC = () => {
       {/* ========== FOUNDER'S NOTE — Claura-style photo card ========== */}
       <section
         style={{
-          padding: '80px 40px',
+          padding: '80px 40px 32px',
           background: '#FFFFFF',
         }}
       >
@@ -306,11 +305,6 @@ export const LandingPage: React.FC = () => {
                 alignItems: 'center',
               }}
             >
-              {/* === TWO-LAYER CSS BOKEH ===
-                  Layer 1 (bottom): sharp, bright, vivid — the "in-focus" centre
-                  Layer 2 (top):    same photo blurred, masked so only the edges show it
-                  Result: centre stays sharp, edges blur out like a portrait camera */}
-
               {/* Layer 1 — Sharp, vibrant base */}
               <img
                 src="/images/flower-field.jpg"
@@ -322,13 +316,13 @@ export const LandingPage: React.FC = () => {
                   height: '100%',
                   objectFit: 'cover',
                   objectPosition: 'center 40%',
-                  filter: 'saturate(1.85) brightness(1.05) contrast(1.08)',
+                  filter: 'saturate(1.9) brightness(1.08) contrast(1.06)',
                   userSelect: 'none',
                   pointerEvents: 'none',
                 }}
               />
 
-              {/* Layer 2 — Blurred, masked: only visible at edges */}
+              {/* Layer 2 — Blurred bokeh edges, masked to show only at periphery */}
               <img
                 src="/images/flower-field.jpg"
                 alt=""
@@ -339,100 +333,127 @@ export const LandingPage: React.FC = () => {
                   height: '100%',
                   objectFit: 'cover',
                   objectPosition: 'center 40%',
-                  // scale(1.06) hides blur fringing at card edges
                   transform: 'scale(1.06)',
-                  filter: 'blur(18px) saturate(2.2) brightness(0.88)',
-                  // Radial mask: transparent in centre (shows sharp layer), opaque at edges
-                  WebkitMaskImage: 'radial-gradient(ellipse 48% 62% at 60% 48%, transparent 0%, transparent 22%, black 62%)',
-                  maskImage: 'radial-gradient(ellipse 48% 62% at 60% 48%, transparent 0%, transparent 22%, black 62%)',
+                  filter: 'blur(20px) saturate(2.4) brightness(0.85)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 50% 65% at 58% 48%, transparent 0%, transparent 20%, black 60%)',
+                  maskImage: 'radial-gradient(ellipse 50% 65% at 58% 48%, transparent 0%, transparent 20%, black 60%)',
                   userSelect: 'none',
                   pointerEvents: 'none',
                 }}
               />
 
-              {/* Minimal bottom gradient — only enough to keep white text readable */}
+              {/* Brand pink tint — warm rose wash, multiply blend */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.28) 60%, rgba(0,0,0,0.58) 100%)',
+                  background: 'rgba(212, 144, 154, 0.55)',
+                  mixBlendMode: 'multiply' as const,
                   pointerEvents: 'none',
                 }}
               />
 
-              {/* Soft edge vignette */}
+              {/* Bottom gradient — anchors text, fades upward quickly */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'radial-gradient(120% 110% at 50% 50%, transparent 42%, rgba(0,0,0,0.40) 100%)',
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.52) 100%)',
                   pointerEvents: 'none',
                 }}
               />
 
-              {/* Film-grain — Claura signature */}
+              {/* Left vignette — makes text column readable without killing photo */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.18'/%3E%3C/svg%3E")`,
+                  background: 'linear-gradient(to right, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.10) 40%, transparent 65%)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* HEAVY film grain — coarse, visible, Claura signature texture
+                  Two passes: one soft-light for brightness variation, one multiply for darkness */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.38'/%3E%3C/svg%3E")`,
                   backgroundRepeat: 'repeat',
-                  backgroundSize: '160px 160px',
+                  backgroundSize: '180px 180px',
                   opacity: 1,
                   mixBlendMode: 'soft-light' as const,
                   pointerEvents: 'none',
                 }}
               />
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch' seed='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g2)' opacity='0.22'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '180px 180px',
+                  opacity: 0.7,
+                  mixBlendMode: 'multiply' as const,
+                  pointerEvents: 'none',
+                }}
+              />
 
-              {/* Content — full width, text overlays the blurred photo */}
+              {/* Content */}
               <div
                 style={{
                   position: 'relative',
                   zIndex: 2,
-                  padding: 'clamp(36px, 5vw, 64px)',
-                  maxWidth: '70%',
+                  padding: 'clamp(48px, 6vw, 72px)',
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
                 }}
               >
-                {/* Large decorative quote mark */}
+                {/* Decorative open-quote — large serif */}
                 <div
                   style={{
                     fontFamily: typography.fontFamily.serif,
-                    fontSize: 'clamp(56px, 6vw, 80px)',
-                    lineHeight: 0.8,
+                    fontSize: 'clamp(52px, 5.5vw, 72px)',
+                    lineHeight: 0.75,
                     color: '#FFFFFF',
-                    opacity: 0.85,
-                    marginBottom: '16px',
+                    opacity: 0.90,
+                    marginBottom: '20px',
                     userSelect: 'none',
                   }}
                 >
                   ❝
                 </div>
 
-                {/* Quote */}
+                {/* Quote — app serif, generous size */}
                 <p
                   style={{
                     fontFamily: typography.fontFamily.serif,
-                    fontSize: 'clamp(22px, 2.8vw, 36px)',
+                    fontSize: 'clamp(20px, 2.4vw, 32px)',
                     fontWeight: typography.fontWeight.normal,
                     color: '#FFFFFF',
-                    lineHeight: 1.45,
+                    lineHeight: 1.5,
                     letterSpacing: '-0.01em',
-                    marginBottom: '28px',
+                    marginBottom: '32px',
+                    textShadow: '0 1px 8px rgba(0,0,0,0.25)',
                   }}
                 >
                   We built this because we kept losing things.
                   Not physical things — but moments that mattered.
                 </p>
 
-                {/* Attribution */}
+                {/* Attribution — semibold serif, app typography */}
                 <p
                   style={{
                     fontFamily: typography.fontFamily.serif,
                     fontWeight: typography.fontWeight.semibold,
-                    fontSize: '14px',
+                    fontSize: '15px',
                     color: '#FFFFFF',
-                    letterSpacing: '0.02em',
-                    marginBottom: '4px',
+                    letterSpacing: '0.03em',
+                    marginBottom: '3px',
+                    textShadow: '0 1px 4px rgba(0,0,0,0.20)',
                   }}
                 >
                   The Horizons Team
@@ -440,27 +461,25 @@ export const LandingPage: React.FC = () => {
                 <p
                   style={{
                     fontFamily: typography.fontFamily.serif,
-                    fontSize: '12px',
-                    color: 'rgba(255,255,255,0.50)',
+                    fontSize: '13px',
+                    color: 'rgba(255,255,255,0.55)',
                     letterSpacing: '0.01em',
-                    marginBottom: '28px',
+                    marginBottom: '36px',
                   }}
                 >
                   Founders of Horizons
                 </p>
 
-                {/* Horizons ghost button — consistent with app design system */}
+                {/* Primary pink button — same as hero CTA */}
                 <Button
-                  variant="ghost"
+                  variant="primary"
                   size="large"
                   onClick={() => setShowLetterModal(true)}
                   style={{
-                    background: 'rgba(255,255,255,0.12)',
-                    color: '#FFFFFF',
-                    border: '1px solid rgba(255,255,255,0.28)',
-                    backdropFilter: 'blur(12px)',
+                    background: `linear-gradient(135deg, ${theme.colors.rose[600]} 0%, ${theme.colors.rose[700]} 100%)`,
                     fontSize: '15px',
-                    padding: '12px 28px',
+                    padding: '13px 30px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.22), 0 8px 32px rgba(0,0,0,0.10)',
                   }}
                 >
                   Read our letter →
@@ -471,13 +490,11 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      <CurvedDivider color="#FFF9F7" flip />
-
       {/* ========== HOW IT WORKS - Editorial Vertical Steps ========== */}
       <section
         id="how-it-works"
         style={{
-          padding: '120px 40px',
+          padding: '56px 40px 120px',
           background: '#FFF9F7',
         }}
       >
@@ -500,7 +517,7 @@ export const LandingPage: React.FC = () => {
                 fontFamily: typography.fontFamily.serif,
                 fontWeight: typography.fontWeight.normal,
                 textAlign: 'center',
-                marginBottom: '96px',
+                marginBottom: '56px',
                 color: theme.text.primary,
                 letterSpacing: '-0.01em',
                 lineHeight: 1.15,

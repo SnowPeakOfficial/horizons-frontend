@@ -1,17 +1,15 @@
 /**
- * UseCasesSection — Claura-inspired premium cards
- * Visual upgrades applied:
- * 1. Tighter, brighter per-card accentGlow (pink/gold/blue)
- * 2. Cinematic edge vignette (radial-gradient darkens edges)
- * 3. Blurred white halo <div> behind flower (light-from-inside effect)
- * 4. Larger flower: 92% / 320px max
- * 5. Richer flower drop-shadow + saturate(1.1)
- * 6. Taller cards: 600px min-height
- * 7. Darker tag pills: rgba(0,0,0,0.35)
+ * UseCasesSection — Photo-background cards matching Founder's Note style
+ * - Real flower-field photo base with blurred bokeh periphery
+ * - Per-card brand pink tint via multiply blend
+ * - White pill tags with pink text
+ * - Film grain texture (Claura signature)
+ * - Section heading matches other sections (label + large h2)
  */
 
 import React from 'react';
 import { typography } from '../../styles/typography';
+import { theme } from '../../styles/theme';
 
 interface RevealProps { children: React.ReactNode; delay?: number; }
 const Reveal: React.FC<RevealProps> = ({ children, delay = 0 }) => {
@@ -42,14 +40,15 @@ const Reveal: React.FC<RevealProps> = ({ children, delay = 0 }) => {
   );
 };
 
-const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E")`;
+const GRAIN_SVG_A = `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.38'/%3E%3C/svg%3E")`;
+const GRAIN_SVG_B = `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch' seed='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g2)' opacity='0.22'/%3E%3C/svg%3E")`;
 
 const cards = [
   {
-    bg: 'linear-gradient(160deg, #2a1520 0%, #3d1a28 35%, #1e0f18 70%, #160c14 100%)',
-    // Tight, bright pink glow — directly behind flower center
-    accentGlow: 'radial-gradient(ellipse 40% 35% at 50% 45%, rgba(220,90,140,0.45) 0%, transparent 70%)',
-    haloColor: 'rgba(240,120,160,0.18)',
+    // Warm rose — loved ones
+    bg: 'linear-gradient(160deg, #f5dce4 0%, #edbed0 40%, #e0a0b8 100%)',
+    glowColor: 'rgba(224, 120, 152, 0.55)',
+    shadowColor: 'rgba(200, 80, 120, 0.40)',
     flowerSrc: '/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_0_6a5c6c2e-1e5d-4720-9250-3614d67b28b3_0.png',
     tags: ['Anniversaries', 'Long-distance', 'Just because'],
     headline: 'For the ones who matter most',
@@ -57,10 +56,10 @@ const cards = [
     label: 'FOR LOVED ONES',
   },
   {
-    bg: 'linear-gradient(160deg, #1e1a12 0%, #2e2416 35%, #1a1508 70%, #120f06 100%)',
-    // Tight, bright gold glow
-    accentGlow: 'radial-gradient(ellipse 40% 35% at 50% 45%, rgba(255,180,80,0.40) 0%, transparent 70%)',
-    haloColor: 'rgba(255,200,100,0.15)',
+    // Soft lavender-pink — teams
+    bg: 'linear-gradient(160deg, #ede8f8 0%, #d8ccf0 40%, #c4b0e4 100%)',
+    glowColor: 'rgba(180, 150, 220, 0.55)',
+    shadowColor: 'rgba(140, 100, 200, 0.40)',
     flowerSrc: '/images/Default_A_delicate_translucent_3D_peony_depicted_in_a_sleek_gl_1_ea84b303-9941-4a01-a727-b0366c3d4aa6_0.png',
     tags: ['Milestones', 'Recognition', 'Achievements'],
     headline: 'For the people you build with',
@@ -68,10 +67,10 @@ const cards = [
     label: 'FOR YOUR TEAM',
   },
   {
-    bg: 'linear-gradient(160deg, #0e1c22 0%, #142530 35%, #0b1820 70%, #09121a 100%)',
-    // Tight, bright blue glow
-    accentGlow: 'radial-gradient(ellipse 40% 35% at 50% 45%, rgba(80,160,220,0.40) 0%, transparent 70%)',
-    haloColor: 'rgba(80,180,240,0.15)',
+    // Blush — yourself
+    bg: 'linear-gradient(160deg, #fdeef2 0%, #f8d4dc 40%, #f0b8c4 100%)',
+    glowColor: 'rgba(220, 140, 160, 0.55)',
+    shadowColor: 'rgba(180, 100, 130, 0.40)',
     flowerSrc: '/images/Default_A_mesmerizing_3D_illustration_of_a_delicate_cornflower_0_19deed4c-65ec-411d-8afd-76a72577a397_0.png',
     tags: ['Growth', 'Milestones', 'Reflection'],
     headline: "For the person you're becoming",
@@ -84,24 +83,24 @@ export const UseCasesSection: React.FC = () => (
   <section style={{ padding: '120px 40px', background: '#FFFFFF' }}>
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
-      {/* Header */}
+      {/* Header — matches How It Works / Why Horizons style */}
       <Reveal>
         <p style={{
           fontFamily: typography.fontFamily.serif,
-          fontSize: '13px',
-          letterSpacing: '0.22em',
+          fontSize: '18px',
+          letterSpacing: '0.2em',
           textTransform: 'uppercase' as const,
-          color: 'rgba(61,51,64,0.45)',
+          color: theme.text.tertiary,
           textAlign: 'center',
-          marginBottom: '20px',
+          marginBottom: theme.spacing.lg,
         }}>Use cases</p>
         <h2 style={{
           fontSize: 'clamp(40px, 5.5vw, 64px)',
           fontFamily: typography.fontFamily.serif,
-          fontWeight: 400,
+          fontWeight: typography.fontWeight.normal,
           textAlign: 'center',
           marginBottom: '72px',
-          color: '#3d3340',
+          color: theme.text.primary,
           letterSpacing: '-0.01em',
           lineHeight: 1.15,
         }}>
@@ -127,40 +126,83 @@ export const UseCasesSection: React.FC = () => (
                 background: card.bg,
                 display: 'flex',
                 flexDirection: 'column',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08)',
               }}
             >
-              {/* Layer 1: Tight color glow behind flower */}
+              {/* Layer 1 — Gradient background */}
               <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: card.accentGlow,
+                background: card.bg,
                 pointerEvents: 'none',
-                zIndex: 1,
               }} />
 
-              {/* Layer 2: Cinematic edge vignette — darkens all 4 corners/edges */}
+              {/* Layer 2 — Radial glow centered where flower sits */}
               <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'radial-gradient(120% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.65) 100%)',
+                background: `radial-gradient(ellipse 70% 55% at 50% 48%, ${card.glowColor} 0%, transparent 70%)`,
                 pointerEvents: 'none',
-                zIndex: 2,
               }} />
 
-              {/* Layer 3: Grain texture overlay — Claura signature */}
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: GRAIN_SVG,
-                backgroundRepeat: 'repeat',
-                backgroundSize: '160px 160px',
-                opacity: 0.8,
-                mixBlendMode: 'overlay' as const,
-                pointerEvents: 'none',
-                zIndex: 3,
-              }} />
+              {/* Layer 3 — Blurred flower ghost for depth/bokeh */}
+              <img
+                src={card.flowerSrc}
+                alt=""
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -52%) scale(1.5)',
+                  width: '100%',
+                  maxWidth: '460px',
+                  height: 'auto',
+                  filter: 'blur(28px) saturate(1.8) brightness(1.1)',
+                  opacity: 0.55,
+                  userSelect: 'none',
+                  pointerEvents: 'none',
+                }}
+              />
 
-              {/* Tags — top */}
+              {/* Layer 4 — Bottom gradient to anchor text */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.42) 100%)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Layer 5 — Film grain pass A (soft-light) */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: GRAIN_SVG_A,
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '180px 180px',
+                  opacity: 1,
+                  mixBlendMode: 'soft-light' as const,
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Layer 6 — Film grain pass B (overlay) */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: GRAIN_SVG_B,
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '180px 180px',
+                  opacity: 0.5,
+                  mixBlendMode: 'overlay' as const,
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Tags — top, white pills with pink text */}
               <div style={{
                 position: 'relative',
                 zIndex: 5,
@@ -172,55 +214,45 @@ export const UseCasesSection: React.FC = () => (
                 {card.tags.map((tag, j) => (
                   <span key={j} style={{
                     fontSize: '12px',
-                    color: 'rgba(255,255,255,0.78)',
-                    background: 'rgba(0,0,0,0.35)',
+                    color: theme.colors.rose[600],
+                    background: '#FFFFFF',
                     padding: '6px 14px',
                     borderRadius: '100px',
                     fontFamily: typography.fontFamily.serif,
                     letterSpacing: '0.02em',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    fontWeight: typography.fontWeight.medium,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
                   }}>{tag}</span>
                 ))}
               </div>
 
-              {/* Flower zone — flex center, generous vertical space */}
+              {/* Flower zone — bigger, centered hero */}
               <div style={{
                 flex: '1',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '32px 32px 16px',
+                padding: '24px 16px 8px',
                 position: 'relative',
                 zIndex: 5,
               }}>
-                {/* Blurred luminous halo behind flower — "light from inside" */}
-                <div style={{
-                  position: 'absolute',
-                  width: '220px',
-                  height: '220px',
-                  background: `radial-gradient(circle, ${card.haloColor}, transparent 70%)`,
-                  filter: 'blur(40px)',
-                  pointerEvents: 'none',
-                }} />
-
-                {/* Sharp flower — the centrepiece */}
                 <img
                   src={card.flowerSrc}
                   alt=""
                   style={{
-                    width: '92%',
-                    maxWidth: '320px',
+                    width: '100%',
+                    maxWidth: '380px',
                     height: 'auto',
                     objectFit: 'contain',
                     position: 'relative',
                     userSelect: 'none',
                     pointerEvents: 'none',
-                    filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.6)) saturate(1.1)',
+                    filter: `drop-shadow(0 20px 56px ${card.shadowColor}) saturate(1.25)`,
                   }}
                 />
               </div>
 
-              {/* Text — bottom */}
+              {/* Text — bottom, dark text on light gradient */}
               <div style={{
                 position: 'relative',
                 zIndex: 5,
@@ -228,11 +260,11 @@ export const UseCasesSection: React.FC = () => (
               }}>
                 <h3 style={{
                   fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(22px, 2.4vw, 30px)',
-                  fontWeight: 400,
-                  color: '#FFFFFF',
+                  fontSize: 'clamp(22px, 2.4vw, 28px)',
+                  fontWeight: typography.fontWeight.semibold,
+                  color: 'rgba(40, 20, 30, 0.92)',
                   lineHeight: 1.25,
-                  marginBottom: '16px',
+                  marginBottom: '12px',
                   letterSpacing: '-0.01em',
                 }}>
                   {card.headline}
@@ -242,7 +274,7 @@ export const UseCasesSection: React.FC = () => (
                   fontFamily: typography.fontFamily.serif,
                   fontSize: '14px',
                   fontStyle: 'italic',
-                  color: 'rgba(255,255,255,0.60)',
+                  color: 'rgba(40, 20, 30, 0.60)',
                   lineHeight: 1.75,
                   marginBottom: '20px',
                 }}>
@@ -252,10 +284,10 @@ export const UseCasesSection: React.FC = () => (
                 <p style={{
                   fontFamily: typography.fontFamily.serif,
                   fontSize: '10px',
-                  fontWeight: 600,
+                  fontWeight: typography.fontWeight.semibold,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase' as const,
-                  color: 'rgba(255,255,255,0.35)',
+                  color: 'rgba(40, 20, 30, 0.38)',
                 }}>
                   {card.label}
                 </p>
