@@ -77,11 +77,11 @@ export const Footer: React.FC = () => {
   };
 
   const taglineStyle: React.CSSProperties = {
-    fontSize: '13px',
+    fontSize: '15px',
     color: '#6B5B6E',
-    marginTop: '6px',
+    marginTop: '8px',
     lineHeight: 1.5,
-    maxWidth: '220px',
+    maxWidth: '260px',
   };
 
   const columnTitleStyle: React.CSSProperties = {
@@ -131,19 +131,19 @@ export const Footer: React.FC = () => {
       <div style={containerStyle}>
         <div className="footer-top-row" style={topRowStyle}>
           {/* Brand */}
-          <div>
-            <div style={logoStyle} onClick={() => navigate('/')}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-start' }}>
+            <div style={{ ...logoStyle, justifyContent: isMobile ? 'center' : 'flex-start' }} onClick={() => navigate('/')}>
               <img
                 src="/images/horizons-logo-wordmark.svg"
                 alt="Horizons"
-                style={{ height: '24px', width: 'auto', display: 'block' }}
+                style={{ height: '40px', width: 'auto', display: 'block' }}
               />
             </div>
-            <p style={taglineStyle}>
+            <p style={{ ...taglineStyle, textAlign: isMobile ? 'center' : 'left' }}>
               A digital garden to grow and share meaningful moments.
             </p>
             {/* Social Icons */}
-            <div style={{ display: 'flex', gap: '12px', marginTop: '14px' }}>
+            <div style={{ display: 'flex', gap: '12px', marginTop: '14px', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               {/* Instagram */}
               <SocialIconButton href="https://www.instagram.com/horizons.memory.garden/" label="Instagram">
                 <Instagram sx={{ fontSize: 20 }} />

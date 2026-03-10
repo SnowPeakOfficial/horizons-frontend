@@ -331,8 +331,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 height: 'auto',
                 userSelect: 'none',
                 pointerEvents: 'none',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
               }}
             />
           </div>

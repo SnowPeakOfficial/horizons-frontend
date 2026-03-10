@@ -144,6 +144,7 @@ export const GardenPage: React.FC = () => {
     height: '100vh',
     position: 'relative',
     background: '#E8F5E9',
+    overflow: 'hidden',
   };
 
   const headerStyle: React.CSSProperties = {
