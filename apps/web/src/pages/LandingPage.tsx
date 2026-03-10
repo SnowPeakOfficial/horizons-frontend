@@ -709,7 +709,7 @@ export const LandingPage: React.FC = () => {
                 padding: '0 16px',
               }}>
                 <img
-                  src="/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_1_1e7015ea-9d7e-4641-a544-8aadfba8a958_0.png"
+                  src="/images/Default_A_mesmerizing_3D_illustration_of_a_delicate_cornflower_0_19deed4c-65ec-411d-8afd-76a72577a397_0.png"
                   alt=""
                   style={{
                     width: '100%',
