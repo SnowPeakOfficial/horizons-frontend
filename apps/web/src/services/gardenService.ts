@@ -3,7 +3,8 @@
  * Handles all garden-related API calls
  */
 
-import api from './api';
+import api, { API_BASE_URL } from './api';
+import axios from 'axios';
 import type {
   Garden,
   CreateGardenRequest,
@@ -12,6 +13,14 @@ import type {
   GardenMember,
   GardenDefinition,
 } from '../types/api.types';
+import type { Flower } from '../types/api.types';
+
+export interface GuestGardenResponse {
+  garden: Garden & { flowers?: Flower[] };
+  guestMode: true;
+  guestEmail?: string;
+  guestDisplayName?: string;
+}
 
 class GardenService {
   /**
@@ -115,6 +124,18 @@ class GardenService {
    */
   async leaveGarden(gardenId: string): Promise<void> {
     await api.post(`/gardens/${gardenId}/leave`);
+  }
+
+  /**
+   * Fetch a garden as an unauthenticated guest using a one-time token.
+   * Uses a plain axios instance so the auth interceptor is bypassed.
+   */
+  async fetchGuestGarden(gardenId: string, token: string): Promise<GuestGardenResponse> {
+    const response = await axios.get<GuestGardenResponse>(
+      `${API_BASE_URL}/gardens/${gardenId}/guest`,
+      { params: { token } }
+    );
+    return response.data;
   }
 }
 
