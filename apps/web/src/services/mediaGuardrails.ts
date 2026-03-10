@@ -3,9 +3,9 @@
  * Enforces size, duration, and type limits before any bytes reach Firebase.
  *
  * Limits (flat — no per-tier differences in Phase 1):
- *   📷 Photo  — 10 MB              | JPG, PNG, WebP, GIF
- *   🎤 Voice  — 10 MB · 30 seconds | MP3, M4A, WAV, OGG, WebM audio
- *   🎬 Video  — 80 MB · 30 seconds | MP4, MOV, WebM video
+ *   📷 Photo  — 8 MB               | JPG, PNG, WebP, GIF
+ *   🎤 Voice  — 5 MB  · 20 seconds | MP3, M4A, WAV, OGG, WebM audio
+ *   🎬 Video  — 25 MB · 20 seconds | MP4, MOV, WebM video
  *
  * Source of truth: horizons-backend/MEDIA_TRANSCODING_PIPELINE.md
  */
@@ -20,15 +20,15 @@ const MB = 1024 * 1024;
 
 const LIMITS = {
   image: {
-    maxBytes: 10 * MB,
+    maxBytes: 8 * MB,
     maxDuration: null as null, // no duration check for images
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
     label: 'Photo',
     formats: 'JPG, PNG, WebP, GIF',
   },
   voice: {
-    maxBytes: 10 * MB,
-    maxDuration: 30, // seconds
+    maxBytes: 5 * MB,
+    maxDuration: 20, // seconds
     mimeTypes: [
       'audio/mpeg',
       'audio/mp4',
@@ -41,8 +41,8 @@ const LIMITS = {
     formats: 'MP3, M4A, WAV, OGG',
   },
   video: {
-    maxBytes: 80 * MB,
-    maxDuration: 30, // seconds
+    maxBytes: 25 * MB,
+    maxDuration: 20, // seconds
     mimeTypes: ['video/mp4', 'video/quicktime', 'video/webm'],
     label: 'Video',
     formats: 'MP4, MOV, WebM',
