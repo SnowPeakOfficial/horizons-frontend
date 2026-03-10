@@ -45,10 +45,10 @@ const GRAIN_SVG_B = `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns=
 
 const cards = [
   {
-    // Pearl-rose — delicate glass flower, cool crystal with pink highlights
-    bg: 'linear-gradient(160deg, #faf4f6 0%, #f0dce6 40%, #e4c4d8 100%)',
-    glowColor: 'rgba(230, 160, 190, 0.60)',
-    shadowColor: 'rgba(210, 120, 160, 0.38)',
+    // Warm amber-cream — matches orange/yellow/gold/cream glass flower
+    bg: 'linear-gradient(160deg, #fdf0e0 0%, #f0d4a0 40%, #e0b870 100%)',
+    glowColor: 'rgba(240, 190, 100, 0.65)',
+    shadowColor: 'rgba(200, 140, 40, 0.40)',
     flowerSrc: '/images/Default_A_delicate_intricately_designed_3D_glass_flower_with_s_3_0df29597-2de3-4b9b-b21e-b189c6a4b42c_0.png',
     tags: ['Anniversaries', 'Long-distance', 'Just because'],
     headline: 'For the ones who matter most',
@@ -56,10 +56,10 @@ const cards = [
     label: 'FOR LOVED ONES',
   },
   {
-    // Soft lavender-pink — teams (unchanged)
-    bg: 'linear-gradient(160deg, #ede8f8 0%, #d8ccf0 40%, #c4b0e4 100%)',
-    glowColor: 'rgba(180, 150, 220, 0.55)',
-    shadowColor: 'rgba(140, 100, 200, 0.40)',
+    // Blush-to-violet — matches peach/cream/pink-violet peony
+    bg: 'linear-gradient(160deg, #f8eef4 0%, #ead4e8 40%, #d0b0d8 100%)',
+    glowColor: 'rgba(210, 160, 210, 0.65)',
+    shadowColor: 'rgba(160, 100, 180, 0.40)',
     flowerSrc: '/images/Default_A_delicate_translucent_3D_peony_depicted_in_a_sleek_gl_1_ea84b303-9941-4a01-a727-b0366c3d4aa6_0.png',
     tags: ['Milestones', 'Recognition', 'Achievements'],
     headline: 'For the people you build with',
@@ -67,10 +67,10 @@ const cards = [
     label: 'FOR YOUR TEAM',
   },
   {
-    // Warm champagne-blush — intricate glass flower with warm crystal/gold tones
-    bg: 'linear-gradient(160deg, #fdf6ee 0%, #f5e0c8 40%, #ead0b0 100%)',
-    glowColor: 'rgba(240, 180, 120, 0.55)',
-    shadowColor: 'rgba(200, 140, 80, 0.38)',
+    // Cool slate-blue — matches blue/white/dark-blue glass flower
+    bg: 'linear-gradient(160deg, #e8eef8 0%, #c8d8f0 40%, #a8c0e4 100%)',
+    glowColor: 'rgba(140, 180, 240, 0.65)',
+    shadowColor: 'rgba(60, 120, 200, 0.40)',
     flowerSrc: '/images/Default_A_highly_detailed_intricately_designed_3D_glass_flower_4_713d0b00-a8e9-41b7-9d42-166af3c21d76_0 1.png',
     tags: ['Growth', 'Milestones', 'Reflection'],
     headline: "For the person you're becoming",
@@ -145,31 +145,31 @@ export const UseCasesSection: React.FC = () => (
                 pointerEvents: 'none',
               }} />
 
-              {/* Layer 3 — Blurred flower ghost for depth/bokeh */}
+              {/* Layer 3 — Blurred flower ghost — bright, light bokeh fill */}
               <img
                 src={card.flowerSrc}
                 alt=""
                 style={{
                   position: 'absolute',
-                  top: '50%',
+                  top: '38%',
                   left: '50%',
-                  transform: 'translate(-50%, -52%) scale(1.5)',
+                  transform: 'translate(-50%, -50%) scale(1.8)',
                   width: '100%',
-                  maxWidth: '460px',
+                  maxWidth: '520px',
                   height: 'auto',
-                  filter: 'blur(28px) saturate(1.8) brightness(1.1)',
-                  opacity: 0.55,
+                  filter: 'blur(38px) saturate(2.0) brightness(1.35)',
+                  opacity: 0.70,
                   userSelect: 'none',
                   pointerEvents: 'none',
                 }}
               />
 
-              {/* Layer 4 — Bottom gradient to anchor text */}
+              {/* Layer 4 — Light bottom fade (no dark overlay) */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.42) 100%)',
+                  background: 'linear-gradient(to bottom, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.10) 65%, rgba(255,255,255,0.30) 100%)',
                   pointerEvents: 'none',
                 }}
               />
@@ -202,14 +202,15 @@ export const UseCasesSection: React.FC = () => (
                 }}
               />
 
-              {/* Tags — top, white pills with pink text */}
+              {/* Tags — top, centered white pills with pink text */}
               <div style={{
                 position: 'relative',
                 zIndex: 5,
                 display: 'flex',
                 flexWrap: 'wrap' as const,
+                justifyContent: 'center',
                 gap: '8px',
-                padding: '24px 24px 0',
+                padding: '24px 16px 0',
               }}>
                 {card.tags.map((tag, j) => (
                   <span key={j} style={{
@@ -220,7 +221,7 @@ export const UseCasesSection: React.FC = () => (
                     borderRadius: '100px',
                     fontFamily: typography.fontFamily.serif,
                     letterSpacing: '0.02em',
-                    fontWeight: typography.fontWeight.medium,
+                    fontWeight: typography.fontWeight.bold,
                     boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
                   }}>{tag}</span>
                 ))}
@@ -303,7 +304,7 @@ export const UseCasesSection: React.FC = () => (
           fontFamily: typography.fontFamily.serif,
           fontSize: 'clamp(20px, 2.5vw, 28px)',
           fontStyle: 'italic',
-          color: 'rgba(61,51,64,0.38)',
+          color: theme.text.tertiary,
           textAlign: 'center',
           marginTop: '72px',
           letterSpacing: '0.01em',
