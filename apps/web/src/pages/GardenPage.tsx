@@ -30,6 +30,7 @@ import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import People from '@mui/icons-material/People';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
+import TouchApp from '@mui/icons-material/TouchApp';
 
 export const GardenPage: React.FC = () => {
   const { gardenId, flowerId } = useParams<{ gardenId: string; flowerId?: string }>();
@@ -51,12 +52,27 @@ export const GardenPage: React.FC = () => {
   // Ref guard: prevents the deep-link flower from opening more than once
   const deepLinkOpenedRef = useRef(false);
   const orbitRef = useRef<OrbitControlsImpl>(null);
+  // Ref to the PlantFlowerPanel's cancel-placement callback (set via onCancelPlacementStep prop)
+  const cancelPlacementStepRef = useRef<(() => void) | null>(null);
   const [hoveredFlowerTooltip, setHoveredFlowerTooltip] = useState<{
     flower: PlacedFlower;
     definition: FlowerDefinition;
     screenX: number;
     screenY: number;
   } | null>(null);
+  const [mobilePeekFlower, setMobilePeekFlower] = useState<{
+    flower: PlacedFlower;
+    definition: FlowerDefinition;
+    apiFlower: Flower;
+  } | null>(null);
+
+  // True when the viewport is mobile-width (≤768px)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (gardenId) {
@@ -128,6 +144,7 @@ export const GardenPage: React.FC = () => {
     height: '100vh',
     position: 'relative',
     background: '#E8F5E9',
+    overflow: 'hidden',
   };
 
   const headerStyle: React.CSSProperties = {
@@ -215,13 +232,13 @@ export const GardenPage: React.FC = () => {
           </Button>
 
           {/* Garden Title */}
-          <div style={headerTitleStyle}>
+          <div style={{ ...headerTitleStyle, ...(isMobile ? { fontSize: '1.1rem' } : {}) }}>
             {currentGarden?.title || 'Loading...'}
           </div>
 
           {/* Garden Stats */}
           {currentGarden && (
-            <div style={headerStatsStyle}>
+            <div className="garden-stats" style={headerStatsStyle}>
               <div style={statItemStyle}>
                 <LocalFlorist sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
                 <span>{flowers.length} flowers</span>
@@ -239,33 +256,78 @@ export const GardenPage: React.FC = () => {
         </div>
 
         {/* Action Buttons */}
-        <div style={headerRightStyle}>
-          <Button
-            variant="primary"
-            size="medium"
-            onClick={() => setIsSettingsOpen(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: theme.spacing.xs,
-            }}
-          >
-            <SettingsOutlined sx={{ fontSize: 18 }} />
-            Garden Details
-          </Button>
-          <Button
-            variant="primary"
-            size="medium"
-            onClick={() => setIsPlantPanelOpen(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: theme.spacing.xs,
-            }}
-          >
-            <LocalFlorist sx={{ fontSize: 18 }} />
-            Plant Flower
-          </Button>
+        <div className="garden-header-actions" style={headerRightStyle}>
+          {isMobile ? (
+            <>
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                title="Garden Details"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: '#E8A4B0',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
+                  transition: 'background 0.2s ease',
+                }}
+              >
+                <SettingsOutlined sx={{ fontSize: 22, color: '#FFFFFF' }} />
+              </button>
+              <button
+                onClick={() => setIsPlantPanelOpen(true)}
+                title="Plant Flower"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: '#E8A4B0',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
+                  transition: 'background 0.2s ease',
+                }}
+              >
+                <LocalFlorist sx={{ fontSize: 22, color: '#FFFFFF' }} />
+              </button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={() => setIsSettingsOpen(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.spacing.xs,
+                }}
+              >
+                <SettingsOutlined sx={{ fontSize: 18 }} />
+                Garden Details
+              </Button>
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={() => setIsPlantPanelOpen(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.spacing.xs,
+                }}
+              >
+                <LocalFlorist sx={{ fontSize: 18 }} />
+                Plant Flower
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -294,6 +356,8 @@ export const GardenPage: React.FC = () => {
               navigate(`/garden/${gardenId}/flower/${flower.id}`, { replace: false });
             }}
             onFlowerHover={(info) => {
+              // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
+              if (isMobile) return;
               if (info) {
                 setHoveredFlowerTooltip({
                   flower: info.flower,
@@ -331,6 +395,89 @@ export const GardenPage: React.FC = () => {
         </Canvas>
       </div>
 
+      {/* Mobile Placement Hint — compact card shown when step 2 is active on mobile */}
+      {isMobile && isPlacementMode && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '32px',
+            left: '16px',
+            right: '16px',
+            zIndex: 999,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Hint card */}
+          <div
+            style={{
+              pointerEvents: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              background: '#FFFFFF',
+              borderRadius: '14px',
+              padding: '12px 16px',
+              border: '1px solid rgba(232, 164, 176, 0.4)',
+              boxShadow: '0 4px 16px rgba(212, 144, 154, 0.18)',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{
+              width: '34px',
+              height: '34px',
+              borderRadius: '50%',
+              background: '#FFF0F3',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <TouchApp sx={{ fontSize: 18, color: '#D4909A' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '13px', fontWeight: 600, color: '#3D3340', lineHeight: 1.3 }}>
+                Tap anywhere to place
+              </span>
+              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '11px', color: '#9D8F99', lineHeight: 1.3 }}>
+                You can move it anywhere later
+              </span>
+            </div>
+          </div>
+
+          {/* Back button */}
+          <button
+            onClick={() => {
+              setIsPlacementMode(false);
+              setSelectedFlowerForPlacement(null);
+              cancelPlacementStepRef.current?.();
+            }}
+            style={{
+              pointerEvents: 'auto',
+              padding: '9px',
+              borderRadius: '10px',
+              background: '#FFFFFF',
+              border: '1px solid rgba(232, 164, 176, 0.4)',
+              boxShadow: '0 2px 8px rgba(212, 144, 154, 0.12)',
+              color: '#D4909A',
+              fontSize: '13px',
+              fontWeight: 600,
+              fontFamily: '"Inter", sans-serif',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '5px',
+            }}
+          >
+            ← Back to flower selection
+          </button>
+        </div>
+      )}
+
       {/* Plant Flower Panel */}
       <PlantFlowerPanel
         isOpen={isPlantPanelOpen}
@@ -353,6 +500,7 @@ export const GardenPage: React.FC = () => {
         }}
         onClearPosition={() => setPlacedPosition(null)}
         placedPosition={placedPosition}
+        onCancelPlacementStep={(fn: () => void) => { cancelPlacementStepRef.current = fn; }}
       />
 
       {/* Flower Hover Tooltip - DOM overlay, always visible */}

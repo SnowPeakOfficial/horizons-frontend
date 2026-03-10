@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { useAuthStore } from '../stores/authStore';
 import authService from '../services/authService';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import PersonOutline from '@mui/icons-material/PersonOutline';
-import LocalFlorist from '@mui/icons-material/LocalFlorist';
-import GrassOutlined from '@mui/icons-material/GrassOutlined';
-import CalendarToday from '@mui/icons-material/CalendarToday';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 
 // Common timezones for dropdown
@@ -30,7 +28,6 @@ export const ProfilePage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<{ gardenCount: number; flowerCount: number } | null>(null);
 
   // Populate form from user
   useEffect(() => {
@@ -40,12 +37,9 @@ export const ProfilePage: React.FC = () => {
     }
   }, [user]);
 
-  // Load fresh profile + stats on mount
+  // Load fresh profile on mount
   useEffect(() => {
     loadUser();
-    authService.getUserStats()
-      .then((s) => setStats({ gardenCount: s.gardenCount, flowerCount: s.flowerCount }))
-      .catch(() => {});
   }, [loadUser]);
 
   const handleSave = async () => {
@@ -75,10 +69,6 @@ export const ProfilePage: React.FC = () => {
     PRO: '#C07080',
     PREMIUM: '#9E7DAE',
   };
-
-  const memberSince = user?.createdAt
-    ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-    : '—';
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
@@ -229,29 +219,8 @@ export const ProfilePage: React.FC = () => {
             )}
           </div>
         </div>
-
-        {/* Account stats */}
-        <div style={sectionStyle}>
-          <div style={sectionTitleStyle}>Account Overview</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-            {[
-              { icon: <GrassOutlined sx={{ fontSize: 22, color: '#D4909A' }} />, label: 'Gardens', value: stats?.gardenCount ?? '—' },
-              { icon: <LocalFlorist sx={{ fontSize: 22, color: '#D4909A' }} />, label: 'Flowers', value: stats?.flowerCount ?? '—' },
-              { icon: <CalendarToday sx={{ fontSize: 18, color: '#D4909A' }} />, label: 'Member Since', value: memberSince },
-            ].map(({ icon, label, value }) => (
-              <div key={label} style={{
-                background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF0F2 100%)',
-                borderRadius: '14px', padding: '18px 16px', textAlign: 'center',
-                border: '1px solid rgba(232, 180, 184, 0.25)',
-              }}>
-                <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 8px' }}>{icon}</div>
-                <div style={{ fontSize: '22px', fontWeight: 700, color: '#3D3340', fontFamily: 'Georgia, serif' }}>{value}</div>
-                <div style={{ fontSize: '12px', color: '#9D8F99', marginTop: '2px' }}>{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
+      <Footer />
     </div>
   );
 };

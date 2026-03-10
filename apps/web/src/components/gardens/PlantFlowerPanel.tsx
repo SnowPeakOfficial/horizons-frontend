@@ -93,6 +93,8 @@ interface PlantFlowerPanelProps {
   onPlacementModeChange?: (active: boolean, definition: FlowerDefinition | null) => void;
   onClearPosition?: () => void;
   placedPosition: { x: number; y: number; z: number } | null;
+  /** Registration fn: parent passes a setter; panel calls it with its cancel handler */
+  onCancelPlacementStep?: (registerFn: () => void) => void;
 }
 
 export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
@@ -104,6 +106,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onPlacementModeChange,
   onClearPosition,
   placedPosition,
+  onCancelPlacementStep,
 }) => {
   const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
   const [step, setStep] = useState(1);
@@ -278,6 +281,23 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     return tierOrder[a.tierAccess] - tierOrder[b.tierAccess];
   });
 
+  // Called by the mobile overlay Back button — returns to step 1.
+  // We expose this via a ref so GardenPage can call it from the overlay button.
+  const handleCancelPlacementRef = useRef<() => void>(() => {});
+  handleCancelPlacementRef.current = () => {
+    setStep(1);
+    if (onPlacementModeChange) {
+      onPlacementModeChange(false, null);
+    }
+  };
+
+  // Register the cancel handler with the parent whenever it changes
+  useEffect(() => {
+    if (onCancelPlacementStep) {
+      onCancelPlacementStep(handleCancelPlacementRef.current);
+    }
+  }, [onCancelPlacementStep]);
+
   const handleNextToPlacement = () => {
     if (!selectedDefinition) {
       setError('Choose a flower to continue');
@@ -434,7 +454,12 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     }
   };
 
+  const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
   if (!isOpen) return null;
+
+  // On mobile, hide the panel during step 2 so the full garden is visible for tapping
+  const isPanelHidden = isMobile && step === 2;
 
   return (
     <div
@@ -442,18 +467,20 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         position: 'fixed',
         top: 0,
         right: 0,
-        width: '420px',
-        height: '100vh',
+        ...(isMobile ? { left: 0 } : {}),
+        width: isMobile ? '100%' : '420px',
+        height: '100dvh',
         background: 'rgba(255, 255, 255, 0.98)',
         backdropFilter: 'blur(20px)',
-        boxShadow: 'inset 0 0 40px rgba(0,0,0,0.02), -4px 0 24px rgba(0, 0, 0, 0.08)',
-        borderTopLeftRadius: '24px',
-        borderBottomLeftRadius: '24px',
+        boxShadow: isMobile ? 'none' : 'inset 0 0 40px rgba(0,0,0,0.02), -4px 0 24px rgba(0, 0, 0, 0.08)',
+        borderTopLeftRadius: isMobile ? '0' : '24px',
+        borderBottomLeftRadius: isMobile ? '0' : '24px',
         zIndex: 1000,
         display: 'flex',
         flexDirection: 'column',
-        transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+        transform: isPanelHidden ? 'translateX(100%)' : 'translateX(0)',
         transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        pointerEvents: isPanelHidden ? 'none' : 'auto',
       }}
     >
       {/* Header */}

@@ -93,6 +93,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
       >
         {/* ── HERO SECTION — exact copy of LandingPage hero ── */}
         <section
+          className="hero-section"
           style={{
             position: 'relative',
             minHeight: 'auto',
@@ -120,8 +121,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             }}
           />
 
-          {/* Bloomory-style peripheral labels */}
-          <div style={{
+          {/* Bloomory-style peripheral labels — desktop only (absolute positioned) */}
+          <div className="sakura-label-desktop" style={{
             position: 'absolute', top: '88px', left: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
             letterSpacing: '0.25em', textTransform: 'uppercase' as const,
@@ -130,7 +131,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             animation: 'heroContentFade 8s ease forwards',
           }}>EST. 2026</div>
 
-          <div style={{
+          <div className="sakura-label-desktop" style={{
             position: 'absolute', top: '88px', right: '52px',
             fontFamily: typography.fontFamily.serif, fontSize: '18px',
             letterSpacing: '0.1em', color: theme.text.tertiary,
@@ -139,6 +140,30 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             animation: 'heroContentFade 8s ease forwards',
           }}>
             <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
+            <span>Private by design</span>
+          </div>
+
+          {/* Mobile-only labels — absolutely positioned just below the logo, left/right edges */}
+          <div className="sakura-label-mobile-left" style={{
+            display: 'none',
+            position: 'absolute', top: '148px', left: '20px',
+            fontFamily: typography.fontFamily.serif, fontSize: '11px',
+            letterSpacing: '0.2em', textTransform: 'uppercase' as const,
+            color: theme.text.tertiary, zIndex: 10,
+            pointerEvents: 'none',
+            animation: 'heroContentFade 8s ease forwards',
+          }}>EST. 2026</div>
+
+          <div className="sakura-label-mobile-right" style={{
+            display: 'none',
+            position: 'absolute', top: '148px', right: '20px',
+            fontFamily: typography.fontFamily.serif, fontSize: '11px',
+            letterSpacing: '0.08em', color: theme.text.tertiary,
+            zIndex: 10, pointerEvents: 'none',
+            alignItems: 'center', gap: '5px',
+            animation: 'heroContentFade 8s ease forwards',
+          }}>
+            <span style={{ fontSize: '8px', color: theme.colors.rose[400] }}>✦</span>
             <span>Private by design</span>
           </div>
 
@@ -184,6 +209,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           >
             {/* Logo/Brand */}
             <div
+              className="sakura-logo-row"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -305,8 +331,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 height: 'auto',
                 userSelect: 'none',
                 pointerEvents: 'none',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 80%, transparent 100%)',
               }}
             />
           </div>
@@ -345,6 +371,13 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           25% { opacity: 0; }      /* Hidden until 2s */
           43.75% { opacity: 1; }   /* Fade in by 3.5s */
           100% { opacity: 1; }
+        }
+
+        /* On mobile: hide desktop labels, show absolutely-positioned mobile labels */
+        @media (max-width: 768px) {
+          .sakura-label-desktop { display: none !important; }
+          .sakura-label-mobile-left { display: block !important; }
+          .sakura-label-mobile-right { display: flex !important; }
         }
 
         /* Video: Fade out gradually */
