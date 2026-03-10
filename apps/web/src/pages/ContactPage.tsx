@@ -189,7 +189,7 @@ export const ContactPage: React.FC = () => {
                 <span style={{ fontWeight: 700, fontFamily: typography.fontFamily.serif, color: theme.text.primary, fontSize: '15px' }}>Email</span>
               </div>
               <p style={{ fontSize: '14px', color: '#7A6E78', lineHeight: 1.6, marginBottom: '24px', marginTop: '8px' }}>
-                horizons.memory.garden@gmail.com
+                support@horizons-garden.com
               </p>
 
               <div style={{ height: '1px', background: 'rgba(232, 180, 184, 0.3)', marginBottom: '24px' }} />

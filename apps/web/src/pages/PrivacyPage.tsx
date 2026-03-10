@@ -96,7 +96,7 @@ export const PrivacyPage: React.FC = () => {
             </Section>
 
             <Section title="11. Contact Us">
-              <p>If you have any questions or concerns about this Privacy Policy, please contact us at <strong>horizons.memory.garden@gmail.com</strong> or use our <span style={{ color: '#D4909A', cursor: 'pointer' }} onClick={() => window.location.href = '/contact'}>Contact page</span>.</p>
+              <p>If you have any questions or concerns about this Privacy Policy, please contact us at <strong>support@horizons-garden.com</strong> or use our <span style={{ color: '#D4909A', cursor: 'pointer' }} onClick={() => window.location.href = '/contact'}>Contact page</span>.</p>
             </Section>
           </div>
         </div>

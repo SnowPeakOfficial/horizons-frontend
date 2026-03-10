@@ -92,7 +92,7 @@ export const TermsPage: React.FC = () => {
             </Section>
 
             <Section title="12. Contact Us">
-              <p>If you have questions about these Terms of Service, please contact us at <strong>horizons.memory.garden@gmail.com</strong> or via our <span style={{ color: '#D4909A', cursor: 'pointer' }} onClick={() => window.location.href = '/contact'}>Contact page</span>.</p>
+              <p>If you have questions about these Terms of Service, please contact us at <strong>support@horizons-garden.com</strong> or via our <span style={{ color: '#D4909A', cursor: 'pointer' }} onClick={() => window.location.href = '/contact'}>Contact page</span>.</p>
             </Section>
           </div>
         </div>
