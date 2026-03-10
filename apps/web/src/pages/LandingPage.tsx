@@ -286,7 +286,7 @@ export const LandingPage: React.FC = () => {
       {/* ========== FOUNDER'S NOTE — Claura-style photo card ========== */}
       <section
         style={{
-          padding: '80px 40px 32px',
+          padding: '80px 40px 120px',
           background: '#FFFFFF',
         }}
       >
@@ -494,7 +494,7 @@ export const LandingPage: React.FC = () => {
       <section
         id="how-it-works"
         style={{
-          padding: '56px 40px 120px',
+          padding: '80px 40px 120px',
           background: '#FFF9F7',
         }}
       >
