@@ -381,7 +381,7 @@ export const LandingPage: React.FC = () => {
 
               {/* Layer 2 — Blurred bokeh edges, masked to show only at periphery */}
               <img
-                src="/images/flower-field.jpg"
+                src="/images/flower-field1.jpg"
                 alt=""
                 style={{
                   position: 'absolute',
