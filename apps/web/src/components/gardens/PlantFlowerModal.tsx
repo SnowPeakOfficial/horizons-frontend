@@ -8,7 +8,7 @@ import { Modal, Button } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
-import type { FlowerDefinition, FlowerType, PlantFlowerRequest } from '../../types/api.types';
+import type { FlowerDefinition, FlowerType } from '../../types/api.types';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import Spa from '@mui/icons-material/Spa';
 
@@ -62,9 +62,8 @@ export const PlantFlowerModal: React.FC<PlantFlowerModalProps> = ({
     setError('');
 
     try {
-      const plantData: PlantFlowerRequest = {
-        gardenId,
-        flowerDefinitionId: selectedDefinition.id,
+      await plantFlower(gardenId, {
+        flowerDefinitionKey: selectedDefinition.key,
         type: flowerType,
         position: {
           x: Math.random() * 20 - 10,
@@ -72,9 +71,7 @@ export const PlantFlowerModal: React.FC<PlantFlowerModalProps> = ({
           z: Math.random() * 20 - 10,
         },
         rotation: Math.random() * Math.PI * 2,
-      };
-
-      await plantFlower(plantData);
+      });
       
       if (onPlantSuccess) {
         onPlantSuccess();

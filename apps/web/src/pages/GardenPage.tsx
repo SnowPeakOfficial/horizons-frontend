@@ -42,7 +42,7 @@ export const GardenPage: React.FC = () => {
   const { flowers, fetchFlowersByGarden } = useFlowerStore();
   const [isPlantPanelOpen, setIsPlantPanelOpen] = useState(false);
   const [isPlacementMode, setIsPlacementMode] = useState(false);
-  const [selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<{ key: string } | null>(null);
+  const [_selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<{ key: string } | null>(null);
   const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
@@ -60,12 +60,6 @@ export const GardenPage: React.FC = () => {
     screenX: number;
     screenY: number;
   } | null>(null);
-  const [mobilePeekFlower, setMobilePeekFlower] = useState<{
-    flower: PlacedFlower;
-    definition: FlowerDefinition;
-    apiFlower: Flower;
-  } | null>(null);
-
   // True when the viewport is mobile-width (≤768px)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   useEffect(() => {
