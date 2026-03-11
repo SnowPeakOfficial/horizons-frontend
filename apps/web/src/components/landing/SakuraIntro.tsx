@@ -305,7 +305,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                Read our letter
+                See How It Works
               </Button>
             </div>
           </div>
