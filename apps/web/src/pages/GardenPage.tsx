@@ -23,6 +23,7 @@ import { useGardenStore } from '../stores/gardenStore';
 import { useFlowerStore } from '../stores/flowerStore';
 import { useAuthStore } from '../stores/authStore';
 import flowerService from '../services/flowerService';
+import gardenService from '../services/gardenService';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -33,16 +34,36 @@ import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import TouchApp from '@mui/icons-material/TouchApp';
 
 export const GardenPage: React.FC = () => {
-  const { gardenId, flowerId } = useParams<{ gardenId: string; flowerId?: string }>();
+  const { gardenId, flowerId: routeFlowerId } = useParams<{ gardenId: string; flowerId?: string }>();
   const [searchParams] = useSearchParams();
   const fromEmail = searchParams.get('from') === 'email';
+  // Guest mode: token from email link — only active when NOT already authenticated.
+  // If the user signed up after receiving the link, treat them as a normal auth user.
+  const guestToken = searchParams.get('token');
+  const guestFlowerId = searchParams.get('flower');
+  const { user, isAuthenticated } = useAuthStore();
+  const isGuestMode = !!guestToken && !isAuthenticated;
+  // For deep-link logic, prefer route param, fall back to ?flower= query param
+  const flowerId = routeFlowerId || guestFlowerId || undefined;
+
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   const { currentGarden, fetchGardenById } = useGardenStore();
   const { flowers, fetchFlowersByGarden } = useFlowerStore();
+
+  // Guest-mode state
+  const [guestGarden, setGuestGarden] = useState<(typeof currentGarden) | null>(null);
+  const [guestFlowers, setGuestFlowers] = useState<Flower[]>([]);
+  const [guestDisplayName, setGuestDisplayName] = useState<string | undefined>();
+
+  // Resolved values — guest overrides authenticated store
+  const activeGarden = isGuestMode ? guestGarden : currentGarden;
+  const activeFlowers = isGuestMode ? guestFlowers : flowers;
+
   const [isPlantPanelOpen, setIsPlantPanelOpen] = useState(false);
   const [isPlacementMode, setIsPlacementMode] = useState(false);
-  const [_selectedFlowerForPlacement, setSelectedFlowerForPlacement] = useState<{ key: string } | null>(null);
+  // Write-only — value is not read directly; placement is driven by isPlacementMode
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setSelectedFlowerForPlacement] = useState<{ key: string } | null>(null);
   const [placedPosition, setPlacedPosition] = useState<{ x: number; y: number; z: number } | null>(null);
   const [isDraggingFlower, setIsDraggingFlower] = useState(false);
   const [selectedFlower, setSelectedFlower] = useState<Flower | null>(null);
@@ -68,17 +89,29 @@ export const GardenPage: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // --- Authenticated fetch ---
   useEffect(() => {
-    if (gardenId) {
-      fetchGardenById(gardenId);
-      fetchFlowersByGarden(gardenId);
-    }
-  }, [gardenId, fetchGardenById, fetchFlowersByGarden]);
+    if (isGuestMode || !gardenId) return;
+    fetchGardenById(gardenId);
+    fetchFlowersByGarden(gardenId);
+  }, [gardenId, isGuestMode, fetchGardenById, fetchFlowersByGarden]);
+
+  // --- Guest fetch (no auth header) ---
+  useEffect(() => {
+    if (!isGuestMode || !gardenId || !guestToken) return;
+    gardenService.fetchGuestGarden(gardenId, guestToken).then((res) => {
+      setGuestGarden(res.garden as typeof currentGarden);
+      setGuestFlowers(res.garden.flowers ?? []);
+      setGuestDisplayName(res.guestDisplayName);
+    }).catch((err) => {
+      console.error('Failed to load guest garden:', err);
+    });
+  }, [gardenId, guestToken, isGuestMode]);
 
   // Auto-open the deep-link flower once flowers are loaded
   useEffect(() => {
-    if (!flowerId || deepLinkOpenedRef.current || flowers.length === 0) return;
-    const target = flowers.find((f) => f.id === flowerId);
+    if (!flowerId || deepLinkOpenedRef.current || activeFlowers.length === 0) return;
+    const target = activeFlowers.find((f) => f.id === flowerId);
     if (target) {
       deepLinkOpenedRef.current = true;
       if (!fromEmail) {
@@ -87,7 +120,7 @@ export const GardenPage: React.FC = () => {
       }
       // fromEmail: overlay already showing; modal opens via onDone callback
     }
-  }, [flowerId, flowers, fromEmail]);
+  }, [flowerId, activeFlowers, fromEmail]);
 
   const handlePlantSuccess = () => {
     if (gardenId) {
@@ -227,103 +260,155 @@ export const GardenPage: React.FC = () => {
 
           {/* Garden Title */}
           <div style={{ ...headerTitleStyle, ...(isMobile ? { fontSize: '1.1rem' } : {}) }}>
-            {currentGarden?.title || 'Loading...'}
+            {activeGarden?.title || 'Loading...'}
           </div>
 
           {/* Garden Stats */}
-          {currentGarden && (
+          {activeGarden && (
             <div className="garden-stats" style={headerStatsStyle}>
               <div style={statItemStyle}>
                 <LocalFlorist sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
-                <span>{flowers.length} flowers</span>
+                <span>{activeFlowers.length} flowers</span>
               </div>
-              <div style={statItemStyle}>
-                <People sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
-                <span>{currentGarden.members?.length || 0} members</span>
-              </div>
+              {!isGuestMode && (
+                <div style={statItemStyle}>
+                  <People sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                  <span>{activeGarden.members?.length || 0} members</span>
+                </div>
+              )}
               <div style={statItemStyle}>
                 <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
-                <span>{formatDate(currentGarden.createdAt)}</span>
+                <span>{formatDate(activeGarden.createdAt)}</span>
               </div>
             </div>
           )}
         </div>
 
-        {/* Action Buttons */}
-        <div className="garden-header-actions" style={headerRightStyle}>
-          {isMobile ? (
-            <>
-              <button
-                onClick={() => setIsSettingsOpen(true)}
-                title="Garden Details"
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: '#E8A4B0',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
-                  transition: 'background 0.2s ease',
-                }}
-              >
-                <SettingsOutlined sx={{ fontSize: 22, color: '#FFFFFF' }} />
-              </button>
-              <button
-                onClick={() => setIsPlantPanelOpen(true)}
-                title="Plant Flower"
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: '#E8A4B0',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
-                  transition: 'background 0.2s ease',
-                }}
-              >
-                <LocalFlorist sx={{ fontSize: 22, color: '#FFFFFF' }} />
-              </button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="primary"
-                size="medium"
-                onClick={() => setIsSettingsOpen(true)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: theme.spacing.xs,
-                }}
-              >
-                <SettingsOutlined sx={{ fontSize: 18 }} />
-                Garden Details
-              </Button>
-              <Button
-                variant="primary"
-                size="medium"
-                onClick={() => setIsPlantPanelOpen(true)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: theme.spacing.xs,
-                }}
-              >
-                <LocalFlorist sx={{ fontSize: 18 }} />
-                Plant Flower
-              </Button>
-            </>
-          )}
-        </div>
+        {/* Action Buttons — hidden in guest mode */}
+        {!isGuestMode && (
+          <div className="garden-header-actions" style={headerRightStyle}>
+            {isMobile ? (
+              <>
+                <button
+                  onClick={() => setIsSettingsOpen(true)}
+                  title="Garden Details"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    background: '#E8A4B0',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
+                    transition: 'background 0.2s ease',
+                  }}
+                >
+                  <SettingsOutlined sx={{ fontSize: 22, color: '#FFFFFF' }} />
+                </button>
+                <button
+                  onClick={() => setIsPlantPanelOpen(true)}
+                  title="Plant Flower"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    background: '#E8A4B0',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(212, 144, 154, 0.35)',
+                    transition: 'background 0.2s ease',
+                  }}
+                >
+                  <LocalFlorist sx={{ fontSize: 22, color: '#FFFFFF' }} />
+                </button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="primary"
+                  size="medium"
+                  onClick={() => setIsSettingsOpen(true)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: theme.spacing.xs,
+                  }}
+                >
+                  <SettingsOutlined sx={{ fontSize: 18 }} />
+                  Garden Details
+                </Button>
+                <Button
+                  variant="primary"
+                  size="medium"
+                  onClick={() => setIsPlantPanelOpen(true)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: theme.spacing.xs,
+                  }}
+                >
+                  <LocalFlorist sx={{ fontSize: 18 }} />
+                  Plant Flower
+                </Button>
+              </>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Guest Banner */}
+      {isGuestMode && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '72px',
+            left: 0,
+            right: 0,
+            zIndex: 99,
+            background: 'linear-gradient(135deg, #FFF0F3 0%, #FFF5F7 100%)',
+            borderBottom: '1px solid rgba(232, 164, 176, 0.4)',
+            padding: '10px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span style={{
+            fontFamily: '"Inter", sans-serif',
+            fontSize: '13px',
+            color: '#9D6B77',
+            fontWeight: 500,
+          }}>
+            🌸 {guestDisplayName ? `Welcome, ${guestDisplayName}!` : 'You\'re viewing as a guest'} — Read-only view
+          </span>
+          <a
+            href="/auth/register"
+            style={{
+              fontFamily: '"Inter", sans-serif',
+              fontSize: '13px',
+              fontWeight: 600,
+              color: '#D4909A',
+              textDecoration: 'none',
+              padding: '5px 14px',
+              borderRadius: '20px',
+              border: '1px solid rgba(212,144,154,0.5)',
+              background: '#FFFFFF',
+              whiteSpace: 'nowrap',
+              transition: 'background 0.15s',
+            }}
+          >
+            Sign up for full access →
+          </a>
+        </div>
+      )}
 
       {/* 3D Garden Scene */}
       <div style={canvasContainerStyle}>
@@ -333,7 +418,7 @@ export const GardenPage: React.FC = () => {
         >
           <GardenScene 
             config={GARDEN_CONFIGS.test_garden}
-            flowers={flowers}
+            flowers={activeFlowers}
             isPlacementMode={isPlacementMode}
             onTerrainClick={(position) => {
               if (isPlacementMode) {
@@ -347,7 +432,9 @@ export const GardenPage: React.FC = () => {
             }}
             onFlowerClick={(flower: Flower) => {
               setSelectedFlower(flower);
-              navigate(`/garden/${gardenId}/flower/${flower.id}`, { replace: false });
+              // Preserve ?token= for guests so the URL stays valid
+              const params = guestToken ? `?token=${guestToken}` : '';
+              navigate(`/garden/${gardenId}/flower/${flower.id}${params}`, { replace: false });
             }}
             onFlowerHover={(info) => {
               // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
@@ -563,7 +650,7 @@ export const GardenPage: React.FC = () => {
           onDone={() => {
             setShowRevealOverlay(false);
             if (flowerId) {
-              const target = flowers.find((f) => f.id === flowerId);
+              const target = activeFlowers.find((f) => f.id === flowerId);
               if (target) setSelectedFlower(target);
             }
           }}
@@ -575,8 +662,10 @@ export const GardenPage: React.FC = () => {
         isOpen={!!selectedFlower}
         onClose={() => {
           setSelectedFlower(null);
-          // Return URL to garden level (no flower ID)
-          navigate(`/garden/${gardenId}`, { replace: true });
+          // Return URL to garden level — preserve ?token= for guests so GardenRoute
+          // doesn't redirect them to login when the modal closes.
+          const params = guestToken ? `?token=${guestToken}` : '';
+          navigate(`/garden/${gardenId}${params}`, { replace: true });
         }}
         flower={selectedFlower}
         definition={selectedFlower ? FLOWER_DEFINITIONS[selectedFlower.flowerDefinition?.key?.toLowerCase() || 'daisy'] : null}
@@ -587,8 +676,8 @@ export const GardenPage: React.FC = () => {
         }}
       />
 
-      {/* Garden Settings Modal */}
-      {currentGarden && user && (
+      {/* Garden Settings Modal — only for authenticated owners */}
+      {!isGuestMode && currentGarden && user && (
         <GardenSettingsModal
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
