@@ -1,6 +1,5 @@
 import { useGLTF } from '@react-three/drei';
 import { useMemo } from 'react';
-import * as THREE from 'three';
 
 type TreeSeason = 'spring' | 'autumn' | 'winter' | 'quiet';
 

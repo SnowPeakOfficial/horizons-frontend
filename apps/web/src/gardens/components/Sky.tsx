@@ -111,7 +111,7 @@ function Clouds({
   }, [count]);
   
   // Gentle cloud drift animation
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * speed * 0.01;
     }
@@ -138,7 +138,6 @@ function Clouds({
 function Cloud({
   position,
   scale,
-  rotation,
   style
 }: {
   position: [number, number, number];

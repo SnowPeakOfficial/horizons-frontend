@@ -13,6 +13,7 @@ import { PricingSuccessPage } from '../pages/PricingSuccessPage';
 import { ProfilePage } from '../pages/ProfilePage';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import { GuestRoute } from '../components/auth/GuestRoute';
+import { GardenRoute } from '../components/auth/GardenRoute';
 import { PrivacyPage } from '../pages/PrivacyPage';
 import { TermsPage } from '../pages/TermsPage';
 import { ContactPage } from '../pages/ContactPage';
@@ -58,17 +59,17 @@ export const router = createBrowserRouter([
       {
         path: '/garden/:gardenId',
         element: (
-          <ProtectedRoute>
+          <GardenRoute>
             <GardenPage />
-          </ProtectedRoute>
+          </GardenRoute>
         ),
       },
       {
         path: '/garden/:gardenId/flower/:flowerId',
         element: (
-          <ProtectedRoute>
+          <GardenRoute>
             <GardenPage />
-          </ProtectedRoute>
+          </GardenRoute>
         ),
       },
 

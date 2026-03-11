@@ -582,47 +582,6 @@ function SucculentPot1() {
 }
 
 /**
- * SucculentPot2 - Second succulent pot on top of Cabana
- */
-function SucculentPot2() {
-  const { scene } = useGLTF('/models/environment/Succulent Pot.glb');
-  
-  const clonedScene = useMemo(() => {
-    const clone = scene.clone();
-    
-    // Lightening value for succulent pot
-    const LIGHTENING_VALUE = 2.5;
-    
-    clone.traverse((child: any) => {
-      if (child.isMesh && child.material) {
-        const materials = Array.isArray(child.material) 
-          ? child.material 
-          : [child.material];
-        
-        materials.forEach((mat: any) => {
-          const material = mat.clone();
-          material.color.multiplyScalar(LIGHTENING_VALUE);
-          child.material = material;
-        });
-      }
-    });
-    
-    return clone;
-  }, [scene]);
-  
-  return (
-    <primitive 
-      object={clonedScene} 
-      position={[22.1, 0.8, -20.8]} 
-      rotation={[0, 0.5, 0]}
-      scale={0.8}
-      castShadow
-      receiveShadow
-    />
-  );
-}
-
-/**
  * Fiddle-leaf Plant - Decorative plant beside the Cabana
  */
 function FiddleLeafPlant() {

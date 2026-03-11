@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { theme } from '../styles/theme';
@@ -15,7 +14,6 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
 );
 
 export const PrivacyPage: React.FC = () => {
-  const navigate = useNavigate();
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)', display: 'flex', flexDirection: 'column' }}>
@@ -98,7 +96,7 @@ export const PrivacyPage: React.FC = () => {
             </Section>
 
             <Section title="11. Contact Us">
-              <p>If you have any questions or concerns about this Privacy Policy, please contact us at <strong>horizons.memory.garden@gmail.com</strong> or use our <span style={{ color: '#D4909A', cursor: 'pointer' }} onClick={() => window.location.href = '/contact'}>Contact page</span>.</p>
+              <p>If you have any questions or concerns about this Privacy Policy, please contact us at <strong>support@horizons-garden.com</strong> or use our <span style={{ color: '#D4909A', cursor: 'pointer' }} onClick={() => window.location.href = '/contact'}>Contact page</span>.</p>
             </Section>
           </div>
         </div>

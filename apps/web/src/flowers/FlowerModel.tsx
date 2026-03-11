@@ -1,8 +1,9 @@
 import { useGLTF } from '@react-three/drei';
 import { useMemo, useState, useRef, useEffect } from 'react';
-import { useThree, ThreeEvent } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
+import type { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
-import { PlacedFlower, FlowerDefinition } from './types';
+import type { PlacedFlower, FlowerDefinition } from './types';
 import { AnimatedFlowerBloom } from './AnimatedFlowerBloom';
 
 interface FlowerModelProps {
@@ -33,9 +34,11 @@ export function FlowerModel({
   const [hovered, setHovered] = useState(false);
   const [dragging, setDragging] = useState(false);
   const meshRef = useRef<THREE.Group>(null);
-  const dragPlaneRef = useRef<THREE.Mesh>(null);
-  const hoverTimeoutRef = useRef<number>();
-  const { camera, raycaster, gl, scene } = useThree();
+  const hoverTimeoutRef = useRef<number | undefined>(undefined);
+  const camera = useThree((state) => state.camera);
+  const raycaster = useThree((state) => state.raycaster);
+  const gl = useThree((state) => state.gl);
+  const scene = useThree((state) => state.scene);
   const dragOffsetRef = useRef(new THREE.Vector3());
   const pointerDownTimeRef = useRef(0);
   const pointerDownPosRef = useRef({ x: 0, y: 0 });

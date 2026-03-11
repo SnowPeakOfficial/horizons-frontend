@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
 import { FlowerModel } from './FlowerModel';
-import { PlacedFlower, FlowerDefinition, getFlowerDefinition, generateFlowerId, FLOWER_DEFINITIONS } from './types';
+import type { PlacedFlower, FlowerDefinition } from './types';
+import { getFlowerDefinition, generateFlowerId, FLOWER_DEFINITIONS } from './types';
 
 interface FlowerGardenProps {
-  gardenId: string;
+  gardenId?: string;
   onFlowerClick?: (flower: PlacedFlower, definition: FlowerDefinition) => void;
   initialFlowers?: PlacedFlower[];
 }
@@ -13,41 +14,11 @@ interface FlowerGardenProps {
  * Handles adding, removing, and repositioning flowers
  */
 export function FlowerGarden({ 
-  gardenId, 
   onFlowerClick,
   initialFlowers = []
 }: FlowerGardenProps) {
   const [flowers, setFlowers] = useState<PlacedFlower[]>(initialFlowers);
-  const [hoveredFlower, setHoveredFlower] = useState<string | null>(null);
-  
-  // Add a new flower to the garden
-  const addFlower = useCallback((
-    flowerDefinitionId: number,
-    position: { x: number; y: number; z: number }
-  ) => {
-    const definition = getFlowerDefinition(flowerDefinitionId);
-    if (!definition) return;
-    
-    const newFlower: PlacedFlower = {
-      id: generateFlowerId(),
-      flowerDefinitionId,
-      gardenId,
-      position,
-      rotation: Math.random() * Math.PI * 2, // Random rotation
-      scale: definition.defaultScale,
-      placedAt: new Date(),
-      state: 'BUD' // Start as bud, will bloom on click or immediately
-    };
-    
-    setFlowers(prev => [...prev, newFlower]);
-    return newFlower;
-  }, [gardenId]);
-  
-  // Remove a flower from the garden
-  const removeFlower = useCallback((flowerId: string) => {
-    setFlowers(prev => prev.filter(f => f.id !== flowerId));
-  }, []);
-  
+
   // Update flower position (from drag)
   const updateFlowerPosition = useCallback((
     flowerId: string,
@@ -57,7 +28,7 @@ export function FlowerGarden({
       f.id === flowerId ? { ...f, position } : f
     ));
   }, []);
-  
+
   // Handle flower click
   const handleFlowerClick = useCallback((flower: PlacedFlower) => {
     const definition = getFlowerDefinition(flower.flowerDefinitionId);
@@ -65,7 +36,7 @@ export function FlowerGarden({
       onFlowerClick?.(flower, definition);
     }
   }, [onFlowerClick]);
-  
+
   // Handle drag end - update position
   const handleDragEnd = useCallback((
     flower: PlacedFlower,
@@ -73,13 +44,13 @@ export function FlowerGarden({
   ) => {
     updateFlowerPosition(flower.id, position);
   }, [updateFlowerPosition]);
-  
+
   return (
     <group>
       {flowers.map(flower => {
         const definition = getFlowerDefinition(flower.flowerDefinitionId);
         if (!definition) return null;
-        
+
         return (
           <FlowerModel
             key={flower.id}
@@ -87,9 +58,6 @@ export function FlowerGarden({
             definition={definition}
             onClick={handleFlowerClick}
             onDragEnd={handleDragEnd}
-            onHover={(hovered) => {
-              setHoveredFlower(hovered ? flower.id : null);
-            }}
             draggable={true}
           />
         );
@@ -104,14 +72,14 @@ export function FlowerGarden({
  */
 export function useFlowerGarden(gardenId: string, initialFlowers: PlacedFlower[] = []) {
   const [flowers, setFlowers] = useState<PlacedFlower[]>(initialFlowers);
-  
+
   const addFlower = useCallback((
     flowerDefinitionId: number,
     position: { x: number; y: number; z: number }
   ) => {
     const definition = getFlowerDefinition(flowerDefinitionId);
     if (!definition) return null;
-    
+
     const newFlower: PlacedFlower = {
       id: generateFlowerId(),
       flowerDefinitionId,
@@ -120,27 +88,28 @@ export function useFlowerGarden(gardenId: string, initialFlowers: PlacedFlower[]
       rotation: Math.random() * Math.PI * 2,
       scale: definition.defaultScale,
       placedAt: new Date(),
-      state: 'BUD' // Start as bud, will bloom on click or immediately
+      type: 'STANDARD',
+      state: 'BUD',
     };
-    
+
     setFlowers(prev => [...prev, newFlower]);
     return newFlower;
   }, [gardenId]);
-  
+
   const removeFlower = useCallback((flowerId: string) => {
     setFlowers(prev => prev.filter(f => f.id !== flowerId));
   }, []);
-  
+
   const updateFlower = useCallback((flowerId: string, updates: Partial<PlacedFlower>) => {
-    setFlowers(prev => prev.map(f => 
+    setFlowers(prev => prev.map(f =>
       f.id === flowerId ? { ...f, ...updates } : f
     ));
   }, []);
-  
+
   const clearFlowers = useCallback(() => {
     setFlowers([]);
   }, []);
-  
+
   return {
     flowers,
     addFlower,

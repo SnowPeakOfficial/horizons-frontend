@@ -3,7 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface ButterflyProps {
-  index: number;
   color: string;
   startPosition: [number, number, number];
 }
@@ -11,7 +10,7 @@ interface ButterflyProps {
 /**
  * Individual butterfly with figure-8 flight pattern
  */
-function Butterfly({ index, color, startPosition }: ButterflyProps) {
+function Butterfly({ color, startPosition }: ButterflyProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   
   // Random offset for unique movement
@@ -127,7 +126,6 @@ export function Butterflies() {
       {butterflies.map((butterfly, i) => (
         <Butterfly
           key={i}
-          index={i}
           color={butterfly.color}
           startPosition={butterfly.pos}
         />

@@ -17,7 +17,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { CurvedDivider } from '../components/landing/CurvedDivider';
+import { UseCasesSection } from '../components/landing/UseCasesSection';
 import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { theme } from '../styles/theme';
@@ -50,6 +50,7 @@ export const LandingPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem('introPlayed')); // Once per session
   const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set());
+  const [showLetterModal, setShowLetterModal] = useState(false);
 
   const toggleFaq = (index: number) => {
     setOpenFaqs(prev => {
@@ -289,7 +290,7 @@ export const LandingPage: React.FC = () => {
               variant="ghost"
               size="large"
               onClick={() => {
-                const element = document.getElementById('our-letter');
+                const element = document.getElementById('how-it-works');
                 element?.scrollIntoView({ behavior: 'smooth' });
               }}
               style={{
@@ -301,7 +302,7 @@ export const LandingPage: React.FC = () => {
                 backdropFilter: 'blur(8px)',
               }}
             >
-              Read our letter
+              See how it works
             </Button>
           </div>
 
@@ -338,126 +339,193 @@ export const LandingPage: React.FC = () => {
       {/* Smooth transition */}
       <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent)' }} />
 
-      {/* ========== OUR LETTER - Handwritten Note Style ========== */}
+      {/* ========== FOUNDER'S NOTE — Claura-style photo card ========== */}
       <section
-        id="our-letter"
         style={{
-          padding: '120px 40px',
-          background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFEF9 100%)',
+          padding: '80px 40px 120px',
+          background: '#FFFFFF',
         }}
       >
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealOnScroll>
-            {/* Letter Container - Handwritten Note Card */}
             <div
+              className="founder-note-card"
               style={{
-                background: '#FFFEF9',
-                borderRadius: theme.radius['2xl'],
-                padding: 'clamp(40px, 6vw, 80px)',
-                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(139, 115, 85, 0.1)',
-                border: '1px solid rgba(139, 115, 85, 0.15)',
                 position: 'relative',
-                transform: 'rotate(-0.5deg)',
-                transition: 'transform 400ms ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'rotate(-0.5deg) translateY(-8px)';
-                e.currentTarget.style.boxShadow = '0 12px 48px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(139, 115, 85, 0.15)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'rotate(-0.5deg)';
-                e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(139, 115, 85, 0.1)';
+                borderRadius: '20px',
+                overflow: 'hidden',
+                // Horizontal panoramic proportions — like the reference card
+                aspectRatio: '16 / 7',
+                background: '#1a1a1a',
+                boxShadow: '0 24px 80px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.10)',
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
-              {/* Subtle paper texture overlay */}
-              <div
+              {/* Layer 1 — Sharp, vibrant base */}
+              <img
+                src="/images/flower-field1.jpg"
+                alt=""
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 115, 85, 0.02) 2px, rgba(139, 115, 85, 0.02) 4px)',
-                  borderRadius: theme.radius['2xl'],
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 40%',
+                  filter: 'saturate(1.9) brightness(1.08) contrast(1.06)',
+                  userSelect: 'none',
                   pointerEvents: 'none',
                 }}
               />
 
-              {/* Letter Header */}
-              <h2
+              {/* Layer 2 — Blurred bokeh edges, masked to show only at periphery */}
+              <img
+                src="/images/flower-field1.jpg"
+                alt=""
                 style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(28px, 4vw, 40px)',
-                  fontWeight: typography.fontWeight.normal,
-                  color: theme.text.primary,
-                  textAlign: 'center',
-                  marginBottom: theme.spacing['5xl'],
-                  letterSpacing: '0.02em',
-                  position: 'relative',
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 40%',
+                  transform: 'scale(1.06)',
+                  filter: 'blur(20px) saturate(2.4) brightness(0.85)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 50% 65% at 58% 48%, transparent 0%, transparent 20%, black 60%)',
+                  maskImage: 'radial-gradient(ellipse 50% 65% at 58% 48%, transparent 0%, transparent 20%, black 60%)',
+                  userSelect: 'none',
+                  pointerEvents: 'none',
                 }}
-              >
-                A Letter About Horizons
-              </h2>
+              />
 
-              {/* Letter Body */}
+              {/* Brand pink tint — warm rose wash, multiply blend */}
               <div
                 style={{
-                  fontFamily: typography.fontFamily.serif,
-                  fontSize: 'clamp(17px, 2vw, 20px)',
-                  lineHeight: 1.9,
-                  color: theme.text.secondary,
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'rgba(212, 144, 154, 0.55)',
+                  mixBlendMode: 'multiply' as const,
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Bottom gradient — anchors text, fades upward quickly */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.52) 100%)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Left vignette — makes text column readable without killing photo */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to right, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.10) 40%, transparent 65%)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* HEAVY film grain — coarse, visible, Claura signature texture
+                  Two passes: one soft-light for brightness variation, one multiply for darkness */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.38'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '180px 180px',
+                  opacity: 1,
+                  mixBlendMode: 'soft-light' as const,
+                  pointerEvents: 'none',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch' seed='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g2)' opacity='0.22'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '180px 180px',
+                  opacity: 0.7,
+                  mixBlendMode: 'multiply' as const,
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Content */}
+              <div
+                style={{
                   position: 'relative',
+                  zIndex: 2,
+                  padding: 'clamp(48px, 6vw, 72px)',
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
                 }}
               >
-                <p style={{ marginBottom: theme.spacing['3xl'] }}>
-                  We built this because we kept losing things.
-                </p>
-
-                <p style={{ marginBottom: theme.spacing['3xl'] }}>
-                  Not physical things — but moments. Conversations that mattered. 
-                  Feelings we wanted to remember. Thoughts we had at 2am that felt important.
-                </p>
-
-                <p style={{ marginBottom: theme.spacing['3xl'] }}>
-                  Social media wasn't the answer. It's too public, too performative, 
-                  too temporary.
-                </p>
-
-                <p style={{ marginBottom: theme.spacing['3xl'] }}>
-                  We needed something quieter. Something just for us. A place where 
-                  memories could live without being judged, liked, or compared.
-                </p>
-
-                <p style={{ marginBottom: theme.spacing['3xl'], fontWeight: typography.fontWeight.medium, color: theme.text.primary }}>
-                  So we built Horizons.
-                </p>
-
-                <p style={{ marginBottom: theme.spacing['3xl'] }}>
-                  A private garden where memories grow as flowers. Plant them. 
-                  Watch them bloom. Return when you need to.
-                </p>
-
-                {/* Signature */}
+                {/* Quote — large, prominent */}
                 <p
                   style={{
-                    marginTop: theme.spacing['5xl'],
-                    fontStyle: 'italic',
-                    textAlign: 'right',
-                    color: theme.text.tertiary,
-                    fontSize: 'clamp(16px, 1.8vw, 18px)',
+                    fontFamily: typography.fontFamily.serif,
+                    fontSize: 'clamp(28px, 3.2vw, 44px)',
+                    fontWeight: typography.fontWeight.normal,
+                    color: '#FFFFFF',
+                    lineHeight: 1.4,
+                    letterSpacing: '-0.01em',
+                    marginBottom: '32px',
+                    textShadow: '0 2px 12px rgba(0,0,0,0.35)',
                   }}
                 >
-                  — The Horizons Team
+                  We built this because we kept losing things.
+                  Not physical things — but moments that mattered.
                 </p>
+
+                {/* Attribution */}
+                <p
+                  style={{
+                    fontFamily: typography.fontFamily.serif,
+                    fontWeight: typography.fontWeight.semibold,
+                    fontSize: '18px',
+                    color: '#FFFFFF',
+                    letterSpacing: '0.03em',
+                    marginBottom: '36px',
+                    textShadow: '0 1px 4px rgba(0,0,0,0.20)',
+                  }}
+                >
+                  The Horizons Team
+                </p>
+
+                {/* Primary pink button — same as hero CTA */}
+                <Button
+                  variant="primary"
+                  size="large"
+                  onClick={() => setShowLetterModal(true)}
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.colors.rose[600]} 0%, ${theme.colors.rose[700]} 100%)`,
+                    fontSize: '15px',
+                    padding: '13px 30px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.22), 0 8px 32px rgba(0,0,0,0.10)',
+                  }}
+                >
+                  Read our letter →
+                </Button>
               </div>
             </div>
           </RevealOnScroll>
         </div>
       </section>
 
-      <CurvedDivider color="#FFF9F7" flip />
-
       {/* ========== HOW IT WORKS - Editorial Vertical Steps ========== */}
       <section
+        id="how-it-works"
         style={{
-          padding: '120px 40px',
+          padding: '80px 40px 120px',
           background: '#FFF9F7',
         }}
       >
@@ -480,7 +548,7 @@ export const LandingPage: React.FC = () => {
                 fontFamily: typography.fontFamily.serif,
                 fontWeight: typography.fontWeight.normal,
                 textAlign: 'center',
-                marginBottom: '96px',
+                marginBottom: '56px',
                 color: theme.text.primary,
                 letterSpacing: '-0.01em',
                 lineHeight: 1.15,
@@ -614,219 +682,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========== USE CASES ========== */}
-      <section
-        style={{
-          padding: '120px 40px',
-          background: '#FFFFFF',
-        }}
-      >
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-
-          {/* Section header */}
-          <RevealOnScroll>
-            <p style={{
-              fontFamily: typography.fontFamily.serif,
-              fontSize: '18px',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase' as const,
-              color: theme.text.tertiary,
-              textAlign: 'center',
-              marginBottom: theme.spacing.lg,
-            }}>Use cases</p>
-            <h2 style={{
-              fontSize: 'clamp(40px, 5.5vw, 64px)',
-              fontFamily: typography.fontFamily.serif,
-              fontWeight: typography.fontWeight.normal,
-              textAlign: 'center',
-              marginBottom: '80px',
-              color: theme.text.primary,
-              letterSpacing: '-0.01em',
-              lineHeight: 1.15,
-            }}>
-              Every moment deserves a place to grow.
-            </h2>
-          </RevealOnScroll>
-
-          {/* Three-card panel row */}
-          <RevealOnScroll delay={80}>
-            <div className="use-cases-cards-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              borderRadius: '16px',
-              overflow: 'hidden',
-              border: `1px solid ${theme.border.light}`,
-              boxShadow: '0 4px 32px rgba(61, 51, 64, 0.06)',
-            }}>
-
-              {[
-                {
-                  bg: '#FFF0F3',
-                  accent: theme.colors.rose[400],
-                  accentText: theme.colors.rose[700],
-                  accentBg: '#FFE0E6',
-                  headline: 'For the ones who\nmatter most',
-                  quote: '"She opened it on the train home.\nI wasn\'t there —\nbut somehow, I was."',
-                  label: 'For loved ones',
-                  examples: ['Anniversaries', 'Long-distance', 'Just because'],
-                  borderColor: theme.colors.rose[200],
-                },
-                {
-                  bg: '#FFFBF0',
-                  accent: '#D4A96A',
-                  accentText: '#8B5E2A',
-                  accentBg: '#FFF3DC',
-                  headline: 'For the people\nyou build with',
-                  quote: '"He\'d been with us for five years.\nA card felt small.\nSo we planted something lasting."',
-                  label: 'For your team',
-                  examples: ['Milestones', 'Recognition', 'Achievements'],
-                  borderColor: '#E8D0A0',
-                },
-                {
-                  bg: '#F3FAF3',
-                  accent: '#4A7C59',
-                  accentText: '#2E5C3A',
-                  accentBg: '#DFF0DC',
-                  headline: 'For the person\nyou\'re becoming',
-                  quote: '"I planted it the day everything shifted.\nI open it when I forget\nhow far I\'ve come."',
-                  label: 'For yourself',
-                  examples: ['Growth', 'Milestones', 'Reflection'],
-                  borderColor: '#B8DDB0',
-                },
-              ].map((card, i) => (
-                <div
-                  key={i}
-                  style={{
-                    background: card.bg,
-                    padding: '52px 44px 48px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderLeft: i > 0 ? `1px solid ${card.borderColor}` : 'none',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {/* Top accent border */}
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '3px',
-                    background: card.accent,
-                  }} />
-
-                  {/* Headline */}
-                  <h3 style={{
-                    fontFamily: typography.fontFamily.serif,
-                    fontSize: 'clamp(24px, 2.5vw, 32px)',
-                    fontWeight: typography.fontWeight.normal,
-                    color: theme.text.primary,
-                    lineHeight: 1.25,
-                    marginBottom: '32px',
-                    letterSpacing: '-0.01em',
-                    whiteSpace: 'pre-line',
-                    position: 'relative',
-                    zIndex: 1,
-                  }}>
-                    {card.headline}
-                  </h3>
-
-                  {/* Quote — the emotional core */}
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: '16px',
-                    marginBottom: '40px',
-                    height: '96px',
-                  }}>
-                    {/* Accent bar — stretches to full height of text regardless of line count */}
-                    <div style={{
-                      width: '2px',
-                      flexShrink: 0,
-                      alignSelf: 'stretch',
-                      background: card.accent,
-                      borderRadius: '2px',
-                      opacity: 0.7,
-                    }} />
-                    <p style={{
-                      fontFamily: typography.fontFamily.serif,
-                      fontSize: '16px',
-                      fontStyle: 'italic',
-                      color: theme.text.secondary,
-                      lineHeight: 2.0,
-                      whiteSpace: 'pre-line',
-                      opacity: 0.85,
-                      margin: 0,
-                    }}>
-                      {card.quote}
-                    </p>
-                  </div>
-
-                  {/* Example tags */}
-                  <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap' as const,
-                    gap: '8px',
-                    marginBottom: '28px',
-                  }}>
-                    {card.examples.map((ex, j) => (
-                      <span key={j} style={{
-                        fontSize: '12px',
-                        color: card.accentText,
-                        background: card.accentBg,
-                        padding: '4px 12px',
-                        borderRadius: '100px',
-                        fontFamily: typography.fontFamily.serif,
-                        letterSpacing: '0.03em',
-                      }}>
-                        {ex}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Label chip */}
-                  <div style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase' as const,
-                    color: card.accentText,
-                    fontFamily: typography.fontFamily.serif,
-                  }}>
-                    <div style={{
-                      width: '20px',
-                      height: '1.5px',
-                      background: card.accent,
-                    }} />
-                    {card.label}
-                  </div>
-                </div>
-              ))}
-
-            </div>
-          </RevealOnScroll>
-
-          {/* Pull-quote closer */}
-          <RevealOnScroll delay={120}>
-            <p style={{
-              fontFamily: typography.fontFamily.serif,
-              fontSize: 'clamp(20px, 2.5vw, 28px)',
-              fontStyle: 'italic',
-              color: theme.text.tertiary,
-              textAlign: 'center',
-              marginTop: '72px',
-              letterSpacing: '0.01em',
-              lineHeight: 1.6,
-            }}>
-              "Some moments deserve forever."
-            </p>
-          </RevealOnScroll>
-
-        </div>
-      </section>
+      <UseCasesSection />
 
       {/* ========== WHY HORIZONS — Orix-style panel row ========== */}
       <section
@@ -881,10 +737,9 @@ export const LandingPage: React.FC = () => {
                 display: 'flex',
                 alignItems: 'flex-end',
                 justifyContent: 'center',
-                padding: '0 16px',
               }}>
                 <img
-                  src="/images/Default_A_highly_detailed_futuristic_3D_glassmorphic_rose_with_1_1e7015ea-9d7e-4641-a544-8aadfba8a958_0.png"
+                  src="/images/Default_A_mesmerizing_3D_illustration_of_a_delicate_cornflower_0_19deed4c-65ec-411d-8afd-76a72577a397_0.png"
                   alt=""
                   style={{
                     width: '100%',
@@ -1125,19 +980,21 @@ export const LandingPage: React.FC = () => {
       {/* ========== FINAL CTA ========== */}
       <section
         style={{
-          padding: '120px 40px',
-          background: 'linear-gradient(180deg, #FFFFFF 0%, #FFF9F7 100%)',
+          padding: '120px 40px 0px',
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #FFF9F7 50%, #FDFCFA 100%)',
           textAlign: 'center',
+          overflow: 'hidden',
         }}
       >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          {/* 1. Headline */}
           <RevealOnScroll>
             <h2
               style={{
                 fontSize: 'clamp(36px, 5vw, 64px)',
                 fontFamily: typography.fontFamily.serif,
                 fontWeight: typography.fontWeight.normal,
-                marginBottom: theme.spacing['6xl'],
+                marginBottom: '48px',
                 color: theme.text.primary,
                 lineHeight: 1.2,
               }}
@@ -1146,7 +1003,10 @@ export const LandingPage: React.FC = () => {
               <br />
               your garden is waiting
             </h2>
+          </RevealOnScroll>
 
+          {/* 2. Button */}
+          <RevealOnScroll delay={80}>
             <Button
               variant="primary"
               size="large"
@@ -1161,7 +1021,164 @@ export const LandingPage: React.FC = () => {
             </Button>
           </RevealOnScroll>
         </div>
+
+        {/* 3. Flower image — large, Claura-style centerpiece */}
+        <RevealOnScroll delay={160}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '40px',
+              marginBottom: '0',
+            }}
+          >
+            <img
+              src="/images/Default_A_delicately_rendered_3D_glassmorphism_flower_radiates_1_700f987d-038b-4bb7-bdff-feeaa85be7dc_0 1.png"
+              alt=""
+              style={{
+                width: 'clamp(340px, 45vw, 600px)',
+                height: 'auto',
+                userSelect: 'none',
+                pointerEvents: 'none',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%)',
+                filter: 'drop-shadow(0 16px 48px rgba(212, 144, 154, 0.25))',
+              }}
+            />
+          </div>
+        </RevealOnScroll>
       </section>
+
+      {/* ========== LETTER MODAL ========== */}
+      {showLetterModal && (
+        <div
+          onClick={() => setShowLetterModal(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(28, 20, 14, 0.75)',
+            backdropFilter: 'blur(12px)',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#FFFEF9',
+              borderRadius: '24px',
+              maxWidth: '680px',
+              width: '100%',
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              padding: 'clamp(40px, 6vw, 72px)',
+              position: 'relative',
+              boxShadow: '0 32px 80px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(139, 115, 85, 0.12)',
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setShowLetterModal(false)}
+              style={{
+                position: 'absolute',
+                top: '24px',
+                right: '24px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                background: 'rgba(61, 51, 64, 0.08)',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '18px',
+                color: theme.text.tertiary,
+                lineHeight: 1,
+                transition: 'background 200ms ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(61, 51, 64, 0.14)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(61, 51, 64, 0.08)'; }}
+            >
+              ×
+            </button>
+
+            {/* Subtle paper lines */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(139, 115, 85, 0.03) 30px, rgba(139, 115, 85, 0.03) 31px)',
+              borderRadius: '24px',
+              pointerEvents: 'none',
+            }} />
+
+            {/* Letter header */}
+            <h2
+              style={{
+                fontFamily: typography.fontFamily.serif,
+                fontSize: 'clamp(24px, 3.5vw, 36px)',
+                fontWeight: typography.fontWeight.normal,
+                color: theme.text.primary,
+                textAlign: 'center',
+                marginBottom: '48px',
+                letterSpacing: '0.01em',
+                position: 'relative',
+              }}
+            >
+              A Letter About Horizons
+            </h2>
+
+            {/* Letter body */}
+            <div
+              style={{
+                fontFamily: typography.fontFamily.serif,
+                fontSize: 'clamp(16px, 1.8vw, 19px)',
+                lineHeight: 2,
+                color: theme.text.secondary,
+                position: 'relative',
+              }}
+            >
+              <p style={{ marginBottom: '28px' }}>
+                We built this because we kept losing things.
+              </p>
+              <p style={{ marginBottom: '28px' }}>
+                Not physical things — but moments. Conversations that mattered.
+                Feelings we wanted to remember. Thoughts we had at 2am that felt important.
+              </p>
+              <p style={{ marginBottom: '28px' }}>
+                Social media wasn't the answer. It's too public, too performative,
+                too temporary.
+              </p>
+              <p style={{ marginBottom: '28px' }}>
+                We needed something quieter. Something just for us. A place where
+                memories could live without being judged, liked, or compared.
+              </p>
+              <p style={{ marginBottom: '28px', fontWeight: typography.fontWeight.medium, color: theme.text.primary }}>
+                So we built Horizons.
+              </p>
+              <p style={{ marginBottom: '28px' }}>
+                A private garden where memories grow as flowers. Plant them.
+                Watch them bloom. Return when you need to.
+              </p>
+              <p
+                style={{
+                  marginTop: '48px',
+                  fontStyle: 'italic',
+                  textAlign: 'right',
+                  color: theme.text.tertiary,
+                  fontSize: 'clamp(15px, 1.6vw, 17px)',
+                }}
+              >
+                — The Horizons Team
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ========== FOOTER ========== */}
       <Footer />

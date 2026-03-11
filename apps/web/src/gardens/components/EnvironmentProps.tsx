@@ -89,7 +89,6 @@ export function EnvironmentProps({
       
       // Fixed inset based on wall geometry - works across all garden sizes
       // Negative inset pushes walls outward to sit at outer perimeter
-      const wallWidth = 11.5; // Extended width for better corner coverage
       const inset = -2.5; // Negative pushes walls to garden terrain edge
       const gardenRadius = (gardenSize / 2) - inset;
       

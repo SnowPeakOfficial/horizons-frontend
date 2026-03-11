@@ -122,3 +122,6 @@ ul, ol {
 
 /* ========== Selection ========== */
 ::selection {
+  background: rgba(212, 144, 154, 0.3);
+  color: #3D3340;
+}
