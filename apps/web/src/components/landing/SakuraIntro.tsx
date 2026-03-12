@@ -176,6 +176,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              padding: '0 40px',
               animation: 'logoFade 8s ease forwards',
             }}
           >
@@ -186,6 +187,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 style={{
                   height: 'clamp(110px, 17vw, 220px)',
                   width: 'auto',
+                  maxWidth: '100%',
                   display: 'block',
                   userSelect: 'none',
                   pointerEvents: 'none',
@@ -307,7 +309,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                See How It Works
+                See how it works
               </Button>
             </div>
           </div>

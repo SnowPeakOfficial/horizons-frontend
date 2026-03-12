@@ -322,6 +322,10 @@ ul, ol {
 /* Garden page button label variants — short hidden by default, shown on mobile */
 .garden-btn-label-short { display: none; }
 
+/* My Gardens stats — desktop shows 3 cards, mobile shows 1 combined card */
+.my-gardens-stats-desktop { display: grid; }
+.my-gardens-stats-mobile  { display: none; }
+
 /* Loading shimmer utility */
 .loading-shimmer {
   background: linear-gradient(
@@ -460,6 +464,37 @@ ul, ol {
   .garden-header-actions {
     position: absolute !important;
     right: 16px !important;
+  }
+
+  /* My Gardens stats — swap to single combined card on mobile */
+  .my-gardens-stats-desktop { display: none !important; }
+  .my-gardens-stats-mobile  { display: flex !important; }
+
+  /* Garden Settings Modal — fullscreen on mobile */
+  .garden-settings-modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    overflow-y: auto !important;
+  }
+  .garden-settings-container {
+    border-radius: 0 !important;
+    min-height: 100dvh !important;
+  }
+
+  /* Garden Settings — member row: shrink role selector so remove button stays visible */
+  .member-role-actions {
+    flex-shrink: 0;
+    gap: 4px !important;
+  }
+  .member-role-actions select {
+    min-width: 76px !important;
+    max-width: 90px !important;
+    font-size: 12px !important;
+    padding: 5px 6px !important;
   }
 
   /* Footer — single column on mobile */

@@ -58,6 +58,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
   // Members tab state
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [newMemberRole, setNewMemberRole] = useState<'VIEWER' | 'CONTRIBUTOR'>('VIEWER');
+  const [inviteError, setInviteError] = useState('');
   
   // Confirmation dialogs
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -106,7 +107,15 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
 
   const handleAddMember = async () => {
     if (!isOwner || !newMemberEmail) return;
-    
+
+    // Client-side email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newMemberEmail)) {
+      setInviteError('Please enter a valid email address.');
+      return;
+    }
+
+    setInviteError('');
     setIsLoading(true);
     try {
       await gardenService.addMember(garden.id, {
@@ -115,10 +124,13 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
       });
       setNewMemberEmail('');
       setNewMemberRole('VIEWER');
+      setInviteError('');
       onGardenUpdated();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to add member:', error);
-      alert('Failed to add member. Please try again.');
+      const message =
+        error instanceof Error ? error.message : 'Failed to add member. Please try again.';
+      setInviteError(message);
     } finally {
       setIsLoading(false);
     }
@@ -201,8 +213,8 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} maxWidth="700px" showCloseButton={false}>
-        <div style={containerStyle}>
+      <Modal isOpen={isOpen} onClose={onClose} maxWidth="700px" showCloseButton={false} className="garden-settings-modal">
+        <div style={containerStyle} className="garden-settings-container">
           {/* Close Button - Top Right */}
           <button
             onClick={onClose}
@@ -384,7 +396,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                           </div>
                         </div>
                       </div>
-                      <div style={memberRoleContainerStyle}>
+                      <div style={memberRoleContainerStyle} className="member-role-actions">
                         {member.role === 'OWNER' ? (
                           <span style={{
                             ...memberRoleBadgeStyle,
@@ -437,9 +449,25 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                       <Input
                         type="email"
                         value={newMemberEmail}
-                        onChange={(e) => setNewMemberEmail(e.target.value)}
+                        onChange={(e) => {
+                          setNewMemberEmail(e.target.value);
+                          if (inviteError) setInviteError('');
+                        }}
                         placeholder="member@example.com"
                       />
+                      {inviteError && (
+                        <p style={{
+                          marginTop: '6px',
+                          marginBottom: 0,
+                          fontSize: '13px',
+                          color: '#DC2626',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}>
+                          ⚠ {inviteError}
+                        </p>
+                      )}
                     </div>
                     <div style={formGroupStyle}>
                       <label style={labelStyle}>Role</label>
