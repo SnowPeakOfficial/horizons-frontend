@@ -502,6 +502,34 @@ ul, ol {
     padding: 5px 6px !important;
   }
 
+  /* Hero h1 — reduce bottom margin on mobile (less gap before subtext) */
+  .hero-content h1 {
+    margin-bottom: 12px !important;
+  }
+
+  /* Hero subheading — reduce bottom margin on mobile (less gap before buttons) */
+  .hero-subheading {
+    font-size: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Hero CTA buttons — smaller, side by side on mobile */
+  .hero-cta-group {
+    gap: 8px !important;
+  }
+  .hero-cta-group button {
+    font-size: 12px !important;
+    padding: 7px 14px !important;
+    min-width: unset !important;
+    height: 36px !important;
+    line-height: 1 !important;
+  }
+
+  /* Hero flower image — push down on mobile relative to buttons */
+  .hero-flower-wrapper {
+    margin-top: -95px !important;
+  }
+
   /* Footer — single column on mobile */
   .footer-top-row {
     flex-direction: column !important;

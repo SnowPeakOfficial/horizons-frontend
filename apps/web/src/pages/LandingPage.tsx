@@ -264,11 +264,12 @@ export const LandingPage: React.FC = () => {
 
           {/* CTA Buttons */}
           <div
+            className="hero-cta-group"
             style={{
               display: 'flex',
               gap: theme.spacing.lg,
               justifyContent: 'center',
-              flexWrap: 'wrap',
+              flexWrap: 'nowrap',
               position: 'relative',
               zIndex: 3,
             }}
@@ -311,6 +312,7 @@ export const LandingPage: React.FC = () => {
 
         {/* Hydrangea image — pulled up close to buttons, Bloomory/Once-style */}
         <div
+          className="hero-flower-wrapper"
           style={{
             position: 'relative',
             zIndex: 1,
@@ -336,9 +338,6 @@ export const LandingPage: React.FC = () => {
           />
         </div>
       </section>
-
-      {/* Smooth transition */}
-      <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent)' }} />
 
       {/* ========== FOUNDER'S NOTE — Claura-style photo card ========== */}
       <section
