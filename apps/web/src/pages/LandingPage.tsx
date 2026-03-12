@@ -246,6 +246,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Subheading */}
           <p
+            className="hero-subheading"
             style={{
               fontSize: 'clamp(20px, 3vw, 28px)',
               fontWeight: typography.fontWeight.medium,
@@ -263,11 +264,12 @@ export const LandingPage: React.FC = () => {
 
           {/* CTA Buttons */}
           <div
+            className="hero-cta-group"
             style={{
               display: 'flex',
               gap: theme.spacing.lg,
               justifyContent: 'center',
-              flexWrap: 'wrap',
+              flexWrap: 'nowrap',
               position: 'relative',
               zIndex: 3,
             }}
@@ -310,6 +312,7 @@ export const LandingPage: React.FC = () => {
 
         {/* Hydrangea image — pulled up close to buttons, Bloomory/Once-style */}
         <div
+          className="hero-flower-wrapper"
           style={{
             position: 'relative',
             zIndex: 1,
@@ -335,9 +338,6 @@ export const LandingPage: React.FC = () => {
           />
         </div>
       </section>
-
-      {/* Smooth transition */}
-      <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent)' }} />
 
       {/* ========== FOUNDER'S NOTE — Claura-style photo card ========== */}
       <section
@@ -372,7 +372,7 @@ export const LandingPage: React.FC = () => {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: 'center 40%',
+                  objectPosition: '70% 40%',
                   filter: 'saturate(1.9) brightness(1.08) contrast(1.06)',
                   userSelect: 'none',
                   pointerEvents: 'none',
@@ -389,11 +389,11 @@ export const LandingPage: React.FC = () => {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: 'center 40%',
+                  objectPosition: '70% 40%',
                   transform: 'scale(1.06)',
                   filter: 'blur(20px) saturate(2.4) brightness(0.85)',
-                  WebkitMaskImage: 'radial-gradient(ellipse 50% 65% at 58% 48%, transparent 0%, transparent 20%, black 60%)',
-                  maskImage: 'radial-gradient(ellipse 50% 65% at 58% 48%, transparent 0%, transparent 20%, black 60%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 62% 72% at 58% 48%, transparent 0%, transparent 25%, black 65%)',
+                  maskImage: 'radial-gradient(ellipse 62% 72% at 58% 48%, transparent 0%, transparent 25%, black 65%)',
                   userSelect: 'none',
                   pointerEvents: 'none',
                 }}

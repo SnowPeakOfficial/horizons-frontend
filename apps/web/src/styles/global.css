@@ -322,6 +322,10 @@ ul, ol {
 /* Garden page button label variants — short hidden by default, shown on mobile */
 .garden-btn-label-short { display: none; }
 
+/* My Gardens stats — desktop shows 3 cards, mobile shows 1 combined card */
+.my-gardens-stats-desktop { display: grid; }
+.my-gardens-stats-mobile  { display: none; }
+
 /* Loading shimmer utility */
 .loading-shimmer {
   background: linear-gradient(
@@ -397,6 +401,11 @@ ul, ol {
     padding-right: 16px !important;
   }
 
+  /* Hero subheading — scale down on mobile to match desktop proportions */
+  .hero-subheading {
+    font-size: 16px !important;
+  }
+
   /* Position mobile labels above the HORIZONS logo (section paddingTop = 40px) */
   .landing-label-mobile-left,
   .landing-label-mobile-right,
@@ -460,6 +469,65 @@ ul, ol {
   .garden-header-actions {
     position: absolute !important;
     right: 16px !important;
+  }
+
+  /* My Gardens stats — swap to single combined card on mobile */
+  .my-gardens-stats-desktop { display: none !important; }
+  .my-gardens-stats-mobile  { display: flex !important; }
+
+  /* Garden Settings Modal — fullscreen on mobile */
+  .garden-settings-modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    overflow-y: auto !important;
+  }
+  .garden-settings-container {
+    border-radius: 0 !important;
+    min-height: 100dvh !important;
+  }
+
+  /* Garden Settings — member row: shrink role selector so remove button stays visible */
+  .member-role-actions {
+    flex-shrink: 0;
+    gap: 4px !important;
+  }
+  .member-role-actions select {
+    min-width: 76px !important;
+    max-width: 90px !important;
+    font-size: 12px !important;
+    padding: 5px 6px !important;
+  }
+
+  /* Hero h1 — reduce bottom margin on mobile (less gap before subtext) */
+  .hero-content h1 {
+    margin-bottom: 12px !important;
+  }
+
+  /* Hero subheading — reduce bottom margin on mobile (less gap before buttons) */
+  .hero-subheading {
+    font-size: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Hero CTA buttons — smaller, side by side on mobile */
+  .hero-cta-group {
+    gap: 8px !important;
+  }
+  .hero-cta-group button {
+    font-size: 12px !important;
+    padding: 7px 14px !important;
+    min-width: unset !important;
+    height: 36px !important;
+    line-height: 1 !important;
+  }
+
+  /* Hero flower image — push down on mobile relative to buttons */
+  .hero-flower-wrapper {
+    margin-top: -95px !important;
   }
 
   /* Footer — single column on mobile */

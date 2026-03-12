@@ -226,8 +226,8 @@ export const MyGardensPage: React.FC = () => {
           )}
         </div>
 
-        {/* Stats */}
-        <div style={statsContainerStyle}>
+        {/* Stats — Desktop: 3 separate cards */}
+        <div className="my-gardens-stats-desktop" style={statsContainerStyle}>
           <div style={statCardStyle}>
             <div style={statValueStyle}>{gardens.length}</div>
             <div style={statLabelStyle}>Active Gardens</div>
@@ -239,6 +239,49 @@ export const MyGardensPage: React.FC = () => {
           <div style={statCardStyle}>
             <div style={statValueStyle}>{user?.tier || 'FREE'}</div>
             <div style={statLabelStyle}>Current Plan</div>
+          </div>
+        </div>
+
+        {/* Stats — Mobile: single combined card */}
+        <div
+          className="my-gardens-stats-mobile"
+          style={{
+            display: 'none',
+            marginBottom: theme.spacing['2xl'],
+            padding: `${theme.spacing.lg} ${theme.spacing.xl}`,
+            border: '1px solid rgba(255, 255, 255, 0.6)',
+            borderRadius: theme.radius.xl,
+            background: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            boxShadow: '0 8px 32px rgba(212, 144, 154, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05)',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            textAlign: 'center',
+          }}
+        >
+          {/* Active Gardens */}
+          <div style={{ flex: 1 }}>
+            <div style={{ ...statValueStyle, fontSize: '1.5rem' }}>{gardens.length}</div>
+            <div style={{ ...statLabelStyle, fontSize: '0.8rem' }}>Active Gardens</div>
+          </div>
+
+          {/* Divider */}
+          <div style={{ width: '1px', height: '40px', background: 'rgba(212, 144, 154, 0.3)', flexShrink: 0 }} />
+
+          {/* Total Flowers */}
+          <div style={{ flex: 1 }}>
+            <div style={{ ...statValueStyle, fontSize: '1.5rem' }}>{getTotalFlowers()}</div>
+            <div style={{ ...statLabelStyle, fontSize: '0.8rem' }}>Total Flowers</div>
+          </div>
+
+          {/* Divider */}
+          <div style={{ width: '1px', height: '40px', background: 'rgba(212, 144, 154, 0.3)', flexShrink: 0 }} />
+
+          {/* Current Plan */}
+          <div style={{ flex: 1 }}>
+            <div style={{ ...statValueStyle, fontSize: '1.5rem' }}>{user?.tier || 'FREE'}</div>
+            <div style={{ ...statLabelStyle, fontSize: '0.8rem' }}>Current Plan</div>
           </div>
         </div>
 

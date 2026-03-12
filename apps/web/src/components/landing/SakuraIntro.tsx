@@ -176,6 +176,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              padding: '0 40px',
               animation: 'logoFade 8s ease forwards',
             }}
           >
@@ -186,6 +187,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 style={{
                   height: 'clamp(110px, 17vw, 220px)',
                   width: 'auto',
+                  maxWidth: '100%',
                   display: 'block',
                   userSelect: 'none',
                   pointerEvents: 'none',
@@ -269,11 +271,12 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
 
             {/* CTA Buttons */}
             <div
+              className="hero-cta-group"
               style={{
                 display: 'flex',
                 gap: theme.spacing.lg,
                 justifyContent: 'center',
-                flexWrap: 'wrap',
+                flexWrap: 'nowrap',
                 position: 'relative',
                 zIndex: 3,
               }}
@@ -285,7 +288,6 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 style={{
                   fontSize: '18px',
                   padding: '18px 48px',
-                  minWidth: '240px',
                   background: `linear-gradient(135deg, ${theme.colors.rose[600]} 0%, ${theme.colors.rose[700]} 100%)`,
                   boxShadow: '0 4px 0 rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.04)',
                 }}
@@ -300,20 +302,20 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
                 style={{
                   fontSize: '18px',
                   padding: '18px 48px',
-                  minWidth: '240px',
                   background: 'rgba(255, 255, 255, 0.92)',
                   color: theme.colors.rose[700],
                   boxShadow: '0 4px 0 rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.03)',
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                See How It Works
+                See how it works
               </Button>
             </div>
           </div>
 
           {/* Hydrangea image — exact copy from LandingPage */}
           <div
+            className="hero-flower-wrapper"
             style={{
               position: 'relative',
               zIndex: 1,
