@@ -246,6 +246,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Subheading */}
           <p
+            className="hero-subheading"
             style={{
               fontSize: 'clamp(20px, 3vw, 28px)',
               fontWeight: typography.fontWeight.medium,

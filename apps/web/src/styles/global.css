@@ -401,6 +401,11 @@ ul, ol {
     padding-right: 16px !important;
   }
 
+  /* Hero subheading — scale down on mobile to match desktop proportions */
+  .hero-subheading {
+    font-size: 16px !important;
+  }
+
   /* Position mobile labels above the HORIZONS logo (section paddingTop = 40px) */
   .landing-label-mobile-left,
   .landing-label-mobile-right,
