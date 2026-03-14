@@ -385,7 +385,7 @@ function NewFountain() {
     const clone = scene.clone();
     
     // Lightening value for new fountain - adjust independently!
-    const LIGHTENING_VALUE = 1.5;
+    const LIGHTENING_VALUE = 2.0;
     
     if (LIGHTENING_VALUE) {
       clone.traverse((child: any) => {
@@ -697,7 +697,7 @@ function FlowerBush1() {
       object={clonedScene} 
       position={[-15, 0.5, -28.2]} 
       rotation={[0, 0.5, 0]}
-      scale={2}
+      scale={2.0}
       castShadow
       receiveShadow
     />
@@ -735,7 +735,7 @@ function FlowerBush2() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[-3, 0.5, -28.2]} 
+      position={[-1.5, 0.5, -28.2]} 
       rotation={[0, 1.2, 0]}
       scale={1.8}
       castShadow
@@ -815,7 +815,7 @@ function FlowerBush4() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[-9, 0.5, -28]} 
+      position={[-10.5, 0.5, -28]} 
       rotation={[0, 0.8, 0]}
       scale={1.9}
       castShadow
@@ -855,7 +855,7 @@ function FlowerBush5() {
   return (
     <primitive 
       object={clonedScene} 
-      position={[-6, 0.5, -26.5]} 
+      position={[-6, 0.5, -28.1]} 
       rotation={[0, 1.7, 0]}
       scale={2.0}
       castShadow

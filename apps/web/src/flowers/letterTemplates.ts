@@ -98,7 +98,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
     garland: '♡―✿―♡',
     showDoodleHearts: true,
     bodyDecorations: [
-      { symbol: '♡', fontSize: '22px', opacity: 0.35, top: '9%',  side: 'left',  inset: 14 },
+      { symbol: '♡', fontSize: '16px', opacity: 0.35, top: '9%',  side: 'left',  inset: 14 },
       { symbol: '♥︎', fontSize: '16px', opacity: 0.28, top: '21%', side: 'right', inset: 18 },
       { symbol: '♡', fontSize: '14px', opacity: 0.22, top: '37%', side: 'left',  inset: 20 },
       { symbol: '♥︎', fontSize: '20px', opacity: 0.30, top: '53%', side: 'right', inset: 14 },
@@ -128,7 +128,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
     garland: '✦―✿―✦',
     showDoodleHearts: false,
     bodyDecorations: [
-      { symbol: '✿', fontSize: '20px', opacity: 0.30, top: '10%', side: 'left',  inset: 16 },
+      { symbol: '✿', fontSize: '16px', opacity: 0.30, top: '10%', side: 'left',  inset: 16 },
       { symbol: '✦', fontSize: '14px', opacity: 0.25, top: '23%', side: 'right', inset: 14 },
       { symbol: '✿', fontSize: '16px', opacity: 0.22, top: '39%', side: 'left',  inset: 18 },
       { symbol: '✦', fontSize: '18px', opacity: 0.28, top: '55%', side: 'right', inset: 16 },
@@ -159,7 +159,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
     garland: '❧―✿―❧',
     showDoodleHearts: false,
     bodyDecorations: [
-      { symbol: '❧', fontSize: '20px', opacity: 0.28, top: '11%', side: 'left',  inset: 15 },
+      { symbol: '❧', fontSize: '16px', opacity: 0.28, top: '11%', side: 'left',  inset: 15 },
       { symbol: '✿', fontSize: '15px', opacity: 0.24, top: '24%', side: 'right', inset: 17 },
       { symbol: '❧', fontSize: '16px', opacity: 0.22, top: '40%', side: 'left',  inset: 19 },
       { symbol: '✿', fontSize: '18px', opacity: 0.26, top: '56%', side: 'right', inset: 15 },
@@ -189,7 +189,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
     garland: '❀―✿―❀',
     showDoodleHearts: false,
     bodyDecorations: [
-      { symbol: '❀', fontSize: '18px', opacity: 0.28, top: '9%',  side: 'left',  inset: 16 },
+      { symbol: '❀', fontSize: '16px', opacity: 0.28, top: '9%',  side: 'left',  inset: 16 },
       { symbol: '✿', fontSize: '14px', opacity: 0.22, top: '22%', side: 'right', inset: 18 },
       { symbol: '❀', fontSize: '22px', opacity: 0.20, top: '38%', side: 'left',  inset: 14 },
       { symbol: '✿', fontSize: '16px', opacity: 0.24, top: '54%', side: 'right', inset: 20 },
@@ -219,7 +219,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
     garland: '◈―✿―◈',
     showDoodleHearts: false,
     bodyDecorations: [
-      { symbol: '◈', fontSize: '18px', opacity: 0.32, top: '10%', side: 'left',  inset: 14 },
+      { symbol: '◈', fontSize: '16px', opacity: 0.32, top: '10%', side: 'left',  inset: 14 },
       { symbol: '✿', fontSize: '15px', opacity: 0.28, top: '23%', side: 'right', inset: 16 },
       { symbol: '◈', fontSize: '14px', opacity: 0.25, top: '39%', side: 'left',  inset: 20 },
       { symbol: '✿', fontSize: '17px', opacity: 0.30, top: '55%', side: 'right', inset: 14 },

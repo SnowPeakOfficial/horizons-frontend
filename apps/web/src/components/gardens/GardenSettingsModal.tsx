@@ -42,7 +42,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
   onClose,
   garden,
   currentUserId,
-  currentUserTier,
+  currentUserTier: _currentUserTier,
   onGardenUpdated,
   onGardenDeleted,
 }) => {
