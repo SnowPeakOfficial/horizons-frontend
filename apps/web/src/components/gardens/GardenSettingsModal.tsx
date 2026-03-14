@@ -281,23 +281,19 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                 <div style={formGroupStyle}>
                   <label style={labelStyle}>
                     Theme
-                    {currentUserTier !== 'PREMIUM' && (
-                      <span style={{ fontSize: '12px', color: theme.colors.rose[500], marginLeft: '8px' }}>
-                        (Premium feature)
-                      </span>
-                    )}
+                    <span style={{ fontSize: '12px', color: theme.text.secondary, marginLeft: '8px' }}>
+                      (Coming soon)
+                    </span>
                   </label>
                   <select
                     value={selectedTheme}
                     onChange={(e) => setSelectedTheme(e.target.value)}
                     style={{
                       ...selectStyle,
-                      ...(currentUserTier !== 'PREMIUM' ? { 
-                        opacity: 0.6,
-                        cursor: 'not-allowed'
-                      } : {})
+                      opacity: 0.6,
+                      cursor: 'not-allowed',
                     }}
-                    disabled={!isOwner || currentUserTier !== 'PREMIUM'}
+                    disabled={true}
                   >
                     {availableThemes.map((themeOption) => (
                       <option key={themeOption.id} value={themeOption.key}>
@@ -305,32 +301,30 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                       </option>
                     ))}
                   </select>
-                  {currentUserTier !== 'PREMIUM' && (
-                    <p style={{ fontSize: '12px', color: theme.text.secondary, marginTop: '4px', marginBottom: 0 }}>
-                      Upgrade to Premium to unlock all garden themes
-                    </p>
-                  )}
+                  <p style={{ fontSize: '12px', color: theme.text.secondary, marginTop: '4px', marginBottom: 0 }}>
+                    More garden themes are coming soon
+                  </p>
                 </div>
 
                 {/* Garden Info */}
                 <div style={infoGridStyle}>
                   <div style={infoItemStyle}>
-                    <CalendarToday sx={{ fontSize: 16, color: theme.text.secondary }} />
+                    <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
                     <span style={infoLabelStyle}>Created</span>
                     <span style={infoValueStyle}>{formatDate(garden.createdAt)}</span>
                   </div>
                   <div style={infoItemStyle}>
-                    <CalendarToday sx={{ fontSize: 16, color: theme.text.secondary }} />
+                    <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
                     <span style={infoLabelStyle}>Last Updated</span>
                     <span style={infoValueStyle}>{formatDate(garden.updatedAt)}</span>
                   </div>
                   <div style={infoItemStyle}>
-                    <LocalFlorist sx={{ fontSize: 16, color: theme.text.secondary }} />
+                    <LocalFlorist sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
                     <span style={infoLabelStyle}>Total Flowers</span>
                     <span style={infoValueStyle}>{garden._count?.flowers || 0}</span>
                   </div>
                   <div style={infoItemStyle}>
-                    <People sx={{ fontSize: 16, color: theme.text.secondary }} />
+                    <People sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
                     <span style={infoLabelStyle}>Total Members</span>
                     <span style={infoValueStyle}>{garden.members?.length || 0}</span>
                   </div>
@@ -576,6 +570,7 @@ const closeButtonStyle: React.CSSProperties = {
   boxShadow: 'none',
   zIndex: 10,
   opacity: 0.6,
+  color: theme.text.primary,
 };
 
 const headerStyle: React.CSSProperties = {

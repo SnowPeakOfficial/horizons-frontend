@@ -507,8 +507,8 @@ export const Navbar: React.FC = () => {
         </div>
       )}
 
-      {/* Click outside to close menus */}
-      {(isUserMenuOpen || isDevMenuOpen) && (
+      {/* Click outside to close menus — only on desktop (not when mobile menu is open) */}
+      {(isUserMenuOpen || isDevMenuOpen) && !isMobileMenuOpen && (
         <div
           style={{
             position: 'fixed',
