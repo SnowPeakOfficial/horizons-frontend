@@ -479,28 +479,6 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
       });
     });
     
-    // SOUTH SIDE TALL BUSHES: Grouped closer together, shifted toward house and flower bushes
-    const southBushPositions = [
-      { pos: [-15, -24], type: 'tallBush' as const },
-      { pos: [-13, -25], type: 'tallBush' as const },
-      { pos: [-11, -24], type: 'tallBush' as const },
-      { pos: [-9, -25.5], type: 'tallBush' as const },
-      { pos: [-7, -24.5], type: 'tallBush' as const },
-      { pos: [-5, -25], type: 'tallBush' as const },
-      { pos: [-3, -24], type: 'tallBush' as const },
-      { pos: [-1, -25], type: 'tallBush' as const },
-      { pos: [1, -24.5], type: 'tallBush' as const },
-    ];
-    
-    southBushPositions.forEach(({ pos: [x, z], type }) => {
-      result.push({
-        type,
-        position: [x, 2, z],
-        rotation: 0,
-        scale: 1.0
-      });
-    });
-    
     return result;
   }, [gardenSize]);
   

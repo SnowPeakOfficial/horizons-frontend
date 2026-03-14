@@ -46,17 +46,6 @@ export function TerrainGround({
     // Apply edge falloff
     heightmap = applyEdgeFalloff(heightmap, resolution, resolution, 0.2);
     
-    // Generate blend map for grass/dirt mixing
-    const blendNoise = generateHeightmap(resolution, resolution, {
-      seed: seed + 100,
-      scale: 0.1,
-      octaves: 2,
-      persistence: 0.45,
-      lacunarity: 2.0,
-      amplitude: 1.0,
-      redistribution: 1.0
-    });
-    
     // Create geometry
     const geometry = new THREE.PlaneGeometry(size, size, resolution - 1, resolution - 1);
     geometry.rotateX(-Math.PI / 2);
@@ -73,23 +62,8 @@ export function TerrainGround({
     const blendWeights = new Float32Array(positions.count);
     
     for (let i = 0; i < positions.count; i++) {
-      const height = heightmap[i] || 0;
-      const normalizedHeight = (height + amplitude * 0.2) / (amplitude * 1.2);
-      const clampedHeight = Math.max(0, Math.min(1, normalizedHeight));
-      
-      const blend = blendNoise[i] || 0;
-      
-      // Garden-appropriate dirt - subtle accent paths, not fields
-      const dirtThreshold = 0.88 + (clampedHeight * 0.08);
-      
-      if (blend > dirtThreshold) {
-        // Dirt area - smooth transition
-        const strength = (blend - dirtThreshold) / (1.0 - dirtThreshold);
-        blendWeights[i] = Math.min(1, strength * 1.2);
-      } else {
-        // Grass area
-        blendWeights[i] = 0;
-      }
+      // All vertices are grass - no dirt blending
+      blendWeights[i] = 0;
     }
     
     // Add blend weights as vertex attribute
@@ -194,7 +168,7 @@ export function TerrainGround({
     });
   }, [textures]);
   
-  const handleClick = (event: any) => {
+  const handleClick = (event: { point?: { x: number; y: number; z: number } }) => {
     if (isPlacementMode && onTerrainClick && event.point) {
       // Get the clicked position in world coordinates
       onTerrainClick({
@@ -239,7 +213,7 @@ export function BaseGroundLayer({
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
         <planeGeometry args={[size, size]} />
         <meshStandardMaterial 
-          color="#EDD9BF"
+          color="#7a8a60"
           roughness={0.95}
           metalness={0.0}
         />
@@ -249,7 +223,7 @@ export function BaseGroundLayer({
       <mesh position={[0, -0.25, 0]} receiveShadow castShadow>
         <boxGeometry args={[size, 0.5, size]} />
         <meshStandardMaterial 
-          color="#EDD9BF"
+          color="#7a8a60"
           roughness={0.95}
           metalness={0.0}
         />

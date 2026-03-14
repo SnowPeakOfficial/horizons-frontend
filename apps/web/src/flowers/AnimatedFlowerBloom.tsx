@@ -33,10 +33,21 @@ export function AnimatedFlowerBloom({
   const clonedScene = useMemo(() => {
     const clone = scene.clone();
     
+    // Brightening value for planted flower GLBs
+    const LIGHTENING_VALUE = 2.0;
+    
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.castShadow = true;
         child.receiveShadow = true;
+        if (child.material) {
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach((mat) => {
+            const material = mat.clone();
+            material.color.multiplyScalar(LIGHTENING_VALUE);
+            child.material = material;
+          });
+        }
       }
     });
     
