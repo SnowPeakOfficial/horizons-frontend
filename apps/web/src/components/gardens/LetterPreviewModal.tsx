@@ -7,7 +7,7 @@
  * Desktop: centred modal, max-width 650px
  */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Modal } from '../common/Modal';
@@ -41,6 +41,32 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
   const isMobile = window.innerWidth <= 768;
 
   const tmpl = resolveLetterTemplate(templateKey);
+
+  // Inject a dynamic <style> tag so the modal scrollbar matches the template accent colour
+  const scrollbarClass = `letter-scroll-${templateKey}`;
+  useEffect(() => {
+    if (!isOpen) return;
+    const styleId = `scrollbar-style-${templateKey}`;
+    let el = document.getElementById(styleId) as HTMLStyleElement | null;
+    if (!el) {
+      el = document.createElement('style');
+      el.id = styleId;
+      document.head.appendChild(el);
+    }
+    el.textContent = `
+      .${scrollbarClass}::-webkit-scrollbar { width: 6px; }
+      .${scrollbarClass}::-webkit-scrollbar-track { background: transparent; }
+      .${scrollbarClass}::-webkit-scrollbar-thumb {
+        background: ${tmpl.frameColor};
+        border-radius: 999px;
+      }
+      .${scrollbarClass} { scrollbar-color: ${tmpl.frameColor} transparent; scrollbar-width: thin; }
+    `;
+    return () => {
+      el?.remove();
+    };
+  }, [isOpen, templateKey, tmpl.accentColor, scrollbarClass]);
+
   const frontendDef = FLOWER_DEFINITIONS[flowerDefinition.key.toLowerCase()];
   const modelPath = frontendDef?.modelPath || '';
   const previewScale = frontendDef?.previewScale || 2.5;
@@ -59,6 +85,7 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
       onClose={onBack}
       showCloseButton={false}
       maxWidth={isMobile ? '100%' : '560px'}
+      className={scrollbarClass}
     >
       {/* Outer coloured frame */}
       <div style={{
