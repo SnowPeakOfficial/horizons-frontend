@@ -85,12 +85,26 @@ function GrassPatch({
   const clonedScene = useMemo(() => {
     const clone = scene.clone();
     // Apply color to all meshes in the grass patch
+    // Hide brownish-pink base/soil disc meshes entirely
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh && child.material) {
-        const material = child.material as THREE.MeshStandardMaterial;
-        if (material.color) {
-          material.color.set(color);
+        const mat = (child.material as THREE.MeshStandardMaterial).clone();
+        if (mat.color) {
+          const r = mat.color.r;
+          const g = mat.color.g;
+          const b = mat.color.b;
+          // Detect brownish/pinkish/terracotta base disc:
+          // red is dominant over both green and blue by any margin
+          const isBrownishPink = r > g && r > b;
+          if (isBrownishPink) {
+            // Hide the disc completely — it bleeds through the terrain
+            child.visible = false;
+            return;
+          } else {
+            mat.color.set(color);
+          }
         }
+        child.material = mat;
       }
     });
     return clone;

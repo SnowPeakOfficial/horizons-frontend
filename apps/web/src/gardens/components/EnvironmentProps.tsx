@@ -508,8 +508,26 @@ function DecoratedWall({ gardenSize }: { gardenSize: number }) {
             
             materials.forEach((mat: any) => {
               const material = mat.clone();
-              // Brighten by the specified value for this model type
-              material.color.multiplyScalar(lighteningValue);
+
+              // For grass patches: hide the brownish-pink soil base by
+              // replacing any warm/brown-toned material with the ground green
+              if (name === 'grass') {
+                const r = material.color.r;
+                const g = material.color.g;
+                const b = material.color.b;
+                // Detect brownish/pinkish colours: red channel dominant over blue
+                const isBrownish = r > 0.35 && r > g * 1.15 && r > b * 1.3;
+                if (isBrownish) {
+                  // Replace with ground green so base disc blends into terrain
+                  material.color.set('#7a8a60');
+                } else {
+                  material.color.multiplyScalar(lighteningValue);
+                }
+              } else {
+                // Brighten by the specified value for this model type
+                material.color.multiplyScalar(lighteningValue);
+              }
+
               child.material = material;
             });
           }

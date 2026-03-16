@@ -95,6 +95,15 @@ interface PlantFlowerPanelProps {
   placedPosition: { x: number; y: number; z: number } | null;
   /** Registration fn: parent passes a setter; panel calls it with its cancel handler */
   onCancelPlacementStep?: (registerFn: () => void) => void;
+  /** Called when user picks a letter template — parent renders the preview modal at the top level */
+  onLetterPreview?: (params: {
+    templateKey: LetterTemplateKey;
+    flowerDefinition: FlowerDefinition;
+    recipientName: string;
+    message: string;
+    onBack: () => void;
+    onConfirm: () => void;
+  }) => void;
 }
 
 export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
@@ -107,6 +116,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onClearPosition,
   placedPosition,
   onCancelPlacementStep,
+  onLetterPreview,
 }) => {
   const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
   const [step, setStep] = useState(1);
@@ -1099,7 +1109,20 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                 return (
                   <div
                     key={key}
-                    onClick={() => { setLetterTemplate(key); setError(''); }}
+                    onClick={() => {
+                      setLetterTemplate(key);
+                      setError('');
+                      if (onLetterPreview && selectedDefinition) {
+                        onLetterPreview({
+                          templateKey: key,
+                          flowerDefinition: selectedDefinition,
+                          recipientName: recipientName || '',
+                          message: seedMessage || '',
+                          onBack: () => setLetterTemplate(null),
+                          onConfirm: () => setStep(5),
+                        });
+                      }
+                    }}
                     style={{
                       padding: theme.spacing.lg,
                       border: `2px solid ${isSelected ? tmpl.accentColor : theme.border.light}`,

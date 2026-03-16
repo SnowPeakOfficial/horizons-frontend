@@ -6,6 +6,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { LetterRevealOverlay } from '../components/gardens/LetterRevealOverlay';
+import { LetterPreviewModal } from '../components/gardens/LetterPreviewModal';
+import type { LetterTemplateKey } from '../flowers/letterTemplates';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -81,6 +83,16 @@ export const GardenPage: React.FC = () => {
     screenX: number;
     screenY: number;
   } | null>(null);
+  // Letter preview state — lifted from PlantFlowerPanel so it renders above the side panel
+  const [letterPreviewParams, setLetterPreviewParams] = useState<{
+    templateKey: LetterTemplateKey;
+    flowerDefinition: import('../types/api.types').FlowerDefinition;
+    recipientName: string;
+    message: string;
+    onBack: () => void;
+    onConfirm: () => void;
+  } | null>(null);
+
   // True when the viewport is mobile-width (≤768px)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   useEffect(() => {
@@ -582,7 +594,21 @@ export const GardenPage: React.FC = () => {
         onClearPosition={() => setPlacedPosition(null)}
         placedPosition={placedPosition}
         onCancelPlacementStep={(fn: () => void) => { cancelPlacementStepRef.current = fn; }}
+        onLetterPreview={(params) => setLetterPreviewParams(params)}
       />
+
+      {/* Letter Preview Modal — rendered at the top level so it sits above the side panel */}
+      {letterPreviewParams && (
+        <LetterPreviewModal
+          isOpen={true}
+          templateKey={letterPreviewParams.templateKey}
+          flowerDefinition={letterPreviewParams.flowerDefinition}
+          recipientName={letterPreviewParams.recipientName}
+          message={letterPreviewParams.message}
+          onBack={() => { letterPreviewParams.onBack(); setLetterPreviewParams(null); }}
+          onConfirm={() => { letterPreviewParams.onConfirm(); setLetterPreviewParams(null); }}
+        />
+      )}
 
       {/* Flower Hover Tooltip - DOM overlay, always visible */}
       {hoveredFlowerTooltip && (() => {
