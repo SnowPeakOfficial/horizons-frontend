@@ -1106,10 +1106,21 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               {LETTER_TEMPLATE_ORDER.map((key) => {
                 const tmpl = LETTER_TEMPLATES[key];
                 const isSelected = letterTemplate === key;
+                const isLocked = isFlowerLocked(tmpl.tier as UserTier);
+
+                // Tier badge colours (same palette as flower picker)
+                const tierColors = {
+                  FREE: { bg: '#E8F5E9', text: '#2E7D32' },
+                  PRO: { bg: '#E3F2FD', text: '#1565C0' },
+                  PREMIUM: { bg: '#F3E5F5', text: '#6A1B9A' },
+                };
+                const tierColor = tierColors[tmpl.tier] ?? tierColors.FREE;
+
                 return (
                   <div
                     key={key}
                     onClick={() => {
+                      if (isLocked) return;
                       setLetterTemplate(key);
                       setError('');
                       if (onLetterPreview && selectedDefinition) {
@@ -1124,19 +1135,54 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                       }
                     }}
                     style={{
+                      position: 'relative',
                       padding: theme.spacing.lg,
-                      border: `2px solid ${isSelected ? tmpl.accentColor : theme.border.light}`,
+                      border: `2px solid ${
+                        isSelected
+                          ? tmpl.accentColor
+                          : isLocked
+                          ? theme.colors.neutral.gray[300]
+                          : theme.border.light
+                      }`,
                       borderRadius: '16px',
-                      cursor: 'pointer',
+                      cursor: isLocked ? 'not-allowed' : 'pointer',
                       background: isSelected ? `${tmpl.frameColor}30` : '#FFFFFF',
                       boxShadow: isSelected
                         ? `0 4px 16px ${tmpl.frameColor}60`
                         : '0 2px 8px rgba(0,0,0,0.06)',
                       transition: 'all 0.25s ease',
+                      opacity: isLocked ? 0.7 : 1,
                     }}
-                    onMouseEnter={(e) => { if (!isSelected) { e.currentTarget.style.borderColor = tmpl.accentColor + '80'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
-                    onMouseLeave={(e) => { if (!isSelected) { e.currentTarget.style.borderColor = theme.border.light; e.currentTarget.style.transform = 'translateY(0)'; } }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected && !isLocked) {
+                        e.currentTarget.style.borderColor = tmpl.accentColor + '80';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected && !isLocked) {
+                        e.currentTarget.style.borderColor = theme.border.light;
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }
+                    }}
                   >
+                    {/* Tier Badge */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      right: '12px',
+                      padding: '4px 10px',
+                      borderRadius: '12px',
+                      background: tierColor.bg,
+                      color: tierColor.text,
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                    }}>
+                      {tmpl.tier}
+                    </div>
+
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: theme.spacing.md }}>
                       {/* Colour swatch */}
                       <div style={{
@@ -1153,7 +1199,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                       }}>
                         {tmpl.emoji}
                       </div>
-                      <div style={{ flex: 1 }}>
+                      <div style={{ flex: 1, paddingRight: '52px' }}>
                         <div style={{ ...typography.styles.body, fontWeight: 700, color: tmpl.accentDark, marginBottom: '2px' }}>
                           {tmpl.label}
                         </div>
@@ -1170,6 +1216,26 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                         </div>
                       </div>
                     </div>
+
+                    {/* Lock message */}
+                    {isLocked && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        marginTop: theme.spacing.sm,
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: theme.colors.neutral.gray[100],
+                        color: theme.text.secondary,
+                        fontSize: '12px',
+                        fontWeight: 600,
+                      }}>
+                        <Lock sx={{ fontSize: 14 }} />
+                        Requires {tmpl.tier}
+                      </div>
+                    )}
                   </div>
                 );
               })}
