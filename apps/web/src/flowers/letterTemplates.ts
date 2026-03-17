@@ -15,6 +15,9 @@ export type LetterTemplateKey =
 export interface LetterTemplate {
   key: LetterTemplateKey;
 
+  /** Minimum subscription tier required to use this template */
+  tier: 'FREE' | 'PRO' | 'PREMIUM';
+
   /** Display label shown in the step 4 picker */
   label: string;
 
@@ -85,6 +88,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
   // ─────────────────────────────────────────────────────────────
   romantic: {
     key: 'romantic',
+    tier: 'FREE',
     label: 'Romantic',
     emoji: '💕',
     description: 'For a partner or someone you love',
@@ -115,6 +119,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
   // ─────────────────────────────────────────────────────────────
   friendship: {
     key: 'friendship',
+    tier: 'PRO',
     label: 'Friendship',
     emoji: '🌿',
     description: 'For a close friend',
@@ -146,6 +151,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
   // ─────────────────────────────────────────────────────────────
   family: {
     key: 'family',
+    tier: 'PRO',
     label: 'Family',
     emoji: '🏡',
     description: 'For a family member',
@@ -176,6 +182,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
   // ─────────────────────────────────────────────────────────────
   gratitude: {
     key: 'gratitude',
+    tier: 'PRO',
     label: 'Gratitude',
     emoji: '🙏',
     description: 'A heartfelt thank-you',
@@ -206,6 +213,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
   // ─────────────────────────────────────────────────────────────
   celebration: {
     key: 'celebration',
+    tier: 'PRO',
     label: 'Celebration',
     emoji: '🎉',
     description: 'Birthdays, achievements, milestones',
@@ -236,6 +244,7 @@ export const LETTER_TEMPLATES: Record<LetterTemplateKey, LetterTemplate> = {
   // ─────────────────────────────────────────────────────────────
   encouragement: {
     key: 'encouragement',
+    tier: 'PRO',
     label: 'Encouragement',
     emoji: '✨',
     description: 'Uplifting support for someone',

@@ -6,6 +6,7 @@ import { Footer } from '../components/layout/Footer';
 import { ConfirmationDialog } from '../components/common/ConfirmationDialog';
 import subscriptionService from '../services/subscriptionService';
 import { theme } from '../styles/theme';
+import SEO from '../components/common/SEO';
 
 export const PricingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -105,21 +106,20 @@ export const PricingPage: React.FC = () => {
       featured: false,
       comingSoon: false,
       features: [
-        '3 flower types',
-        '1 garden',
-        'Basic garden themes',
-        'Share garden with friends',
-        'Secret blooming messages',
-        'Voice and video messages',
+        'Your own private garden',
+        'Plant 1 flower per year',
+        '1 flower type',
+        'Flowers that bloom with a hidden message',
+        'Send images, voice and video inside flowers',
       ],
     },
     {
       key: 'PRO',
       name: 'Pro',
       emoji: '\uD83C\uDF38',
-      price: billingInterval === 'yearly' ? '$49.99' : '$5.99',
+      price: billingInterval === 'yearly' ? '$49.99' : '$4.99',
       period: billingInterval === 'yearly' ? 'CAD / year' : 'CAD / month',
-      annualNote: billingInterval === 'yearly' ? 'That\'s $4.17/mo — save $21.89' : null,
+      annualNote: billingInterval === 'yearly' ? "That's ~$4.17/mo — save $9.89" : null,
       tagline: 'For deeper connections',
       color: '#D4909A',
       borderColor: '#FFB0C8',
@@ -128,19 +128,20 @@ export const PricingPage: React.FC = () => {
       comingSoon: false,
       features: [
         'Everything in Free',
-        '5 exclusive flower types',
-        'Unlimited gardens',
-        'Multiple letter templates',
-        'Priority support',
+        'Up to 3 gardens',
+        'Plant 50 flowers per year',
+        '7 exclusive flower types',
+        'Multiple letter templates for flowers',
+        'Send a gift card with flowers',
       ],
     },
     {
       key: 'PREMIUM',
       name: 'Premium',
       emoji: '\uD83D\uDC9C',
-      price: 'Coming Soon',
-      period: '',
-      annualNote: null,
+      price: billingInterval === 'yearly' ? '$109.99' : '$10.99',
+      period: billingInterval === 'yearly' ? 'CAD / year' : 'CAD / month',
+      annualNote: billingInterval === 'yearly' ? "That's ~$9.17/mo — save $21.88" : null,
       tagline: 'The full experience',
       color: '#9E7DAE',
       borderColor: '#D6C3E3',
@@ -149,16 +150,22 @@ export const PricingPage: React.FC = () => {
       comingSoon: true,
       features: [
         'Everything in Pro',
+        'Up to 30 gardens',
+        'Plant 100 flowers per year',
         '3 premium flower types',
         'Seasonal garden themes',
-        'Advanced animations',
-        'Early access to new flowers',
+        'Seasonal and yearly recap',
       ],
     },
   ];
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)' }}>
+      <SEO
+        title="Pricing — Memory Garden Plans"
+        description="Choose your Horizons plan. Free, Pro, or Premium — plant digital flower memories, grow private gardens, and share meaningful moments with loved ones."
+        canonical="/pricing"
+      />
       <Navbar />
 
       {/* Hero */}

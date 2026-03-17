@@ -8,6 +8,7 @@ import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import EmailOutlined from '@mui/icons-material/EmailOutlined';
+import SEO from '../components/common/SEO';
 
 export const ContactPage: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
@@ -84,6 +85,11 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)', display: 'flex', flexDirection: 'column' }}>
+      <SEO
+        title="Contact Us"
+        description="Have a question or need support? Contact the Horizons team — we typically respond within 1–2 business days."
+        canonical="/contact"
+      />
       <Navbar />
       <div style={{ flex: 1 }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '48px 32px 64px' }}>

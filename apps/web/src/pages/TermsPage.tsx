@@ -3,6 +3,7 @@ import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
+import SEO from '../components/common/SEO';
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div style={{ marginBottom: '36px' }}>
@@ -16,6 +17,11 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
 export const TermsPage: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)', display: 'flex', flexDirection: 'column' }}>
+      <SEO
+        title="Terms of Service"
+        description="Read the Horizons Terms of Service — covering account registration, acceptable use, subscriptions, content ownership, and more."
+        canonical="/terms"
+      />
       <Navbar />
       <div style={{ flex: 1 }}>
         <div style={{ maxWidth: '760px', margin: '0 auto', padding: '48px 24px 64px' }}>

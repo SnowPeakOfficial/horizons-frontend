@@ -22,6 +22,7 @@ import { SakuraIntro } from '../components/landing/SakuraIntro';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { theme } from '../styles/theme';
 import { typography } from '../styles/typography';
+import SEO from '../components/common/SEO';
 
 // Scroll reveal wrapper
 const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number }> = ({
@@ -82,6 +83,11 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div style={{ background: '#FDFCFA', minHeight: '100vh' }}>
+      <SEO
+        title="Plant Memories That Bloom Forever"
+        description="Horizons is a 3D memory garden app where you plant digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start."
+        canonical="/"
+      />
       {/* Navbar */}
       <Navbar />
       

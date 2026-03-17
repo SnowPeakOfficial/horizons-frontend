@@ -302,65 +302,67 @@ export const Navbar: React.FC = () => {
               {user?.tier || 'FREE'}
             </div>
 
-            {/* DEV: Tier Switcher */}
-            <div style={{ position: 'relative' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '4px 10px',
-                  borderRadius: theme.radius.md,
-                  background: 'rgba(255, 200, 100, 0.15)',
-                  border: '1px dashed rgba(200, 150, 50, 0.4)',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: '#9B7B30',
-                  letterSpacing: '0.05em',
-                }}
-                onClick={() => { setIsDevMenuOpen(!isDevMenuOpen); setIsUserMenuOpen(false); }}
-              >
-                <BugReport sx={{ fontSize: 14 }} />
-                DEV
-              </div>
-
-              {isDevMenuOpen && (
-                <div style={{ ...dropdownStyle, minWidth: '140px' }}>
-                  <div style={{ padding: '6px 12px 4px', fontSize: '10px', fontWeight: 700, color: '#9B7B30', letterSpacing: '0.08em' }}>
-                    SWITCH TIER
-                  </div>
-                  {(['FREE', 'PRO', 'PREMIUM'] as const).map((tier) => (
-                    <div
-                      key={tier}
-                      style={{
-                        ...dropdownItemStyle,
-                        fontWeight: user?.tier === tier ? 700 : 400,
-                        color: user?.tier === tier ? theme.colors.rose[700] : theme.text.primary,
-                        background: user?.tier === tier ? theme.colors.rose[50] : 'transparent',
-                        opacity: devLoading && devLoading !== tier ? 0.5 : 1,
-                        cursor: devLoading ? 'default' : 'pointer',
-                        fontSize: '13px',
-                      }}
-                      onClick={() => devLoading ? undefined : handleDevChangeTier(tier)}
-                      onMouseEnter={(e) => {
-                        if (!devLoading && user?.tier !== tier) {
-                          (e.currentTarget as HTMLElement).style.background = theme.colors.rose[50];
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (user?.tier !== tier) {
-                          (e.currentTarget as HTMLElement).style.background = 'transparent';
-                        }
-                      }}
-                    >
-                      {devLoading === tier ? '...' : tier}
-                      {user?.tier === tier && ' ✓'}
-                    </div>
-                  ))}
+            {/* DEV: Tier Switcher — only visible in development builds */}
+            {import.meta.env.DEV && (
+              <div style={{ position: 'relative' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '4px 10px',
+                    borderRadius: theme.radius.md,
+                    background: 'rgba(255, 200, 100, 0.15)',
+                    border: '1px dashed rgba(200, 150, 50, 0.4)',
+                    cursor: 'pointer',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: '#9B7B30',
+                    letterSpacing: '0.05em',
+                  }}
+                  onClick={() => { setIsDevMenuOpen(!isDevMenuOpen); setIsUserMenuOpen(false); }}
+                >
+                  <BugReport sx={{ fontSize: 14 }} />
+                  DEV
                 </div>
-              )}
-            </div>
+
+                {isDevMenuOpen && (
+                  <div style={{ ...dropdownStyle, minWidth: '140px' }}>
+                    <div style={{ padding: '6px 12px 4px', fontSize: '10px', fontWeight: 700, color: '#9B7B30', letterSpacing: '0.08em' }}>
+                      SWITCH TIER
+                    </div>
+                    {(['FREE', 'PRO', 'PREMIUM'] as const).map((tier) => (
+                      <div
+                        key={tier}
+                        style={{
+                          ...dropdownItemStyle,
+                          fontWeight: user?.tier === tier ? 700 : 400,
+                          color: user?.tier === tier ? theme.colors.rose[700] : theme.text.primary,
+                          background: user?.tier === tier ? theme.colors.rose[50] : 'transparent',
+                          opacity: devLoading && devLoading !== tier ? 0.5 : 1,
+                          cursor: devLoading ? 'default' : 'pointer',
+                          fontSize: '13px',
+                        }}
+                        onClick={() => { if (!devLoading) handleDevChangeTier(tier); }}
+                        onMouseEnter={(e) => {
+                          if (!devLoading && user?.tier !== tier) {
+                            (e.currentTarget as HTMLElement).style.background = theme.colors.rose[50];
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (user?.tier !== tier) {
+                            (e.currentTarget as HTMLElement).style.background = 'transparent';
+                          }
+                        }}
+                      >
+                        {devLoading === tier ? '...' : tier}
+                        {user?.tier === tier && ' ✓'}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div style={{ position: 'relative' }}>
               <div
@@ -480,24 +482,26 @@ export const Navbar: React.FC = () => {
           >
             <Logout sx={{ fontSize: 18 }} />Sign Out
           </div>
-          {/* Tier badge + DEV switcher row */}
+          {/* Tier badge + DEV switcher row — only visible in development builds */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
             <div style={tierBadgeStyle}>{user?.tier || 'FREE'}</div>
-            <div
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: theme.radius.md, background: 'rgba(255,200,100,0.15)', border: '1px dashed rgba(200,150,50,0.4)', cursor: 'pointer', fontSize: '11px', fontWeight: 700, color: '#9B7B30' }}
-              onClick={() => setIsDevMenuOpen(!isDevMenuOpen)}
-            >
-              <BugReport sx={{ fontSize: 14 }} />
-              DEV
-            </div>
+            {import.meta.env.DEV && (
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: theme.radius.md, background: 'rgba(255,200,100,0.15)', border: '1px dashed rgba(200,150,50,0.4)', cursor: 'pointer', fontSize: '11px', fontWeight: 700, color: '#9B7B30' }}
+                onClick={() => setIsDevMenuOpen(!isDevMenuOpen)}
+              >
+                <BugReport sx={{ fontSize: 14 }} />
+                DEV
+              </div>
+            )}
           </div>
-          {isDevMenuOpen && (
+          {import.meta.env.DEV && isDevMenuOpen && (
             <div style={{ marginTop: '8px', paddingLeft: '8px' }}>
               {(['FREE', 'PRO', 'PREMIUM'] as const).map((tier) => (
                 <div
                   key={tier}
                   style={{ ...dropdownItemStyle, fontWeight: user?.tier === tier ? 700 : 400, color: user?.tier === tier ? theme.colors.rose[700] : theme.text.primary, fontSize: '13px' }}
-                  onClick={() => { devLoading ? undefined : handleDevChangeTier(tier); }}
+                  onClick={() => { if (!devLoading) handleDevChangeTier(tier); }}
                 >
                   {devLoading === tier ? '...' : tier}{user?.tier === tier && ' ✓'}
                 </div>

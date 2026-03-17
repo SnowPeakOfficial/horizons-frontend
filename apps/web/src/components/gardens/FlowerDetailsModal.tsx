@@ -791,6 +791,7 @@ const messageTextStyle: React.CSSProperties = {
   lineHeight: 2.2,
   textAlign: 'center',
   letterSpacing: '0.2px',
+  whiteSpace: 'pre-wrap',
 };
 
 // Media reveal button

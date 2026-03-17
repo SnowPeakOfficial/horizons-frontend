@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /garden/
+Disallow: /my-gardens
+Disallow: /profile
+Disallow: /auth/
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://www.horizons-garden.com/sitemap.xml
