@@ -490,16 +490,45 @@ ul, ol {
     min-height: 100dvh !important;
   }
 
-  /* Garden Settings — member row: shrink role selector so remove button stays visible */
-  .member-role-actions {
-    flex-shrink: 0;
-    gap: 4px !important;
+  /* Garden Settings — member row: stack info on top, role actions on bottom-right */
+  .member-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
   }
+
+  /* Member info takes full width, clips overflow, avatar vertically centered */
+  .member-info {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    align-items: center !important;
+  }
+
+  /* Truncate long names and emails with ellipsis */
+  .member-name,
+  .member-email {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+  }
+
+  /* Role actions sit on a second line, aligned to the right */
+  .member-role-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    gap: 6px !important;
+  }
+
+  /* Role dropdown — give it enough room to show full text */
   .member-role-actions select {
-    min-width: 76px !important;
-    max-width: 90px !important;
-    font-size: 12px !important;
-    padding: 5px 6px !important;
+    min-width: 110px !important;
+    max-width: 130px !important;
+    font-size: 13px !important;
+    padding: 5px 8px !important;
   }
 
   /* Hero h1 — reduce bottom margin on mobile (less gap before subtext) */

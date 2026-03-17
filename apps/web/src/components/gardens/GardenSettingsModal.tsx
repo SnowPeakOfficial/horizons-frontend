@@ -371,16 +371,16 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                 {/* Member List */}
                 <div style={memberListStyle}>
                   {garden.members?.map((member) => (
-                    <div key={member.id} style={memberItemStyle}>
-                      <div style={memberInfoStyle}>
+                    <div key={member.id} style={memberItemStyle} className="member-item">
+                      <div style={memberInfoStyle} className="member-info">
                         <div style={memberAvatarStyle}>
                           {(member.user?.name?.[0] || member.displayName?.[0] || member.email?.[0] || '?').toUpperCase()}
                         </div>
-                        <div>
-                          <div style={memberNameStyle}>
+                        <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                          <div style={memberNameStyle} className="member-name">
                             {member.user?.name || member.displayName || member.email}
                           </div>
-                          <div style={memberEmailStyle}>
+                          <div style={memberEmailStyle} className="member-email">
                             {member.email}
                             {!member.isRegistered && (
                               <span style={{ marginLeft: '6px', color: theme.colors.rose[500], fontSize: '11px' }}>
