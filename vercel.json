@@ -3,8 +3,17 @@
   "outputDirectory": "apps/web/dist",
   "installCommand": "echo 'skip root install'",
   "framework": null,
+  "redirects": [
+    {
+      "source": "https://horizons-garden.com/(.*)",
+      "destination": "https://www.horizons-garden.com/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/((?!robots.txt|sitemap.xml).*)", "destination": "/index.html" }
   ],
   "headers": [
     {

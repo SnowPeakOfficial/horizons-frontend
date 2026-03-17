@@ -6,6 +6,7 @@ import { Footer } from '../components/layout/Footer';
 import { ConfirmationDialog } from '../components/common/ConfirmationDialog';
 import subscriptionService from '../services/subscriptionService';
 import { theme } from '../styles/theme';
+import SEO from '../components/common/SEO';
 
 export const PricingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -160,6 +161,11 @@ export const PricingPage: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)' }}>
+      <SEO
+        title="Pricing — Memory Garden Plans"
+        description="Choose your Horizons plan. Free, Pro, or Premium — plant digital flower memories, grow private gardens, and share meaningful moments with loved ones."
+        canonical="/pricing"
+      />
       <Navbar />
 
       {/* Hero */}
