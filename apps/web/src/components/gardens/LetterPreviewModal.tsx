@@ -84,7 +84,7 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
       isOpen={isOpen}
       onClose={onBack}
       showCloseButton={false}
-      maxWidth={isMobile ? '100%' : '560px'}
+      maxWidth={isMobile ? '100%' : '650px'}
       className={scrollbarClass}
     >
       {/* Outer coloured frame */}
@@ -140,7 +140,7 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
           background: tmpl.cardGradient,
           margin: isMobile ? '0 10px 10px 10px' : '0 12px 12px 12px',
           borderRadius: '12px',
-          padding: isMobile ? '48px 20px 32px 20px' : '48px 32px 32px 32px',
+          padding: isMobile ? '48px 20px 32px 20px' : '64px 48px 48px 48px',
           boxShadow: '0 4px 16px rgba(61,51,64,0.08)',
           overflow: 'visible',
           ...(isMobile ? { flex: 1 } : {}),
@@ -150,12 +150,12 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
           {modelPath && (
             <div style={{
               position: 'absolute',
-              top: '-24px',
-              right: isMobile ? '16px' : '24px',
-              width: isMobile ? '90px' : '110px',
-              height: isMobile ? '90px' : '110px',
+              top: isMobile ? '-24px' : '-30px',
+              right: isMobile ? '16px' : '32px',
+              width: isMobile ? '90px' : '150px',
+              height: isMobile ? '90px' : '150px',
               borderRadius: '50%',
-              overflow: 'visible',
+              overflow: 'hidden',
               background: '#FFFFFF',
               boxShadow: '0 8px 24px rgba(61,51,64,0.12)',
               border: `3px solid ${tmpl.frameColor}`,
@@ -193,10 +193,10 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
           {/* Greeting */}
           <div style={{
             fontFamily: "'Caveat', cursive",
-            fontSize: isMobile ? '24px' : '28px',
+            fontSize: isMobile ? '24px' : 'clamp(1.75rem, 2vw + 0.5rem, 2rem)',
             fontWeight: 600,
             color: theme.text.primary,
-            marginBottom: '20px',
+            marginBottom: isMobile ? '20px' : '32px',
             lineHeight: 1.3,
           }}>
             Dear {displayRecipient},
@@ -205,10 +205,10 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
           {/* Opening sentence */}
           <div style={{
             fontFamily: typography.fontFamily.serif,
-            fontSize: isMobile ? '14px' : '15px',
+            fontSize: isMobile ? '14px' : '17px',
             color: theme.text.primary,
-            lineHeight: 2,
-            marginBottom: '20px',
+            lineHeight: isMobile ? 2 : 2.2,
+            marginBottom: isMobile ? '20px' : '28px',
             letterSpacing: '0.3px',
           }}>
             {openingSentence}
@@ -216,17 +216,17 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
 
           {/* Message box */}
           <div style={{
-            marginBottom: '28px',
-            padding: isMobile ? '16px' : '24px',
+            marginBottom: isMobile ? '28px' : '40px',
+            padding: isMobile ? '16px' : '40px 32px',
             background: 'rgba(255,250,245,0.4)',
             borderRadius: '10px',
             border: `1px solid rgba(212,144,154,0.15)`,
           }}>
             <div style={{
               fontFamily: typography.fontFamily.serif,
-              fontSize: isMobile ? '14px' : '15px',
+              fontSize: isMobile ? '14px' : '17px',
               color: theme.text.primary,
-              lineHeight: 2,
+              lineHeight: isMobile ? 2 : 2.2,
               textAlign: 'center',
               letterSpacing: '0.2px',
               whiteSpace: 'pre-wrap',
@@ -236,10 +236,10 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
           </div>
 
           {/* Quote */}
-          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <div style={{ textAlign: 'center', marginBottom: isMobile ? '28px' : '48px' }}>
             <div style={{
               fontFamily: typography.fontFamily.serif,
-              fontSize: '14px',
+              fontSize: isMobile ? '14px' : '16px',
               fontStyle: 'italic',
               color: theme.text.secondary,
               opacity: 0.7,
@@ -249,10 +249,10 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
           </div>
 
           {/* Sign-off */}
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: 'right', marginTop: isMobile ? '0' : '56px' }}>
             <div style={{
               fontFamily: "'Caveat', cursive",
-              fontSize: isMobile ? '22px' : '26px',
+              fontSize: isMobile ? '22px' : 'clamp(1.75rem, 2vw + 0.25rem, 1.875rem)',
               fontWeight: 600,
               color: theme.text.primary,
               lineHeight: 1.3,
@@ -261,7 +261,7 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
             </div>
             <div style={{
               fontFamily: "'Caveat', cursive",
-              fontSize: isMobile ? '22px' : '26px',
+              fontSize: isMobile ? '22px' : 'clamp(1.75rem, 2vw + 0.25rem, 1.875rem)',
               fontWeight: 600,
               color: theme.text.primary,
               lineHeight: 1.3,
@@ -270,13 +270,47 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
             </div>
           </div>
 
-          {/* Body decorations */}
-          {tmpl.bodyDecorations.map((d, i) => (
+          {/* Body decorations — desktop: scattered absolute positions; mobile: linear column per side */}
+          {isMobile ? (() => {
+            const leftDecs = tmpl.bodyDecorations.filter(d => d.side === 'left');
+            const rightDecs = tmpl.bodyDecorations.filter(d => d.side === 'right');
+            const step = 100 / (Math.max(leftDecs.length, rightDecs.length) + 1);
+            return (
+              <>
+                {leftDecs.map((d, i) => (
+                  <div key={`ml-${i}`} style={{
+                    position: 'absolute',
+                    top: `${step * (i + 1)}%`,
+                    left: '6px',
+                    fontSize: '11px',
+                    color: tmpl.accentColor,
+                    opacity: d.opacity,
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                    lineHeight: 1,
+                  }}>{d.symbol}</div>
+                ))}
+                {rightDecs.map((d, i) => (
+                  <div key={`mr-${i}`} style={{
+                    position: 'absolute',
+                    top: `${step * (i + 1)}%`,
+                    right: '6px',
+                    fontSize: '11px',
+                    color: tmpl.accentColor,
+                    opacity: d.opacity,
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                    lineHeight: 1,
+                  }}>{d.symbol}</div>
+                ))}
+              </>
+            );
+          })() : tmpl.bodyDecorations.map((d, i) => (
             <div key={i} style={{
               position: 'absolute',
               top: d.top,
-              left: d.side === 'left' ? `${isMobile ? 4 : d.inset}px` : undefined,
-              right: d.side === 'right' ? `${isMobile ? 4 : d.inset}px` : undefined,
+              left: d.side === 'left' ? `${d.inset}px` : undefined,
+              right: d.side === 'right' ? `${d.inset}px` : undefined,
               fontSize: d.fontSize,
               color: tmpl.accentColor,
               opacity: d.opacity,
