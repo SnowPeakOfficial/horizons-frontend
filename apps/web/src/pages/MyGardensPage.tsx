@@ -40,8 +40,8 @@ export const MyGardensPage: React.FC = () => {
   const canCreateMore = () => {
     if (!user) return false;
     if (user.tier === 'FREE') return gardens.length < 1;
-    if (user.tier === 'PRO') return gardens.length < 10;
-    return true; // PREMIUM unlimited
+    if (user.tier === 'PRO') return gardens.length < 3;
+    return gardens.length < 30; // PREMIUM soft cap
   };
 
   const getTotalFlowers = () => {
