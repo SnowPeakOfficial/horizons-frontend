@@ -1,0 +1,14 @@
+{
+  "name": "horizons-marketing",
+  "version": "1.0.0",
+  "description": "Print-ready marketing flyer exporter for Horizons",
+  "private": true,
+  "scripts": {
+    "export": "node export.js",
+    "preview": "npx serve public"
+  },
+  "dependencies": {
+    "puppeteer": "^24.15.0",
+    "sharp": "^0.33.0"
+  }
+}
