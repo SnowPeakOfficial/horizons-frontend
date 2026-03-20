@@ -142,8 +142,8 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
 
   const handleUse = () => {
     if (!capturedBlob) return;
-    const ext = mode === 'photo' ? 'jpg' : mode === 'voice' ? 'webm' : 'webm';
-    const mimeType = mode === 'photo' ? 'image/jpeg' : 'audio/webm';
+    const ext = mode === 'photo' ? 'jpg' : 'webm';
+    const mimeType = mode === 'photo' ? 'image/jpeg' : mode === 'video' ? 'video/webm' : 'audio/webm';
     const file = new File([capturedBlob], `capture-${Date.now()}.${ext}`, { type: mimeType });
     onCapture(file);
     onClose();

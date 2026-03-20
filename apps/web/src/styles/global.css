@@ -84,6 +84,19 @@ select {
   font-size: inherit;
 }
 
+/* iOS Safari / WKWebView auto-zoom prevention
+ * Safari (and all iOS browsers — Chrome, Firefox, etc. — which use WKWebView)
+ * automatically zooms into any input/textarea/select whose font-size < 16px.
+ * Forcing 16px here prevents that zoom without affecting layout or visual sizing.
+ * The @supports query targets only WebKit-based browsers. */
+@supports (-webkit-overflow-scrolling: touch) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 /* Images */
 img {
   max-width: 100%;
