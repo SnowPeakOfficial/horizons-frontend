@@ -67,7 +67,7 @@ function FlowerPreview({
 
 // Zod validation schema
 const plantFlowerFormSchema = z.object({
-  recipientName: z.string().max(50, 'Name must be 50 characters or less').optional().or(z.literal('')),
+  recipientName: z.string().min(1, "Recipient's name is required").max(50, 'Name must be 50 characters or less'),
   recipientEmail: z.string().refine((val) => !val || z.string().email().safeParse(val).success, {
     message: 'Please enter a valid email address'
   }),
@@ -1002,10 +1002,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             {/* Recipient Name */}
             <Input
               {...register('recipientName')}
-              label="Who is this for? (optional)"
+              label="Who is this for?"
               placeholder="Recipient's name (e.g., Sarah)"
               error={errors.recipientName?.message}
-              helperText="This name will appear in the letter"
+              helperText="Required · This name will appear in the letter"
               fullWidth
             />
 
@@ -1549,7 +1549,18 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               }} style={{ flex: 1 }}>
                 Back
               </Button>
-              <Button variant="primary" onClick={() => setStep(4)} style={{ flex: 1 }}>
+              <Button
+                variant="primary"
+                disabled={!recipientName?.trim() || !!errors.recipientName || !!errors.recipientEmail}
+                onClick={async () => {
+                  const valid = await trigger(['recipientName', 'recipientEmail']);
+                  if (valid) {
+                    setError('');
+                    setStep(4);
+                  }
+                }}
+                style={{ flex: 1 }}
+              >
                 Next
               </Button>
             </>
