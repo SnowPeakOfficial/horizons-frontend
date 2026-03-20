@@ -384,6 +384,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           .sakura-label-mobile-right { display: flex !important; }
           .hero-section h1 { font-size: 32px !important; margin-bottom: 8px !important; }
           .hero-section p { font-size: 16px !important; }
+          .hero-flower-wrapper { margin-top: -108px !important; }
         }
 
         /* Video: Fade out gradually */
