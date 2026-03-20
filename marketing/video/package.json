@@ -1,0 +1,22 @@
+{
+  "name": "horizons-promo-video",
+  "version": "1.0.0",
+  "description": "Horizons motion graphics promo video — built with Remotion",
+  "private": true,
+  "scripts": {
+    "start": "npx remotion studio",
+    "render": "npx remotion render HorizonsPromo out/horizons-promo.mp4 --codec=h264",
+    "render:short": "npx remotion render HorizonsPromo out/horizons-promo-short.mp4 --codec=h264 --frames=0-299"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "remotion": "^4.0.0"
+  },
+  "remotion": {
+    "entryPoint": "src/index.ts"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3"
+  }
+}
