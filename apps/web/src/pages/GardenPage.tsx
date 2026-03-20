@@ -584,6 +584,7 @@ export const GardenPage: React.FC = () => {
         }}
         gardenId={gardenId || ''}
         userTier={user?.tier || 'FREE'}
+        userRole={currentGarden?.members?.find(m => m.userId === user?.id)?.role ?? 'VIEWER'}
         onPlantSuccess={handlePlantSuccess}
         onPlacementModeChange={(active, definition) => {
           setIsPlacementMode(active);
