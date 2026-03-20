@@ -92,14 +92,14 @@ function HeartGarland({ garland, color }: { garland: string; color: string }) {
  */
 function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
   if (isMobile) {
-    // Pink header strip is 72px tall; center the logo+text within it
+    // Pink header strip is 88px tall; center the wordmark within it
     return (
       <div style={{
         position: 'absolute',
         top: '0',
         left: '0',
         right: '0',
-        height: '72px',
+        height: '88px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -108,20 +108,10 @@ function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
         pointerEvents: 'none',
       }}>
         <img
-          src="/images/horizons-logo.svg"
+          src="/images/horizons-logo-wordmark.svg"
           alt="Horizons"
-          style={{ width: '28px', height: '28px', opacity: 0.9, filter: 'brightness(0) invert(1)' }}
+          style={{ height: '32px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)', opacity: 0.5 }}
         />
-        <span style={{
-          fontFamily: typography.fontFamily.serif,
-          fontSize: '10px',
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.9)',
-          fontWeight: 500,
-        }}>
-          HORIZONS
-        </span>
       </div>
     );
   }
@@ -132,15 +122,13 @@ function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
       top: '36px',
       left: '50%',
       transform: 'translateX(-50%)',
-      fontFamily: typography.fontFamily.serif,
-      fontSize: '13px',
-      fontWeight: typography.fontWeight.normal,
-      letterSpacing: '0.15em',
-      textTransform: 'uppercase',
-      color: theme.text.tertiary,
       opacity: 0.5,
     }}>
-      HORIZONS
+      <img
+        src="/images/horizons-logo-wordmark.svg"
+        alt="Horizons"
+        style={{ height: '32px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)' }}
+      />
     </div>
   );
 }
@@ -203,7 +191,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   const isMobile = window.innerWidth <= 768;
   // On mobile: use paddingTop on the outer frame so the pink header is always visible
   // (not scrollable away like margin-based approach)
-  const mobileFramePadding = isMobile ? '72px 14px 24px 14px' : '40px';
+  const mobileFramePadding = isMobile ? '88px 14px 24px 14px' : '40px';
   // Card margin: 0 on mobile (frame's paddingTop handles the spacing), 48px on desktop
   const mobileCardMarginTop = isMobile ? '0' : '48px';
 

@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 
 const SITE_URL = 'https://www.horizons-garden.com';
-const DEFAULT_TITLE = 'Horizons — Plant Memories That Bloom Forever';
+const DEFAULT_TITLE = 'Horizons - Memory Garden';
 const DEFAULT_DESCRIPTION =
-  'Horizons is a 3D memory garden app where you plant digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start.';
+  'Plant Memories That Bloom Forever. Horizons is a 3D memory garden where you plant digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start.';
 const DEFAULT_IMAGE = `${SITE_URL}/images/horizons-logo.svg`;
 
 interface SEOProps {
@@ -26,7 +26,7 @@ export default function SEO({
   ogImage,
   noIndex = false,
 }: SEOProps) {
-  const fullTitle = title ? `${title} | Horizons` : DEFAULT_TITLE;
+  const fullTitle = title ? `${title} — Horizons` : DEFAULT_TITLE;
   const metaDescription = description || DEFAULT_DESCRIPTION;
   const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : SITE_URL;
   const image = ogImage || DEFAULT_IMAGE;
@@ -40,12 +40,16 @@ export default function SEO({
       <link rel="canonical" href={canonicalUrl} />
 
       {/* Open Graph */}
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Horizons - Memory Garden" />
+      <meta property="og:locale" content="en_US" />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={metaDescription} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={image} />
 
       {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={image} />

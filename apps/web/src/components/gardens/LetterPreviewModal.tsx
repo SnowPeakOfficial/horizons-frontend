@@ -25,6 +25,10 @@ interface LetterPreviewModalProps {
   flowerDefinition: FlowerDefinition;
   recipientName: string;
   message: string;
+  senderName?: string;
+  imagePreviewUrl?: string;
+  voicePreviewUrl?: string;
+  videoPreviewUrl?: string;
   onBack: () => void;
   onConfirm: () => void;
 }
@@ -35,6 +39,10 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
   flowerDefinition,
   recipientName,
   message,
+  senderName,
+  imagePreviewUrl,
+  voicePreviewUrl,
+  videoPreviewUrl,
   onBack,
   onConfirm,
 }) => {
@@ -116,22 +124,16 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
         {/* Horizons branding */}
         <div style={{
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          gap: '3px',
-          paddingTop: '8px',
-          paddingBottom: '4px',
+          justifyContent: 'center',
+          paddingTop: '6px',
+          paddingBottom: '20px',
         }}>
-          <img src="/images/horizons-logo.svg" alt="Horizons"
-            style={{ width: '24px', height: '24px', opacity: 0.9, filter: 'brightness(0) invert(1)' }} />
-          <span style={{
-            fontFamily: typography.fontFamily.serif,
-            fontSize: '10px',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase' as const,
-            color: 'rgba(255,255,255,0.9)',
-            fontWeight: 500,
-          }}>HORIZONS</span>
+          <img
+            src="/images/horizons-logo-wordmark.svg"
+            alt="Horizons"
+            style={{ height: '32px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)', opacity: 0.5 }}
+          />
         </div>
 
         {/* White card — flex-grows on mobile so it fills available space */}
@@ -235,6 +237,114 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
             </div>
           </div>
 
+          {/* Attached Media */}
+          {(imagePreviewUrl || voicePreviewUrl || videoPreviewUrl) && (
+            <div style={{
+              marginBottom: isMobile ? '24px' : '36px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '14px',
+            }}>
+              {/* Section label */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.6px',
+                textTransform: 'uppercase' as const,
+                color: tmpl.accentDark,
+                opacity: 0.6,
+              }}>
+                <span>✦</span> Attached memories
+              </div>
+
+              {/* Photo */}
+              {imagePreviewUrl && (
+                <div style={{
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: `1.5px solid ${tmpl.frameColor}50`,
+                  boxShadow: '0 2px 10px rgba(61,51,64,0.08)',
+                }}>
+                  <img
+                    src={imagePreviewUrl}
+                    alt="Attached photo"
+                    style={{
+                      width: '100%',
+                      maxHeight: isMobile ? '180px' : '240px',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Voice message */}
+              {voicePreviewUrl && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  background: `${tmpl.frameColor}18`,
+                  border: `1.5px solid ${tmpl.frameColor}40`,
+                  display: 'flex',
+                  flexDirection: 'column' as const,
+                  gap: '6px',
+                }}>
+                  <div style={{
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: tmpl.accentDark,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}>
+                    🎙️ Voice message
+                  </div>
+                  <audio
+                    controls
+                    src={voicePreviewUrl}
+                    style={{ width: '100%', height: '36px' }}
+                  />
+                </div>
+              )}
+
+              {/* Video */}
+              {videoPreviewUrl && (
+                <div style={{
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: `1.5px solid ${tmpl.frameColor}50`,
+                  boxShadow: '0 2px 10px rgba(61,51,64,0.08)',
+                }}>
+                  <div style={{
+                    padding: '8px 12px',
+                    background: `${tmpl.frameColor}18`,
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: tmpl.accentDark,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}>
+                    🎬 Video
+                  </div>
+                  <video
+                    controls
+                    src={videoPreviewUrl}
+                    style={{
+                      width: '100%',
+                      maxHeight: isMobile ? '180px' : '240px',
+                      display: 'block',
+                      background: '#000',
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Quote */}
           <div style={{ textAlign: 'center', marginBottom: isMobile ? '28px' : '48px' }}>
             <div style={{
@@ -266,7 +376,7 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
               color: theme.text.primary,
               lineHeight: 1.3,
             }}>
-              You
+              {senderName || 'You'}
             </div>
           </div>
 
