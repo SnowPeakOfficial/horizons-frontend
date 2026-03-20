@@ -24,7 +24,7 @@ import Videocam from '@mui/icons-material/Videocam';
 import Photo from '@mui/icons-material/Photo';
 import Spa from '@mui/icons-material/Spa';
 import Close from '@mui/icons-material/Close';
-import DeleteOutline from '@mui/icons-material/DeleteOutline';
+import Delete from '@mui/icons-material/Delete';
 
 interface FlowerDetailsModalProps {
   isOpen: boolean;
@@ -367,6 +367,22 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
       {/* Outer Frame - color driven by letter template */}
       <div style={{ ...outerFrameStyle, background: tmpl.frameColor, padding: mobileFramePadding, ...(isMobile ? { borderRadius: '0', minHeight: '100dvh', boxSizing: 'border-box' } : {}) }}>
         
+        {/* Delete Button - only visible to planter or garden owner, beside the X */}
+        {onDelete && currentUserId && (
+          currentUserId === flower.plantedByUserId || currentUserId === gardenOwnerId
+        ) && (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            style={{ ...closeButtonStyle, background: `${tmpl.frameColor}66`, right: '52px' }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.4'; }}
+            aria-label="Delete flower"
+            title="Remove this flower"
+          >
+            <Delete sx={{ fontSize: 20, color: tmpl.accentDark }} />
+          </button>
+        )}
+
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -576,35 +592,6 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
           {/* Body Decorations - template-specific symbols scattered throughout the card */}
           <BodyDecorations decorations={tmpl.bodyDecorations} color={tmpl.accentColor} isMobile={isMobile} />
 
-          {/* Delete Button - only visible to planter or garden owner, anchored bottom-left of white card */}
-          {onDelete && currentUserId && (
-            currentUserId === flower.plantedByUserId || currentUserId === gardenOwnerId
-          ) && (
-            <button
-              style={{
-                position: 'absolute',
-                bottom: '-32px',
-                left: '0',
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                background: `${tmpl.accentColor}33`,
-                border: `2px solid ${tmpl.accentColor}66`,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease',
-                boxShadow: `0 2px 8px ${tmpl.accentColor}44`,
-                zIndex: 10,
-              }}
-              onClick={() => setShowDeleteConfirm(true)}
-              aria-label="Delete flower"
-              title="Remove this flower"
-            >
-              <DeleteOutline sx={{ fontSize: 16, color: tmpl.accentDark }} />
-            </button>
-          )}
           
         </div>
 

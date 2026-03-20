@@ -187,8 +187,13 @@ export const GardenPage: React.FC = () => {
 
   // True when the viewport is mobile-width (≤768px)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  // True at medium widths (≤1100px) — triggers compact buttons and hidden date stat
+  const [isCompact, setIsCompact] = useState(window.innerWidth <= 1100);
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsCompact(window.innerWidth <= 1100);
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -306,6 +311,9 @@ export const GardenPage: React.FC = () => {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing.md,
+    flex: 1,
+    minWidth: 0,
+    overflow: 'hidden',
   };
 
   const headerTitleStyle: React.CSSProperties = {
@@ -317,17 +325,23 @@ export const GardenPage: React.FC = () => {
     backgroundClip: 'text',
     fontWeight: 700,
     fontSize: '1.5rem',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: isCompact ? '160px' : '320px',
+    flexShrink: 1,
   };
 
   const headerStatsStyle: React.CSSProperties = {
     display: 'flex',
-    gap: theme.spacing.xl,
+    gap: isCompact ? theme.spacing.sm : theme.spacing.xl,
     alignItems: 'center',
-    marginLeft: theme.spacing.xl,
-    padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
+    marginLeft: isCompact ? theme.spacing.sm : theme.spacing.xl,
+    padding: `${theme.spacing.xs} ${isCompact ? theme.spacing.sm : theme.spacing.lg}`,
     background: 'rgba(255, 255, 255, 0.6)',
     borderRadius: theme.radius.full,
     border: '1px solid rgba(232, 180, 184, 0.2)',
+    flexShrink: 0,
   };
 
   const statItemStyle: React.CSSProperties = {
@@ -386,10 +400,12 @@ export const GardenPage: React.FC = () => {
                   <span>{activeGarden.members?.length || 0} members</span>
                 </div>
               )}
-              <div style={statItemStyle}>
-                <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
-                <span>{formatDate(activeGarden.createdAt)}</span>
-              </div>
+              {!isCompact && (
+                <div style={statItemStyle}>
+                  <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                  <span>{formatDate(activeGarden.createdAt)}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -397,7 +413,7 @@ export const GardenPage: React.FC = () => {
         {/* Action Buttons — hidden in guest mode */}
         {!isGuestMode && (
           <div className="garden-header-actions" style={headerRightStyle}>
-            {isMobile ? (
+            {isCompact ? (
               <>
                 <button
                   onClick={() => setIsSettingsOpen(true)}
