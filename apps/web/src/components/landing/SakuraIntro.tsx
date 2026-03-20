@@ -82,7 +82,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           top: '50%',
           left: '50%',
           width: '100vw',
-          height: '100vh',
+          height: '100dvh',
           transform: 'translate(-50%, -50%)',
           transformOrigin: 'center center',
           animation: 'scaleUp 8s cubic-bezier(0.16, 1, 0.3, 1) forwards',

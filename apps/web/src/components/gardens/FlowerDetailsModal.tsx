@@ -8,6 +8,7 @@ import confetti from 'canvas-confetti';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Modal } from '../common/Modal';
+import { ConfirmationDialog } from '../common/ConfirmationDialog';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { Flower } from '../../types/api.types';
@@ -15,7 +16,6 @@ import type { FlowerDefinition } from '../../flowers/types';
 import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import { FlowerBud } from '../../flowers/FlowerBud';
 import { resolveLetterTemplate } from '../../flowers/letterTemplates';
-import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import CardGiftcard from '@mui/icons-material/CardGiftcard';
 import Image from '@mui/icons-material/Image';
@@ -24,13 +24,16 @@ import Videocam from '@mui/icons-material/Videocam';
 import Photo from '@mui/icons-material/Photo';
 import Spa from '@mui/icons-material/Spa';
 import Close from '@mui/icons-material/Close';
+import DeleteOutline from '@mui/icons-material/DeleteOutline';
 
 interface FlowerDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   flower: Flower | null;
   definition: FlowerDefinition | null;
-  onDelete?: (flowerId: string) => void;
+  onDelete?: (flowerId: string) => Promise<void>;
+  currentUserId?: string;
+  gardenOwnerId?: string;
   /** When true, shows a 2-second confetti burst over the letter (triggered by email deep-link) */
   fromEmail?: boolean;
 }
@@ -189,11 +192,14 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   flower,
   definition,
   onDelete,
+  currentUserId,
+  gardenOwnerId,
   fromEmail = false,
 }) => {
-  const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
   const [showGlow, setShowGlow] = React.useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const isMobile = window.innerWidth <= 768;
   // On mobile: use paddingTop on the outer frame so the pink header is always visible
   // (not scrollable away like margin-based approach)
@@ -581,33 +587,61 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
           
           {/* Body Decorations - template-specific symbols scattered throughout the card */}
           <BodyDecorations decorations={tmpl.bodyDecorations} color={tmpl.accentColor} isMobile={isMobile} />
-          
-        </div>
-        
-        {/* Hidden Actions Menu */}
-        <div 
-          style={actionsMenuStyle}
-          onMouseEnter={() => setShowActions(true)}
-          onMouseLeave={() => setShowActions(false)}
-        >
-          <MoreHoriz sx={{ fontSize: 20, color: theme.colors.rose[600] }} />
-          
-          {showActions && onDelete && (
-            <div style={actionsDropdownStyle}>
-              <button
-                onClick={() => {
-                  if (window.confirm('Remove this flower from your garden?')) {
-                    onDelete(flower.id);
-                    onClose();
-                  }
-                }}
-                style={deleteButtonStyle}
-              >
-                Delete flower
-              </button>
-            </div>
+
+          {/* Delete Button - only visible to planter or garden owner, anchored bottom-left of white card */}
+          {onDelete && currentUserId && (
+            currentUserId === flower.plantedByUserId || currentUserId === gardenOwnerId
+          ) && (
+            <button
+              style={{
+                position: 'absolute',
+                bottom: '-32px',
+                left: '0',
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: `${tmpl.accentColor}33`,
+                border: `2px solid ${tmpl.accentColor}66`,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease',
+                boxShadow: `0 2px 8px ${tmpl.accentColor}44`,
+                zIndex: 10,
+              }}
+              onClick={() => setShowDeleteConfirm(true)}
+              aria-label="Delete flower"
+              title="Remove this flower"
+            >
+              <DeleteOutline sx={{ fontSize: 16, color: tmpl.accentDark }} />
+            </button>
           )}
+          
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <ConfirmationDialog
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          onConfirm={async () => {
+            if (!onDelete) return;
+            setIsDeleting(true);
+            try {
+              await onDelete(flower.id);
+              setShowDeleteConfirm(false);
+              onClose();
+            } finally {
+              setIsDeleting(false);
+            }
+          }}
+          title="Remove this flower?"
+          message="This will permanently remove the flower and its letter from the garden. This action cannot be undone."
+          confirmText="Remove Flower"
+          cancelText="Keep It"
+          variant="danger"
+          isLoading={isDeleting}
+        />
         
       </div>
       
@@ -903,39 +937,3 @@ const senderNameStyle: React.CSSProperties = {
   lineHeight: 1.3,
 };
 
-const actionsMenuStyle: React.CSSProperties = {
-  position: 'absolute',
-  bottom: '16px',
-  left: '16px',
-  padding: '8px',
-  cursor: 'pointer',
-  borderRadius: '50%',
-  transition: theme.transition.fast,
-  opacity: 0.4,
-};
-
-const actionsDropdownStyle: React.CSSProperties = {
-  position: 'absolute',
-  bottom: '100%',
-  left: '0',
-  marginBottom: '8px',
-  background: '#FFFFFF',
-  borderRadius: '8px',
-  boxShadow: theme.shadow.lg,
-  padding: '4px',
-  minWidth: '140px',
-};
-
-const deleteButtonStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 16px',
-  background: 'transparent',
-  border: 'none',
-  borderRadius: '6px',
-  fontSize: '14px',
-  color: theme.colors.rose[700],
-  cursor: 'pointer',
-  textAlign: 'left',
-  fontFamily: typography.fontFamily.serif,
-  transition: theme.transition.fast,
-};
