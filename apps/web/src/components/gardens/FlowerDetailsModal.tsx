@@ -132,15 +132,13 @@ function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
       top: '36px',
       left: '50%',
       transform: 'translateX(-50%)',
-      fontFamily: typography.fontFamily.serif,
-      fontSize: '13px',
-      fontWeight: typography.fontWeight.normal,
-      letterSpacing: '0.15em',
-      textTransform: 'uppercase',
-      color: theme.text.tertiary,
       opacity: 0.5,
     }}>
-      HORIZONS
+      <img
+        src="/images/horizons-logo-wordmark.svg"
+        alt="Horizons"
+        style={{ height: '32px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)' }}
+      />
     </div>
   );
 }

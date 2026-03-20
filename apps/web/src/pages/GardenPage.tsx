@@ -177,6 +177,10 @@ export const GardenPage: React.FC = () => {
     flowerDefinition: import('../types/api.types').FlowerDefinition;
     recipientName: string;
     message: string;
+    senderName?: string;
+    imagePreviewUrl?: string;
+    voicePreviewUrl?: string;
+    videoPreviewUrl?: string;
     onBack: () => void;
     onConfirm: () => void;
   } | null>(null);
@@ -707,6 +711,10 @@ export const GardenPage: React.FC = () => {
           flowerDefinition={letterPreviewParams.flowerDefinition}
           recipientName={letterPreviewParams.recipientName}
           message={letterPreviewParams.message}
+          senderName={letterPreviewParams.senderName}
+          imagePreviewUrl={letterPreviewParams.imagePreviewUrl}
+          voicePreviewUrl={letterPreviewParams.voicePreviewUrl}
+          videoPreviewUrl={letterPreviewParams.videoPreviewUrl}
           onBack={() => { letterPreviewParams.onBack(); setLetterPreviewParams(null); }}
           onConfirm={() => { letterPreviewParams.onConfirm(); setLetterPreviewParams(null); }}
         />

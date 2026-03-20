@@ -16,6 +16,7 @@ import { Button, Input } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
+import { useAuthStore } from '../../stores/authStore';
 import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import flowerService from '../../services/flowerService';
 import gardenService from '../../services/gardenService';
@@ -103,6 +104,10 @@ interface PlantFlowerPanelProps {
     flowerDefinition: FlowerDefinition;
     recipientName: string;
     message: string;
+    senderName?: string;
+    imagePreviewUrl?: string;
+    voicePreviewUrl?: string;
+    videoPreviewUrl?: string;
     onBack: () => void;
     onConfirm: () => void;
   }) => void;
@@ -122,6 +127,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onLetterPreview,
 }) => {
   const isViewer = userRole === 'VIEWER';
+  const { user } = useAuthStore();
   const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
   const [step, setStep] = useState(1);
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
@@ -1274,6 +1280,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                           flowerDefinition: selectedDefinition,
                           recipientName: recipientName || '',
                           message: seedMessage || '',
+                          senderName: user?.name || '',
+                          imagePreviewUrl: imageFile?.previewUrl,
+                          voicePreviewUrl: voiceFile?.previewUrl,
+                          videoPreviewUrl: videoFile?.previewUrl,
                           onBack: () => setLetterTemplate(null),
                           onConfirm: () => setStep(5),
                         });
