@@ -124,22 +124,16 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
         {/* Horizons branding */}
         <div style={{
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          gap: '3px',
-          paddingTop: '8px',
-          paddingBottom: '4px',
+          justifyContent: 'center',
+          paddingTop: '6px',
+          paddingBottom: '20px',
         }}>
-          <img src="/images/horizons-logo.svg" alt="Horizons"
-            style={{ width: '24px', height: '24px', opacity: 0.9, filter: 'brightness(0) invert(1)' }} />
-          <span style={{
-            fontFamily: typography.fontFamily.serif,
-            fontSize: '10px',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase' as const,
-            color: 'rgba(255,255,255,0.9)',
-            fontWeight: 500,
-          }}>HORIZONS</span>
+          <img
+            src="/images/horizons-logo-wordmark.svg"
+            alt="Horizons"
+            style={{ height: '32px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)', opacity: 0.5 }}
+          />
         </div>
 
         {/* White card — flex-grows on mobile so it fills available space */}
