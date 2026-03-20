@@ -50,7 +50,7 @@ export const GardenPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { currentGarden, fetchGardenById } = useGardenStore();
-  const { flowers, fetchFlowersByGarden } = useFlowerStore();
+  const { flowers, fetchFlowersByGarden, deleteFlower } = useFlowerStore();
 
   // Guest-mode state
   const [guestGarden, setGuestGarden] = useState<(typeof currentGarden) | null>(null);
@@ -696,9 +696,13 @@ export const GardenPage: React.FC = () => {
         flower={selectedFlower}
         definition={selectedFlower ? FLOWER_DEFINITIONS[selectedFlower.flowerDefinition?.key?.toLowerCase() || 'daisy'] : null}
         fromEmail={fromEmail && !!flowerId}
+        currentUserId={user?.id}
+        gardenOwnerId={activeGarden?.ownerId}
         onDelete={async (fid) => {
-          // TODO: Implement flower deletion
-          console.log('Delete flower:', fid);
+          await deleteFlower(fid);
+          setSelectedFlower(null);
+          const params = guestToken ? `?token=${guestToken}` : '';
+          navigate(`/garden/${gardenId}${params}`, { replace: true });
         }}
       />
 
