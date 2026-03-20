@@ -41,7 +41,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       outline: 'none',
       width: '100%',
-      fontSize: 'clamp(0.875rem, 1vw + 0.25rem, 1rem)', // Fluid typography
+      fontSize: 'clamp(1rem, 1vw + 0.25rem, 1.125rem)', // Fluid typography (min 16px to prevent iOS Safari zoom)
       boxShadow: isFocused ? `0 0 0 3px rgba(232, 180, 184, 0.15)` : 'none',
     };
 

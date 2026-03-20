@@ -203,7 +203,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   const isMobile = window.innerWidth <= 768;
   // On mobile: use paddingTop on the outer frame so the pink header is always visible
   // (not scrollable away like margin-based approach)
-  const mobileFramePadding = isMobile ? '72px 14px 24px 14px' : '40px';
+  const mobileFramePadding = isMobile ? '72px 14px 40px 14px' : '40px';
   // Card margin: 0 on mobile (frame's paddingTop handles the spacing), 48px on desktop
   const mobileCardMarginTop = isMobile ? '0' : '48px';
 

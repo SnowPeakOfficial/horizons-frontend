@@ -25,6 +25,10 @@ interface LetterPreviewModalProps {
   flowerDefinition: FlowerDefinition;
   recipientName: string;
   message: string;
+  imagePreviewUrl?: string;
+  voicePreviewUrl?: string;
+  videoPreviewUrl?: string;
+  isBloomingType?: boolean;
   onBack: () => void;
   onConfirm: () => void;
 }
@@ -35,6 +39,10 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
   flowerDefinition,
   recipientName,
   message,
+  imagePreviewUrl,
+  voicePreviewUrl,
+  videoPreviewUrl,
+  isBloomingType,
   onBack,
   onConfirm,
 }) => {
@@ -234,6 +242,91 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
               {displayMessage}
             </div>
           </div>
+
+          {/* Media previews — shown when the user has attached photo / voice / video */}
+          {(imagePreviewUrl || voicePreviewUrl || videoPreviewUrl) && (
+            <div style={{
+              marginBottom: isMobile ? '20px' : '32px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}>
+              {/* Bloom label for BLOOMING type */}
+              {isBloomingType && (
+                <div style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase' as const,
+                  color: tmpl.accentDark,
+                  opacity: 0.7,
+                  marginBottom: '4px',
+                }}>
+                  🌸 Revealed when the flower blooms
+                </div>
+              )}
+
+              {imagePreviewUrl && (
+                <div style={{
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: `2px solid ${tmpl.accentColor}40`,
+                  boxShadow: '0 2px 8px rgba(61,51,64,0.08)',
+                }}>
+                  <img
+                    src={imagePreviewUrl}
+                    alt="Attached photo"
+                    style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
+              )}
+
+              {voicePreviewUrl && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  background: `${tmpl.frameColor}20`,
+                  border: `2px solid ${tmpl.accentColor}40`,
+                }}>
+                  <div style={{
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: tmpl.accentDark,
+                    marginBottom: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}>
+                    🎙️ Voice message
+                  </div>
+                  <audio controls src={voicePreviewUrl} style={{ width: '100%', height: '36px' }} />
+                </div>
+              )}
+
+              {videoPreviewUrl && (
+                <div style={{
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: `2px solid ${tmpl.accentColor}40`,
+                  boxShadow: '0 2px 8px rgba(61,51,64,0.08)',
+                }}>
+                  <div style={{
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: tmpl.accentDark,
+                    padding: '8px 12px',
+                    background: `${tmpl.frameColor}20`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}>
+                    🎬 Video
+                  </div>
+                  <video controls src={videoPreviewUrl} style={{ width: '100%', maxHeight: '200px', display: 'block' }} />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Quote */}
           <div style={{ textAlign: 'center', marginBottom: isMobile ? '28px' : '48px' }}>

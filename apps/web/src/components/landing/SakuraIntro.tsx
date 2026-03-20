@@ -236,7 +236,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             {/* Main Headline */}
             <h1
               style={{
-                fontSize: 'clamp(48px, 8vw, 96px)',
+                fontSize: 'clamp(36px, 8vw, 96px)',
                 fontFamily: typography.fontFamily.serif,
                 fontWeight: typography.fontWeight.normal,
                 color: theme.text.primary,
@@ -382,6 +382,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           .sakura-label-desktop { display: none !important; }
           .sakura-label-mobile-left { display: block !important; }
           .sakura-label-mobile-right { display: flex !important; }
+          .hero-section h1 { font-size: 32px !important; margin-bottom: 8px !important; }
+          .hero-section p { font-size: 16px !important; }
         }
 
         /* Video: Fade out gradually */
