@@ -166,6 +166,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     if (type === 'video') { setVideoFile(mediaFile); setVideoProgress(null); }
   };
 
+  // Scrollable content area ref — used to reset scroll position on step change
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   // Hidden file input refs
   const imageInputRef = useRef<HTMLInputElement>(null);
   const voiceInputRef = useRef<HTMLInputElement>(null);
@@ -247,6 +250,13 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       handleReset();
     }
   }, [isOpen]);
+
+  // Scroll the content area back to the top whenever the step changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [step]);
 
   // Move to step 3 when position is placed
   useEffect(() => {
@@ -576,6 +586,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
       {/* Content Area */}
       <div
+        ref={scrollContainerRef}
         style={{
           flex: 1,
           overflow: 'auto',

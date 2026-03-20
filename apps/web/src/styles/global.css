@@ -85,11 +85,13 @@ select {
 }
 
 /* iOS Safari / WKWebView auto-zoom prevention
- * Safari (and all iOS browsers — Chrome, Firefox, etc. — which use WKWebView)
- * automatically zooms into any input/textarea/select whose font-size < 16px.
- * Forcing 16px here prevents that zoom without affecting layout or visual sizing.
- * The @supports query targets only WebKit-based browsers. */
-@supports (-webkit-overflow-scrolling: touch) {
+ * Safari (and ALL iOS browsers — Chrome, Firefox, etc. use WKWebView under the hood)
+ * automatically zooms into any focused input/textarea/select whose font-size < 16px
+ * and never zooms back out on blur. Forcing 16px prevents this entirely.
+ *
+ * Note: @supports (-webkit-overflow-scrolling: touch) was removed in iOS 13 and
+ * no longer matches on modern devices. A plain mobile media query is reliable. */
+@media screen and (max-width: 768px) {
   input,
   textarea,
   select {
