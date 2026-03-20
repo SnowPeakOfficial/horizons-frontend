@@ -427,6 +427,13 @@ export const GardenPage: React.FC = () => {
         <Canvas
           shadows
           camera={{ position: [0, 25, 35], fov: 50 }}
+          gl={{
+            // Force consistent output across all browsers / mobile WebGL
+            outputColorSpace: 'srgb',
+            toneMapping: 4,           // THREE.ACESFilmicToneMapping = 4
+            toneMappingExposure: 1.2, // Slightly boosted — matches what desktop Chrome was showing
+            antialias: true,
+          }}
         >
           <GardenScene 
             config={GARDEN_CONFIGS.test_garden}

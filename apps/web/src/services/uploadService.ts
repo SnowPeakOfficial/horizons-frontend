@@ -6,7 +6,7 @@
  * Guardrails are enforced via mediaGuardrails.ts BEFORE any bytes are sent to Firebase.
  */
 
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "./firebase";
 import { validateMediaFile } from "./mediaGuardrails";
 
@@ -93,4 +93,27 @@ export interface PendingUpload {
  */
 export function createPreviewUrl(file: File): string {
   return URL.createObjectURL(file);
+}
+
+/**
+ * Deletes a list of Firebase Storage files by their download URLs.
+ * Fails silently per file — a missing or already-deleted file won't block the rest.
+ * Safe to call fire-and-forget (no need to await at call site).
+ */
+export async function deleteMediaFiles(
+  urls: (string | null | undefined)[],
+): Promise<void> {
+  const validUrls = urls.filter(Boolean) as string[];
+  await Promise.allSettled(
+    validUrls.map(async (url) => {
+      try {
+        // Firebase accepts full download URLs — it parses the storage path internally
+        const fileRef = ref(storage, url);
+        await deleteObject(fileRef);
+      } catch (e) {
+        // File may already be deleted or not exist — log and continue
+        console.warn("Failed to delete Firebase file:", url, e);
+      }
+    }),
+  );
 }
