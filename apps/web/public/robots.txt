@@ -7,5 +7,5 @@ Disallow: /auth/
 Disallow: /login
 Disallow: /register
 
-Host: https://www.horizons-garden.com
-Sitemap: https://www.horizons-garden.com/sitemap.xml
+Host: https://horizons-garden.com
+Sitemap: https://horizons-garden.com/sitemap.xml

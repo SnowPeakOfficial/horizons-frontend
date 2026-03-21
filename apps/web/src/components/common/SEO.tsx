@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-const SITE_URL = 'https://www.horizons-garden.com';
+const SITE_URL = 'https://horizons-garden.com';
 const DEFAULT_TITLE = 'Horizons - Memory Garden';
 const DEFAULT_DESCRIPTION =
   'Plant Memories That Bloom Forever. Horizons is a 3D memory garden where you plant digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start.';
