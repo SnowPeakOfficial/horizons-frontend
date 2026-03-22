@@ -359,7 +359,7 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
           </div>
 
           {/* Sign-off */}
-          <div style={{ textAlign: 'right', marginTop: isMobile ? '0' : '56px' }}>
+          <div style={{ textAlign: 'right', marginTop: isMobile ? '0' : '56px', paddingRight: isMobile ? '6px' : '0' }}>
             <div style={{
               fontFamily: "'Caveat', cursive",
               fontSize: isMobile ? '22px' : 'clamp(1.75rem, 2vw + 0.25rem, 1.875rem)',
