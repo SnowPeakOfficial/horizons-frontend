@@ -5,10 +5,11 @@
  *  1. The user is authenticated, OR
  *  2. The URL contains ?token=... (guest email-link access)
  *
- * In all other cases, redirects to /auth/login.
+ * In all other cases, redirects to /auth/login with a ?redirect= param
+ * so the user is returned to the original letter URL after logging in.
  */
 
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 
 interface GardenRouteProps {
@@ -18,6 +19,7 @@ interface GardenRouteProps {
 export const GardenRoute: React.FC<GardenRouteProps> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const hasGuestToken = !!searchParams.get('token');
 
   // Allow through: authenticated users OR guests with a valid token
@@ -25,5 +27,7 @@ export const GardenRoute: React.FC<GardenRouteProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  return <Navigate to="/auth/login" replace />;
+  // Preserve the full original URL so LoginPage can redirect back after login
+  const redirectTo = encodeURIComponent(location.pathname + location.search);
+  return <Navigate to={`/auth/login?redirect=${redirectTo}`} replace />;
 };
