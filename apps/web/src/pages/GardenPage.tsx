@@ -248,6 +248,7 @@ export const GardenPage: React.FC = () => {
   const handlePlantSuccess = () => {
     if (gardenId) {
       fetchFlowersByGarden(gardenId);
+      fetchGardenById(gardenId); // refresh member count + members list
     }
   };
 
