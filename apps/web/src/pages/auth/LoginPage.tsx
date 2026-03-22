@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Button, Input, Card } from '../../components/common';
 import { Navbar } from '../../components/layout/Navbar';
 import { useAuthStore } from '../../stores/authStore';
@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const login = useAuthStore((state) => state.login);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -54,7 +55,8 @@ export const LoginPage: React.FC = () => {
       console.log('🔐 Attempting login for:', formData.email);
       await login({ email: formData.email.trim(), password: formData.password });
       toast.success('Welcome back!');
-      navigate('/my-gardens');
+      const redirectTo = searchParams.get('redirect');
+      navigate(redirectTo ? decodeURIComponent(redirectTo) : '/my-gardens');
     } catch (error: unknown) {
       console.error('❌ Login error:', error);
       

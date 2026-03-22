@@ -223,17 +223,23 @@ export const GardenPage: React.FC = () => {
     });
   }, [gardenId, guestToken, isGuestMode]);
 
-  // Auto-open the deep-link flower once flowers are loaded
+  // Auto-open the deep-link flower once flowers are loaded.
+  // For email deep-links: pre-set selectedFlower immediately so the FlowerDetailsModal
+  // is fully mounted and rendered DURING the overlay animation. When onDone() fires
+  // the overlay just lifts — the modal appears instantly with no visible delay.
   useEffect(() => {
     if (!flowerId || deepLinkOpenedRef.current || activeFlowers.length === 0) return;
     const target = activeFlowers.find((f) => f.id === flowerId);
     if (target) {
       deepLinkOpenedRef.current = true;
-      if (!fromEmail) {
+      if (fromEmail) {
+        // Pre-load: defer to next tick (satisfies ESLint) but still fires immediately —
+        // well before the 4.35s animation ends, so the modal is fully rendered when onDone() fires.
+        setTimeout(() => setSelectedFlower(target), 0);
+      } else {
         // Defer to avoid synchronous setState inside effect
         setTimeout(() => setSelectedFlower(target), 0);
       }
-      // fromEmail: overlay already showing; modal opens via onDone callback
     }
   }, [flowerId, activeFlowers, fromEmail]);
 
@@ -799,15 +805,15 @@ export const GardenPage: React.FC = () => {
       {/* Garden flower loading screen — shown on first load until flowers arrive */}
       <GardenLoadingScreen visible={showFlowerLoading} />
 
-      {/* Email deep-link: cinematic reveal overlay */}
+      {/* Email deep-link: cinematic reveal overlay.
+          The FlowerDetailsModal is already mounted in the background (selectedFlower is set
+          during the animation). When onDone fires we simply hide the overlay — the modal
+          appears immediately with no fetch delay. */}
       {showRevealOverlay && (
         <LetterRevealOverlay
           onDone={() => {
             setShowRevealOverlay(false);
-            if (flowerId) {
-              const target = activeFlowers.find((f) => f.id === flowerId);
-              if (target) setSelectedFlower(target);
-            }
+            // selectedFlower is already set — nothing else needed
           }}
         />
       )}
