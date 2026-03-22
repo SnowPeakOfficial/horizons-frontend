@@ -892,6 +892,7 @@ const quoteStyle: React.CSSProperties = {
 
 const signOffContainerStyle: React.CSSProperties = {
   marginTop: '56px',
+  paddingRight: '6px',
   textAlign: 'right',
 };
 
