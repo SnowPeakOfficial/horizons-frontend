@@ -156,6 +156,8 @@ export const GardenPage: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   // Email deep-link: show reveal overlay before opening the modal
   const [showRevealOverlay, setShowRevealOverlay] = useState(fromEmail && !!flowerId);
+  // Confetti fires only AFTER the overlay animation completes (onDone), not at mount time.
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Loading screen: starts true on first render, dismissed once the first fetch resolves
   const [showFlowerLoading, setShowFlowerLoading] = useState(true);
@@ -813,7 +815,8 @@ export const GardenPage: React.FC = () => {
         <LetterRevealOverlay
           onDone={() => {
             setShowRevealOverlay(false);
-            // selectedFlower is already set — nothing else needed
+            // Fire confetti AFTER the overlay lifts so it plays over the visible letter
+            setShowConfetti(true);
           }}
         />
       )}
@@ -823,6 +826,7 @@ export const GardenPage: React.FC = () => {
         isOpen={!!selectedFlower}
         onClose={() => {
           setSelectedFlower(null);
+          setShowConfetti(false);
           // Return URL to garden level — preserve ?token= for guests so GardenRoute
           // doesn't redirect them to login when the modal closes.
           const params = guestToken ? `?token=${guestToken}` : '';
@@ -830,12 +834,13 @@ export const GardenPage: React.FC = () => {
         }}
         flower={selectedFlower}
         definition={selectedFlower ? FLOWER_DEFINITIONS[selectedFlower.flowerDefinition?.key?.toLowerCase() || 'daisy'] : null}
-        fromEmail={fromEmail && !!flowerId}
+        fromEmail={showConfetti}
         currentUserId={user?.id}
         gardenOwnerId={activeGarden?.ownerId}
         onDelete={async (fid) => {
           await deleteFlower(fid);
           setSelectedFlower(null);
+          setShowConfetti(false);
           const params = guestToken ? `?token=${guestToken}` : '';
           navigate(`/garden/${gardenId}${params}`, { replace: true });
         }}
