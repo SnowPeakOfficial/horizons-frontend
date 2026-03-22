@@ -369,6 +369,21 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     setError('');
 
     try {
+      // Step 0: Add garden member BEFORE planting the flower.
+      // The backend uses a job to match flowers to garden members and send notification emails.
+      // The member must exist first so the job can find them when the flower is created.
+      if (recipientEmail) {
+        try {
+          await gardenService.addMember(gardenId, {
+            email: recipientEmail,
+            role: 'CONTRIBUTOR'
+          });
+        } catch (memberError) {
+          console.error('Failed to add member:', memberError);
+          // Continue anyway — garden invite failed but we can still plant the flower
+        }
+      }
+
       // Step 1: Plant the flower with seed message in content
       const plantData = {
         flowerDefinitionKey: selectedDefinition.key,
@@ -456,19 +471,6 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           } catch (mediaError) {
             console.error('Failed to add content:', mediaError);
           }
-        }
-      }
-      
-      // Step 3: Add garden member if email provided
-      if (recipientEmail) {
-        try {
-          await gardenService.addMember(gardenId, {
-            email: recipientEmail,
-            role: 'CONTRIBUTOR'
-          });
-        } catch (memberError) {
-          console.error('Failed to add member:', memberError);
-          // Continue anyway - flower was planted successfully
         }
       }
       
