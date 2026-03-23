@@ -17,6 +17,8 @@ import { GardenRoute } from '../components/auth/GardenRoute';
 import { PrivacyPage } from '../pages/PrivacyPage';
 import { TermsPage } from '../pages/TermsPage';
 import { ContactPage } from '../pages/ContactPage';
+import { BlogPage } from '../pages/BlogPage';
+import { BlogPostPage } from '../pages/BlogPostPage';
 import { RootLayout } from '../components/layout/RootLayout';
 
 export const router = createBrowserRouter([
@@ -99,6 +101,16 @@ export const router = createBrowserRouter([
             <ProfilePage />
           </ProtectedRoute>
         ),
+      },
+
+      // Blog (public)
+      {
+        path: '/blog',
+        element: <BlogPage />,
+      },
+      {
+        path: '/blog/:slug',
+        element: <BlogPostPage />,
       },
 
       // Legal & contact (public)

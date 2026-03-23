@@ -882,35 +882,70 @@ export const LandingPage: React.FC = () => {
           <RevealOnScroll delay={80}>
             <div>
               {[
+                /* Phase 1 — What is this? */
                 {
-                  Icon: CreditCardOutlinedIcon,
-                  question: 'Is Horizons free?',
-                  answer: 'Yes — Horizons has a free tier that lets you plant memories and grow your garden. Pro and Premium plans unlock additional gardens, larger storage, and more customization options.',
-                },
-                {
-                  Icon: VisibilityOffOutlinedIcon,
-                  question: 'Who can see my memories?',
-                  answer: 'Only you — unless you deliberately invite someone. Your garden is private by default. Nothing is public, nothing is indexed, and no one can stumble in uninvited.',
-                },
-                {
-                  Icon: SaveOutlinedIcon,
-                  question: 'What happens to my memories if I cancel?',
-                  answer: "They're yours. You can export everything before you leave, and we keep your data for 30 days after cancellation so nothing is lost accidentally.",
-                },
-                {
-                  Icon: IosShareOutlinedIcon,
-                  question: 'Can I share with someone who doesn\'t have Horizons?',
-                  answer: 'Yes. You can send a memory as a flower via a private link — the recipient can open and read it without an account. Sharing is always a deliberate choice.',
-                },
-                {
-                  Icon: LockOutlinedIcon,
-                  question: 'Is my data encrypted?',
-                  answer: 'End-to-end. Your memories are encrypted in transit and at rest. We never index your content, never sell your data, and never use your memories to train anything.',
+                  Icon: LocalFloristOutlinedIcon,
+                  question: 'What is Horizons?',
+                  answer: 'Horizons is a 3D memory garden where you plant digital flowers to preserve your most meaningful moments. Each flower holds a message, a photo, a voice note, or a video — and can be set to bloom at a future date you choose.',
                 },
                 {
                   Icon: LocalFloristOutlinedIcon,
-                  question: "What's the difference between a garden and a memory?",
-                  answer: "A garden is a space — like a journal or an album. A memory is a single flower within that garden. You can have multiple gardens for different parts of your life, each with their own collection of flowers.",
+                  question: 'What is a blooming flower?',
+                  answer: 'A blooming flower is a memory you seal. You write your message now and set a specific date for it to open. Until then, the recipient sees a bud — a quiet signal that something is waiting. On the bloom date, it opens and delivers everything you put inside.',
+                },
+                /* Phase 2 — How it works */
+                {
+                  Icon: IosShareOutlinedIcon,
+                  question: 'What can I put inside a flower?',
+                  answer: 'A written message, a photo (upload or take one in-app), a voice note, or a short video. You can also choose a letter theme — romantic, friendly, family, or personal — that wraps your message in a beautiful design.',
+                },
+                {
+                  Icon: IosShareOutlinedIcon,
+                  question: 'How does sharing work? Does the recipient need an account?',
+                  answer: "You invite people into your garden by email. They'll get a link and can join for free. For one-off blooming flowers, you can also send a private link directly — the recipient can open it without an account.",
+                },
+                {
+                  Icon: IosShareOutlinedIcon,
+                  question: 'Can I see a flower before it blooms?',
+                  answer: "No — and that's the point. Once you seal a blooming flower, even you cannot read its contents until the bloom date. This preserves the surprise and gives the moment its weight.",
+                },
+                /* Phase 3 — Use cases */
+                {
+                  Icon: VisibilityOffOutlinedIcon,
+                  question: 'Who is Horizons for?',
+                  answer: 'Couples in long-distance relationships, parents wanting to capture family milestones, grandparents planting letters for grandchildren to open years from now, people going through grief, friends who want to send something more meaningful than a text, and anyone who wants to write to their future self.',
+                },
+                {
+                  Icon: VisibilityOffOutlinedIcon,
+                  question: 'Can I plant a flower for a milestone that is years away?',
+                  answer: "Yes. There is no limit on how far in the future you can set a bloom date. We have users who have planted flowers set to open on their children's 18th birthdays, on anniversaries a decade away, and on dates tied to people who may no longer be around to deliver them in person.",
+                },
+                /* Phase 4 — Pricing */
+                {
+                  Icon: CreditCardOutlinedIcon,
+                  question: 'Is Horizons free to start?',
+                  answer: 'Yes. The free plan lets you create one garden and plant up to 10 flowers with basic media. No credit card required. Pro and Premium plans unlock multiple gardens, higher storage limits, voice notes, video, and priority support.',
+                },
+                {
+                  Icon: CreditCardOutlinedIcon,
+                  question: 'What is the difference between Pro and Premium?',
+                  answer: 'Pro gives you up to 5 gardens, 500MB storage per garden, voice notes, and custom bloom themes. Premium gives you unlimited gardens, 2GB storage per garden, video support, and early access to new features.',
+                },
+                {
+                  Icon: CreditCardOutlinedIcon,
+                  question: 'Can I cancel my subscription at any time?',
+                  answer: 'Yes — cancel anytime from your profile, no questions asked. You keep access until the end of your billing period. Your memories and gardens are never deleted when you cancel; they move to the free tier limits.',
+                },
+                /* Phase 5 — Trust & privacy */
+                {
+                  Icon: LockOutlinedIcon,
+                  question: 'Who can see my garden and my memories?',
+                  answer: 'Only the people you explicitly invite. Your garden is completely private by default — nothing is public, nothing is indexed by search engines, and no one can stumble in uninvited. You control every invitation.',
+                },
+                {
+                  Icon: SaveOutlinedIcon,
+                  question: 'Is my data encrypted and safe?',
+                  answer: 'Yes. Your memories are encrypted in transit and at rest. We never sell your data, never use your memories to train AI models, and never share your content with third parties. What you plant stays yours.',
                 },
               ].map(({ Icon, question, answer }, i) => {
                 const isOpen = openFaqs.has(i);
@@ -919,7 +954,7 @@ export const LandingPage: React.FC = () => {
                     key={i}
                     style={{
                       borderTop: `1px solid ${theme.border.light}`,
-                      ...(i === 5 ? { borderBottom: `1px solid ${theme.border.light}` } : {}),
+                      ...(i === 11 ? { borderBottom: `1px solid ${theme.border.light}` } : {}),
                     }}
                   >
                     <button
