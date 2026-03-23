@@ -52,7 +52,7 @@ const cards = [
     flowerSrc: '/images/Default_A_delicate_intricately_designed_3D_glass_flower_with_s_3_0df29597-2de3-4b9b-b21e-b189c6a4b42c_0.png',
     tags: ['Anniversaries', 'Long-distance', 'Just because'],
     headline: 'For the ones who matter most',
-    quote: '"She opened it on the train home. I wasn\'t there — but somehow, I was."',
+    quote: '"I recorded a voice note on our anniversary. She listened to it a year later — and felt me right there with her."',
     label: 'FOR LOVED ONES',
   },
   {
@@ -61,9 +61,9 @@ const cards = [
     glowColor: 'rgba(210, 160, 210, 0.65)',
     shadowColor: 'rgba(160, 100, 180, 0.40)',
     flowerSrc: '/images/Default_A_delicate_translucent_3D_peony_depicted_in_a_sleek_gl_1_ea84b303-9941-4a01-a727-b0366c3d4aa6_0.png',
-    tags: ['Milestones', 'Recognition', 'Achievements'],
+    tags: ['Milestones', 'Recognition', 'Gratitude'],
     headline: 'For the people you build with',
-    quote: '"He\'d been with us five years. A card felt small. So we planted something lasting."',
+    quote: '"The launch went live at midnight. I planted it that night — a reminder of what we built together, whenever they need it."',
     label: 'FOR YOUR TEAM',
   },
   {
@@ -74,7 +74,7 @@ const cards = [
     flowerSrc: '/images/Default_A_highly_detailed_intricately_designed_3D_glass_flower_4_713d0b00-a8e9-41b7-9d42-166af3c21d76_0 1.png',
     tags: ['Growth', 'Milestones', 'Reflection'],
     headline: "For the person you're becoming",
-    quote: '"I planted it the day everything shifted. I open it when I forget how far I\'ve come."',
+    quote: '"I planted a note to myself on the hardest day of the year. When I opened it six months later, I remembered exactly who I was trying to become."',
     label: 'FOR YOURSELF',
   },
 ];
@@ -104,7 +104,7 @@ export const UseCasesSection: React.FC = () => (
           letterSpacing: '-0.01em',
           lineHeight: 1.15,
         }}>
-          Every moment deserves a place to grow.
+          Every moment deserves somewhere to live.
         </h2>
       </Reveal>
 
@@ -284,7 +284,7 @@ export const UseCasesSection: React.FC = () => (
 
                 <p style={{
                   fontFamily: typography.fontFamily.serif,
-                  fontSize: '10px',
+                  fontSize: '14px',
                   fontWeight: typography.fontWeight.semibold,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase' as const,
@@ -310,7 +310,7 @@ export const UseCasesSection: React.FC = () => (
           letterSpacing: '0.01em',
           lineHeight: 1.6,
         }}>
-          "Some moments deserve forever."
+          Some moments deserve forever.
         </p>
       </Reveal>
 

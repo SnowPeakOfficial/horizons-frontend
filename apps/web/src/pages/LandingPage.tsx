@@ -263,7 +263,7 @@ export const LandingPage: React.FC = () => {
           >
             Plant memories as flowers.
             <br />
-            Return to them when you're ready.
+            Return to them whenever you want.
           </p>
 
           {/* CTA Buttons */}
@@ -568,7 +568,7 @@ export const LandingPage: React.FC = () => {
               number: '01',
               label: 'STEP 01',
               title: 'Plant a memory',
-              description: 'Write a thought, attach a photo, record a voice note — anything worth keeping. The moment becomes a flower in your garden.',
+              description: 'Write a thought, attach a photo, record a voice note, or capture a video — anything worth keeping. The moment becomes a flower in your garden.',
               image: '/images/Moment to remember-rafiki.png',
               imageAlt: 'A person capturing a moment to remember',
               imageRight: false,
@@ -577,7 +577,7 @@ export const LandingPage: React.FC = () => {
               number: '02',
               label: 'STEP 02',
               title: 'Choose when it blooms',
-              description: 'Set it to open now, or seal it for later — a week, a year, or a lifetime. Some things are sweeter with time.',
+              description: 'Set it to open now, or seal it for later — a week, a month, a year. Build the anticipation. Let the moment unfold when it\'s meant to.',
               image: '/images/Flowers-rafiki.png',
               imageAlt: 'Flowers blooming — a memory coming to life',
               imageRight: true,
@@ -586,7 +586,7 @@ export const LandingPage: React.FC = () => {
               number: '03',
               label: 'STEP 03',
               title: 'Grow your garden',
-              description: "Every memory you plant adds to your private garden — a quiet, growing space that's entirely yours.",
+              description: "Every memory you plant adds to your private garden — a quiet, growing space that's entirely yours, or shared with the people you choose to invite.",
               image: '/images/Flowers-amico.png',
               imageAlt: 'A garden growing — a collection of memories',
               imageRight: false,
@@ -595,7 +595,7 @@ export const LandingPage: React.FC = () => {
               number: '04',
               label: 'STEP 04',
               title: 'Send it as a flower',
-              description: "When the moment is right, send a memory to someone you love. No wrapping needed — just a flower, and a letter.",
+              description: "Send it to someone who matters — a memory, delivered as a flower, waiting to be opened.",
               image: "/images/Valentine's bouquet with a card-bro.png",
               imageAlt: "A bouquet with a card — a memory sent with love",
               imageRight: true,
@@ -718,7 +718,7 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '-0.01em',
               lineHeight: 1.15,
             }}>
-              Where moments are kept with care
+              A place where moments are kept with care
             </h2>
           </RevealOnScroll>
 
@@ -812,7 +812,7 @@ export const LandingPage: React.FC = () => {
               }}>
                 {[
                   { icon: LockOutlinedIcon, headline: 'Your garden is private', body: 'No one enters unless you invite them.' },
-                  { icon: VisibilityOffOutlinedIcon, headline: 'Nothing is indexed', body: "Your memories aren't searchable or public." },
+                  { icon: VisibilityOffOutlinedIcon, headline: 'Yours, permanently', body: "No expiry. No algorithm. What you plant here stays here, exactly as you left it." },
                   { icon: SendOutlinedIcon, headline: 'Sharing is intentional', body: 'Nothing leaves without your choice.' },
                 ].map((item, i) => (
                   <div key={i} style={{
@@ -1166,7 +1166,7 @@ export const LandingPage: React.FC = () => {
               </p>
               <p style={{ marginBottom: '28px' }}>
                 A private garden where memories grow as flowers. Plant them.
-                Watch them bloom. Return when you need to.
+                Watch them bloom. Keep them forever.
               </p>
               <p
                 style={{
