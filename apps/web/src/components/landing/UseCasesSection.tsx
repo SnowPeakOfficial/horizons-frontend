@@ -72,7 +72,7 @@ const cards = [
     glowColor: 'rgba(140, 180, 240, 0.65)',
     shadowColor: 'rgba(60, 120, 200, 0.40)',
     flowerSrc: '/images/Default_A_highly_detailed_intricately_designed_3D_glass_flower_4_713d0b00-a8e9-41b7-9d42-166af3c21d76_0 1.png',
-    tags: ['Growth', 'Milestones', 'Reflection'],
+    tags: ['Growth', 'Self-care', 'Reflection'],
     headline: "For the person you're becoming",
     quote: '"I planted a note to myself on the hardest day of the year. When I opened it six months later, I remembered exactly who I was trying to become."',
     label: 'FOR YOURSELF',
