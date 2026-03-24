@@ -159,40 +159,6 @@ export const BlogPostPage: React.FC = () => {
 
         </div>
 
-        {/* ── Final CTA — exact LandingPage final CTA, no flower ── */}
-        <section style={{
-          padding: '120px 40px 120px',
-          background: 'linear-gradient(180deg, #FFFFFF 0%, #FFF9F7 50%, #FDFCFA 100%)',
-          textAlign: 'center',
-        }}>
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{
-              fontSize: 'clamp(36px, 5vw, 64px)',
-              fontFamily: typography.fontFamily.serif,
-              fontWeight: 400,
-              marginBottom: '48px',
-              color: '#3D3340',
-              lineHeight: 1.2,
-            }}>
-              When you're ready,
-              <br />
-              your garden is waiting
-            </h2>
-            <Button
-              variant="primary"
-              size="large"
-              onClick={() => navigate('/auth/register')}
-              style={{
-                fontSize: '18px',
-                padding: '20px 56px',
-                boxShadow: '0 12px 40px rgba(212, 144, 154, 0.35)',
-              }}
-            >
-              Enter your garden
-            </Button>
-          </div>
-        </section>
-
       </div>
 
       <Footer />
