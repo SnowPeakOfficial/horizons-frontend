@@ -94,8 +94,8 @@ const post2: BlogPost = {
       <h2 style={s.h2}>4. A message written weeks ago, set to arrive today</h2>
       <p style={s.p}>This is the one that tends to hit hardest. Write your message before the date — really write it, with photos, a voice note, all of it — seal it, and set it to open on the day that matters.</p>
       <p style={s.p}>When it opens, they're not reading something you sent this morning. They're reading proof that this day has been on your mind for weeks. That's a different kind of gift.</p>
-      <p style={s.p}>In Horizons, this is called a blooming flower — a memory you plant in a private garden, sealed until the bloom date you choose. It links back to the idea we explored in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>best memory keeping app 2026</a>: context, relationship, and timing — all three, in one thing.</p>
-      <blockquote style={s.blockquote}>"I planted ours the day we hit one year. Six months later it bloomed and he called immediately. He goes — I didn't know you'd been holding onto that that long."</blockquote>
+      <p style={s.p}>In Horizons, you can do more than plant one flower for someone far away — you can plant a whole garden for them. Arrange flowers in a constellation: one star per month you've been apart, each one blooming on the anniversary of a call, a trip, a moment that mattered between you. They watch the constellation grow from their side of the distance. One flower at a time, one memory at a time — a sky you built for them, from wherever you are.</p>
+      <blockquote style={s.blockquote}>"I planted ours the day we hit one year. Six months later it bloomed and he called me. He goes — I didn't know you'd been holding onto that that long."</blockquote>
       <h2 style={s.h2}>5. A handwritten letter, mailed the slow way</h2>
       <p style={s.p}>Underrated. The physical arrival of something you touched and addressed and sealed carries weight that digital things can't fully replicate. Takes effort. That's the point.</p>
       <h2 style={s.h2}>6. A shared playlist built for them</h2>
@@ -156,7 +156,7 @@ const post4: BlogPost = {
   slug: 'gifts-for-someone-grieving',
   title: 'Gifts for someone who is grieving that last longer than flowers',
   description: 'When someone is grieving, we reach for objects. But what they often need most isn\'t something to unwrap — it\'s to not be forgotten later. Here\'s what actually helps.',
-  publishedAt: '2026-04-08',
+  publishedAt: '2026-04-17',
   readTime: '5 min',
   category: 'Relationships',
   headerImage: '/images/blog-post4-community.jpg',
@@ -183,7 +183,7 @@ const post4: BlogPost = {
       <p style={s.p}>Write something specific about the person who was lost. A real memory. A particular quality. Something you witnessed. "I'm so sorry for your loss" is kind. "I still think about the way he laughed at his own jokes" is something they'll hold onto.</p>
       <h3 style={s.h3}>A message timed for a hard date</h3>
       <p style={s.p}>This is the one most people never think to do. Plant a message now — write it carefully, with specificity — and set it to arrive at a date you know will be hard. The first anniversary of the loss. The deceased person's birthday. A holiday. A milestone they were supposed to be there for.</p>
-      <p style={s.p}>In Horizons, a blooming flower can be planted today and sealed until that future date. When it opens, the person isn't receiving something generic sent in the moment — they're receiving proof that you thought ahead, that you knew those days would be hard, that you didn't forget. As we covered in <a href="/blog/long-distance-relationship-gift-ideas" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>long-distance relationship gift ideas</a>, what makes a message land is specificity and timing — both together.</p>
+      <p style={s.p}>In Horizons, you can plant a grief garden — not one flower, but a whole arrangement of flowers, each one set to bloom on a different hard date. The first anniversary of the loss. The deceased person's birthday. The holidays. The milestone they were supposed to be there for. The person receives a flower each time — proof, on every difficult date that keeps arriving, that you still haven't forgotten. As we covered in <a href="/blog/long-distance-relationship-gift-ideas" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>long-distance relationship gift ideas</a>, what makes a message land is specificity and timing — both together.</p>
       <blockquote style={s.blockquote}>"She planted one for me to open on my mom's first birthday after she passed. I was already having a hard day when it bloomed. Reading it — it felt like being caught before I fell."</blockquote>
       <h3 style={s.h3}>Something that does the ordinary for them</h3>
       <p style={s.p}>Grief is exhausting. Practical help — a meal delivery subscription, help with a task, a gift card to somewhere they go regularly — removes a small piece of friction from a period when everything takes more effort than it should.</p>
@@ -197,7 +197,7 @@ const post5: BlogPost = {
   slug: 'problem-with-digital-time-capsules',
   title: 'The problem with digital time capsules (and how to fix it)',
   description: 'Most digital time capsules get lost, forgotten, or never opened at the right moment. Here\'s why — and what actually needs to be different.',
-  publishedAt: '2026-04-14',
+  publishedAt: '2026-04-22',
   readTime: '5 min',
   category: 'Guides',
   headerImage: '/images/blog-post5-time-capsule.jpg',
@@ -231,7 +231,7 @@ const post6: BlogPost = {
   slug: 'what-to-write-letter-to-future-self',
   title: 'What to write in a letter to your future self (with real examples)',
   description: 'Writing a letter to your future self is one of the most clarifying things you can do. Here\'s what to actually put in it — and how to make sure you actually receive it.',
-  publishedAt: '2026-04-19',
+  publishedAt: '2026-04-27',
   readTime: '6 min',
   category: 'Wellness',
   headerImage: '/images/blog-post6-letter.jpg',
@@ -260,8 +260,8 @@ const post6: BlogPost = {
       <blockquote style={s.blockquote}>"I'm proud of the fact that I finally said the thing I'd been not saying for two years. I want you to remember that it felt like jumping off something, and that it was okay."</blockquote>
       <h2 style={s.h2}>How to make sure you actually receive it</h2>
       <p style={s.p}>This is where most future self letters fail. Written in a notebook, forgotten. Saved in a document, never opened. Emailed to yourself, lost in an inbox.</p>
-      <p style={s.p}>In Horizons, a blooming flower gives the letter a delivery date. You write it, seal it, set the date — your next birthday, the end of the year, a specific moment you know is coming. When it arrives, it opens. You don't have to go looking for it. As we explored in <a href="/blog/problem-with-digital-time-capsules" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>the problem with digital time capsules</a>, the content is rarely the issue. The delivery is.</p>
-      <p style={s.p}>Write the letter. Set the date. Let it find you at the right moment.</p>
+      <p style={s.p}>In Horizons, you can go further than one letter — plant multiple flowers for different future versions of yourself. One for your next birthday. One for the end of this year. One for the milestone you're working toward right now. One for five years from now, from whoever you are today. Each one sealed. Each one arriving when the moment is ready. A garden that walks you through your own future, one bloom at a time. As we explored in <a href="/blog/problem-with-digital-time-capsules" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>the problem with digital time capsules</a>, the content is rarely the issue. The delivery is.</p>
+      <p style={s.p}>Write the letters. Set the dates. Let them find you.</p>
       <h2 style={s.h2}>A simple template to follow</h2>
 <p style={s.p}>Copy this if it helps:</p>
 <ul style={s.ul}>
@@ -279,7 +279,7 @@ const post7: BlogPost = {
   slug: 'how-to-make-a-gift-feel-personal',
   title: 'How to make any gift feel personal (without spending more)',
   description: 'Most gifts solve the practical side but miss the emotional one. Here\'s how to fix that — and why the memory matters more than the gift itself.',
-  publishedAt: '2026-04-25',
+  publishedAt: '2026-05-02',
   readTime: '5 min',
   category: 'Gift Ideas',
   headerImage: '/images/blog-post7-gift-card.jpg',
@@ -487,31 +487,36 @@ const post12: BlogPost = {
   slug: 'gift-for-girlfriend',
   title: 'Gift ideas for your girlfriend that actually feel personal',
   description: 'Generic gifts are easy to find. Personal ones take something else. Here are the ideas that land — and one that arrives exactly when it should.',
-  publishedAt: '2026-05-01',
+  publishedAt: '2026-04-10',
   readTime: '5 min',
   category: 'Gift Ideas',
   headerImage: '/images/blog-post12-girlfriend-gift.jpg',
   ctaText: 'Plant something she will actually remember',
   content: () => (
     <div>
-      <p style={s.p}><strong style={s.strong}>Short answer:</strong> The best gifts for your girlfriend are the ones that prove you were paying attention — to what she said, what she needs, what she loves. Not a list of things to buy. Evidence that you know her.</p>
-      <p style={s.p}>The problem with most gift guides for girlfriends is that they optimize for objects, not for meaning. Candles, jewellery, skincare sets — all fine, all forgettable if they could have come from anyone.</p>
-      <p style={s.p}>What actually lands is specificity. Something chosen because of her, not because it was on a list.</p>
-      <h2 style={s.h2}>What makes a gift feel personal</h2>
-      <p style={s.p}>Three things: evidence that you listened, intention behind the choice, and timing. The last one is underrated. A gift that arrives at exactly the right moment — not just the occasion but the feeling of the occasion — does more than a better gift given carelessly.</p>
-      <h2 style={s.h2}>Gift ideas that tend to land</h2>
+      <p style={s.p}><strong style={s.strong}>Short answer:</strong> The gifts that stick are the ones that feel like inside jokes made physical — something only you two would understand. Not a list. Evidence that you know her, specifically.</p>
+      <p style={s.p}>Most gift guides for girlfriends optimize for objects. Jewellery, candles, skincare. All fine. All forgettable if they could have come from anyone. What actually lands is specificity — something that only makes sense for her.</p>
+      <h2 style={s.h2}>Gift ideas that prove you were paying attention</h2>
       <ul style={s.ul}>
-        <li style={s.li}><strong style={s.strong}>An experience she's mentioned</strong> — a restaurant, a class, a trip she's brought up. The fact that you remembered is the gift.</li>
-        <li style={s.li}><strong style={s.strong}>Something local to where you are</strong> — not Amazon. Something from your city, your neighbourhood, a place that means something between you.</li>
-        <li style={s.li}><strong style={s.strong}>A playlist built for her</strong> — not one you already listen to. One you made, with songs that mean something specific.</li>
-        <li style={s.li}><strong style={s.strong}>A voice note, recorded and saved</strong> — something she can come back to. Not edited. The imperfect version is the real one.</li>
-        <li style={s.li}><strong style={s.strong}>A message written ahead of time, set to arrive on the day</strong> — not sent the morning of. Written weeks ago, sealed, timed to open when the moment is right.</li>
+        <li style={s.li}><strong style={s.strong}>A custom map of a place that means something</strong> — the street you met on, the city you visited, the neighbourhood from your first date. Printed and framed. She'll know immediately why you chose it.</li>
+        <li style={s.li}><strong style={s.strong}>A "newspaper front page" from the day you met</strong> — services like Artifact Uprising or Newspaper Club let you design a front page around a specific date. The headline writes itself.</li>
+        <li style={s.li}><strong style={s.strong}>Something engraved with a phrase only she'd understand</strong> — not "always and forever." The inside thing. The line from the text, the joke from that trip, the word you two use for something no one else knows.</li>
+        <li style={s.li}><strong style={s.strong}>A blind tasting of something she loves, assembled by you</strong> — coffee, wine, chocolate, tea. Five options, numbered. You score them together. The experience is the gift; the curation is the proof.</li>
+        <li style={s.li}><strong style={s.strong}>Booking the thing she mentioned once and never followed up on</strong> — the class she said sounded interesting, the restaurant she opened on her phone and closed. The fact that you remembered is the entire point.</li>
       </ul>
-      <p style={s.p}>That last one is worth dwelling on. In Horizons, a blooming flower is a memory you plant now and set to bloom on a specific date. Write the message before her birthday, before your anniversary, before a day you know will matter. When it opens, she's not reading something you sent that morning — she's reading proof that this day has been on your mind for a long time.</p>
-      <blockquote style={s.blockquote}>"He planted one for our anniversary two months before. When it bloomed he was already at work. I read it alone and cried. That's the one I still go back to."</blockquote>
-      <h2 style={s.h2}>What to avoid</h2>
-      <p style={s.p}>Gifts that feel interchangeable — that could have been bought in five minutes, for anyone. If there's no story behind it, it's hard to feel anything receiving it. The story is the gift. The object is just how you deliver it.</p>
-      <p style={s.p}>As we explored in <a href="/blog/how-to-make-a-gift-feel-personal" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>how to make any gift feel personal</a>, the memory matters more than the object. Pair whatever you give with something that carries the meaning.</p>
+      <h2 style={s.h2}>The Horizons idea: a garden, not a flower</h2>
+      <p style={s.p}>If you want to give something she'll carry for years — plant a whole garden for her in Horizons. Not one flower. A garden shaped like a heart, each petal holding a different memory from your relationship, set to bloom one per month for the next year.</p>
+      <p style={s.p}>The first petal: the day you met. The next: the first trip. The third: the inside joke that became a whole thing. The fourth: the hard moment you got through together. Each one sealed, each one connected to the last — a journey unfolding over twelve months. She can see the full shape of the garden before a single petal opens. Then it delivers itself, one memory at a time.</p>
+      <p style={s.p}>That's not a gift. That's a year of being remembered.</p>
+      <blockquote style={s.blockquote}>"He built one before our anniversary — twelve flowers, one per month. The first one opened on the day. I didn't know the others were coming. By the third I understood what he'd done and I just sat with it for a while."</blockquote>
+      <h2 style={s.h2}>What to write inside each flower</h2>
+      <ul style={s.ul}>
+        <li style={s.li}>The specific memory it's anchored to — not vague, the real moment</li>
+        <li style={s.li}>What you want her to know that you don't usually say out loud</li>
+        <li style={s.li}>What that memory means now, looking back</li>
+      </ul>
+      <p style={s.p}>The garden is the gift. Each flower is a chapter. The whole thing tells the story of you two — arranged, intentional, arriving one bloom at a time.</p>
+      <p style={s.p}>More on this in <a href="/blog/how-to-make-a-gift-feel-personal" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>how to make any gift feel personal</a> — the memory matters more than the object. Give her both.</p>
     </div>
   ),
 };
@@ -520,7 +525,7 @@ const post13: BlogPost = {
   slug: 'gift-for-boyfriend',
   title: 'Gift ideas for your boyfriend that actually mean something',
   description: "Most gift guides for boyfriends lean on objects. The ones that land lean on attention. Here's what to give — and how to make it last longer than the occasion.",
-  publishedAt: '2026-05-01',
+  publishedAt: '2026-04-10',
   readTime: '5 min',
   category: 'Gift Ideas',
   headerImage: '/images/blog-post13-headphones-gift.jpg',
@@ -532,20 +537,23 @@ const post13: BlogPost = {
       <p style={s.p}>What makes a gift memorable isn't the category. It's the evidence inside it — that you were listening, that you noticed, that this was chosen for him and not for a placeholder version of a boyfriend.</p>
       <h2 style={s.h2}>The gifts that tend to work</h2>
       <ul style={s.ul}>
-        <li style={s.li}><strong style={s.strong}>An experience around something he cares about</strong> — a class, a game, a trip, a dinner around a thing he actually loves. Not what you think a boyfriend should want. What he wants.</li>
-        <li style={s.li}><strong style={s.strong}>Something he'd never buy himself</strong> — the upgrade he keeps putting off, the thing he mentioned once and didn't follow up on.</li>
-        <li style={s.li}><strong style={s.strong}>A voice recording, kept</strong> — something real and unscripted. Something he can listen to when he needs to.</li>
-        <li style={s.li}><strong style={s.strong}>A message written before the day and timed to arrive</strong> — not sent the morning of the occasion. Written ahead, sealed, set to open when it matters.</li>
+        <li style={s.li}><strong style={s.strong}>Book the obscure thing he mentioned once, six months ago</strong> — the brewery tour, the obscure film screening, the class he said sounded interesting and never followed up on. That you remembered proves you were actually listening. That's the gift.</li>
+        <li style={s.li}><strong style={s.strong}>A blind tasting flight, assembled by you</strong> — whiskey, hot sauce, craft beer, coffee. Five options, numbered, no labels. You curate it, you taste it together. The experience is the point; the effort is the proof.</li>
+        <li style={s.li}><strong style={s.strong}>A framed "permission slip" for something he keeps putting off</strong> — the trip, the purchase, the thing he's been saying "eventually" about for two years. Frame it. Give him actual written permission. It's funny and it's not.</li>
+        <li style={s.li}><strong style={s.strong}>A playlist with liner notes, written by you</strong> — not a Spotify link. A playlist where every song has a handwritten note underneath explaining exactly why you chose it. The liner notes are the gift.</li>
+        <li style={s.li}><strong style={s.strong}>A message written before the day, sealed, set to arrive</strong> — not sent the morning of. Written weeks ago, attached to a photo, set to open when it matters most.</li>
       </ul>
-      <p style={s.p}>In Horizons, a blooming flower does exactly this. You write the message now — before the birthday, before the anniversary — attach a photo, record your voice if you want. Set it to bloom on the day. When it opens, he's not reading something you sent in a rush. He's reading proof that this day mattered to you before it arrived.</p>
+      <h2 style={s.h2}>The Horizons idea: build him a trail</h2>
+      <p style={s.p}>If you want to give him something he'll carry — not just an occasion — plant a garden for him in Horizons. Not one flower. A trail of flowers, each one a chapter in your story together: the first date, the first trip, the moment you knew, the inside joke, the hard thing you got through together.</p>
+      <p style={s.p}>Each one sealed. Each one blooming in sequence, weeks apart. He doesn't get the whole story at once — he walks the trail over months, one memory at a time. The whole garden is visible from the start, but he has to wait for it to unfold.</p>
       <blockquote style={s.blockquote}>"She gave me a card and then later that day a flower bloomed in the app. The card was fine. The flower was the thing I actually read twice."</blockquote>
-      <h2 style={s.h2}>What to write if you plant a flower</h2>
+      <h2 style={s.h2}>What to write inside each flower</h2>
       <ul style={s.ul}>
         <li style={s.li}>Something specific about him — not about the relationship in general, but about him</li>
-        <li style={s.li}>A memory you want him to have on record</li>
+        <li style={s.li}>The memory the flower is anchored to — specific, not vague</li>
         <li style={s.li}>What you want him to know that you don't usually say out loud</li>
       </ul>
-      <p style={s.p}>The gift funds an experience or marks an occasion. The flower is what he'll still have years from now.</p>
+      <p style={s.p}>The gift funds an experience or marks an occasion. The trail is what he'll still be walking through months from now.</p>
       <p style={s.p}>More on timing and intention in <a href="/blog/long-distance-relationship-gift-ideas" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>long-distance relationship gift ideas</a> — the same principles apply even when you're in the same city.</p>
     </div>
   ),
@@ -555,7 +563,7 @@ const post14: BlogPost = {
   slug: 'digital-scrapbook-ideas',
   title: 'Digital scrapbook ideas — and why a memory garden does it better',
   description: 'Digital scrapbooks look great. They\'re also passive — no one knows to look at them. Here\'s what works, and what to do instead if you want memories to actually land.',
-  publishedAt: '2026-05-08',
+  publishedAt: '2026-04-15',
   readTime: '5 min',
   category: 'Memory',
   headerImage: '/images/blog-post14-dollar-bill.jpg',
@@ -571,12 +579,13 @@ const post14: BlogPost = {
       <h2 style={s.h2}>Digital scrapbook ideas that actually work</h2>
       <p style={s.p}>If you're building a digital scrapbook, these approaches make it more likely to be used:</p>
       <ul style={s.ul}>
-        <li style={s.li}><strong style={s.strong}>Annual family recap</strong> — build one per year, share it on New Year's or a family birthday. Give it a moment, not just a folder.</li>
-        <li style={s.li}><strong style={s.strong}>Trip scrapbook shared during the trip</strong> — build it while you're still there, share it the last night. The proximity to the memory makes it land differently.</li>
-        <li style={s.li}><strong style={s.strong}>Milestone scrapbook as a gift</strong> — a graduation, a retirement, a big birthday. Print it or share it at the event.</li>
-        <li style={s.li}><strong style={s.strong}>Relationship anniversary scrapbook</strong> — document the year together, share it on the date.</li>
+        <li style={s.li}><strong style={s.strong}>The "director's commentary" scrapbook</strong> — every photo gets a voice note underneath it explaining what was actually happening behind the camera. Not the caption. The real version. The one you'd only tell a close friend.</li>
+        <li style={s.li}><strong style={s.strong}>A "year in numbers" page</strong> — miles driven together, meals cooked, 3am texts sent, inside jokes counted, cities visited. Numbers make abstract time concrete. It hits differently than photos.</li>
+        <li style={s.li}><strong style={s.strong}>A "things we said" page</strong> — pull actual quotes from texts. The ones that made you laugh, the ones that were actually important, the ones that only make sense between you. A page of those is more alive than any photo.</li>
+        <li style={s.li}><strong style={s.strong}>A milestone scrapbook shared at the event</strong> — graduation, retirement, a big birthday. Print it or pull it up at the table. Give it a moment, not just a folder.</li>
+        <li style={s.li}><strong style={s.strong}>A trip scrapbook built during the trip</strong> — build it while you're still there, share it on the last night. The proximity to the memory makes it land differently than six months later.</li>
       </ul>
-      <p style={s.p}>The pattern: give the scrapbook a moment, not just a location. Something that makes it land rather than sit.</p>
+      <p style={s.p}>The pattern: give the scrapbook a moment and a format that has a point of view. Something that makes it land rather than sit.</p>
       <h2 style={s.h2}>What a memory garden does differently</h2>
       <p style={s.p}>A <a href="/blog/what-is-a-memory-garden" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>memory garden</a> is built around delivery. You don't build an archive and hope someone visits it. You plant a memory — a message, a photo, a voice note — with a specific recipient and a specific date. On that date, it blooms. It arrives. The person receives it whether or not they were thinking about it.</p>
       <p style={s.p}>The difference is orientation. A scrapbook faces inward — it's an archive of the past, for whoever finds it. A memory garden faces outward — it's a message to someone, arriving when you intended.</p>
@@ -653,5 +662,5 @@ const post16: BlogPost = {
   ),
 };
 
-export const blogPosts: BlogPost[] = [post1, post2, post3, post4, post5, post6, post7, post8, post9, post10, post11, post12, post13, post14, post15, post16];
+export const blogPosts: BlogPost[] = [post1, post2, post3, post12, post13, post14, post4, post5, post6, post7, post8, post15, post16, post9, post10, post11];
 
