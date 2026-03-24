@@ -28,7 +28,7 @@ export const BlogPostPage: React.FC = () => {
   const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) return <Navigate to="/blog" replace />;
-  if (new Date(post.publishedAt) > new Date()) return <Navigate to="/blog" replace />;
+  if (import.meta.env.MODE !== 'development' && new Date(post.publishedAt) > new Date()) return <Navigate to="/blog" replace />;
 
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
@@ -152,10 +152,39 @@ export const BlogPostPage: React.FC = () => {
         {/* ── Article body ── */}
         <div
           className="blog-post-content"
-          style={{ maxWidth: '760px', margin: '0 auto', padding: '0 24px clamp(60px, 8vw, 96px)' }}
+          style={{ maxWidth: '760px', margin: '0 auto', padding: '0 24px clamp(40px, 6vw, 64px)' }}
         >
           {post.content()}
+        </div>
 
+        {/* ── End-of-article CTA ── */}
+        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 24px clamp(64px, 10vw, 96px)', textAlign: 'center' }}>
+          <button
+            onClick={() => navigate('/auth/register')}
+            style={{
+              background: 'linear-gradient(135deg, #E8B4B8 0%, #D4909A 100%)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '999px',
+              padding: '16px 40px',
+              fontSize: '16px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              boxShadow: '0 8px 28px rgba(212, 144, 154, 0.35)',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              letterSpacing: '0.02em',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 36px rgba(212, 144, 154, 0.45)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(212, 144, 154, 0.35)';
+            }}
+          >
+            {post.ctaText} →
+          </button>
         </div>
 
       </div>

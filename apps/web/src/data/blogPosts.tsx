@@ -8,6 +8,7 @@ export interface BlogPost {
   readTime: string;
   category: string;
   headerImage: string;
+  ctaText: string;
   content: () => React.ReactNode;
 }
 
@@ -25,198 +26,206 @@ const s = {
 // ─── Blog Posts ─────────────────────────────────────────────────────────────
 
 const post1: BlogPost = {
-  slug: 'meaningful-gift-long-distance',
-  title: 'The most meaningful gift you can give: a message that arrives exactly when they need it',
-  description: 'Blooming flowers let you plant a message today and deliver it at a future moment that matters — a birthday, an anniversary, the end of a hard week. Here\'s why that idea is so powerful.',
-  publishedAt: '2026-03-25',
-  readTime: '5 min',
-  category: 'Gift Ideas',
-  headerImage: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1200&q=80&auto=format&fit=crop',
+  slug: 'best-memory-keeping-app',
+  title: 'The best memory keeping app in 2026 (and what most of them get wrong)',
+  description: 'Most memory apps store your photos. Very few actually preserve them. Here\'s an honest look at what\'s out there — and what to look for.',
+  publishedAt: '2026-03-26',
+  readTime: '6 min',
+  category: 'Memory',
+  headerImage: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80&auto=format&fit=crop',
+  ctaText: 'Start keeping memories that actually last',
   content: () => (
     <div>
-      <p style={s.p}>There is a specific kind of longing that comes with caring about someone far away — or even someone close, when life has made you both busy. You want to reach them. You want the moment to land right.</p>
-      <p style={s.p}>Some moments shouldn't arrive late.</p>
-      <p style={s.p}>Flowers get delivered and die. Cards get recycled. Most digital gifts feel like an afterthought — something bought in thirty seconds, sent and forgotten the same day.</p>
-      <p style={s.p}>But what if you could plant a message today — write it carefully, attach a photo or a voice note — and have it arrive on a specific date in the future, sealed until that moment?</p>
-      <h2 style={s.h2}>That's what a blooming flower is</h2>
-      <p style={s.p}>In Horizons, a blooming flower is a memory you seal. You write your message now — with time, with thought — and choose the exact date it opens. Until then, the recipient sees a bud: something growing, something waiting. The anticipation is part of the gift.</p>
-      <p style={s.p}>On the date you chose, it blooms. Your message, your photo, your voice — all of it revealed at once.</p>
-      <blockquote style={s.blockquote}>"I planted it three months out. She kept asking what it was. When it finally opened she just — yeah. She cried."</blockquote>
-      <h2 style={s.h2}>Why timing changes everything</h2>
-      <p style={s.p}>A message that arrives on the right day feels different from one sent at random. The effort of planning — of thinking ahead, of choosing a date that means something — communicates care in a way that a spontaneous text cannot.</p>
-      <p style={s.p}>A flower planted for a partner's hard week, set to open on Friday evening. A message to a parent on their retirement date. A note to yourself at the start of a difficult year, set to bloom when it's over.</p>
-      <p style={s.p}>The gift isn't just the message. It's the proof that you thought about them long before the day arrived.</p>
-      <h2 style={s.h2}>What you can put inside</h2>
+      <p style={s.p}>If you search "best memory keeping app," you'll find a dozen roundups that recommend the same five tools: Google Photos, iCloud, Notion, Day One, and whatever journaling app has the best App Store screenshots that week.</p>
+      <p style={s.p}>Here's the problem: most of those apps do the same thing. They store. They don't preserve.</p>
+      <p style={s.p}>Storing and preserving are not the same. A photo in iCloud is stored. A memory is preserved when it carries context, intention, and a destination — someone to give it to, a moment to arrive in.</p>
+      <h2 style={s.h2}>What most memory apps get wrong</h2>
+      <p style={s.p}><strong style={s.strong}>Google Photos / iCloud</strong> — excellent at storing, zero at meaning. Photos sit in a library nobody browses. Search is good. Emotional delivery is nonexistent.</p>
+      <p style={s.p}><strong style={s.strong}>Day One / journey apps</strong> — great for personal journaling. But they're inward-facing. Your entries stay with you, for you, forever. There's no mechanism for sharing a memory with someone at the right moment.</p>
+      <p style={s.p}><strong style={s.strong}>Shared albums (Google Photos, iCloud Shared)</strong> — better, but passive. You add photos and hope someone scrolls back and finds them. Nothing is timed. Nothing is anchored to a moment that matters.</p>
+      <p style={s.p}><strong style={s.strong}>Scrapbooking apps</strong> — beautiful output, but the effort is high and the delivery is usually a printed book that takes six weeks to arrive.</p>
+      <h2 style={s.h2}>What actually makes a memory last</h2>
+      <p style={s.p}>The research on memory and meaning points to the same things: context (the story behind the moment), relationship (who it's for), and timing (when it arrives). Strip any of those out and you have documentation, not memory.</p>
+      <p style={s.p}>This is why a voice note from a parent feels irreplaceable while a folder of family photos doesn't. The voice note has all three. The folder has none.</p>
+      <h2 style={s.h2}>What to look for in a memory keeping app</h2>
       <ul style={s.ul}>
-        <li style={s.li}>A written message — as short or as long as you need</li>
-        <li style={s.li}>A photo (upload one or take it in the app)</li>
-        <li style={s.li}>A voice note — hearing your actual voice is irreplaceable</li>
-        <li style={s.li}>A short video</li>
+        <li style={s.li}><strong style={s.strong}>Context layer</strong> — can you attach a written message or voice note to a photo?</li>
+        <li style={s.li}><strong style={s.strong}>Intentional sharing</strong> — can you choose exactly who sees it and when?</li>
+        <li style={s.li}><strong style={s.strong}>Timed delivery</strong> — can a memory arrive at a specific future moment, not just sit in a feed?</li>
+        <li style={s.li}><strong style={s.strong}>Privacy</strong> — is it a private space, not a social feed?</li>
       </ul>
-      <p style={s.p}>All of it sealed until the bloom date. All of it private — only visible to the people you invite into the garden.</p>
-      <h2 style={s.h2}>When to use one</h2>
-      <ul style={s.ul}>
-        <li style={s.li}><strong style={s.strong}>Anniversaries</strong> — plant it months in advance; let them live with the anticipation</li>
-        <li style={s.li}><strong style={s.strong}>Birthdays</strong> — especially for people who live far away</li>
-        <li style={s.li}><strong style={s.strong}>Hard seasons</strong> — set a flower to bloom when a difficult thing ends</li>
-        <li style={s.li}><strong style={s.strong}>New Year's</strong> — a message from your present self to your future self</li>
-        <li style={s.li}><strong style={s.strong}>Baby arrivals</strong> — plant a letter before they're even born</li>
-      </ul>
-      <p style={s.p}>There are no wrong occasions. There is only the decision to be intentional about when something arrives.</p>
+      <h2 style={s.h2}>Where Horizons fits</h2>
+      <p style={s.p}>Horizons is built specifically around the third piece — timed, intentional delivery. You plant a memory (a message, a photo, a voice note) in a private garden, choose the exact date it opens, and it blooms for the person you chose. It's the only app we've found that treats delivery as a feature, not an afterthought.</p>
+      <p style={s.p}>If you want a photo library, use Google Photos. If you want a journal, use Day One. If you want a memory to actually arrive — to land with someone, at the right moment, with the context that makes it mean something — that's what a blooming flower is for.</p>
     </div>
   ),
 };
 
 const post2: BlogPost = {
-  slug: 'anniversary-gift-long-distance-couples',
-  title: 'Anniversary gifts for long-distance couples that actually feel personal',
-  description: 'Physical gifts shipped across time zones rarely land with the emotional weight the occasion deserves. Here are ideas — including one that arrives exactly when you want it to.',
-  publishedAt: '2026-04-05',
+  slug: 'long-distance-relationship-gift-ideas',
+  title: 'Long-distance relationship gift ideas that actually feel personal (not generic)',
+  description: 'Shipping something across time zones rarely lands with the emotional weight the occasion deserves. Here are the ideas that actually work — and one that arrives exactly when you want it to.',
+  publishedAt: '2026-04-02',
   readTime: '6 min',
   category: 'Gift Ideas',
-  headerImage: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop',
+  headerImage: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=1200&q=80&auto=format&fit=crop',
+  ctaText: 'Plant a message for someone far away',
   content: () => (
     <div>
       <p style={s.p}>Long-distance relationships run on two things: trust and the feeling of being remembered. Distance doesn't break most couples. Being forgotten does.</p>
-      <p style={s.p}>The hard part about anniversaries across distance isn't finding a gift — it's finding something that says "I thought about you specifically, on this specific day." Not because you had to. Because you wanted to.</p>
-      <h2 style={s.h2}>What doesn't work</h2>
-      <p style={s.p}><strong style={s.strong}>Generic delivery gifts</strong> say "I thought of you." They don't say "I know you." <strong style={s.strong}>E-gift cards</strong> are convenient and immediately forgotten. <strong style={s.strong}>A text sent on the day</strong> gets buried in their phone within hours.</p>
-      <p style={s.p}>None of these are wrong. They just don't carry the weight the day deserves.</p>
-      <h2 style={s.h2}>What works</h2>
-      <h3 style={s.h3}>1. A voice note they can keep</h3>
-      <p style={s.p}>Record yourself saying what you'd say if you were there. Not a call — a recording they can return to. Keep it raw. Don't edit. The imperfection is what makes it feel real and close, even across the distance.</p>
-      <h3 style={s.h3}>2. A shared photo album of the year</h3>
-      <p style={s.p}>Collect 12–20 photos from your year — screenshots of video calls, photos from visits, funny texts. Go through them together on a call. The act of reviewing it together does more than the album itself.</p>
-      <h3 style={s.h3}>3. A message planted weeks ago, set to bloom today</h3>
-      <p style={s.p}>Write your message weeks before the date. Attach a photo, record a voice note. Seal it. Set it to open on your anniversary.</p>
-      <p style={s.p}>When it opens, they're not reading something you sent today. They're reading something you wrote across the distance — proof that this day has been on your mind for a long time.</p>
-      <blockquote style={s.blockquote}>"I planted ours the day we hit one year. Six months later it bloomed and he called me right away. He goes, I didn't know you'd been holding onto that that long."</blockquote>
-      <h2 style={s.h2}>How to do it in Horizons</h2>
-      <ul style={s.ul}>
-        <li style={s.li}>Create a garden — your private shared space</li>
-        <li style={s.li}>Invite your partner as a contributor</li>
-        <li style={s.li}>Plant a blooming flower, set the bloom date to your anniversary</li>
-        <li style={s.li}>Write your message, attach a photo or voice note</li>
-        <li style={s.li}>Choose the Romantic letter theme</li>
-        <li style={s.li}>Watch it bloom together on the day</li>
-      </ul>
-      <p style={s.p}>Free to start. No subscription required for your first garden.</p>
+      <p style={s.p}>The problem with most long-distance gifts isn't the budget — it's that they feel like something anyone could have sent. A box of chocolates, a flower delivery, an e-gift card. Generic. Forgettable. Proof of effort, not proof of knowing.</p>
+      <p style={s.p}>Here are the ideas that actually work — ranked roughly by how personal they feel.</p>
+      <h2 style={s.h2}>1. A voice note, recorded and saved</h2>
+      <p style={s.p}>Not a call. A recording — something they can return to at 2am, something that doesn't disappear. Say what you'd say if you were in the room. Keep it unedited. The stumbles and pauses are what make it feel close.</p>
+      <h2 style={s.h2}>2. A shared photo album of the year</h2>
+      <p style={s.p}>Pull together 15–20 photos from your time together — screenshots of calls, photos from visits, funny texts, anything. Build the album and go through it on a video call. The shared act of remembering is the gift.</p>
+      <h2 style={s.h2}>3. Something local, sent from where you are</h2>
+      <p style={s.p}>Not from Amazon — from a local bakery, a shop on your street, something that carries a sense of your actual place. It tells them where you are, not just that you thought of them.</p>
+      <h2 style={s.h2}>4. A message written weeks ago, set to arrive today</h2>
+      <p style={s.p}>This is the one that tends to hit hardest. Write your message before the date — really write it, with photos, a voice note, all of it — seal it, and set it to open on the day that matters.</p>
+      <p style={s.p}>When it opens, they're not reading something you sent this morning. They're reading proof that this day has been on your mind for weeks. That's a different kind of gift.</p>
+      <p style={s.p}>In Horizons, this is called a blooming flower — a memory you plant in a private garden, sealed until the bloom date you choose. It links back to the idea we explored in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>what actually makes a memory last</a>: context, relationship, and timing — all three, in one thing.</p>
+      <blockquote style={s.blockquote}>"I planted ours the day we hit one year. Six months later it bloomed and he called immediately. He goes — I didn't know you'd been holding onto that that long."</blockquote>
+      <h2 style={s.h2}>5. A handwritten letter, mailed the slow way</h2>
+      <p style={s.p}>Underrated. The physical arrival of something you touched and addressed and sealed carries weight that digital things can't fully replicate. Takes effort. That's the point.</p>
+      <h2 style={s.h2}>The honest answer</h2>
+      <p style={s.p}>The best long-distance gift is the one that proves you thought about them specifically — not just that you remembered the occasion. Timing, specificity, and a little planning go further than any budget.</p>
     </div>
   ),
 };
 
 const post3: BlogPost = {
-  slug: 'digital-memory-preservation',
-  title: 'Why photos in your camera roll are not the same as preserved memories',
-  description: 'You have thousands of photos. But do you have the stories behind them? Here is why context is the thing that makes a memory last.',
-  publishedAt: '2026-04-17',
-  readTime: '4 min',
+  slug: 'how-to-preserve-family-memories',
+  title: 'How to preserve family memories before they\'re gone',
+  description: 'Most family memories live in people\'s heads, not on paper. Here\'s what actually works for capturing and keeping them — before the people who carry them aren\'t here to tell them.',
+  publishedAt: '2026-04-09',
+  readTime: '6 min',
   category: 'Memory',
-  headerImage: 'https://images.unsplash.com/photo-1515965885361-f1e0095517ea?w=1200&q=80&auto=format&fit=crop',
+  headerImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80&auto=format&fit=crop',
+  ctaText: "Preserve a memory before it's gone",
   content: () => (
     <div>
-      <p style={s.p}>The average person has 2,000+ photos on their phone. Most will never be seen again after the first week. Not because they don't matter — but because a photo, on its own, is incomplete.</p>
-      <p style={s.p}>Storage is not the same as remembering.</p>
-      <p style={s.p}>A memory is not the image. A memory is the image plus the feeling you had, the thing that was said, the way the light looked, the reason you were there.</p>
-      <h2 style={s.h2}>What gets lost</h2>
-      <p style={s.p}>Grandparents' photos sit in boxes, unlabeled. Digital albums become unidentifiable — who is that? Where was this? The photo survives. The meaning doesn't.</p>
-      <p style={s.p}>The people who know the context are here now. Every year without recording it is a year of context gone.</p>
-      <h2 style={s.h2}>What preservation actually means</h2>
-      <p style={s.p}>A preserved memory has three things: the artifact (photo, audio, video), the story (what was happening, why it mattered), and anchoring — who it's for, when it should be remembered.</p>
-      <p style={s.p}>Anchoring is what most tools miss entirely. A photo in iCloud is stored but unanchored. It exists. It isn't pointed anywhere. It has no intended recipient, no moment of arrival. It will sit there until the account lapses.</p>
-      <h2 style={s.h2}>What anchored preservation looks like</h2>
-      <p style={s.p}>In Horizons, each flower is anchored by design. You choose who it's for. You write the context. You decide when it opens. The memory doesn't just sit — it arrives. It blooms at the right moment, for the right person.</p>
-      <blockquote style={s.blockquote}>"I planted a flower with photos from my dad's last healthy summer. Set it to bloom on his birthday, the year after he passed. My brother opened it and just — he said it felt like hearing from him again."</blockquote>
-      <p style={s.p}>That is what preservation means. Not storage. Delivery. Intentional, timed, human delivery.</p>
+      <p style={s.p}>Every family has a version of this story: someone passes away, and a week later someone else says "I wish I'd recorded her telling that story about—" and then trails off, because the story is gone now.</p>
+      <p style={s.p}>Family memories don't disappear because nobody cared. They disappear because nobody got around to it. Because the urgency of recording the past always loses to the urgency of the present.</p>
+      <p style={s.p}>Here's what actually works — and why most approaches fail.</p>
+      <h2 style={s.h2}>Why photos alone aren't enough</h2>
+      <p style={s.p}>Most family preservation efforts start and stop with photos. The problem is that a photo without context is just an image. In one generation, it becomes "who is that?" In two generations, it becomes unidentifiable entirely.</p>
+      <p style={s.p}>The photo preserves the face. It doesn't preserve the voice, the laugh, the story behind why that photo was taken, the feeling in the room. Those things live in people. And people don't last.</p>
+      <h2 style={s.h2}>What actually works</h2>
+      <h3 style={s.h3}>Voice recordings over video calls</h3>
+      <p style={s.p}>The easiest thing most families never do: record a voice memo of a grandparent or parent telling a story. No setup. No camera anxiety. Just a phone on a table and someone saying "tell me about the house you grew up in." Even ten minutes is irreplaceable.</p>
+      <h3 style={s.h3}>Story-first, photo-second</h3>
+      <p style={s.p}>Go through old photos together and record the commentary, not just the images. The photo is the prompt. The recording is the memory. Save both.</p>
+      <h3 style={s.h3}>Timed delivery for future generations</h3>
+      <p style={s.p}>This is the piece most tools miss entirely. A memory preserved but never delivered is still at risk of being lost. The most powerful preservation is memory with a destination — something written or recorded today, addressed to someone specific, set to arrive at a moment that matters.</p>
+      <p style={s.p}>In Horizons, you can plant a memory — a message, a voice note, a photo with context — in a private family garden, and set it to bloom for a grandchild on their 18th birthday, or for a child on a graduation day years away. As we explored in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>our look at memory keeping apps</a>, the difference between storage and preservation is anchoring: who it's for, and when they receive it.</p>
+      <blockquote style={s.blockquote}>"My grandmother recorded a message for me the year I was born. I didn't hear it until I was 21. There's no way to explain what that does to you."</blockquote>
+      <h2 style={s.h2}>Start smaller than you think</h2>
+      <p style={s.p}>You don't need a project. You need one recording. One message. One photo with a voice note attached that explains why it matters. Do that once, and the habit follows.</p>
+      <p style={s.p}>The families who have rich records didn't build them all at once. They just didn't stop starting.</p>
     </div>
   ),
 };
 
 const post4: BlogPost = {
-  slug: 'gifts-for-grieving-friend',
-  title: 'What to give someone who is grieving: the case for a message, not a thing',
-  description: 'When someone we love is going through loss, we reach for objects — flowers, food, cards. But what they often need most is a message that tells them they are not forgotten.',
-  publishedAt: '2026-04-29',
+  slug: 'gifts-for-someone-grieving',
+  title: 'Gifts for someone who is grieving that last longer than flowers',
+  description: 'When someone is grieving, we reach for objects. But what they often need most isn\'t something to unwrap — it\'s to not be forgotten later. Here\'s what actually helps.',
+  publishedAt: '2026-04-16',
   readTime: '5 min',
   category: 'Relationships',
-  headerImage: 'https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=1200&q=80&auto=format&fit=crop',
+  headerImage: 'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=1200&q=80&auto=format&fit=crop',
+  ctaText: 'Send something that arrives when it matters most',
   content: () => (
     <div>
       <p style={s.p}>What people often need isn't more support in the first week. It's to not be forgotten later.</p>
-      <p style={s.p}>When someone is grieving, the impulse is to do something — send flowers, bring food, drop off a card. These gestures aren't wrong. But they're over fast. The flowers wilt. The food is eaten. The card gets set aside.</p>
-      <p style={s.p}>The absence — the person who is no longer there — doesn't end. But the attention does.</p>
+      <p style={s.p}>When someone we care about is grieving, the impulse is to do something immediately — send flowers, bring food, drop off a card. These gestures matter. But they're over fast. The flowers wilt. The food is eaten. The attention moves on.</p>
+      <p style={s.p}>The absence — the person who isn't there anymore — doesn't end. But the support does.</p>
       <h2 style={s.h2}>The loneliness of later grief</h2>
-      <p style={s.p}>Most people receive an outpouring of support in the first two weeks. By week six, messages have slowed. By month three, nearly stopped.</p>
-      <p style={s.p}>But grief doesn't stop at month three. It reshapes. It moves. And the people carrying it often feel, quietly, that everyone else has returned to their lives — as if the loss belongs only to them now.</p>
-      <h2 style={s.h2}>A message timed for the hard moments</h2>
-      <p style={s.p}>A blooming flower can do something no physical gift can. Plant a message today — write it now, when you have the time and the words — and set it to arrive at a specific future moment.</p>
-      <p style={s.p}>The first anniversary of the loss. The deceased person's birthday. A holiday that will be hard. A milestone the person was supposed to be there for.</p>
-      <p style={s.p}>Your message, planted now, arrives then — proof that you thought ahead, that you knew those days would be hard, that you didn't forget.</p>
-      <blockquote style={s.blockquote}>"She planted one for me set to bloom on my mom's first birthday after she passed. I was already having a bad day when it opened. Reading it — I don't know. It felt like being caught before I fell."</blockquote>
-      <h2 style={s.h2}>What to write</h2>
-      <p style={s.p}>You don't need to say the right thing. There is no right thing. What matters is specificity — say the person's name, mention a real memory, say what you miss about them. Not just that you're sorry for their loss.</p>
-      <p style={s.p}>Write it like you have all the time in the world. With a blooming flower, you do.</p>
+      <p style={s.p}>Most grieving people receive an outpouring in the first two weeks. By week six, messages have slowed. By month three, nearly stopped. But grief doesn't stop at month three. It reshapes. It intensifies at anniversaries, birthdays, holidays — the dates that keep arriving without the person who used to be in them.</p>
+      <p style={s.p}>The best gifts for grief aren't ones you give in the first week. They're ones designed for later — for the quiet, forgotten moments when the person is carrying the loss alone.</p>
+      <h2 style={s.h2}>What actually helps</h2>
+      <h3 style={s.h3}>Specific memories, not general condolences</h3>
+      <p style={s.p}>Write something specific about the person who was lost. A real memory. A particular quality. Something you witnessed. "I'm so sorry for your loss" is kind. "I still think about the way he laughed at his own jokes" is something they'll hold onto.</p>
+      <h3 style={s.h3}>A message timed for a hard date</h3>
+      <p style={s.p}>This is the one most people never think to do. Plant a message now — write it carefully, with specificity — and set it to arrive at a date you know will be hard. The first anniversary of the loss. The deceased person's birthday. A holiday. A milestone they were supposed to be there for.</p>
+      <p style={s.p}>In Horizons, a blooming flower can be planted today and sealed until that future date. When it opens, the person isn't receiving something generic sent in the moment — they're receiving proof that you thought ahead, that you knew those days would be hard, that you didn't forget. As we covered in <a href="/blog/long-distance-relationship-gift-ideas" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>our piece on gifts that feel personal</a>, what makes a message land is specificity and timing — both together.</p>
+      <blockquote style={s.blockquote}>"She planted one for me to open on my mom's first birthday after she passed. I was already having a hard day when it bloomed. Reading it — it felt like being caught before I fell."</blockquote>
+      <h3 style={s.h3}>Something that does the ordinary for them</h3>
+      <p style={s.p}>Grief is exhausting. Practical help — a meal delivery subscription, help with a task, a gift card to somewhere they go regularly — removes a small piece of friction from a period when everything takes more effort than it should.</p>
+      <h2 style={s.h2}>What to avoid</h2>
+      <p style={s.p}>Anything that requires energy to receive: elaborate setups, things that need assembling, experiences they have to schedule. Grief flattens capacity. The best gifts are low-friction and high-meaning.</p>
     </div>
   ),
 };
 
 const post5: BlogPost = {
-  slug: 'family-memory-garden-guide',
-  title: 'How to build a family memory garden: a guide for parents and grandparents',
-  description: 'A shared garden in Horizons can become a living archive of your family — stories, photos, letters, and blooming messages for every milestone your children and grandchildren will reach.',
-  publishedAt: '2026-05-12',
-  readTime: '7 min',
+  slug: 'problem-with-digital-time-capsules',
+  title: 'The problem with digital time capsules (and how to fix it)',
+  description: 'Most digital time capsules get lost, forgotten, or never opened at the right moment. Here\'s why — and what actually needs to be different.',
+  publishedAt: '2026-04-23',
+  readTime: '5 min',
   category: 'Guides',
-  headerImage: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80&auto=format&fit=crop',
+  headerImage: 'https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=1200&q=80&auto=format&fit=crop',
+  ctaText: 'Plant one that actually gets delivered',
   content: () => (
     <div>
-      <p style={s.p}>One of the most powerful things a parent or grandparent can build is a record of the family as it was — the stories that don't make it into photos, the feelings that never quite make it into conversation, the messages intended for moments that haven't happened yet.</p>
-      <p style={s.p}>A family memory garden in Horizons is a way to do all of that in one private place. And unlike a box of photos or an unlabeled album, it's built to be found.</p>
-      <h2 style={s.h2}>The letter to your future grandchild</h2>
-      <p style={s.p}>One of the most common uses we see: a grandparent planting a flower the day a grandchild is born, set to bloom on their 18th birthday. Inside: a letter written to someone who doesn't yet exist as the adult they'll become.</p>
-      <p style={s.p}>Eighteen years from now, that grandchild opens a garden. A flower blooms. Inside is a voice note from someone who may no longer be alive — speaking directly to them, knowing this day would come. That is what legacy actually looks like.</p>
-      <blockquote style={s.blockquote}>"My mom planted one for my daughter the week she was born. She passed two years later. That flower is set to bloom on my daughter's graduation. I genuinely cannot explain what it means to know it's waiting there."</blockquote>
-      <h2 style={s.h2}>How to set it up</h2>
+      <p style={s.p}>The idea of a digital time capsule is compelling: capture something now, open it later, feel something about who you were and what has changed. People write letters to their future selves. Teachers have students create them. Apps are built around the concept.</p>
+      <p style={s.p}>Most of them fail. Not because the content wasn't meaningful — because the delivery never happened.</p>
+      <h2 style={s.h2}>Why most digital time capsules get abandoned</h2>
+      <p style={s.p}><strong style={s.strong}>The rely-on-memory problem.</strong> Most time capsule tools require you to remember where you put it. A folder on your desktop. A document in the cloud. An email you sent to a future address. If the platform changes, if you forget the password, if the service shuts down — it's gone. And more often than not, it's just quietly forgotten.</p>
+      <p style={s.p}><strong style={s.strong}>The timing problem.</strong> Even when a time capsule is technically preserved, it usually opens at the wrong moment — or not at all. There's no mechanism to ensure the message finds you when it matters. You have to go looking for it. And the version of you that would most benefit from it is rarely the version who thinks to go looking.</p>
+      <p style={s.p}><strong style={s.strong}>The delivery problem.</strong> Most time capsule apps are built for storage, not delivery. They hold the content. They don't send it anywhere. They don't bloom. They sit.</p>
+      <h2 style={s.h2}>What actually needs to be different</h2>
+      <p style={s.p}>A time capsule that works needs three things: a specific recipient, a specific date, and a delivery mechanism that doesn't rely on anyone remembering to look.</p>
+      <p style={s.p}>This is what we built Horizons around. A blooming flower is planted with a recipient and a bloom date. On that date, it opens — for them, or for you, depending on who you planted it for. No one has to remember. No one has to go looking. It arrives.</p>
+      <p style={s.p}>As we explored in <a href="/blog/how-to-preserve-family-memories" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>how to preserve family memories</a> and in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>what most memory apps get wrong</a>, the missing piece is almost always the same: anchoring. Without a destination and a delivery date, a memory is just storage.</p>
+      <h2 style={s.h2}>What this looks like in practice</h2>
       <ul style={s.ul}>
-        <li style={s.li}><strong style={s.strong}>Create the garden</strong> — name it something that signals its purpose: "The Family Garden," "Our Story," "For the Kids"</li>
-        <li style={s.li}><strong style={s.strong}>Invite family members</strong> as contributors or viewers depending on what you want them to see</li>
-        <li style={s.li}><strong style={s.strong}>Start with one flower</strong> — something immediate that captures this moment</li>
-        <li style={s.li}><strong style={s.strong}>Plant one blooming flower</strong> for a future milestone you know is coming</li>
-        <li style={s.li}><strong style={s.strong}>Make it a practice</strong> — plant something on every significant occasion going forward</li>
+        <li style={s.li}>A letter written to your child today, set to bloom when they graduate</li>
+        <li style={s.li}>A message to yourself at the start of a hard year, set to open when it ends</li>
+        <li style={s.li}>A note to a friend planted six months before a milestone you know is coming</li>
+        <li style={s.li}>A recording from a grandparent, sealed until a grandchild turns 18</li>
       </ul>
-      <p style={s.p}>The garden grows over time. That is the point. Not a single gesture but a living archive — accumulating with every year, every visit, every milestone. The people planting may not be here when the flowers open. That is exactly why they plant them.</p>
+      <p style={s.p}>The content matters. But the delivery is what makes it land. That's the fix.</p>
     </div>
   ),
 };
 
 const post6: BlogPost = {
-  slug: 'self-care-time-capsule',
-  title: 'The self-care practice nobody talks about: writing to your future self',
-  description: 'A letter to your future self is one of the most clarifying things you can write. Here is why the practice works, and how a blooming flower makes it something you can actually return to.',
-  publishedAt: '2026-05-26',
-  readTime: '5 min',
+  slug: 'what-to-write-letter-to-future-self',
+  title: 'What to write in a letter to your future self (with real examples)',
+  description: 'Writing a letter to your future self is one of the most clarifying things you can do. Here\'s what to actually put in it — and how to make sure you actually receive it.',
+  publishedAt: '2026-04-30',
+  readTime: '6 min',
   category: 'Wellness',
-  headerImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80&auto=format&fit=crop',
+  headerImage: 'https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=1200&q=80&auto=format&fit=crop',
+  ctaText: 'Write a letter your future self will actually receive',
   content: () => (
     <div>
-      <p style={s.p}>There is a version of journaling that most people never try: writing not to process the present, but to send something forward. A message from the person you are now, addressed to the person you will be.</p>
-      <p style={s.p}>Most journaling is written and forgotten. This isn't.</p>
-      <p style={s.p}>The practice has a name — the future self letter — and the research is surprisingly robust. People who write to their future selves report clearer goals, greater self-compassion, and a stronger sense of who they are across time.</p>
-      <p style={s.p}>The problem is delivery. Most future self letters get lost — written in a notebook, buried in a document, never opened at the right moment. The writing matters. But so does the receiving.</p>
-      <h2 style={s.h2}>What a blooming flower solves</h2>
-      <p style={s.p}>A blooming flower planted for yourself is a time capsule with a guaranteed delivery date. Write the message now. Set the bloom date — one year from now, your next birthday, the end of a hard season. On that date, it opens.</p>
-      <p style={s.p}>You don't have to remember to look for it. It arrives.</p>
-      <h2 style={s.h2}>What to write</h2>
-      <ul style={s.ul}>
-        <li style={s.li}>Where you are right now — not logistically, emotionally</li>
-        <li style={s.li}>What you're afraid of, and what you're hoping for</li>
-        <li style={s.li}>A specific goal you want to check in on</li>
-        <li style={s.li}>Something you want your future self to remember about this period</li>
-        <li style={s.li}>Permission to have changed your mind about everything</li>
-      </ul>
-      <h2 style={s.h2}>When to set it to bloom</h2>
-      <p style={s.p}>The most powerful timing is just past a meaningful threshold — the end of a hard year, after a specific challenge is supposed to be done, on a birthday that feels significant. The gap between writing and receiving is where it works. You forget the exact words. Life moves. Then it opens, and you meet the version of yourself that wrote it.</p>
-      <blockquote style={s.blockquote}>"I planted one at the start of a really bad year. Set it to bloom twelve months later. When it opened I was in a completely different place. Reading what I'd written — honestly one of the most emotional things I've been through."</blockquote>
+      <p style={s.p}>Writing a letter to your future self sounds like a school assignment. It feels, when you actually do it, like something else entirely.</p>
+      <p style={s.p}>Most people who try it report the same thing: the act of writing forces a kind of clarity that regular journaling doesn't. You're not processing — you're committing. You're telling the person you'll be what the person you are right now actually believes, fears, and hopes for. That's harder than it sounds. And more valuable.</p>
+      <p style={s.p}>The problem isn't the writing. It's the delivery. Most future self letters get buried — in notebooks, in documents, in email drafts. The moment of reading never happens at the right time, if it happens at all.</p>
+      <h2 style={s.h2}>What to actually write</h2>
+      <p style={s.p}>The most useful letters aren't the ones that try to predict the future. They're the ones that capture the present honestly — so that when you read them later, you understand who you were.</p>
+      <h3 style={s.h3}>Start with where you are, emotionally</h3>
+      <p style={s.p}>Not "I live in Toronto and I'm 28." That's documentation. Start with: <em>I'm in the middle of something hard and I'm not sure I'm handling it right</em> — or — <em>I'm genuinely happy right now in a way I don't want to forget.</em></p>
+      <p style={s.p}>The version of you reading this in a year or five will remember the circumstances. What they'll have forgotten is how it felt.</p>
+      <h3 style={s.h3}>Name one thing you're afraid of</h3>
+      <p style={s.p}>This is the part most people skip. It's also the most valuable. Writing your fear down — specifically, not vaguely — creates a reference point. Future you will know whether it happened. Whether it mattered as much as you thought. Whether the dread was proportional.</p>
+      <h3 style={s.h3}>Name one thing you're proud of right now</h3>
+      <p style={s.p}>Small or large. Something you did, something you chose, something you survived. This is the part that tends to make people emotional when they read it back — because future you has usually forgotten to credit the person they used to be.</p>
+      <h3 style={s.h3}>Make one specific prediction</h3>
+      <p style={s.p}>Not a hope — a prediction. "I think by the time you read this, [X] will have happened." It gives future you something concrete to respond to.</p>
+      <h3 style={s.h3}>Give future you permission</h3>
+      <p style={s.p}>To have changed your mind. To have moved on from something. To have become someone different. This is the line people remember most: <em>it's okay if you're not who I thought you'd be.</em></p>
+      <h2 style={s.h2}>Real examples of what this looks like</h2>
+      <blockquote style={s.blockquote}>"Right now I'm scared that I made the wrong call leaving that job. I think by the time you read this, either it'll have been clearly right or clearly wrong. I hope you're not still in the middle."</blockquote>
+      <blockquote style={s.blockquote}>"I'm proud of the fact that I finally said the thing I'd been not saying for two years. I want you to remember that it felt like jumping off something, and that it was okay."</blockquote>
+      <h2 style={s.h2}>How to make sure you actually receive it</h2>
+      <p style={s.p}>This is where most future self letters fail. Written in a notebook, forgotten. Saved in a document, never opened. Emailed to yourself, lost in an inbox.</p>
+      <p style={s.p}>In Horizons, a blooming flower gives the letter a delivery date. You write it, seal it, set the date — your next birthday, the end of the year, a specific moment you know is coming. When it arrives, it opens. You don't have to go looking for it. As we explored in <a href="/blog/problem-with-digital-time-capsules" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>the problem with most digital time capsules</a>, the content is rarely the issue. The delivery is.</p>
+      <p style={s.p}>Write the letter. Set the date. Let it find you at the right moment.</p>
     </div>
   ),
 };
@@ -225,10 +234,11 @@ const post7: BlogPost = {
   slug: 'gift-and-a-memory',
   title: 'A gift card, and something to remember it by',
   description: 'Gift cards solve the practical problem. Memories solve the emotional one. Here\'s how to give both at once.',
-  publishedAt: '2026-06-10',
+  publishedAt: '2026-05-07',
   readTime: '5 min',
   category: 'Gift Ideas',
-  headerImage: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1200&q=80&auto=format&fit=crop',
+  headerImage: 'https://images.unsplash.com/photo-1513201099705-a9746072f498?w=1200&q=80&auto=format&fit=crop',
+  ctaText: 'Add a memory to any gift',
   content: () => (
     <div>
       <p style={s.p}>A gift card is a practical object. It funds something — a dinner, an experience, a purchase the recipient will actually want. There's nothing wrong with that. The problem is that it doesn't mean anything.</p>
