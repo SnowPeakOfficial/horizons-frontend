@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { blogPosts } from '../data/blogPosts';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
+import SEO from '../components/common/SEO';
 
 const CAT_BG: Record<string, string> = {
   'Gift Ideas':  'rgba(212, 144, 154, 0.12)',
@@ -30,31 +31,93 @@ export const BlogPostPage: React.FC = () => {
   if (!post) return <Navigate to="/blog" replace />;
   if (import.meta.env.MODE !== 'development' && new Date(post.publishedAt) > new Date()) return <Navigate to="/blog" replace />;
 
-  const jsonLd = JSON.stringify({
+  // Resolve the header image to a full URL for structured data
+  const absoluteImage = post.headerImage
+    ? post.headerImage.startsWith('http')
+      ? post.headerImage
+      : `${SITE}${post.headerImage}`
+    : `${SITE}/images/og-social-card.jpg`;
+
+  // Article JSON-LD — enriched with image, author, section, breadcrumb
+  const articleJsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
     description: post.description,
+    image: {
+      '@type': 'ImageObject',
+      url: absoluteImage,
+      width: 1200,
+      height: 630,
+    },
     datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    articleSection: post.category,
+    inLanguage: 'en',
+    author: {
+      '@type': 'Organization',
+      name: 'Horizons',
+      url: SITE,
+    },
     publisher: {
       '@type': 'Organization',
       name: 'Horizons',
-      logo: { '@type': 'ImageObject', url: `${SITE}/images/horizons-logo.svg` },
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE}/images/horizons-logo.svg`,
+      },
     },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE}/blog/${post.slug}` },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE}/blog/${post.slug}`,
+    },
+  });
+
+  // BreadcrumbList JSON-LD
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: `${SITE}/blog`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: `${SITE}/blog/${post.slug}`,
+      },
+    ],
   });
 
   return (
     <>
+      {/* Per-page SEO — og:type=article, full image metadata, article dates */}
+      <SEO
+        title={post.title}
+        description={post.description}
+        canonical={`/blog/${post.slug}`}
+        ogType="article"
+        ogImage={absoluteImage}
+        ogImageAlt={post.title}
+        publishedAt={post.publishedAt}
+        modifiedAt={post.publishedAt}
+        articleSection={post.category}
+      />
+
+      {/* Structured data — Article + BreadcrumbList */}
       <Helmet>
-        <title>{post.title} — Horizons Blog</title>
-        <meta name="description" content={post.description} />
-        <link rel="canonical" href={`${SITE}/blog/${post.slug}`} />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.description} />
-        <meta property="og:url" content={`${SITE}/blog/${post.slug}`} />
-        <meta property="og:type" content="article" />
-        <script type="application/ld+json">{jsonLd}</script>
+        <script type="application/ld+json">{articleJsonLd}</script>
+        <script type="application/ld+json">{breadcrumbJsonLd}</script>
       </Helmet>
 
       <Navbar />

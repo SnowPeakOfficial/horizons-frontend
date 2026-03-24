@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import SEO from '../components/common/SEO';
 import { blogPosts } from '../data/blogPosts';
 import { Navbar } from '../components/layout/Navbar';
@@ -22,6 +23,23 @@ const CAT_FG: Record<string, string> = {
   Wellness:      '#9B7B30',
 };
 
+const SITE = 'https://horizons-garden.com';
+
+const blogJsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'The Horizons Blog',
+  description:
+    'Stories, guides, and ideas about memory, meaningful connection, and the art of giving something that lasts.',
+  url: `${SITE}/blog`,
+  publisher: {
+    '@type': 'Organization',
+    name: 'Horizons',
+    logo: { '@type': 'ImageObject', url: `${SITE}/images/horizons-logo.svg` },
+  },
+  inLanguage: 'en',
+});
+
 export const BlogPage: React.FC = () => {
   const navigate = useNavigate();
 
@@ -32,6 +50,9 @@ export const BlogPage: React.FC = () => {
         description="Stories, guides, and ideas about memory, meaningful connection, and the art of giving something that lasts."
         canonical="/blog"
       />
+      <Helmet>
+        <script type="application/ld+json">{blogJsonLd}</script>
+      </Helmet>
       <Navbar />
 
       <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)' }}>

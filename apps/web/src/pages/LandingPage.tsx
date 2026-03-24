@@ -85,6 +85,8 @@ export const LandingPage: React.FC = () => {
     <div style={{ background: '#FDFCFA', minHeight: '100vh' }}>
       <SEO
         canonical="/"
+        description="Plant memories that bloom forever. Horizons is a private 3D memory garden where you plant digital flowers to preserve your most meaningful moments, send timed messages to loved ones, and keep memories that actually last."
+        ogImageAlt="Horizons — A private 3D memory garden app"
       />
       {/* Navbar */}
       <Navbar />
