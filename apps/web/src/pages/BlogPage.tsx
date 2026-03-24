@@ -109,14 +109,14 @@ export const BlogPage: React.FC = () => {
                 style={{
                   background: '#FFFFFF',
                   borderRadius: '24px',
-                  padding: '32px',
+                  padding: '0',
                   border: '1.5px solid rgba(232, 180, 184, 0.35)',
                   boxShadow: '0 4px 20px rgba(212, 144, 154, 0.08)',
                   cursor: 'pointer',
                   transition: 'transform 0.25s ease, box-shadow 0.25s ease',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '14px',
+                  overflow: 'hidden',
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
@@ -127,6 +127,29 @@ export const BlogPage: React.FC = () => {
                   (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,144,154,0.08)';
                 }}
               >
+                {/* Header image */}
+                {post.headerImage && (
+                  <div style={{ width: '100%', aspectRatio: '16/9', overflow: 'hidden', flexShrink: 0 }}>
+                    <img
+                      src={post.headerImage}
+                      alt={post.title}
+                      loading="lazy"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                        transition: 'transform 0.35s ease',
+                      }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.04)'; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
+                    />
+                  </div>
+                )}
+
+                {/* Card body */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', padding: '24px 28px 28px', flexGrow: 1 }}>
+
                 {/* Category + read time */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                   <span style={{
@@ -179,6 +202,7 @@ export const BlogPage: React.FC = () => {
                     Read <span style={{ fontSize: '16px' }}>→</span>
                   </span>
                 </div>
+                </div>{/* end card body */}
               </article>
             ))}
           </div>

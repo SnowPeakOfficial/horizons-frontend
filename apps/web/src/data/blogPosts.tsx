@@ -32,7 +32,7 @@ const post1: BlogPost = {
   publishedAt: '2026-03-26',
   readTime: '6 min',
   category: 'Memory',
-  headerImage: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80&auto=format&fit=crop',
+  headerImage: '/images/blog-post1-memory-app.jpg',
   ctaText: 'Start keeping memories that actually last',
   content: () => (
     <div>
@@ -77,7 +77,7 @@ const post2: BlogPost = {
   publishedAt: '2026-04-02',
   readTime: '6 min',
   category: 'Gift Ideas',
-  headerImage: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=1200&q=80&auto=format&fit=crop',
+  headerImage: '/images/blog-post2-video-call.jpg',
   ctaText: 'Plant a message for someone far away',
   content: () => (
     <div>
@@ -117,7 +117,7 @@ const post3: BlogPost = {
   publishedAt: '2026-04-09',
   readTime: '6 min',
   category: 'Memory',
-  headerImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80&auto=format&fit=crop',
+  headerImage: '/images/blog-post3-family.jpg',
   ctaText: "Preserve a memory before it's gone",
   content: () => (
     <div>
@@ -159,7 +159,7 @@ const post4: BlogPost = {
   publishedAt: '2026-04-16',
   readTime: '5 min',
   category: 'Relationships',
-  headerImage: 'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=1200&q=80&auto=format&fit=crop',
+  headerImage: '/images/blog-post4-community.jpg',
   ctaText: 'Send something that arrives when it matters most',
   content: () => (
     <div>
@@ -200,7 +200,7 @@ const post5: BlogPost = {
   publishedAt: '2026-04-23',
   readTime: '5 min',
   category: 'Guides',
-  headerImage: 'https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=1200&q=80&auto=format&fit=crop',
+  headerImage: '/images/blog-post5-time-capsule.jpg',
   ctaText: 'Plant one that actually gets delivered',
   content: () => (
     <div>
@@ -234,7 +234,7 @@ const post6: BlogPost = {
   publishedAt: '2026-04-30',
   readTime: '6 min',
   category: 'Wellness',
-  headerImage: 'https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=1200&q=80&auto=format&fit=crop',
+  headerImage: '/images/blog-post6-letter.jpg',
   ctaText: 'Write a letter your future self will actually receive',
   content: () => (
     <div>
@@ -282,7 +282,7 @@ const post7: BlogPost = {
   publishedAt: '2026-05-07',
   readTime: '5 min',
   category: 'Gift Ideas',
-  headerImage: 'https://images.unsplash.com/photo-1513201099705-a9746072f498?w=1200&q=80&auto=format&fit=crop',
+  headerImage: '/images/blog-post7-gift-card.jpg',
   ctaText: 'Add a memory to any gift',
   content: () => (
     <div>
