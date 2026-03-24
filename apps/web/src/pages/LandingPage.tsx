@@ -883,71 +883,71 @@ export const LandingPage: React.FC = () => {
 
           <RevealOnScroll delay={80}>
             <div>
-              {[
+                {[
                 /* Phase 1 — What is this? */
                 {
                   Icon: LocalFloristOutlinedIcon,
                   question: 'What is Horizons?',
-                  answer: 'Horizons is a 3D memory garden where you plant digital flowers to preserve your most meaningful moments. Each flower holds a message, a photo, a voice note, or a video — and can be set to bloom at a future date you choose.',
+                  answer: 'Horizons is a private 3D garden where you plant digital flowers to keep the moments that matter. Each flower holds a memory — a written message, a photo, a voice note, or a video. Some flowers open right away, sharing something with the people you care about immediately. Others can be set to bloom on a date you choose, so a moment arrives exactly when it\'s meant to. It\'s a quiet, personal space to preserve what\'s worth keeping, share something real with the people you love, and give memories a place to actually live.',
                 },
                 {
                   Icon: LocalFloristOutlinedIcon,
                   question: 'What is a blooming flower?',
-                  answer: 'A blooming flower is a memory you seal. You write your message now and set a specific date for it to open. Until then, the recipient sees a bud — a quiet signal that something is waiting. On the bloom date, it opens and delivers everything you put inside.',
+                  answer: 'A blooming flower is a memory you save for a specific moment in the future. While it\'s still waiting to open, you can leave a small note for the recipient — a hint, a few words, something for them to hold onto while they wait. On the day it blooms, the flower opens and reveals everything inside: your full message, a photo, a voice note, or a video. They tap it to open it, and the moment arrives exactly when you intended.',
                 },
                 /* Phase 2 — How it works */
                 {
                   Icon: IosShareOutlinedIcon,
                   question: 'What can I put inside a flower?',
-                  answer: 'A written message, a photo (upload or take one in-app), a voice note, or a short video. You can also choose a letter theme — romantic, friendly, family, or personal — that wraps your message in a beautiful design.',
+                  answer: 'You can add a written message, a photo, a voice note, or a short video — or any combination of them. If the flower opens right away, everything inside is visible the moment it\'s opened. If you\'ve set a bloom date, you can also leave a small note that appears while the flower is still waiting — something for them to see in the meantime — and then the full message and any media you\'ve attached come through when it blooms. You can also choose a letter theme that wraps everything in a beautiful design: Romantic, Friendship, Family, Gratitude, Celebration, or Encouragement.',
                 },
                 {
                   Icon: IosShareOutlinedIcon,
                   question: 'How does sharing work? Does the recipient need an account?',
-                  answer: "You invite people into your garden by email. They'll get a link and can join for free. For one-off blooming flowers, you can also send a private link directly — the recipient can open it without an account.",
+                  answer: "You invite people into your garden by email. They'll get a link and can join for free. Once they're in, they can explore the garden and open any flowers planted for them. No paid plan is required to receive or view a flower.",
                 },
                 {
                   Icon: IosShareOutlinedIcon,
                   question: 'Can I see a flower before it blooms?',
-                  answer: "No — and that's the point. Once you seal a blooming flower, even you cannot read its contents until the bloom date. This preserves the surprise and gives the moment its weight.",
+                  answer: "No — and that's the point. Once you set a bloom date, the flower stays sealed until that day arrives. Even you won't be able to see what's inside until it opens. This is what gives the moment its weight — the waiting is part of it.",
                 },
                 /* Phase 3 — Use cases */
                 {
                   Icon: VisibilityOffOutlinedIcon,
                   question: 'Who is Horizons for?',
-                  answer: 'Couples in long-distance relationships, parents wanting to capture family milestones, grandparents planting letters for grandchildren to open years from now, people going through grief, friends who want to send something more meaningful than a text, and anyone who wants to write to their future self.',
+                  answer: 'Couples who want to share something more meaningful than a text. Parents capturing milestones as their children grow. Grandparents planting letters for grandchildren to open years from now. Friends who want to say something real. People going through grief who need a quiet place to remember. Anyone who has ever wanted to write to their future self — or leave something behind for someone they love.',
                 },
                 {
                   Icon: VisibilityOffOutlinedIcon,
                   question: 'Can I plant a flower for a milestone that is years away?',
-                  answer: "Yes. There is no limit on how far in the future you can set a bloom date. We have users who have planted flowers set to open on their children's 18th birthdays, on anniversaries a decade away, and on dates tied to people who may no longer be around to deliver them in person.",
+                  answer: "Yes — there's no limit on how far in the future you can set a bloom date. Some people plant flowers set to open on a child's 18th birthday, on an anniversary a decade away, or on a date tied to someone who may not be around to deliver the message in person. The flower will wait as long as it needs to.",
                 },
                 /* Phase 4 — Pricing */
                 {
                   Icon: CreditCardOutlinedIcon,
                   question: 'Is Horizons free to start?',
-                  answer: 'Yes. The free plan lets you create one garden and plant up to 10 flowers with basic media. No credit card required. Pro and Premium plans unlock multiple gardens, higher storage limits, voice notes, video, and priority support.',
+                  answer: 'Yes — no credit card required. The free plan gives you one private garden and lets you plant one flower per year, with all flower types and media options available. Pro unlocks up to 3 gardens, 50 flowers per year, 7 exclusive flower types, letter themes, and the ability to send a gift card with a flower. Premium (coming soon) expands to 30 gardens, 100 flowers per year, 3 rare flower types, and seasonal garden themes.',
                 },
                 {
                   Icon: CreditCardOutlinedIcon,
                   question: 'What is the difference between Pro and Premium?',
-                  answer: 'Pro gives you up to 5 gardens, 500MB storage per garden, voice notes, and custom bloom themes. Premium gives you unlimited gardens, 2GB storage per garden, video support, and early access to new features.',
+                  answer: 'Pro is built for people who want to grow multiple gardens and plant more frequently — up to 3 gardens, 50 flowers a year, 7 exclusive flower types, all 6 letter themes, and the ability to send a gift card alongside a flower. Premium (coming soon) is the full experience: up to 30 gardens, 100 flowers a year, 3 additional rare flower varieties, and seasonal garden themes that change throughout the year.',
                 },
                 {
                   Icon: CreditCardOutlinedIcon,
                   question: 'Can I cancel my subscription at any time?',
-                  answer: 'Yes — cancel anytime from your profile, no questions asked. You keep access until the end of your billing period. Your memories and gardens are never deleted when you cancel; they move to the free tier limits.',
+                  answer: 'Yes — cancel anytime from your profile, no questions asked. You keep full access until the end of your billing period. Your memories and gardens are never deleted when you cancel; everything moves to the free plan limits, and nothing is lost.',
                 },
                 /* Phase 5 — Trust & privacy */
                 {
                   Icon: LockOutlinedIcon,
                   question: 'Who can see my garden and my memories?',
-                  answer: 'Only the people you explicitly invite. Your garden is completely private by default — nothing is public, nothing is indexed by search engines, and no one can stumble in uninvited. You control every invitation.',
+                  answer: 'Only the people you personally invite. Your garden is completely private by default — nothing is visible to the public, nothing is searchable, and no one can find or enter it without an invitation from you. You decide who gets in.',
                 },
                 {
                   Icon: SaveOutlinedIcon,
                   question: 'Is my data encrypted and safe?',
-                  answer: 'Yes. Your memories are encrypted in transit and at rest. We never sell your data, never use your memories to train AI models, and never share your content with third parties. What you plant stays yours.',
+                  answer: 'Yes. Everything you store in Horizons is encrypted while it travels and while it rests. We never sell your data, never use your memories to train AI, and never share anything with third parties. What you plant here stays yours.',
                 },
               ].map(({ Icon, question, answer }, i) => {
                 const isOpen = openFaqs.has(i);
@@ -995,9 +995,9 @@ export const LandingPage: React.FC = () => {
 
                     <div style={{
                       overflow: 'hidden',
-                      maxHeight: isOpen ? '300px' : '0px',
+                      maxHeight: isOpen ? '600px' : '0px',
                       opacity: isOpen ? 1 : 0,
-                      transition: 'max-height 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
+                      transition: 'max-height 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
                     }}>
                       <p style={{
                         fontFamily: typography.fontFamily.serif,

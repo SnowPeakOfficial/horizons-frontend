@@ -29,7 +29,7 @@ export const BlogPostPage: React.FC = () => {
   const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) return <Navigate to="/blog" replace />;
-  if (import.meta.env.MODE !== 'development' && new Date(post.publishedAt) > new Date()) return <Navigate to="/blog" replace />;
+  if (import.meta.env.MODE !== 'development' && new Date(post.publishedAt + 'T12:00:00') > new Date()) return <Navigate to="/blog" replace />;
 
   // Resolve the header image to a full URL for structured data
   const absoluteImage = post.headerImage
@@ -179,7 +179,7 @@ export const BlogPostPage: React.FC = () => {
             </span>
             <span style={{ fontSize: '13px', color: '#9D8F99' }}>{post.readTime} read</span>
             <span style={{ fontSize: '13px', color: '#9D8F99' }}>
-              {new Date(post.publishedAt).toLocaleDateString('en-US', {
+              {new Date(post.publishedAt + 'T12:00:00').toLocaleDateString('en-US', {
                 month: 'long', day: 'numeric', year: 'numeric',
               })}
             </span>

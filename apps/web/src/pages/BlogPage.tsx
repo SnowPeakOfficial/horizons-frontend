@@ -123,7 +123,7 @@ export const BlogPage: React.FC = () => {
               gap: '24px',
             }}
           >
-            {blogPosts.filter((post) => import.meta.env.MODE === 'development' || new Date(post.publishedAt) <= new Date()).map((post) => (
+{blogPosts.filter((post) => import.meta.env.MODE === 'development' || new Date(post.publishedAt + 'T12:00:00') <= new Date()).map((post) => (
               <article
                 key={post.slug}
                 onClick={() => navigate(`/blog/${post.slug}`)}
@@ -212,7 +212,7 @@ export const BlogPage: React.FC = () => {
                   borderTop: '1px solid rgba(232, 180, 184, 0.15)',
                 }}>
                   <span style={{ fontSize: '12px', color: '#9D8F99' }}>
-                    {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                    {new Date(post.publishedAt + 'T12:00:00').toLocaleDateString('en-US', {
                       month: 'long', day: 'numeric', year: 'numeric',
                     })}
                   </span>
