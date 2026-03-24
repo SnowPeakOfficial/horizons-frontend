@@ -194,6 +194,24 @@ export const Navbar: React.FC = () => {
           {/* Desktop: Nav links + Auth Buttons */}
           <div className="navbar-desktop-links" style={{ display: 'flex', gap: theme.spacing.sm, alignItems: 'center' }}>
             <div
+              style={navLinkStyle(location.pathname === '/pricing')}
+              onClick={() => navigate('/pricing')}
+              onMouseEnter={(e) => {
+                if (location.pathname !== '/pricing') {
+                  (e.currentTarget as HTMLElement).style.background = theme.colors.rose[50];
+                  (e.currentTarget as HTMLElement).style.color = theme.colors.rose[700];
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (location.pathname !== '/pricing') {
+                  (e.currentTarget as HTMLElement).style.background = 'transparent';
+                  (e.currentTarget as HTMLElement).style.color = theme.text.secondary;
+                }
+              }}
+            >
+              Pricing
+            </div>
+            <div
               style={navLinkStyle(location.pathname === '/blog' || location.pathname.startsWith('/blog/'))}
               onClick={() => navigate('/blog')}
               onMouseEnter={(e) => {
@@ -239,6 +257,12 @@ export const Navbar: React.FC = () => {
               background: 'rgba(255,255,255,0.97)',
             }}
           >
+            <div
+              style={{ ...dropdownItemStyle, marginBottom: '6px', fontWeight: location.pathname === '/pricing' ? 600 : 400, color: location.pathname === '/pricing' ? theme.colors.rose[700] : theme.text.primary }}
+              onClick={() => { navigate('/pricing'); setIsMobileMenuOpen(false); }}
+            >
+              Pricing
+            </div>
             <div
               style={{ ...dropdownItemStyle, marginBottom: '6px', fontWeight: location.pathname.startsWith('/blog') ? 600 : 400, color: location.pathname.startsWith('/blog') ? theme.colors.rose[700] : theme.text.primary }}
               onClick={() => { navigate('/blog'); setIsMobileMenuOpen(false); }}
