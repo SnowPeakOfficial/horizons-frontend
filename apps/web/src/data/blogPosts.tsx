@@ -1,7 +1,4 @@
 import React from 'react';
-import { Button } from '../components/common';
-
-type Nav = (path: string) => void;
 
 export interface BlogPost {
   slug: string;
@@ -11,7 +8,7 @@ export interface BlogPost {
   readTime: string;
   category: string;
   headerImage: string;
-  content: (navigate: Nav) => React.ReactNode;
+  content: () => React.ReactNode;
 }
 
 // ─── Shared inline styles for blog post body ────────────────────────────────
@@ -31,11 +28,11 @@ const post1: BlogPost = {
   slug: 'meaningful-gift-long-distance',
   title: 'The most meaningful gift you can give: a message that arrives exactly when they need it',
   description: 'Blooming flowers let you plant a message today and deliver it at a future moment that matters — a birthday, an anniversary, the end of a hard week. Here\'s why that idea is so powerful.',
-  publishedAt: '2026-03-24',
+  publishedAt: '2026-03-25',
   readTime: '5 min',
   category: 'Gift Ideas',
   headerImage: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1200&q=80&auto=format&fit=crop',
-  content: (navigate: Nav) => (
+  content: () => (
     <div>
       <p style={s.p}>There is a specific kind of longing that comes with caring about someone who is far away — or even someone close, when life has made you both busy. You want to reach them. You want the moment to land right.</p>
       <p style={s.p}>Flowers get delivered and die. Cards get recycled. Most "digital gifts" feel like an afterthought — a gift card, an e-certificate, something you clearly bought in thirty seconds.</p>
@@ -64,13 +61,7 @@ const post1: BlogPost = {
         <li style={s.li}><strong style={s.strong}>New Year's</strong> — a message from your present self to your future self</li>
         <li style={s.li}><strong style={s.strong}>Baby arrivals</strong> — plant a letter to the baby before they're even born</li>
       </ul>
-      <p style={s.p}>There are no wrong occasions. There is only the decision to be intentional about when something arrives.</p>
-      <div style={{ textAlign: 'center', margin: '48px 0 24px' }}>
-        <Button variant="primary" size="large" onClick={() => navigate('/auth/register')} style={{ fontSize: '16px', padding: '14px 36px' }}>
-          Plant your first blooming flower →
-        </Button>
-      </div>
-    </div>
+      <p style={s.p}>There are no wrong occasions. There is only the decision to be intentional about when something arrives.</p>    </div>
   ),
 };
 
@@ -78,11 +69,11 @@ const post2: BlogPost = {
   slug: 'anniversary-gift-long-distance-couples',
   title: 'Anniversary gifts for long-distance couples that actually feel personal',
   description: 'Physical gifts shipped across time zones rarely land with the emotional weight the occasion deserves. Here are ideas — including one that arrives exactly when you want it to.',
-  publishedAt: '2026-03-28',
+  publishedAt: '2026-04-05',
   readTime: '6 min',
   category: 'Gift Ideas',
   headerImage: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop',
-  content: (navigate: Nav) => (
+  content: () => (
     <div>
       <p style={s.p}>Long-distance relationships run on two things: trust and the feeling of being remembered. The hard part about anniversaries across distance isn't finding a gift — it's finding something that communicates "I thought about you, specifically, on this specific day."</p>
       <p style={s.p}>Here are the approaches that actually work — and one that we think is genuinely the most personal thing you can do.</p>
@@ -108,13 +99,7 @@ const post2: BlogPost = {
         <li style={s.li}>Choose the Romantic letter theme</li>
         <li style={s.li}>Watch it bloom together on the day</li>
       </ul>
-      <p style={s.p}>It's free to start. No subscription required for your first garden.</p>
-      <div style={{ textAlign: 'center', margin: '48px 0 24px' }}>
-        <Button variant="primary" size="large" onClick={() => navigate('/auth/register')} style={{ fontSize: '16px', padding: '14px 36px' }}>
-          Create your shared garden →
-        </Button>
-      </div>
-    </div>
+      <p style={s.p}>It's free to start. No subscription required for your first garden.</p>    </div>
   ),
 };
 
@@ -122,11 +107,11 @@ const post3: BlogPost = {
   slug: 'digital-memory-preservation',
   title: 'Why photos in your camera roll are not the same as preserved memories',
   description: 'You have thousands of photos. But do you have the stories behind them? Here is why context is the thing that makes a memory last.',
-  publishedAt: '2026-04-01',
+  publishedAt: '2026-04-17',
   readTime: '4 min',
   category: 'Memory',
   headerImage: 'https://images.unsplash.com/photo-1515965885361-f1e0095517ea?w=1200&q=80&auto=format&fit=crop',
-  content: (navigate: Nav) => (
+  content: () => (
     <div>
       <p style={s.p}>The average person has 2,000+ photos on their phone. Most of them will never be seen again after the first week. Not because they don't matter — but because a photo, on its own, is incomplete.</p>
       <p style={s.p}>A memory is not the image. A memory is the image plus the feeling you had, the thing that was said, the way the light looked, the reason you were there at all.</p>
@@ -139,13 +124,7 @@ const post3: BlogPost = {
       <h2 style={s.h2}>What anchored preservation looks like</h2>
       <p style={s.p}>In Horizons, each flower is anchored by design. You choose who it's for. You write the context. You decide when it opens. The memory doesn't just sit there — it arrives. It blooms at the right moment, for the right person.</p>
       <blockquote style={s.blockquote}>'I planted a flower with photos from my dad's last healthy summer. Set it to bloom on his birthday, the year after he passed. My brother opened it. He said it was like hearing from Dad one more time.'</blockquote>
-      <p style={s.p}>That is what preservation actually means. Not storage. Delivery. Intentional, human, timed delivery.</p>
-      <div style={{ textAlign: 'center', margin: '48px 0 24px' }}>
-        <Button variant="primary" size="large" onClick={() => navigate('/auth/register')} style={{ fontSize: '16px', padding: '14px 36px' }}>
-          Start preserving your memories →
-        </Button>
-      </div>
-    </div>
+      <p style={s.p}>That is what preservation actually means. Not storage. Delivery. Intentional, human, timed delivery.</p>    </div>
   ),
 };
 
@@ -153,11 +132,11 @@ const post4: BlogPost = {
   slug: 'gifts-for-grieving-friend',
   title: 'What to give someone who is grieving: the case for a message, not a thing',
   description: 'When someone we love is going through loss, we reach for objects — flowers, food, cards. But what they often need most is a message that tells them they are not forgotten.',
-  publishedAt: '2026-04-05',
+  publishedAt: '2026-04-29',
   readTime: '5 min',
   category: 'Relationships',
   headerImage: 'https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=1200&q=80&auto=format&fit=crop',
-  content: (navigate: Nav) => (
+  content: () => (
     <div>
       <p style={s.p}>When someone we care about is grieving, the impulse is to do something — send flowers, bring food, drop off a card. These gestures are not wrong. But they are often over in a moment. The flowers wilt. The food is eaten. The card gets set aside.</p>
       <p style={s.p}>What most grieving people describe needing is not more things in the first week. It is the feeling of being remembered in the weeks and months after — when the casseroles stop and everyone else has moved on.</p>
@@ -171,13 +150,7 @@ const post4: BlogPost = {
       <blockquote style={s.blockquote}>'She planted a flower for me set to bloom on my mother's first birthday after she passed. When it opened, I was already having a terrible day. Reading her message felt like being caught.'</blockquote>
       <h2 style={s.h2}>What to write</h2>
       <p style={s.p}>You do not need to say the right thing. There is no right thing. What matters is specificity. Say the person's name. Mention a specific memory. Say what you miss about them, not just that you're sorry for their loss.</p>
-      <p style={s.p}>Write it the way you would if you had all the time in the world — because with a blooming flower, you do.</p>
-      <div style={{ textAlign: 'center', margin: '48px 0 24px' }}>
-        <Button variant="primary" size="large" onClick={() => navigate('/auth/register')} style={{ fontSize: '16px', padding: '14px 36px' }}>
-          Plant a message for someone you love →
-        </Button>
-      </div>
-    </div>
+      <p style={s.p}>Write it the way you would if you had all the time in the world — because with a blooming flower, you do.</p>    </div>
   ),
 };
 
@@ -185,11 +158,11 @@ const post5: BlogPost = {
   slug: 'family-memory-garden-guide',
   title: 'How to build a family memory garden: a guide for parents and grandparents',
   description: 'A shared garden in Horizons can become a living archive of your family — stories, photos, letters, and blooming messages for every milestone your children and grandchildren will reach.',
-  publishedAt: '2026-04-10',
+  publishedAt: '2026-05-12',
   readTime: '7 min',
   category: 'Guides',
   headerImage: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80&auto=format&fit=crop',
-  content: (navigate: Nav) => (
+  content: () => (
     <div>
       <p style={s.p}>One of the most powerful things a parent or grandparent can build is a record of the family as it was — the stories that don't make it into photos, the feelings that don't make it into conversation, the messages intended for moments that haven't happened yet.</p>
       <p style={s.p}>A family memory garden in Horizons is a way to do all of that in one private, beautiful place.</p>
@@ -214,13 +187,7 @@ const post5: BlogPost = {
         <li style={s.li}><strong style={s.strong}>Plant one blooming flower</strong> for a future milestone you know is coming</li>
         <li style={s.li}><strong style={s.strong}>Make it a practice</strong> — plant something on every significant occasion going forward</li>
       </ul>
-      <p style={s.p}>The garden grows over time. That is the point. Not a single gesture but a living archive that accumulates with every year, every visit, every milestone.</p>
-      <div style={{ textAlign: 'center', margin: '48px 0 24px' }}>
-        <Button variant="primary" size="large" onClick={() => navigate('/auth/register')} style={{ fontSize: '16px', padding: '14px 36px' }}>
-          Start your family garden today →
-        </Button>
-      </div>
-    </div>
+      <p style={s.p}>The garden grows over time. That is the point. Not a single gesture but a living archive that accumulates with every year, every visit, every milestone.</p>    </div>
   ),
 };
 
@@ -228,11 +195,11 @@ const post6: BlogPost = {
   slug: 'self-care-time-capsule',
   title: 'The self-care practice nobody talks about: writing to your future self',
   description: 'A letter to your future self is one of the most clarifying things you can write. Here is why the practice works, and how a blooming flower makes it something you can actually return to.',
-  publishedAt: '2026-04-15',
+  publishedAt: '2026-05-26',
   readTime: '5 min',
   category: 'Wellness',
   headerImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80&auto=format&fit=crop',
-  content: (navigate: Nav) => (
+  content: () => (
     <div>
       <p style={s.p}>There is a version of journaling that most people never try: writing not to process the present, but to send something forward. A message from the person you are now, addressed to the person you will be.</p>
       <p style={s.p}>This practice has a name — the future self letter — and the research behind it is surprisingly robust. People who write to their future selves report clearer goal-setting, greater self-compassion, and a stronger sense of identity continuity.</p>
@@ -250,13 +217,7 @@ const post6: BlogPost = {
       </ul>
       <h2 style={s.h2}>When to set it to bloom</h2>
       <p style={s.p}>The most powerful timing is just past a meaningful threshold — the end of a year, after a specific challenge is supposed to be complete, on a birthday that feels significant. The gap between writing and receiving is where the magic happens. You forget the exact words. Life moves. And then it arrives, and you meet the version of yourself that wrote it.</p>
-      <blockquote style={s.blockquote}>'I planted a flower to myself at the start of a really hard year. Set it to bloom 12 months later. When it opened, I was in a completely different place — and reading what I had written then was one of the most emotional things I have ever experienced.'</blockquote>
-      <div style={{ textAlign: 'center', margin: '48px 0 24px' }}>
-        <Button variant="primary" size="large" onClick={() => navigate('/auth/register')} style={{ fontSize: '16px', padding: '14px 36px' }}>
-          Plant a letter to your future self →
-        </Button>
-      </div>
-    </div>
+      <blockquote style={s.blockquote}>'I planted a flower to myself at the start of a really hard year. Set it to bloom 12 months later. When it opened, I was in a completely different place — and reading what I had written then was one of the most emotional things I have ever experienced.'</blockquote>    </div>
   ),
 };
 

@@ -4,8 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { blogPosts } from '../data/blogPosts';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { Button } from '../components/common';
-import { typography } from '../styles/typography';
 
 const CAT_BG: Record<string, string> = {
   'Gift Ideas':  'rgba(212, 144, 154, 0.12)',
@@ -30,6 +28,7 @@ export const BlogPostPage: React.FC = () => {
   const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) return <Navigate to="/blog" replace />;
+  if (new Date(post.publishedAt) > new Date()) return <Navigate to="/blog" replace />;
 
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
@@ -155,7 +154,7 @@ export const BlogPostPage: React.FC = () => {
           className="blog-post-content"
           style={{ maxWidth: '760px', margin: '0 auto', padding: '0 24px clamp(60px, 8vw, 96px)' }}
         >
-          {post.content(navigate)}
+          {post.content()}
 
         </div>
 
