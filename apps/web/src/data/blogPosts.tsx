@@ -94,7 +94,7 @@ const post2: BlogPost = {
       <h2 style={s.h2}>4. A message written weeks ago, set to arrive today</h2>
       <p style={s.p}>This is the one that tends to hit hardest. Write your message before the date — really write it, with photos, a voice note, all of it — seal it, and set it to open on the day that matters.</p>
       <p style={s.p}>When it opens, they're not reading something you sent this morning. They're reading proof that this day has been on your mind for weeks. That's a different kind of gift.</p>
-      <p style={s.p}>In Horizons, this is called a blooming flower — a memory you plant in a private garden, sealed until the bloom date you choose. It links back to the idea we explored in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>what actually makes a memory last</a>: context, relationship, and timing — all three, in one thing.</p>
+      <p style={s.p}>In Horizons, this is called a blooming flower — a memory you plant in a private garden, sealed until the bloom date you choose. It links back to the idea we explored in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>best memory keeping app 2026</a>: context, relationship, and timing — all three, in one thing.</p>
       <blockquote style={s.blockquote}>"I planted ours the day we hit one year. Six months later it bloomed and he called immediately. He goes — I didn't know you'd been holding onto that that long."</blockquote>
       <h2 style={s.h2}>5. A handwritten letter, mailed the slow way</h2>
       <p style={s.p}>Underrated. The physical arrival of something you touched and addressed and sealed carries weight that digital things can't fully replicate. Takes effort. That's the point.</p>
@@ -135,7 +135,7 @@ const post3: BlogPost = {
       <p style={s.p}>Go through old photos together and record the commentary, not just the images. The photo is the prompt. The recording is the memory. Save both.</p>
       <h3 style={s.h3}>Timed delivery for future generations</h3>
       <p style={s.p}>This is the piece most tools miss entirely. A memory preserved but never delivered is still at risk of being lost. The most powerful preservation is memory with a destination — something written or recorded today, addressed to someone specific, set to arrive at a moment that matters.</p>
-      <p style={s.p}>In Horizons, you can plant a memory — a message, a voice note, a photo with context — in a private family garden, and set it to bloom for a grandchild on their 18th birthday, or for a child on a graduation day years away. As we explored in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>our look at memory keeping apps</a>, the difference between storage and preservation is anchoring: who it's for, and when they receive it.</p>
+      <p style={s.p}>In Horizons, you can plant a memory — a message, a voice note, a photo with context — in a private family garden, and set it to bloom for a grandchild on their 18th birthday, or for a child on a graduation day years away. As we explored in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>best memory keeping apps 2026</a>, the difference between storage and preservation is anchoring: who it's for, and when they receive it.</p>
       <blockquote style={s.blockquote}>"My grandmother recorded a message for me the year I was born. I didn't hear it until I was 21. There's no way to explain what that does to you."</blockquote>
       <h2 style={s.h2}>Start smaller than you think</h2>
       <p style={s.p}>You don't need a project. You need one recording. One message. One photo with a voice note attached that explains why it matters. Do that once, and the habit follows.</p>
@@ -183,7 +183,7 @@ const post4: BlogPost = {
       <p style={s.p}>Write something specific about the person who was lost. A real memory. A particular quality. Something you witnessed. "I'm so sorry for your loss" is kind. "I still think about the way he laughed at his own jokes" is something they'll hold onto.</p>
       <h3 style={s.h3}>A message timed for a hard date</h3>
       <p style={s.p}>This is the one most people never think to do. Plant a message now — write it carefully, with specificity — and set it to arrive at a date you know will be hard. The first anniversary of the loss. The deceased person's birthday. A holiday. A milestone they were supposed to be there for.</p>
-      <p style={s.p}>In Horizons, a blooming flower can be planted today and sealed until that future date. When it opens, the person isn't receiving something generic sent in the moment — they're receiving proof that you thought ahead, that you knew those days would be hard, that you didn't forget. As we covered in <a href="/blog/long-distance-relationship-gift-ideas" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>our piece on gifts that feel personal</a>, what makes a message land is specificity and timing — both together.</p>
+      <p style={s.p}>In Horizons, a blooming flower can be planted today and sealed until that future date. When it opens, the person isn't receiving something generic sent in the moment — they're receiving proof that you thought ahead, that you knew those days would be hard, that you didn't forget. As we covered in <a href="/blog/long-distance-relationship-gift-ideas" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>long-distance relationship gift ideas</a>, what makes a message land is specificity and timing — both together.</p>
       <blockquote style={s.blockquote}>"She planted one for me to open on my mom's first birthday after she passed. I was already having a hard day when it bloomed. Reading it — it felt like being caught before I fell."</blockquote>
       <h3 style={s.h3}>Something that does the ordinary for them</h3>
       <p style={s.p}>Grief is exhausting. Practical help — a meal delivery subscription, help with a task, a gift card to somewhere they go regularly — removes a small piece of friction from a period when everything takes more effort than it should.</p>
@@ -214,7 +214,7 @@ const post5: BlogPost = {
       <h2 style={s.h2}>What actually needs to be different</h2>
       <p style={s.p}>A time capsule that works needs three things: a specific recipient, a specific date, and a delivery mechanism that doesn't rely on anyone remembering to look.</p>
       <p style={s.p}>This is what we built Horizons around. A blooming flower is planted with a recipient and a bloom date. On that date, it opens — for them, or for you, depending on who you planted it for. No one has to remember. No one has to go looking. It arrives.</p>
-      <p style={s.p}>As we explored in <a href="/blog/how-to-preserve-family-memories" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>how to preserve family memories</a> and in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>what most memory apps get wrong</a>, the missing piece is almost always the same: anchoring. Without a destination and a delivery date, a memory is just storage.</p>
+      <p style={s.p}>As we explored in <a href="/blog/how-to-preserve-family-memories" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>how to preserve family memories</a> and in <a href="/blog/best-memory-keeping-app" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>what most memory keeping apps get wrong</a>, the missing piece is almost always the same: anchoring. Without a destination and a delivery date, a memory is just storage.</p>
       <h2 style={s.h2}>What this looks like in practice</h2>
       <ul style={s.ul}>
         <li style={s.li}>A letter written to your child today, set to bloom when they graduate</li>
@@ -260,7 +260,7 @@ const post6: BlogPost = {
       <blockquote style={s.blockquote}>"I'm proud of the fact that I finally said the thing I'd been not saying for two years. I want you to remember that it felt like jumping off something, and that it was okay."</blockquote>
       <h2 style={s.h2}>How to make sure you actually receive it</h2>
       <p style={s.p}>This is where most future self letters fail. Written in a notebook, forgotten. Saved in a document, never opened. Emailed to yourself, lost in an inbox.</p>
-      <p style={s.p}>In Horizons, a blooming flower gives the letter a delivery date. You write it, seal it, set the date — your next birthday, the end of the year, a specific moment you know is coming. When it arrives, it opens. You don't have to go looking for it. As we explored in <a href="/blog/problem-with-digital-time-capsules" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>the problem with most digital time capsules</a>, the content is rarely the issue. The delivery is.</p>
+      <p style={s.p}>In Horizons, a blooming flower gives the letter a delivery date. You write it, seal it, set the date — your next birthday, the end of the year, a specific moment you know is coming. When it arrives, it opens. You don't have to go looking for it. As we explored in <a href="/blog/problem-with-digital-time-capsules" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>the problem with digital time capsules</a>, the content is rarely the issue. The delivery is.</p>
       <p style={s.p}>Write the letter. Set the date. Let it find you at the right moment.</p>
       <h2 style={s.h2}>A simple template to follow</h2>
 <p style={s.p}>Copy this if it helps:</p>
@@ -316,5 +316,49 @@ const post7: BlogPost = {
   ),
 };
 
-export const blogPosts: BlogPost[] = [post1, post2, post3, post4, post5, post6, post7];
+const post8: BlogPost = {
+  slug: 'gift-and-a-memory',
+  title: 'A gift card, and something to remember it by',
+  description: 'A gift card funds an experience. A blooming flower makes it permanent. Here\'s why the memory matters more — and how to give both at once.',
+  publishedAt: '2026-06-10',
+  readTime: '5 min',
+  category: 'Gift Ideas',
+  headerImage: '/images/blog-post7-gift-card.jpg',
+  ctaText: 'Give the gift and the memory',
+  content: () => (
+    <div>
+      <p style={s.p}><strong style={s.strong}>Short answer:</strong> A gift card solves the practical problem. A blooming flower solves the emotional one. Horizons lets you do both — the gift funds the experience, and the flower makes it something they'll actually remember.</p>
+      <p style={s.p}>Gift cards are a perfectly reasonable gift. They're flexible. They're practical. The recipient gets to choose what they actually want, which is often better than you guessing wrong.</p>
+      <p style={s.p}>The problem isn't practicality. The problem is that a gift card doesn't feel like anything. It arrives in an envelope or an inbox, says "happy birthday" or "congratulations," and disappears into a wallet or an app. The occasion passes. The card gets used on a Tuesday for something unremarkable. The moment is gone.</p>
+      <p style={s.p}>Two years later, they won't remember the gift card. They might not even remember the occasion. What they remember is whether you made them feel something.</p>
+      <h2 style={s.h2}>What a gift card can't carry</h2>
+      <p style={s.p}>A gift card funds an experience. It doesn't explain why you chose it. It doesn't say what the occasion means to you. It doesn't tell them what you hope they do with it, or what you want them to feel when they do.</p>
+      <p style={s.p}>All of that has to come from somewhere else. That's where most people stop — they hand over the card and call it done. The meaning gets left out entirely.</p>
+      <h2 style={s.h2}>What a blooming flower does instead</h2>
+      <p style={s.p}>In Horizons, you plant a flower alongside the gift. Write the message the card can't carry — the why, the story, the feeling. Attach a photo. Record your voice. Set it to bloom on the day they use the gift, or the day after, when the experience is still fresh.</p>
+      <p style={s.p}>When it opens, they're not receiving a generic card message. They're receiving something you wrote specifically for them, timed specifically for that moment.</p>
+      <blockquote style={s.blockquote}>"I gave him a gift card for a cooking class for his birthday. Then planted a flower to open on the day of the class — wrote about why I thought he needed something just for himself. He said he read it on the way there. That note is what he remembers."</blockquote>
+      <p style={s.p}>The gift funds the experience. The flower makes it permanent.</p>
+      <h2 style={s.h2}>When this works especially well</h2>
+      <ul style={s.ul}>
+        <li style={s.li}><strong style={s.strong}>Experiences</strong> — a spa day, a cooking class, a concert: the flower arrives the morning of, adding intention to the occasion</li>
+        <li style={s.li}><strong style={s.strong}>Milestone birthdays</strong> — the card is practical; the flower holds the meaning of the milestone itself</li>
+        <li style={s.li}><strong style={s.strong}>Graduations</strong> — money toward the next chapter, plus a letter about why you believe in them</li>
+        <li style={s.li}><strong style={s.strong}>Long distance</strong> — when you can't be there, a flower carries what a card and an envelope cannot</li>
+        <li style={s.li}><strong style={s.strong}>Just because</strong> — sometimes the most memorable gifts are the ones with no occasion attached</li>
+      </ul>
+      <h2 style={s.h2}>What to write inside the flower</h2>
+      <p style={s.p}>You don't need much. A few honest sentences beat a page of the right words.</p>
+      <ul style={s.ul}>
+        <li style={s.li}>Why you chose this specific gift for this specific person</li>
+        <li style={s.li}>What you hope they feel when they use it</li>
+        <li style={s.li}>One thing you want them to know, that the gift itself can't say</li>
+      </ul>
+      <p style={s.p}>That's it. The gift handles the practical side. The flower handles the rest.</p>
+      <p style={s.p}>As we explored in <a href="/blog/how-to-make-a-gift-feel-personal" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>how to make any gift feel personal</a>, the memory matters more than the object. Give them both.</p>
+    </div>
+  ),
+};
+
+export const blogPosts: BlogPost[] = [post1, post2, post3, post4, post5, post6, post7, post8];
 
