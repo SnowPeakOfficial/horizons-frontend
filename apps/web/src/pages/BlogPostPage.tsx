@@ -73,21 +73,25 @@ export const BlogPostPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Back button ── */}
-        <div
-          className="blog-post-back"
-          style={{ maxWidth: '760px', margin: '0 auto', padding: '20px 24px 0' }}
-        >
+        {/* ── Back link ── */}
+        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '20px 24px 0' }}>
           <button
             onClick={() => navigate('/blog')}
             style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              color: '#D4909A', fontSize: '14px', fontWeight: 600,
-              padding: 0, display: 'flex', alignItems: 'center', gap: '6px',
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              color: '#C47A85', fontSize: '16px', fontWeight: 600,
+              letterSpacing: '0.01em',
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
               transition: 'color 0.2s ease',
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#B87580'; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#D4909A'; }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = '#9A5A64';
+              (e.currentTarget as HTMLElement).style.textDecoration = 'underline';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = '#C47A85';
+              (e.currentTarget as HTMLElement).style.textDecoration = 'none';
+            }}
           >
             ← All articles
           </button>
@@ -189,21 +193,6 @@ export const BlogPostPage: React.FC = () => {
           </div>
         </section>
 
-        {/* ── Back link ── */}
-        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '36px 24px 48px', textAlign: 'center' }}>
-          <button
-            onClick={() => navigate('/blog')}
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              color: '#D4909A', fontSize: '14px', fontWeight: 600,
-              transition: 'color 0.2s ease',
-            }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#B87580'; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#D4909A'; }}
-          >
-            ← Back to all articles
-          </button>
-        </div>
       </div>
 
       <Footer />
