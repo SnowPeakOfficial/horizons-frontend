@@ -102,7 +102,7 @@ export const BlogPage: React.FC = () => {
               gap: '24px',
             }}
           >
-            {blogPosts.filter((post) => new Date(post.publishedAt) <= new Date()).map((post) => (
+            {blogPosts.filter((post) => import.meta.env.MODE === 'development' || new Date(post.publishedAt) <= new Date()).map((post) => (
               <article
                 key={post.slug}
                 onClick={() => navigate(`/blog/${post.slug}`)}
