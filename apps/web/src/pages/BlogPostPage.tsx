@@ -4,14 +4,22 @@ import { Helmet } from 'react-helmet-async';
 import { blogPosts } from '../data/blogPosts';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
+import { Button } from '../components/common';
+import { typography } from '../styles/typography';
 
 const CAT_BG: Record<string, string> = {
-  'Gift Ideas': '#FDE8EC', Memory: '#EDE8FD',
-  Relationships: '#E8F4FD', Guides: '#E8FDE9', Wellness: '#FDF6E8',
+  'Gift Ideas':  'rgba(212, 144, 154, 0.12)',
+  Memory:        'rgba(197, 169, 208, 0.15)',
+  Relationships: 'rgba(155, 181, 212, 0.15)',
+  Guides:        'rgba(107, 155, 122, 0.12)',
+  Wellness:      'rgba(212, 175, 106, 0.12)',
 };
 const CAT_FG: Record<string, string> = {
-  'Gift Ideas': '#9B2D42', Memory: '#4A2D9B',
-  Relationships: '#2D609B', Guides: '#2D8B3A', Wellness: '#8B6E2D',
+  'Gift Ideas':  '#B87580',
+  Memory:        '#9E7DAE',
+  Relationships: '#5A8AAE',
+  Guides:        '#4A7A58',
+  Wellness:      '#9B7B30',
 };
 
 const SITE = 'https://horizons-garden.com';
@@ -51,67 +59,153 @@ export const BlogPostPage: React.FC = () => {
       </Helmet>
 
       <Navbar />
-      <div style={{ minHeight: '100vh', background: '#FFFAF8' }}>
-        {/* Back */}
-        <div style={{ maxWidth: '740px', margin: '0 auto', padding: '32px 24px 0' }}>
+
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF5F7 0%, #FAF7F5 50%, #F3EEF7 100%)' }}>
+
+        {/* ── Header image — constrained to content width ── */}
+        <div style={{ maxWidth: '760px', margin: '0 auto', padding: 'clamp(24px, 4vw, 36px) 24px 0' }}>
+          <div style={{ borderRadius: '16px', overflow: 'hidden' }}>
+            <img
+              src={post.headerImage}
+              alt={post.title}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          </div>
+        </div>
+
+        {/* ── Back button ── */}
+        <div
+          className="blog-post-back"
+          style={{ maxWidth: '760px', margin: '0 auto', padding: '20px 24px 0' }}
+        >
           <button
             onClick={() => navigate('/blog')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C2475D', fontSize: '14px', fontWeight: 600, padding: 0 }}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: '#D4909A', fontSize: '14px', fontWeight: 600,
+              padding: 0, display: 'flex', alignItems: 'center', gap: '6px',
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#B87580'; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#D4909A'; }}
           >
-            &larr; All articles
+            ← All articles
           </button>
         </div>
 
-        {/* Header */}
-        <div style={{ maxWidth: '740px', margin: '0 auto', padding: '36px 24px 0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
-            <span style={{ background: CAT_BG[post.category] || '#FDE8EC', color: CAT_FG[post.category] || '#9B2D42', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', borderRadius: '20px' }}>
+        {/* ── Article header ── */}
+        <div
+          className="blog-post-header"
+          style={{ maxWidth: '760px', margin: '0 auto', padding: 'clamp(24px, 4vw, 40px) 24px 0' }}
+        >
+          {/* Meta row */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '12px',
+            marginBottom: '24px', flexWrap: 'wrap',
+          }}>
+            <span style={{
+              background: CAT_BG[post.category] || 'rgba(212,144,154,0.12)',
+              color: CAT_FG[post.category] || '#B87580',
+              fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em',
+              padding: '5px 14px', borderRadius: '999px',
+            }}>
               {post.category}
             </span>
-            <span style={{ fontSize: '14px', color: '#9D8F99' }}>{post.readTime} read</span>
-            <span style={{ fontSize: '14px', color: '#9D8F99' }}>
-              {new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            <span style={{ fontSize: '13px', color: '#9D8F99' }}>{post.readTime} read</span>
+            <span style={{ fontSize: '13px', color: '#9D8F99' }}>
+              {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                month: 'long', day: 'numeric', year: 'numeric',
+              })}
             </span>
           </div>
-          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(26px,4vw,40px)', fontWeight: 600, color: '#2C2028', lineHeight: 1.25, marginBottom: '20px' }}>
+
+          {/* Title */}
+          <h1 style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: 'clamp(24px, 4vw, 40px)',
+            fontWeight: 600,
+            color: '#3D3340',
+            lineHeight: 1.25,
+            marginBottom: '20px',
+          }}>
             {post.title}
           </h1>
-          <p style={{ fontSize: '19px', color: '#6B5B6E', lineHeight: 1.7, marginBottom: '40px', fontStyle: 'italic' }}>
+
+          {/* Deck / description */}
+          <p style={{
+            fontSize: 'clamp(16px, 2vw, 19px)',
+            color: '#6B5F68',
+            lineHeight: 1.7,
+            marginBottom: '40px',
+            fontStyle: 'italic',
+          }}>
             {post.description}
           </p>
-          <div style={{ height: '1px', background: 'rgba(212,144,154,0.2)', marginBottom: '48px' }} />
+
+          {/* Divider */}
+          <div style={{ height: '1px', background: 'rgba(232, 180, 184, 0.25)', marginBottom: 'clamp(32px, 5vw, 52px)' }} />
         </div>
 
-        {/* Body */}
-        <div style={{ maxWidth: '740px', margin: '0 auto', padding: '0 24px 80px' }}>
-          {post.content()}
+        {/* ── Article body ── */}
+        <div
+          className="blog-post-content"
+          style={{ maxWidth: '760px', margin: '0 auto', padding: '0 24px clamp(60px, 8vw, 96px)' }}
+        >
+          {post.content(navigate)}
 
-          {/* CTA card */}
-          <div style={{ marginTop: '64px', padding: '40px 32px', background: 'linear-gradient(135deg,#FFF0F3 0%,#FDE8EC 100%)', borderRadius: '20px', textAlign: 'center' }}>
-            <h3 style={{ fontFamily: 'Georgia, serif', fontSize: '24px', fontWeight: 600, color: '#2C2028', marginBottom: '12px' }}>
-              Ready to plant your first memory?
-            </h3>
-            <p style={{ fontSize: '16px', color: '#6B5B6E', marginBottom: '24px', lineHeight: 1.6 }}>
-              Horizons is free to start. Create your garden and plant your first flower today.
-            </p>
-            <a
-              href="/auth/register"
-              style={{ display: 'inline-block', padding: '14px 32px', background: 'linear-gradient(135deg,#C2475D 0%,#9B2D42 100%)', color: '#fff', borderRadius: '40px', textDecoration: 'none', fontWeight: 700, fontSize: '16px' }}
-            >
-              Get started free
-            </a>
-          </div>
+        </div>
 
-          <div style={{ marginTop: '32px', textAlign: 'center' }}>
-            <button
-              onClick={() => navigate('/blog')}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C2475D', fontSize: '14px', fontWeight: 600 }}
+        {/* ── Final CTA — exact LandingPage final CTA, no flower ── */}
+        <section style={{
+          padding: '120px 40px 120px',
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #FFF9F7 50%, #FDFCFA 100%)',
+          textAlign: 'center',
+        }}>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <h2 style={{
+              fontSize: 'clamp(36px, 5vw, 64px)',
+              fontFamily: typography.fontFamily.serif,
+              fontWeight: 400,
+              marginBottom: '48px',
+              color: '#3D3340',
+              lineHeight: 1.2,
+            }}>
+              When you're ready,
+              <br />
+              your garden is waiting
+            </h2>
+            <Button
+              variant="primary"
+              size="large"
+              onClick={() => navigate('/auth/register')}
+              style={{
+                fontSize: '18px',
+                padding: '20px 56px',
+                boxShadow: '0 12px 40px rgba(212, 144, 154, 0.35)',
+              }}
             >
-              &larr; Back to all articles
-            </button>
+              Enter your garden
+            </Button>
           </div>
+        </section>
+
+        {/* ── Back link ── */}
+        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '36px 24px 48px', textAlign: 'center' }}>
+          <button
+            onClick={() => navigate('/blog')}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: '#D4909A', fontSize: '14px', fontWeight: 600,
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#B87580'; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#D4909A'; }}
+          >
+            ← Back to all articles
+          </button>
         </div>
       </div>
+
       <Footer />
     </>
   );
