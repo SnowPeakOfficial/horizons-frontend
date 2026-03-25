@@ -61,8 +61,7 @@ export const HorizonsPromo: React.FC = () => {
             'they open it when it blooms.',
           ]}
           flowerSrc={ASSETS.peony}
-          flowerSide="left"
-          glowColor="rgba(232,180,184,0.40)"
+          glowColor="rgba(218,130,140,0.58)"
         />
       </Sequence>
 
@@ -78,8 +77,7 @@ export const HorizonsPromo: React.FC = () => {
             'Everything else stays yours.',
           ]}
           flowerSrc={ASSETS.glassMorph}
-          flowerSide="right"
-          glowColor="rgba(197,169,208,0.40)"
+          glowColor="rgba(160,118,196,0.58)"
         />
       </Sequence>
 
@@ -95,7 +93,6 @@ export const HorizonsPromo: React.FC = () => {
             'to know you were thinking of them.',
           ]}
           flowerSrc={ASSETS.cornflower}
-          flowerSide="left"
           glowColor="rgba(212,112,126,0.35)"
         />
       </Sequence>
