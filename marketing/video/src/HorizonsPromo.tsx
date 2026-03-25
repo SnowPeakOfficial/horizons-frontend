@@ -48,17 +48,17 @@ export const HorizonsPromo: React.FC = () => {
         <SakuraOpenerScene />
       </Sequence>
 
-      {/* ── SCENE 3: Feature — Send a memory ── */}
+      {/* ── SCENE 4: Feature — Send a memory ── */}
       {/* Starts XFADE frames before Sakura ends — cream fades over the dark sakura bg */}
       <Sequence from={SCENE.feat1.start} durationInFrames={SCENE.feat1.dur}>
         <FeatureScene
-          label="For loved ones"
+          label="For the people you love"
           labelColor={COLOR.rose600}
-          headline={['Send a memory', 'sealed inside', 'a flower']}
+          headline={['A memory, sealed', 'inside a flower.']}
           description={[
-            'Attach a letter, photo, voice note, or video.',
-            'Your recipient opens it like unwrapping',
-            'something rare.',
+            'A letter. A photo. A voice note. A video.',
+            'Plant it in your garden —',
+            'they open it when it blooms.',
           ]}
           flowerSrc={ASSETS.peony}
           flowerSide="left"
@@ -66,16 +66,16 @@ export const HorizonsPromo: React.FC = () => {
         />
       </Sequence>
 
-      {/* ── SCENE 4: Feature — Private garden ── */}
+      {/* ── SCENE 5: Feature — Private garden ── */}
       <Sequence from={SCENE.feat2.start} durationInFrames={SCENE.feat2.dur}>
         <FeatureScene
           label="Private by design"
           labelColor={COLOR.lavender400}
-          headline={['No feeds.', 'No likes.', 'No one enters uninvited.']}
+          headline={['Your garden.', 'Your people.', 'No one else.']}
           description={[
-            'Your garden is yours alone.',
-            'Invite only the people who matter,',
-            'or keep it entirely to yourself.',
+            'Invite the people who matter',
+            'and plant flowers just for them.',
+            'Everything else stays yours.',
           ]}
           flowerSrc={ASSETS.glassMorph}
           flowerSide="right"
@@ -83,16 +83,16 @@ export const HorizonsPromo: React.FC = () => {
         />
       </Sequence>
 
-      {/* ── SCENE 5: Feature — Time capsule ── */}
+      {/* ── SCENE 6: Feature — Time capsule ── */}
       <Sequence from={SCENE.feat3.start} durationInFrames={SCENE.feat3.dur}>
         <FeatureScene
           label="Time capsule"
           labelColor={COLOR.rose400}
-          headline={['Set it to bloom', 'now, or years', 'from now.']}
+          headline={['Plant it today.', 'Let it bloom', 'when the moment is right.']}
           description={[
-            'Schedule a flower to open on a birthday,',
-            'an anniversary, or the day',
-            'everything changed.',
+            'Set it to open on a birthday, an anniversary,',
+            'or the day you just want someone',
+            'to know you were thinking of them.',
           ]}
           flowerSrc={ASSETS.cornflower}
           flowerSide="left"

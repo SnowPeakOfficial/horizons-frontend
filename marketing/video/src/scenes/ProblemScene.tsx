@@ -13,7 +13,7 @@ import { ASSETS, COLOR, FONT } from '../constants';
 const LINES = [
   'The photos stay in the camera roll.',
   'The letters never get sent.',
-  'The moments just... disappear.',
+  'The moments just...disappear.',
 ];
 
 const LINE_STAGGER = 28;
