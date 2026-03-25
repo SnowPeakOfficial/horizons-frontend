@@ -273,13 +273,13 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
             <div style={{
               padding: `${theme.spacing.md} ${theme.spacing.lg}`,
               borderRadius: theme.radius.md,
-              background: theme.colors.rose[50],
-              border: `1px solid ${theme.border.dark}`,
-              color: theme.text.secondary,
+              background: '#FEF2F2',
+              border: `2px solid #DC2626`,
+              color: '#DC2626',
               ...typography.styles.caption,
               display: 'flex', gap: 8, alignItems: 'flex-start',
             }}>
-              <span style={{ color: theme.colors.rose[600], flexShrink: 0 }}>⚠️</span>
+              <span style={{ flexShrink: 0 }}>⚠</span>
               {permissionError}
             </div>
           )}

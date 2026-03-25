@@ -25,6 +25,7 @@ export const LoginPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [formError, setFormError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +51,7 @@ export const LoginPage: React.FC = () => {
 
     setIsLoading(true);
     setErrors({});
+    setFormError('');
 
     try {
       console.log('🔐 Attempting login for:', formData.email);
@@ -63,8 +65,7 @@ export const LoginPage: React.FC = () => {
       // Handle specific error cases
       const err = error as ApiError;
       if (err.statusCode === 401) {
-        toast.error('Invalid email or password');
-        setErrors({ password: 'Invalid credentials' });
+        setFormError('Invalid email or password. Please try again.');
       } else if (err.statusCode === 429) {
         toast.error('Too many login attempts. Please try again later.');
       } else if (err.statusCode === 0 || err.error === 'NETWORK_ERROR') {
@@ -91,14 +92,6 @@ export const LoginPage: React.FC = () => {
   const formContainerStyle: React.CSSProperties = {
     width: '100%',
     maxWidth: '420px',
-  };
-
-  const logoStyle: React.CSSProperties = {
-    ...typography.styles.h2,
-    fontFamily: typography.fontFamily.serif,
-    color: theme.text.primary,
-    textAlign: 'center',
-    marginBottom: theme.spacing.lg,
   };
 
   const titleStyle: React.CSSProperties = {
@@ -133,59 +126,69 @@ export const LoginPage: React.FC = () => {
       <Navbar />
       <div style={containerStyle}>
         <div style={formContainerStyle}>
-        <div style={logoStyle}>Horizons</div>
+          <img
+            src="/images/horizons-logo-wordmark.png"
+            alt="Horizons"
+            style={{ display: 'block', margin: '0 auto', marginBottom: theme.spacing.lg, height: '40px', width: 'auto' }}
+          />
         
-        <Card>
-          <h1 style={titleStyle}>Welcome Back</h1>
-          <p style={subtitleStyle}>Sign in to your memory garden</p>
+          <Card>
+            <h1 style={titleStyle}>Welcome Back</h1>
+            <p style={subtitleStyle}>Sign in to your memory garden</p>
 
-          <form onSubmit={handleSubmit} style={formStyle}>
-            <Input
-              label="Email"
-              type="email"
-              placeholder="you@example.com"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              error={errors.email}
-              fullWidth
-              autoComplete="email"
-            />
+            <form onSubmit={handleSubmit} style={formStyle} noValidate>
+              <Input
+                label="Email"
+                type="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                error={errors.email}
+                fullWidth
+                autoComplete="email"
+              />
 
-            <Input
-              label="Password"
-              type="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              error={errors.password}
-              fullWidth
-              autoComplete="current-password"
-            />
+              <Input
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                error={errors.password}
+                fullWidth
+                autoComplete="current-password"
+              />
 
-            <Button
-              type="submit"
-              variant="primary"
-              size="large"
-              fullWidth
-              isLoading={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
+              {formError && (
+                <p style={{ color: '#DC2626', fontSize: '14px', textAlign: 'center', margin: 0 }}>
+                  {formError}
+                </p>
+              )}
 
-          <div style={linkStyle}>
-            Don't have an account?{' '}
-            <Link to="/auth/register" style={{ fontWeight: 600, textDecoration: 'underline' }}>
-              Create one
+              <Button
+                type="submit"
+                variant="primary"
+                size="large"
+                fullWidth
+                isLoading={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </form>
+
+            <div style={linkStyle}>
+              Don't have an account?{' '}
+              <Link to="/auth/register" style={{ fontWeight: 600, textDecoration: 'underline' }}>
+                Create one
+              </Link>
+            </div>
+          </Card>
+
+          <div style={{ textAlign: 'center', marginTop: theme.spacing.xl }}>
+            <Link to="/" style={{ ...typography.styles.caption, color: theme.text.tertiary }}>
+              ← Back to home
             </Link>
           </div>
-        </Card>
-
-        <div style={{ textAlign: 'center', marginTop: theme.spacing.xl }}>
-          <Link to="/" style={{ ...typography.styles.caption, color: theme.text.tertiary }}>
-            ← Back to home
-          </Link>
-        </div>
         </div>
       </div>
     </>

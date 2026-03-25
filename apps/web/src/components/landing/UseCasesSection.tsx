@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { LazyImage } from '../common';
 import { typography } from '../../styles/typography';
 import { theme } from '../../styles/theme';
 
@@ -149,6 +150,8 @@ export const UseCasesSection: React.FC = () => (
               <img
                 src={card.flowerSrc}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{
                   position: 'absolute',
                   top: '38%',
@@ -237,15 +240,15 @@ export const UseCasesSection: React.FC = () => (
                 position: 'relative',
                 zIndex: 5,
               }}>
-                <img
+                <LazyImage
                   src={card.flowerSrc}
                   alt=""
+                  noSkeleton
                   style={{
                     width: '100%',
                     maxWidth: '380px',
                     height: 'auto',
                     objectFit: 'contain',
-                    position: 'relative',
                     userSelect: 'none',
                     pointerEvents: 'none',
                     filter: `drop-shadow(0 20px 56px ${card.shadowColor}) saturate(1.25)`,

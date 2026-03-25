@@ -108,7 +108,7 @@ export const PricingPage: React.FC = () => {
       features: [
         'Your own private garden',
         'Plant 1 flower per year',
-        '1 flower type',
+        '3 flower types',
         'Flowers that bloom with a hidden message',
         'Send images, voice and video inside flowers',
       ],
@@ -130,7 +130,7 @@ export const PricingPage: React.FC = () => {
         'Everything in Free',
         'Up to 3 gardens',
         'Plant 50 flowers per year',
-        '7 exclusive flower types',
+        '5 exclusive flower types',
         'Multiple letter templates for flowers',
         'Send a gift card with flowers',
       ],
@@ -150,7 +150,7 @@ export const PricingPage: React.FC = () => {
       comingSoon: true,
       features: [
         'Everything in Pro',
-        'Up to 30 gardens',
+        'Unlimited gardens',
         'Plant 100 flowers per year',
         '3 premium flower types',
         'Seasonal garden themes',

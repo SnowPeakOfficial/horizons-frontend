@@ -11,6 +11,7 @@ import React, { Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Modal } from '../common/Modal';
+import { LazyImage } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { FlowerDefinition } from '../../types/api.types';
@@ -268,14 +269,14 @@ export const LetterPreviewModal: React.FC<LetterPreviewModalProps> = ({
                   border: `1.5px solid ${tmpl.frameColor}50`,
                   boxShadow: '0 2px 10px rgba(61,51,64,0.08)',
                 }}>
-                  <img
+                  <LazyImage
                     src={imagePreviewUrl}
                     alt="Attached photo"
+                    noSkeleton
                     style={{
                       width: '100%',
                       maxHeight: isMobile ? '180px' : '240px',
                       objectFit: 'cover',
-                      display: 'block',
                     }}
                   />
                 </div>

@@ -12,7 +12,7 @@ import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Input } from '../common';
+import { Button, Input, DateTimePicker, LazyImage } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
@@ -177,6 +177,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   // React Hook Form with Zod validation
   const {
     register,
+    setValue,
     formState: { errors },
     watch,
     reset: resetForm,
@@ -1081,12 +1082,11 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
             {/* Bloom Date (if BLOOMING selected) */}
             {flowerType === 'BLOOMING' && (
-              <Input
-                {...register('bloomAt')}
-                type="datetime-local"
+              <DateTimePicker
                 label="Bloom Date"
+                value={watch('bloomAt')}
+                onChange={(iso) => setValue('bloomAt', iso, { shouldValidate: true })}
                 error={errors.bloomAt?.message}
-                fullWidth
               />
             )}
 
@@ -1151,7 +1151,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                     </div>
                   </div>
                   {/* Full-width image preview */}
-                  <img src={imageFile.previewUrl} alt="preview" style={{ width: '100%', borderRadius: theme.radius.md, maxHeight: 160, objectFit: 'contain', display: 'block' }} />
+                  <LazyImage src={imageFile.previewUrl} alt="preview" noSkeleton style={{ width: '100%', borderRadius: theme.radius.md, maxHeight: 160, objectFit: 'contain' }} />
                   {imageProgress !== null && <div style={{ marginTop: 8, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${imageProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: theme.spacing.sm }}>
                     <button onClick={() => clearFile('image')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.text.secondary, padding: 4, fontSize: 18, lineHeight: 1 }}>✕</button>
@@ -1474,7 +1474,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               {imageFile && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md }}>
-                    <img src={imageFile.previewUrl} alt="preview" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: theme.radius.md }} />
+                    <LazyImage src={imageFile.previewUrl} alt="preview" noSkeleton style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: theme.radius.md }} />
                     <div>
                       <div style={{ ...typography.styles.body, fontWeight: 600 }}>📷 Photo attached</div>
                       <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{imageFile.file.name}</div>
