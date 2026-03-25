@@ -41,8 +41,9 @@ export const CTAFinaleScene: React.FC = () => {
   const headlineOpacity = interpolate(frame, [28, 52], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   const headlineY = interpolate(headlineSp, [0, 1], [30, 0]);
 
-  // URL fades in after headline
-  const urlOpacity = interpolate(frame, [55, 72], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  // URL fades in just after headline settles
+  const urlOpacity = interpolate(frame, [60, 78], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const urlY = interpolate(frame, [60, 78], [12, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
   // Hydrangea: starts below frame, drifts up slowly (parallax feel)
   const flowerOpacity = interpolate(frame, [0, 35], [0, 1], { extrapolateRight: 'clamp' });
@@ -120,6 +121,22 @@ export const CTAFinaleScene: React.FC = () => {
           <br />
           your garden is waiting
         </h2>
+
+        {/* URL — sits directly below the headline, larger and prominent */}
+        <p
+          style={{
+            fontFamily: FONT.sans,
+            fontSize: 28,
+            fontWeight: 500,
+            color: COLOR.textSecondary,
+            margin: 0,
+            letterSpacing: '0.06em',
+            opacity: urlOpacity,
+            transform: `translateY(${urlY}px)`,
+          }}
+        >
+          www.horizons-garden.com
+        </p>
       </div>
 
       {/* ── BOTTOM SECTION: Hydrangea rising from bottom ── */}
@@ -148,34 +165,6 @@ export const CTAFinaleScene: React.FC = () => {
             filter: 'drop-shadow(0 16px 48px rgba(212, 144, 154, 0.25))',
           }}
         />
-      </div>
-
-      {/* ── URL — floats just above the flower peak, black text ── */}
-      <div
-        style={{
-          position: 'absolute',
-          // sits roughly where the flower tip is in the mid-lower area
-          bottom: 210,
-          left: 0,
-          right: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          zIndex: 3,
-          opacity: urlOpacity,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: FONT.sans,
-            fontSize: 17,
-            fontWeight: 500,
-            color: '#000000',
-            margin: 0,
-            letterSpacing: '0.07em',
-          }}
-        >
-          www.horizons-garden.com
-        </p>
       </div>
 
       {/* White fade overlay */}
