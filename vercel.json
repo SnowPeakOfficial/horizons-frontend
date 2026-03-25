@@ -3,14 +3,6 @@
   "outputDirectory": "apps/web/dist",
   "installCommand": "echo 'skip root install'",
   "framework": null,
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "horizons-garden.com" }],
-      "destination": "https://www.horizons-garden.com/$1",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },

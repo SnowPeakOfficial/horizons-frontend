@@ -5,6 +5,7 @@
 
 import { create } from 'zustand';
 import flowerService from '../services/flowerService';
+import { deleteMediaFiles } from '../services/uploadService';
 import type { Flower, PlantFlowerRequest, FlowerDefinition } from '../types/api.types';
 import toast from 'react-hot-toast';
 
@@ -24,7 +25,7 @@ interface FlowerState {
   clearError: () => void;
 }
 
-export const useFlowerStore = create<FlowerState>((set) => ({
+export const useFlowerStore = create<FlowerState>((set, get) => ({
   flowers: [],
   flowerDefinitions: [],
   selectedFlower: null,
@@ -76,7 +77,20 @@ export const useFlowerStore = create<FlowerState>((set) => ({
   deleteFlower: async (flowerId: string) => {
     set({ isLoading: true, error: null });
     try {
+      // Collect all media URLs from the flower's content before deleting
+      const flower = get().flowers.find((f) => f.id === flowerId);
+      const mediaUrls = flower?.content?.flatMap((c) => [
+        c.imageUrl,
+        c.voiceUrl,
+        c.videoUrl,
+      ]) ?? [];
+
+      // Delete flower from DB first (source of truth)
       await flowerService.deleteFlower(flowerId);
+
+      // Clean up Firebase Storage files fire-and-forget (non-blocking)
+      deleteMediaFiles(mediaUrls);
+
       set((state) => ({
         flowers: state.flowers.filter((f) => f.id !== flowerId),
         selectedFlower: state.selectedFlower?.id === flowerId ? null : state.selectedFlower,

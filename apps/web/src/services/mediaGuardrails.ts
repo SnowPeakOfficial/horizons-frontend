@@ -72,14 +72,25 @@ function getMediaDuration(file: File): Promise<number> {
       | HTMLAudioElement;
     el.preload = 'metadata';
     const url = URL.createObjectURL(file);
+
+    const cleanup = (duration: number) => {
+      URL.revokeObjectURL(url);
+      resolve(duration);
+    };
+
+    // Timeout fallback: if metadata never loads (common on mobile for MP4/MOV),
+    // resolve with 0 so the size check still runs and the file isn't rejected.
+    const timeout = setTimeout(() => cleanup(0), 3000);
+
     el.src = url;
     el.onloadedmetadata = () => {
-      URL.revokeObjectURL(url);
-      resolve(el.duration);
+      clearTimeout(timeout);
+      cleanup(el.duration);
     };
     el.onerror = () => {
-      URL.revokeObjectURL(url);
-      resolve(Infinity); // fail open — size check will still protect
+      // Fail open — resolve 0 so size check protects instead of blocking all videos.
+      clearTimeout(timeout);
+      cleanup(0);
     };
   });
 }

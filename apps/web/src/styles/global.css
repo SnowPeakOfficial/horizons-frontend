@@ -84,6 +84,21 @@ select {
   font-size: inherit;
 }
 
+/* iOS Safari / WKWebView auto-zoom prevention
+ * Safari (and ALL iOS browsers — Chrome, Firefox, etc. use WKWebView under the hood)
+ * automatically zooms into any focused input/textarea/select whose font-size < 16px
+ * and never zooms back out on blur. Forcing 16px prevents this entirely.
+ *
+ * Note: @supports (-webkit-overflow-scrolling: touch) was removed in iOS 13 and
+ * no longer matches on modern devices. A plain mobile media query is reliable. */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 /* Images */
 img {
   max-width: 100%;
@@ -573,6 +588,42 @@ ul, ol {
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
+  }
+}
+
+/* ── Blog pages — responsive ── */
+@media (max-width: 768px) {
+  /* Blog index — single column card grid */
+  .blog-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Blog hero — tighter padding on mobile */
+  .blog-hero {
+    padding: 48px 20px 32px !important;
+  }
+
+  /* Blog post back button — side padding */
+  .blog-post-back {
+    padding: 20px 20px 0 !important;
+  }
+
+  /* Blog post header — side padding */
+  .blog-post-header {
+    padding: 20px 20px 0 !important;
+  }
+
+  /* Blog post body — side padding */
+  .blog-post-content {
+    padding: 0 20px 56px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screens — tighter still */
+  .blog-card-grid {
+    gap: 12px !important;
   }
 }
 

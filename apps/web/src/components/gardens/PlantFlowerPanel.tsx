@@ -16,6 +16,7 @@ import { Button, Input } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
+import { useAuthStore } from '../../stores/authStore';
 import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import flowerService from '../../services/flowerService';
 import gardenService from '../../services/gardenService';
@@ -67,7 +68,7 @@ function FlowerPreview({
 
 // Zod validation schema
 const plantFlowerFormSchema = z.object({
-  recipientName: z.string().max(50, 'Name must be 50 characters or less').optional().or(z.literal('')),
+  recipientName: z.string().min(1, "Recipient's name is required").max(50, 'Name must be 50 characters or less'),
   recipientEmail: z.string().refine((val) => !val || z.string().email().safeParse(val).success, {
     message: 'Please enter a valid email address'
   }),
@@ -89,6 +90,8 @@ interface PlantFlowerPanelProps {
   onClose: () => void;
   gardenId: string;
   userTier: string;
+  /** The current user's role in this garden — VIEWERs cannot plant */
+  userRole?: string;
   onPlantSuccess?: () => void;
   onPlacementModeChange?: (active: boolean, definition: FlowerDefinition | null) => void;
   onClearPosition?: () => void;
@@ -101,6 +104,10 @@ interface PlantFlowerPanelProps {
     flowerDefinition: FlowerDefinition;
     recipientName: string;
     message: string;
+    senderName?: string;
+    imagePreviewUrl?: string;
+    voicePreviewUrl?: string;
+    videoPreviewUrl?: string;
     onBack: () => void;
     onConfirm: () => void;
   }) => void;
@@ -111,6 +118,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onClose,
   gardenId,
   userTier,
+  userRole = 'CONTRIBUTOR',
   onPlantSuccess,
   onPlacementModeChange,
   onClearPosition,
@@ -118,6 +126,8 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onCancelPlacementStep,
   onLetterPreview,
 }) => {
+  const isViewer = userRole === 'VIEWER';
+  const { user } = useAuthStore();
   const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
   const [step, setStep] = useState(1);
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
@@ -155,6 +165,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     if (type === 'voice') { setVoiceFile(mediaFile); setVoiceProgress(null); }
     if (type === 'video') { setVideoFile(mediaFile); setVideoProgress(null); }
   };
+
+  // Scrollable content area ref — used to reset scroll position on step change
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Hidden file input refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -237,6 +250,13 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       handleReset();
     }
   }, [isOpen]);
+
+  // Scroll the content area back to the top whenever the step changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [step]);
 
   // Move to step 3 when position is placed
   useEffect(() => {
@@ -349,6 +369,21 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     setError('');
 
     try {
+      // Step 0: Add garden member BEFORE planting the flower.
+      // The backend uses a job to match flowers to garden members and send notification emails.
+      // The member must exist first so the job can find them when the flower is created.
+      if (recipientEmail) {
+        try {
+          await gardenService.addMember(gardenId, {
+            email: recipientEmail,
+            role: 'CONTRIBUTOR'
+          });
+        } catch (memberError) {
+          console.error('Failed to add member:', memberError);
+          // Continue anyway — garden invite failed but we can still plant the flower
+        }
+      }
+
       // Step 1: Plant the flower with seed message in content
       const plantData = {
         flowerDefinitionKey: selectedDefinition.key,
@@ -439,19 +474,6 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }
       }
       
-      // Step 3: Add garden member if email provided
-      if (recipientEmail) {
-        try {
-          await gardenService.addMember(gardenId, {
-            email: recipientEmail,
-            role: 'CONTRIBUTOR'
-          });
-        } catch (memberError) {
-          console.error('Failed to add member:', memberError);
-          // Continue anyway - flower was planted successfully
-        }
-      }
-      
       if (onPlantSuccess) {
         onPlantSuccess();
       }
@@ -504,7 +526,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }}
       >
         <h2 style={{ ...typography.styles.h4, margin: 0 }}>
-          Plant a Memory
+          {isViewer ? 'Garden Access' : 'Plant a Memory'}
         </h2>
         <button
           onClick={handleClose}
@@ -523,55 +545,197 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         </button>
       </div>
 
-      {/* Progress Indicator */}
-      <div
-        style={{
-          padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-          borderBottom: `1px solid ${theme.border.light}`,
-        }}
-      >
-        <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-          {[1, 2, 3, 4, 5].map((s) => (
-            <div
-              key={s}
-              style={{
-                flex: 1,
-                height: '5px',
-                background: s <= step 
-                  ? 'linear-gradient(90deg, #D4909A 0%, #E8A4A4 100%)' 
-                  : 'rgba(232, 180, 184, 0.15)',
-                borderRadius: '3px',
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: s <= step ? '0 2px 4px rgba(212, 144, 154, 0.3)' : 'none',
-              }}
-            />
-          ))}
-        </div>
+      {/* Progress Indicator — hidden for viewers */}
+      {!isViewer && (
         <div
           style={{
-            ...typography.styles.caption,
-            color: theme.text.secondary,
-            marginTop: theme.spacing.sm,
-            fontWeight: 600,
-            fontSize: '11px',
-            letterSpacing: '0.5px',
-            textTransform: 'uppercase',
+            padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+            borderBottom: `1px solid ${theme.border.light}`,
           }}
         >
-          Step {step} of 5
+          <div style={{ display: 'flex', gap: theme.spacing.sm }}>
+            {[1, 2, 3, 4, 5].map((s) => (
+              <div
+                key={s}
+                style={{
+                  flex: 1,
+                  height: '5px',
+                  background: s <= step 
+                    ? 'linear-gradient(90deg, #D4909A 0%, #E8A4A4 100%)' 
+                    : 'rgba(232, 180, 184, 0.15)',
+                  borderRadius: '3px',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: s <= step ? '0 2px 4px rgba(212, 144, 154, 0.3)' : 'none',
+                }}
+              />
+            ))}
+          </div>
+          <div
+            style={{
+              ...typography.styles.caption,
+              color: theme.text.secondary,
+              marginTop: theme.spacing.sm,
+              fontWeight: 600,
+              fontSize: '11px',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+            }}
+          >
+            Step {step} of 5
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content Area */}
       <div
+        ref={scrollContainerRef}
         style={{
           flex: 1,
           overflow: 'auto',
           padding: theme.spacing.xl,
         }}
       >
+        {/* Viewer blocked screen */}
+        {isViewer && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              minHeight: '100%',
+              padding: isMobile ? '16px 4px' : '0 8px',
+              gap: isMobile ? '20px' : '28px',
+            }}
+          >
+            {/* Illustration */}
+            <div
+              style={{
+                width: isMobile ? '80px' : '100px',
+                height: isMobile ? '80px' : '100px',
+                borderRadius: theme.radius.full,
+                background: theme.bg.gradient.rose,
+                border: `2px solid ${theme.border.medium}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: isMobile ? '36px' : '44px',
+                boxShadow: theme.shadow.md,
+                flexShrink: 0,
+              }}
+            >
+              🌷
+            </div>
+
+            {/* Text */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm }}>
+              <div style={{ ...typography.styles.h5, color: theme.text.primary, margin: 0 }}>
+                You're a viewer here
+              </div>
+              <div
+                style={{
+                  ...typography.styles.body,
+                  lineHeight: 1.6,
+                  color: theme.text.secondary,
+                  maxWidth: '280px',
+                }}
+              >
+                Only contributors and owners can plant flowers. Ask the garden owner to upgrade your access.
+              </div>
+            </div>
+
+            {/* Role pill */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: theme.spacing.sm,
+                padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+                borderRadius: theme.radius.full,
+                background: theme.colors.rose[100],
+                border: `1px solid ${theme.border.dark}`,
+                ...typography.styles.caption,
+                fontWeight: 600,
+                color: theme.colors.rose[700],
+                letterSpacing: '0.3px',
+                flexShrink: 0,
+              }}
+            >
+              <span style={{ fontSize: '14px' }}>👁</span>
+              Viewer access
+            </div>
+
+            {/* What you can do */}
+            <div
+              style={{
+                width: '100%',
+                padding: `${theme.spacing.lg} ${theme.spacing.xl}`,
+                borderRadius: theme.radius.lg,
+                background: theme.bg.gradient.warm,
+                border: `1px solid ${theme.border.medium}`,
+                textAlign: 'left',
+              }}
+            >
+              <div
+                style={{
+                  ...typography.styles.caption,
+                  fontWeight: 700,
+                  color: theme.colors.rose[700],
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.8px',
+                  marginBottom: theme.spacing.md,
+                }}
+              >
+                What you can do
+              </div>
+              {[
+                'View and explore this garden',
+                'Open and read flowers',
+                'Experience blooms & letters',
+              ].map((item) => (
+                <div
+                  key={item}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: theme.spacing.sm,
+                    ...typography.styles.body,
+                    color: theme.text.secondary,
+                    marginBottom: theme.spacing.sm,
+                  }}
+                >
+                  <span style={{ color: theme.colors.rose[600], fontSize: '14px', flexShrink: 0 }}>✓</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+
+            {/* Close button — full width on mobile to match panel footer buttons */}
+            <button
+              onClick={handleClose}
+              style={{
+                padding: `${theme.spacing.md} ${theme.spacing['2xl']}`,
+                width: isMobile ? '100%' : 'auto',
+                borderRadius: theme.radius.full,
+                background: `linear-gradient(135deg, ${theme.colors.rose[600]} 0%, ${theme.colors.rose[700]} 100%)`,
+                border: 'none',
+                cursor: 'pointer',
+                ...typography.styles.body,
+                fontWeight: 600,
+                color: theme.text.inverse,
+                boxShadow: theme.shadow.md,
+                letterSpacing: '0.2px',
+                flexShrink: 0,
+              }}
+            >
+              Got it
+            </button>
+          </div>
+        )}
+
         {/* Step 1: Choose Flower Type */}
-        {step === 1 && (
+        {!isViewer && step === 1 && (
           <div>
             <p style={{ ...typography.styles.body, color: theme.text.secondary, marginBottom: theme.spacing.lg }}>
               Choose a flower for this memory
@@ -857,10 +1021,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             {/* Recipient Name */}
             <Input
               {...register('recipientName')}
-              label="Who is this for? (optional)"
+              label="Who is this for?"
               placeholder="Recipient's name (e.g., Sarah)"
               error={errors.recipientName?.message}
-              helperText="This name will appear in the letter"
+              helperText="Required · This name will appear in the letter"
               fullWidth
             />
 
@@ -1129,6 +1293,10 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                           flowerDefinition: selectedDefinition,
                           recipientName: recipientName || '',
                           message: seedMessage || '',
+                          senderName: user?.name || '',
+                          imagePreviewUrl: imageFile?.previewUrl,
+                          voicePreviewUrl: voiceFile?.previewUrl,
+                          videoPreviewUrl: videoFile?.previewUrl,
                           onBack: () => setLetterTemplate(null),
                           onConfirm: () => setStep(5),
                         });
@@ -1362,82 +1530,95 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         )}
       </div>
 
-      {/* Footer Actions */}
-      <div
-        style={{
-          padding: theme.spacing.xl,
-          borderTop: `1px solid ${theme.border.light}`,
-          display: 'flex',
-          gap: theme.spacing.sm,
-        }}
-      >
-        {step === 1 && (
-          <>
-            <Button variant="ghost" onClick={handleClose} style={{ flex: 1 }}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleNextToPlacement} style={{ flex: 1 }}>
-              Next
-            </Button>
-          </>
-        )}
+      {/* Footer Actions — hidden for viewers (they have a "Got it" button in the content area) */}
+      {!isViewer && (
+        <div
+          style={{
+            padding: theme.spacing.xl,
+            borderTop: `1px solid ${theme.border.light}`,
+            display: 'flex',
+            gap: theme.spacing.sm,
+          }}
+        >
+          {step === 1 && (
+            <>
+              <Button variant="ghost" onClick={handleClose} style={{ flex: 1 }}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleNextToPlacement} style={{ flex: 1 }}>
+                Next
+              </Button>
+            </>
+          )}
 
-        {step === 2 && (
-          <>
-            <Button variant="ghost" onClick={() => setStep(1)} style={{ flex: 1 }}>
-              Back
-            </Button>
-          </>
-        )}
+          {step === 2 && (
+            <>
+              <Button variant="ghost" onClick={() => setStep(1)} style={{ flex: 1 }}>
+                Back
+              </Button>
+            </>
+          )}
 
-        {step === 3 && (
-          <>
-            <Button variant="ghost" onClick={() => {
-              setStep(2);
-              if (onClearPosition) {
-                onClearPosition();
-              }
-              if (onPlacementModeChange && selectedDefinition) {
-                onPlacementModeChange(true, selectedDefinition);
-              }
-            }} style={{ flex: 1 }}>
-              Back
-            </Button>
-            <Button variant="primary" onClick={() => setStep(4)} style={{ flex: 1 }}>
-              Next
-            </Button>
-          </>
-        )}
+          {step === 3 && (
+            <>
+              <Button variant="ghost" onClick={() => {
+                setStep(2);
+                if (onClearPosition) {
+                  onClearPosition();
+                }
+                if (onPlacementModeChange && selectedDefinition) {
+                  onPlacementModeChange(true, selectedDefinition);
+                }
+              }} style={{ flex: 1 }}>
+                Back
+              </Button>
+              <Button
+                variant="primary"
+                disabled={!recipientName?.trim() || !!errors.recipientName || !!errors.recipientEmail}
+                onClick={async () => {
+                  const valid = await trigger(['recipientName', 'recipientEmail']);
+                  if (valid) {
+                    setError('');
+                    setStep(4);
+                  }
+                }}
+                style={{ flex: 1 }}
+              >
+                Next
+              </Button>
+            </>
+          )}
 
-        {step === 4 && (
-          <>
-            <Button variant="ghost" onClick={() => setStep(3)} style={{ flex: 1 }}>
-              Back
-            </Button>
-            <Button variant="primary" onClick={() => {
-              if (!letterTemplate) {
-                setError('Please choose a letter theme to continue');
-                return;
-              }
-              setError('');
-              setStep(5);
-            }} style={{ flex: 1 }}>
-              Next
-            </Button>
-          </>
-        )}
+          {step === 4 && (
+            <>
+              <Button variant="ghost" onClick={() => setStep(3)} style={{ flex: 1 }}>
+                Back
+              </Button>
+              <Button variant="primary" onClick={() => {
+                if (!letterTemplate) {
+                  setError('Please choose a letter theme to continue');
+                  return;
+                }
+                setError('');
+                setStep(5);
+              }} style={{ flex: 1 }}>
+                Next
+              </Button>
+            </>
+          )}
 
-        {step === 5 && (
-          <>
-            <Button variant="ghost" onClick={() => setStep(4)} style={{ flex: 1 }}>
-              Back
-            </Button>
-            <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>
-              Plant
-            </Button>
-          </>
-        )}
-      </div>
+          {step === 5 && (
+            <>
+              <Button variant="ghost" onClick={() => setStep(4)} style={{ flex: 1 }}>
+                Back
+              </Button>
+              <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>
+                Plant
+              </Button>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Media Capture Modal */}
       <MediaCaptureModal

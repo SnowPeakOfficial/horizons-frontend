@@ -169,6 +169,7 @@ export const Footer: React.FC = () => {
                 <div style={columnTitleStyle}>Product</div>
                 <span style={linkStyle} onClick={() => navigate('/my-gardens')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>My Gardens</span>
                 <span style={linkStyle} onClick={() => navigate('/pricing')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Pricing</span>
+                <span style={linkStyle} onClick={() => navigate('/blog')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Blog</span>
               </div>
               {/* Col 2: Legal */}
               <div>
@@ -189,6 +190,7 @@ export const Footer: React.FC = () => {
                 <div style={columnTitleStyle}>Product</div>
                 <span style={linkStyle} onClick={() => navigate('/my-gardens')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>My Gardens</span>
                 <span style={linkStyle} onClick={() => navigate('/pricing')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Pricing</span>
+                <span style={linkStyle} onClick={() => navigate('/blog')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Blog</span>
               </div>
 
               {/* Legal */}
@@ -210,9 +212,21 @@ export const Footer: React.FC = () => {
         <div style={dividerStyle} />
 
         <div className="footer-bottom-row" style={bottomRowStyle}>
-          <span style={copyrightStyle}>
-            © {year} Horizons. All rights reserved.
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <span style={copyrightStyle}>
+              © {year} Horizons. All rights reserved.
+            </span>
+            <a
+              href="https://www.snow-peak.ca/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: '12px', color: '#9D8F99', textDecoration: 'none', transition: 'color 0.2s ease' }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#D4909A'; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#9D8F99'; }}
+            >
+              Powered by SnowPeak
+            </a>
+          </div>
           <div style={{ display: 'flex', gap: '20px' }}>
             <span
               style={{ ...linkStyle, marginBottom: 0, fontSize: '13px' }}

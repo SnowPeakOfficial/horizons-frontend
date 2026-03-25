@@ -35,6 +35,90 @@ import CalendarToday from '@mui/icons-material/CalendarToday';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import TouchApp from '@mui/icons-material/TouchApp';
 
+// ─── Garden Loading Screen ──────────────────────────────────────────────────
+function GardenLoadingScreen({ visible }: { visible: boolean }) {
+  const [mounted, setMounted] = React.useState(true);
+
+  // Keep mounted briefly after visible=false so the fade-out plays
+  useEffect(() => {
+    if (!visible) {
+      const t = setTimeout(() => setMounted(false), 500);
+      return () => clearTimeout(t);
+    }
+    // visible=true: re-mount immediately (no setState needed — initial value is true)
+  }, [visible]);
+
+  if (!mounted) return null;
+
+  return (
+    <>
+      <style>{`
+        @keyframes gls-fadeIn {
+          from { opacity: 0; transform: translateY(14px) scale(0.95); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes gls-pulse {
+          0%, 100% { opacity: 0.45; }
+          50%       { opacity: 0.75; }
+        }
+      `}</style>
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9998,
+          background: 'linear-gradient(180deg, #FDFCFA 0%, #FFF9F7 50%, #FFFFFF 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '28px',
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 0.45s ease',
+          pointerEvents: visible ? 'auto' : 'none',
+        }}
+      >
+        {/* Mesh gradient overlay — same as LetterRevealOverlay */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: `radial-gradient(circle at 20% 30%, rgba(232,180,188,0.08) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 70%, rgba(197,169,208,0.06) 0%, transparent 50%)`,
+          pointerEvents: 'none',
+        }} />
+
+        {/* Horizons wordmark */}
+        <img
+          src="/images/horizons-logo-wordmark.svg"
+          alt="Horizons"
+          style={{
+            height: 'clamp(96px, 14vw, 160px)',
+            width: 'auto',
+            userSelect: 'none',
+            pointerEvents: 'none',
+            animation: 'gls-fadeIn 0.8s cubic-bezier(0.16,1,0.3,1) forwards',
+          }}
+        />
+
+        {/* Caption */}
+        <div
+          style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: 'clamp(13px, 2vw, 15px)',
+            color: '#9D8F99',
+            letterSpacing: '0.08em',
+            animation: 'gls-pulse 2s ease-in-out infinite',
+          }}
+        >
+          Growing your garden…
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+
 export const GardenPage: React.FC = () => {
   const { gardenId, flowerId: routeFlowerId } = useParams<{ gardenId: string; flowerId?: string }>();
   const [searchParams] = useSearchParams();
@@ -50,7 +134,7 @@ export const GardenPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { currentGarden, fetchGardenById } = useGardenStore();
-  const { flowers, fetchFlowersByGarden } = useFlowerStore();
+  const { flowers, fetchFlowersByGarden, deleteFlower } = useFlowerStore();
 
   // Guest-mode state
   const [guestGarden, setGuestGarden] = useState<(typeof currentGarden) | null>(null);
@@ -72,6 +156,12 @@ export const GardenPage: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   // Email deep-link: show reveal overlay before opening the modal
   const [showRevealOverlay, setShowRevealOverlay] = useState(fromEmail && !!flowerId);
+  // Confetti fires only AFTER the overlay animation completes (onDone), not at mount time.
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  // Loading screen: starts true on first render, dismissed once the first fetch resolves
+  const [showFlowerLoading, setShowFlowerLoading] = useState(true);
+
   // Ref guard: prevents the deep-link flower from opening more than once
   const deepLinkOpenedRef = useRef(false);
   const orbitRef = useRef<OrbitControlsImpl>(null);
@@ -89,14 +179,23 @@ export const GardenPage: React.FC = () => {
     flowerDefinition: import('../types/api.types').FlowerDefinition;
     recipientName: string;
     message: string;
+    senderName?: string;
+    imagePreviewUrl?: string;
+    voicePreviewUrl?: string;
+    videoPreviewUrl?: string;
     onBack: () => void;
     onConfirm: () => void;
   } | null>(null);
 
   // True when the viewport is mobile-width (≤768px)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  // True at medium widths (≤1100px) — triggers compact buttons and hidden date stat
+  const [isCompact, setIsCompact] = useState(window.innerWidth <= 1100);
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsCompact(window.innerWidth <= 1100);
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -105,7 +204,11 @@ export const GardenPage: React.FC = () => {
   useEffect(() => {
     if (isGuestMode || !gardenId) return;
     fetchGardenById(gardenId);
-    fetchFlowersByGarden(gardenId);
+    fetchFlowersByGarden(gardenId).then(() => {
+      setShowFlowerLoading(false);
+    }).catch(() => {
+      setShowFlowerLoading(false);
+    });
   }, [gardenId, isGuestMode, fetchGardenById, fetchFlowersByGarden]);
 
   // --- Guest fetch (no auth header) ---
@@ -115,28 +218,37 @@ export const GardenPage: React.FC = () => {
       setGuestGarden(res.garden as typeof currentGarden);
       setGuestFlowers(res.garden.flowers ?? []);
       setGuestDisplayName(res.guestDisplayName);
+      setShowFlowerLoading(false);
     }).catch((err) => {
       console.error('Failed to load guest garden:', err);
+      setShowFlowerLoading(false);
     });
   }, [gardenId, guestToken, isGuestMode]);
 
-  // Auto-open the deep-link flower once flowers are loaded
+  // Auto-open the deep-link flower once flowers are loaded.
+  // For email deep-links: pre-set selectedFlower immediately so the FlowerDetailsModal
+  // is fully mounted and rendered DURING the overlay animation. When onDone() fires
+  // the overlay just lifts — the modal appears instantly with no visible delay.
   useEffect(() => {
     if (!flowerId || deepLinkOpenedRef.current || activeFlowers.length === 0) return;
     const target = activeFlowers.find((f) => f.id === flowerId);
     if (target) {
       deepLinkOpenedRef.current = true;
-      if (!fromEmail) {
+      if (fromEmail) {
+        // Pre-load: defer to next tick (satisfies ESLint) but still fires immediately —
+        // well before the 4.35s animation ends, so the modal is fully rendered when onDone() fires.
+        setTimeout(() => setSelectedFlower(target), 0);
+      } else {
         // Defer to avoid synchronous setState inside effect
         setTimeout(() => setSelectedFlower(target), 0);
       }
-      // fromEmail: overlay already showing; modal opens via onDone callback
     }
   }, [flowerId, activeFlowers, fromEmail]);
 
   const handlePlantSuccess = () => {
     if (gardenId) {
       fetchFlowersByGarden(gardenId);
+      fetchGardenById(gardenId); // refresh member count + members list
     }
   };
 
@@ -208,6 +320,9 @@ export const GardenPage: React.FC = () => {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing.md,
+    flex: 1,
+    minWidth: 0,
+    overflow: 'hidden',
   };
 
   const headerTitleStyle: React.CSSProperties = {
@@ -219,17 +334,23 @@ export const GardenPage: React.FC = () => {
     backgroundClip: 'text',
     fontWeight: 700,
     fontSize: '1.5rem',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: isCompact ? '160px' : '320px',
+    flexShrink: 1,
   };
 
   const headerStatsStyle: React.CSSProperties = {
     display: 'flex',
-    gap: theme.spacing.xl,
+    gap: isCompact ? theme.spacing.sm : theme.spacing.xl,
     alignItems: 'center',
-    marginLeft: theme.spacing.xl,
-    padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
+    marginLeft: isCompact ? theme.spacing.sm : theme.spacing.xl,
+    padding: `${theme.spacing.xs} ${isCompact ? theme.spacing.sm : theme.spacing.lg}`,
     background: 'rgba(255, 255, 255, 0.6)',
     borderRadius: theme.radius.full,
     border: '1px solid rgba(232, 180, 184, 0.2)',
+    flexShrink: 0,
   };
 
   const statItemStyle: React.CSSProperties = {
@@ -288,10 +409,12 @@ export const GardenPage: React.FC = () => {
                   <span>{activeGarden.members?.length || 0} members</span>
                 </div>
               )}
-              <div style={statItemStyle}>
-                <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
-                <span>{formatDate(activeGarden.createdAt)}</span>
-              </div>
+              {!isCompact && (
+                <div style={statItemStyle}>
+                  <CalendarToday sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
+                  <span>{formatDate(activeGarden.createdAt)}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -299,7 +422,7 @@ export const GardenPage: React.FC = () => {
         {/* Action Buttons — hidden in guest mode */}
         {!isGuestMode && (
           <div className="garden-header-actions" style={headerRightStyle}>
-            {isMobile ? (
+            {isCompact ? (
               <>
                 <button
                   onClick={() => setIsSettingsOpen(true)}
@@ -427,6 +550,13 @@ export const GardenPage: React.FC = () => {
         <Canvas
           shadows
           camera={{ position: [0, 25, 35], fov: 50 }}
+          gl={{
+            // Force consistent output across all browsers / mobile WebGL
+            outputColorSpace: 'srgb',
+            toneMapping: 4,           // THREE.ACESFilmicToneMapping = 4
+            toneMappingExposure: 1.2, // Slightly boosted — matches what desktop Chrome was showing
+            antialias: true,
+          }}
         >
           <GardenScene 
             config={GARDEN_CONFIGS.test_garden}
@@ -584,6 +714,7 @@ export const GardenPage: React.FC = () => {
         }}
         gardenId={gardenId || ''}
         userTier={user?.tier || 'FREE'}
+        userRole={currentGarden?.members?.find(m => m.userId === user?.id)?.role ?? (currentGarden?.ownerId === user?.id ? 'OWNER' : 'VIEWER')}
         onPlantSuccess={handlePlantSuccess}
         onPlacementModeChange={(active, definition) => {
           setIsPlacementMode(active);
@@ -605,6 +736,10 @@ export const GardenPage: React.FC = () => {
           flowerDefinition={letterPreviewParams.flowerDefinition}
           recipientName={letterPreviewParams.recipientName}
           message={letterPreviewParams.message}
+          senderName={letterPreviewParams.senderName}
+          imagePreviewUrl={letterPreviewParams.imagePreviewUrl}
+          voicePreviewUrl={letterPreviewParams.voicePreviewUrl}
+          videoPreviewUrl={letterPreviewParams.videoPreviewUrl}
           onBack={() => { letterPreviewParams.onBack(); setLetterPreviewParams(null); }}
           onConfirm={() => { letterPreviewParams.onConfirm(); setLetterPreviewParams(null); }}
         />
@@ -670,15 +805,19 @@ export const GardenPage: React.FC = () => {
         );
       })()}
 
-      {/* Email deep-link: cinematic reveal overlay */}
+      {/* Garden flower loading screen — shown on first load until flowers arrive */}
+      <GardenLoadingScreen visible={showFlowerLoading} />
+
+      {/* Email deep-link: cinematic reveal overlay.
+          The FlowerDetailsModal is already mounted in the background (selectedFlower is set
+          during the animation). When onDone fires we simply hide the overlay — the modal
+          appears immediately with no fetch delay. */}
       {showRevealOverlay && (
         <LetterRevealOverlay
           onDone={() => {
             setShowRevealOverlay(false);
-            if (flowerId) {
-              const target = activeFlowers.find((f) => f.id === flowerId);
-              if (target) setSelectedFlower(target);
-            }
+            // Fire confetti AFTER the overlay lifts so it plays over the visible letter
+            setShowConfetti(true);
           }}
         />
       )}
@@ -688,6 +827,7 @@ export const GardenPage: React.FC = () => {
         isOpen={!!selectedFlower}
         onClose={() => {
           setSelectedFlower(null);
+          setShowConfetti(false);
           // Return URL to garden level — preserve ?token= for guests so GardenRoute
           // doesn't redirect them to login when the modal closes.
           const params = guestToken ? `?token=${guestToken}` : '';
@@ -695,10 +835,15 @@ export const GardenPage: React.FC = () => {
         }}
         flower={selectedFlower}
         definition={selectedFlower ? FLOWER_DEFINITIONS[selectedFlower.flowerDefinition?.key?.toLowerCase() || 'daisy'] : null}
-        fromEmail={fromEmail && !!flowerId}
+        fromEmail={showConfetti}
+        currentUserId={user?.id}
+        gardenOwnerId={activeGarden?.ownerId}
         onDelete={async (fid) => {
-          // TODO: Implement flower deletion
-          console.log('Delete flower:', fid);
+          await deleteFlower(fid);
+          setSelectedFlower(null);
+          setShowConfetti(false);
+          const params = guestToken ? `?token=${guestToken}` : '';
+          navigate(`/garden/${gardenId}${params}`, { replace: true });
         }}
       />
 

@@ -8,6 +8,7 @@ import confetti from 'canvas-confetti';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Modal } from '../common/Modal';
+import { ConfirmationDialog } from '../common/ConfirmationDialog';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { Flower } from '../../types/api.types';
@@ -15,7 +16,6 @@ import type { FlowerDefinition } from '../../flowers/types';
 import { FLOWER_DEFINITIONS } from '../../flowers/types';
 import { FlowerBud } from '../../flowers/FlowerBud';
 import { resolveLetterTemplate } from '../../flowers/letterTemplates';
-import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 import CardGiftcard from '@mui/icons-material/CardGiftcard';
 import Image from '@mui/icons-material/Image';
@@ -24,13 +24,16 @@ import Videocam from '@mui/icons-material/Videocam';
 import Photo from '@mui/icons-material/Photo';
 import Spa from '@mui/icons-material/Spa';
 import Close from '@mui/icons-material/Close';
+import Delete from '@mui/icons-material/Delete';
 
 interface FlowerDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   flower: Flower | null;
   definition: FlowerDefinition | null;
-  onDelete?: (flowerId: string) => void;
+  onDelete?: (flowerId: string) => Promise<void>;
+  currentUserId?: string;
+  gardenOwnerId?: string;
   /** When true, shows a 2-second confetti burst over the letter (triggered by email deep-link) */
   fromEmail?: boolean;
 }
@@ -89,14 +92,14 @@ function HeartGarland({ garland, color }: { garland: string; color: string }) {
  */
 function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
   if (isMobile) {
-    // Pink header strip is 72px tall; center the logo+text within it
+    // Pink header strip is 88px tall; center the wordmark within it
     return (
       <div style={{
         position: 'absolute',
         top: '0',
         left: '0',
         right: '0',
-        height: '72px',
+        height: '88px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -105,20 +108,10 @@ function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
         pointerEvents: 'none',
       }}>
         <img
-          src="/images/horizons-logo.svg"
+          src="/images/horizons-logo-wordmark.svg"
           alt="Horizons"
-          style={{ width: '28px', height: '28px', opacity: 0.9, filter: 'brightness(0) invert(1)' }}
+          style={{ height: '32px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)', opacity: 0.5 }}
         />
-        <span style={{
-          fontFamily: typography.fontFamily.serif,
-          fontSize: '10px',
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.9)',
-          fontWeight: 500,
-        }}>
-          HORIZONS
-        </span>
       </div>
     );
   }
@@ -129,15 +122,13 @@ function HorizonsBranding({ isMobile }: { isMobile?: boolean }) {
       top: '36px',
       left: '50%',
       transform: 'translateX(-50%)',
-      fontFamily: typography.fontFamily.serif,
-      fontSize: '13px',
-      fontWeight: typography.fontWeight.normal,
-      letterSpacing: '0.15em',
-      textTransform: 'uppercase',
-      color: theme.text.tertiary,
       opacity: 0.5,
     }}>
-      HORIZONS
+      <img
+        src="/images/horizons-logo-wordmark.svg"
+        alt="Horizons"
+        style={{ height: '32px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)' }}
+      />
     </div>
   );
 }
@@ -189,15 +180,18 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   flower,
   definition,
   onDelete,
+  currentUserId,
+  gardenOwnerId,
   fromEmail = false,
 }) => {
-  const [showActions, setShowActions] = React.useState(false);
   const [mediaRevealed, setMediaRevealed] = React.useState(false);
   const [showGlow, setShowGlow] = React.useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const isMobile = window.innerWidth <= 768;
   // On mobile: use paddingTop on the outer frame so the pink header is always visible
   // (not scrollable away like margin-based approach)
-  const mobileFramePadding = isMobile ? '72px 14px 24px 14px' : '40px';
+  const mobileFramePadding = isMobile ? '88px 14px 40px 14px' : '40px';
   // Card margin: 0 on mobile (frame's paddingTop handles the spacing), 48px on desktop
   const mobileCardMarginTop = isMobile ? '0' : '48px';
 
@@ -373,6 +367,22 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
       {/* Outer Frame - color driven by letter template */}
       <div style={{ ...outerFrameStyle, background: tmpl.frameColor, padding: mobileFramePadding, ...(isMobile ? { borderRadius: '0', minHeight: '100dvh', boxSizing: 'border-box' } : {}) }}>
         
+        {/* Delete Button - only visible to planter or garden owner, beside the X */}
+        {onDelete && currentUserId && (
+          currentUserId === flower.plantedByUserId || currentUserId === gardenOwnerId
+        ) && (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            style={{ ...closeButtonStyle, background: `${tmpl.frameColor}66`, right: '52px' }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.4'; }}
+            aria-label="Delete flower"
+            title="Remove this flower"
+          >
+            <Delete sx={{ fontSize: 20, color: tmpl.accentDark }} />
+          </button>
+        )}
+
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -581,33 +591,32 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
           
           {/* Body Decorations - template-specific symbols scattered throughout the card */}
           <BodyDecorations decorations={tmpl.bodyDecorations} color={tmpl.accentColor} isMobile={isMobile} />
+
           
         </div>
-        
-        {/* Hidden Actions Menu */}
-        <div 
-          style={actionsMenuStyle}
-          onMouseEnter={() => setShowActions(true)}
-          onMouseLeave={() => setShowActions(false)}
-        >
-          <MoreHoriz sx={{ fontSize: 20, color: theme.colors.rose[600] }} />
-          
-          {showActions && onDelete && (
-            <div style={actionsDropdownStyle}>
-              <button
-                onClick={() => {
-                  if (window.confirm('Remove this flower from your garden?')) {
-                    onDelete(flower.id);
-                    onClose();
-                  }
-                }}
-                style={deleteButtonStyle}
-              >
-                Delete flower
-              </button>
-            </div>
-          )}
-        </div>
+
+        {/* Delete Confirmation Dialog */}
+        <ConfirmationDialog
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          onConfirm={async () => {
+            if (!onDelete) return;
+            setIsDeleting(true);
+            try {
+              await onDelete(flower.id);
+              setShowDeleteConfirm(false);
+              onClose();
+            } finally {
+              setIsDeleting(false);
+            }
+          }}
+          title="Remove this flower?"
+          message="This will permanently remove the flower and its letter from the garden. This action cannot be undone."
+          confirmText="Remove Flower"
+          cancelText="Keep It"
+          variant="danger"
+          isLoading={isDeleting}
+        />
         
       </div>
       
@@ -883,6 +892,7 @@ const quoteStyle: React.CSSProperties = {
 
 const signOffContainerStyle: React.CSSProperties = {
   marginTop: '56px',
+  paddingRight: '6px',
   textAlign: 'right',
 };
 
@@ -903,39 +913,3 @@ const senderNameStyle: React.CSSProperties = {
   lineHeight: 1.3,
 };
 
-const actionsMenuStyle: React.CSSProperties = {
-  position: 'absolute',
-  bottom: '16px',
-  left: '16px',
-  padding: '8px',
-  cursor: 'pointer',
-  borderRadius: '50%',
-  transition: theme.transition.fast,
-  opacity: 0.4,
-};
-
-const actionsDropdownStyle: React.CSSProperties = {
-  position: 'absolute',
-  bottom: '100%',
-  left: '0',
-  marginBottom: '8px',
-  background: '#FFFFFF',
-  borderRadius: '8px',
-  boxShadow: theme.shadow.lg,
-  padding: '4px',
-  minWidth: '140px',
-};
-
-const deleteButtonStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 16px',
-  background: 'transparent',
-  border: 'none',
-  borderRadius: '6px',
-  fontSize: '14px',
-  color: theme.colors.rose[700],
-  cursor: 'pointer',
-  textAlign: 'left',
-  fontFamily: typography.fontFamily.serif,
-  transition: theme.transition.fast,
-};

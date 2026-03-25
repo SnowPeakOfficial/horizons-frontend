@@ -82,7 +82,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           top: '50%',
           left: '50%',
           width: '100vw',
-          height: '100vh',
+          height: '100dvh',
           transform: 'translate(-50%, -50%)',
           transformOrigin: 'center center',
           animation: 'scaleUp 8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
@@ -236,7 +236,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             {/* Main Headline */}
             <h1
               style={{
-                fontSize: 'clamp(48px, 8vw, 96px)',
+                fontSize: 'clamp(36px, 8vw, 96px)',
                 fontFamily: typography.fontFamily.serif,
                 fontWeight: typography.fontWeight.normal,
                 color: theme.text.primary,
@@ -382,6 +382,9 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           .sakura-label-desktop { display: none !important; }
           .sakura-label-mobile-left { display: block !important; }
           .sakura-label-mobile-right { display: flex !important; }
+          .hero-section h1 { font-size: 32px !important; margin-bottom: 8px !important; }
+          .hero-section p { font-size: 16px !important; }
+          .hero-flower-wrapper { margin-top: -108px !important; }
         }
 
         /* Video: Fade out gradually */

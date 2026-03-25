@@ -32,6 +32,8 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
+  // Stores the MIME type actually used by MediaRecorder (varies by browser/OS)
+  const recordingMimeTypeRef = useRef<string>('video/webm');
 
   const [phase, setPhase] = useState<Phase>('preview');
   const [recordingSeconds, setRecordingSeconds] = useState(0);
@@ -111,11 +113,38 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
   const handleStartRecording = () => {
     if (!streamRef.current) return;
     chunksRef.current = [];
-    const mimeType = mode === 'voice' ? 'audio/webm' : 'video/webm';
-    const recorder = new MediaRecorder(streamRef.current, { mimeType });
+
+    // Pick a MIME type the current browser/OS actually supports.
+    // iOS Safari (WKWebView) only supports video/mp4 — video/webm throws NotSupportedError.
+    // Chrome/Firefox/Android support video/webm.
+    let mimeType: string;
+    if (mode === 'voice') {
+      mimeType = 'audio/webm';
+    } else {
+      // Prefer mp4 (iOS Safari compatible), fall back to webm (Chrome/Firefox)
+      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) {
+        mimeType = 'video/mp4;codecs=avc1';
+      } else if (MediaRecorder.isTypeSupported('video/mp4')) {
+        mimeType = 'video/mp4';
+      } else {
+        mimeType = 'video/webm';
+      }
+    }
+    recordingMimeTypeRef.current = mimeType;
+
+    let recorder: MediaRecorder;
+    try {
+      recorder = new MediaRecorder(streamRef.current, { mimeType });
+    } catch {
+      setPermissionError('Video recording is not supported on this browser. Try uploading a file instead.');
+      return;
+    }
+
     recorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
     recorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: mimeType });
+      // Use the base MIME type (strip codec params) for the Blob
+      const blobType = mimeType.split(';')[0];
+      const blob = new Blob(chunksRef.current, { type: blobType });
       setCapturedBlob(blob);
       setCapturedUrl(URL.createObjectURL(blob));
       setPhase('review');
@@ -142,8 +171,21 @@ export const MediaCaptureModal: React.FC<MediaCaptureModalProps> = ({
 
   const handleUse = () => {
     if (!capturedBlob) return;
-    const ext = mode === 'photo' ? 'jpg' : mode === 'voice' ? 'webm' : 'webm';
-    const mimeType = mode === 'photo' ? 'image/jpeg' : 'audio/webm';
+    // Use the MIME type that was actually recorded (mp4 on iOS, webm on desktop)
+    const actualMime = recordingMimeTypeRef.current.split(';')[0]; // strip codec params
+    let ext: string;
+    let mimeType: string;
+    if (mode === 'photo') {
+      ext = 'jpg';
+      mimeType = 'image/jpeg';
+    } else if (mode === 'voice') {
+      ext = 'webm';
+      mimeType = 'audio/webm';
+    } else {
+      // video — extension matches actual recorded format
+      ext = actualMime === 'video/mp4' ? 'mp4' : 'webm';
+      mimeType = actualMime;
+    }
     const file = new File([capturedBlob], `capture-${Date.now()}.${ext}`, { type: mimeType });
     onCapture(file);
     onClose();
