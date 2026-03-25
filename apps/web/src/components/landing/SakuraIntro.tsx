@@ -266,7 +266,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             >
               Plant memories as flowers.
               <br />
-              Return to them when you're ready.
+              Return to them whenever you want.
             </p>
 
             {/* CTA Buttons */}
