@@ -1,6 +1,6 @@
-// ── Timing (frames @ 30fps) — ~27.7s total = 830 frames ─────────────────────
+// ── Timing (frames @ 30fps) — ~30.2s total = 905 frames ─────────────────────
 export const FPS = 30;
-export const TOTAL_FRAMES = 830;
+export const TOTAL_FRAMES = 905;
 
 export const SCENE = {
   problem:  { start: 0,   dur: 105 },  // 0:00–0:03.5   dark problem hook
@@ -9,7 +9,7 @@ export const SCENE = {
   feat1:    { start: 305, dur: 150 },  // 0:10.2–0:15.2 send a memory
   feat2:    { start: 440, dur: 150 },  // 0:14.7–0:19.7 private garden (15f XFADE with feat1 end)
   feat3:    { start: 575, dur: 150 },  // 0:19.2–0:24.2 time capsule
-  cta:      { start: 725, dur: 105 },  // 0:24.2–0:27.7 CTA finale → white fade
+  cta:      { start: 725, dur: 180 },  // 0:24.2–0:30.2 CTA finale → white fade (6s)
 } as const;
 
 // ── Exact Horizons design-system colours (from theme.ts) ─────────────────────
