@@ -5,6 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
@@ -88,6 +89,110 @@ export const LandingPage: React.FC = () => {
         description="Plant memories that bloom forever. Horizons is a private 3D memory garden where you plant digital flowers to preserve your most meaningful moments, send timed messages to loved ones, and keep memories that actually last."
         ogImageAlt="Horizons — A private 3D memory garden app"
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is Horizons?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Horizons is a private 3D garden where you plant digital flowers to keep the moments that matter. Each flower holds a memory — a written message, a photo, a voice note, or a video. Some flowers open right away, sharing something with the people you care about immediately. Others can be set to bloom on a date you choose, so a moment arrives exactly when it's meant to."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is a blooming flower?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A blooming flower is a memory you save for a specific moment in the future. While it's still waiting to open, you can leave a small note for the recipient — a hint, a few words, something for them to hold onto while they wait. On the day it blooms, the flower opens and reveals everything inside: your full message, a photo, a voice note, or a video."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What can I put inside a flower?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can add a written message, a photo, a voice note, or a short video — or any combination. If the flower opens right away, everything is visible the moment it's opened. If you've set a bloom date, you can leave a small note that appears while the flower is still waiting, and then the full message and media come through when it blooms. You can also choose a letter theme: Romantic, Friendship, Family, Gratitude, Celebration, or Encouragement."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does sharing work? Does the recipient need an account?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You invite people into your garden by email. They'll get a link and can join for free. Once they're in, they can explore the garden and open any flowers planted for them. No paid plan is required to receive or view a flower."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I see a flower before it blooms?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No — and that's the point. Once you set a bloom date, the flower stays sealed until that day arrives. Even you won't be able to see what's inside until it opens. This is what gives the moment its weight — the waiting is part of it."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who is Horizons for?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Couples who want to share something more meaningful than a text. Parents capturing milestones as their children grow. Grandparents planting letters for grandchildren to open years from now. Friends who want to say something real. People going through grief who need a quiet place to remember. Anyone who has ever wanted to write to their future self — or leave something behind for someone they love."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I plant a flower for a milestone that is years away?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — there's no limit on how far in the future you can set a bloom date. Some people plant flowers set to open on a child's 18th birthday, on an anniversary a decade away, or on a date tied to someone who may not be around to deliver the message in person. The flower will wait as long as it needs to."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is Horizons free to start?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — no credit card required. The free plan gives you one private garden and lets you plant one flower per year, with all flower types and media options available. Pro unlocks up to 3 gardens, 50 flowers per year, 7 exclusive flower types, letter themes, and the ability to send a gift card with a flower. Premium (coming soon) expands to 30 gardens, 100 flowers per year, 3 rare flower types, and seasonal garden themes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the difference between Pro and Premium?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Pro is built for people who want to grow multiple gardens and plant more frequently — up to 3 gardens, 50 flowers a year, 7 exclusive flower types, all 6 letter themes, and the ability to send a gift card alongside a flower. Premium (coming soon) is the full experience: up to 30 gardens, 100 flowers a year, 3 additional rare flower varieties, and seasonal garden themes that change throughout the year."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I cancel my subscription at any time?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — cancel anytime from your profile, no questions asked. You keep full access until the end of your billing period."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who can see my garden and my memories?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Only the people you personally invite. Your garden is completely private by default — nothing is visible to the public, nothing is searchable, and no one can find or enter it without an invitation from you. You decide who gets in."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my data encrypted and safe?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Everything you store in Horizons is encrypted while it travels and while it rests. We never sell your data, never use your memories to train AI, and never share anything with third parties. What you plant here stays yours."
+              }
+            }
+          ]
+        })}</script>
+      </Helmet>
       {/* Navbar */}
       <Navbar />
       
@@ -936,7 +1041,7 @@ export const LandingPage: React.FC = () => {
                 {
                   Icon: CreditCardOutlinedIcon,
                   question: 'Can I cancel my subscription at any time?',
-                  answer: 'Yes — cancel anytime from your profile, no questions asked. You keep full access until the end of your billing period. Your memories and gardens are never deleted when you cancel; everything moves to the free plan limits, and nothing is lost.',
+                  answer: 'Yes — cancel anytime from your profile, no questions asked. You keep full access until the end of your billing period.',
                 },
                 /* Phase 5 — Trust & privacy */
                 {
