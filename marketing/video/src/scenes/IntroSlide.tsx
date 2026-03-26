@@ -8,7 +8,7 @@
  */
 import React from 'react';
 import { AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
-import { ASSETS, COLOR, FONT } from '../constants';
+import { ASSETS, COLOR, FONT } from '../constants'; // ASSETS kept for logoIcon
 
 export const IntroSlide: React.FC = () => {
   const frame = useCurrentFrame();
@@ -45,34 +45,6 @@ export const IntroSlide: React.FC = () => {
         gap: 24,
       }}
     >
-      {/* Same blurred hydrangea as ProblemScene — identical bg */}
-      <div
-        style={{
-          position: 'absolute',
-          right: -100,
-          bottom: -120,
-          opacity: 0.06,
-          filter: 'blur(24px)',
-          pointerEvents: 'none',
-        }}
-      >
-        <img
-          src={staticFile(ASSETS.hydrangea)}
-          alt=""
-          style={{ width: 800, height: 'auto' }}
-        />
-      </div>
-
-      {/* Same vignette as ProblemScene */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(ellipse at center, transparent 40%, rgba(10,6,14,0.6) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
-
       {/* Main line */}
       <p
         style={{

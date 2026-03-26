@@ -34,8 +34,8 @@ export const HorizonsPromo: React.FC = () => {
       {/* ── MUSIC ── StockTune "Ascent Of Ambitions" — royalty-free commercial use */}
       <Audio src={staticFile('videos/StockTune-Ascent Of Ambitions_1774493201.mp3')} volume={1.0} />
 
-      {/* ── SCENE 1: The Problem ── clean cut into IntroSlide */}
-      <Sequence from={SCENE.problem.start} durationInFrames={SCENE.problem.dur}>
+      {/* ── SCENE 1: The Problem ── stays alive through IntroSlide as the background layer */}
+      <Sequence from={SCENE.problem.start} durationInFrames={SCENE.problem.dur + SCENE.intro.dur}>
         <ProblemScene />
       </Sequence>
 
