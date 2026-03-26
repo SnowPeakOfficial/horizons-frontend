@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { blogPosts } from '../data/blogPosts';
+import { blogPosts, DEFAULT_AUTHOR } from '../data/blogPosts';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import SEO from '../components/common/SEO';
@@ -56,7 +56,7 @@ export const BlogPostPage: React.FC = () => {
     inLanguage: 'en',
     author: {
       '@type': 'Organization',
-      name: 'Horizons',
+      name: DEFAULT_AUTHOR,
       url: SITE,
     },
     publisher: {
@@ -182,6 +182,9 @@ export const BlogPostPage: React.FC = () => {
               {new Date(post.publishedAt + 'T12:00:00').toLocaleDateString('en-US', {
                 month: 'long', day: 'numeric', year: 'numeric',
               })}
+            </span>
+            <span style={{ fontSize: '13px', color: '#9D8F99' }}>
+              By <span style={{ fontWeight: 600, color: '#7A6B78' }}>{post.author ?? DEFAULT_AUTHOR}</span>
             </span>
           </div>
 

@@ -7,10 +7,15 @@ export interface BlogPost {
   publishedAt: string;
   readTime: string;
   category: string;
+  /** Defaults to 'Horizons Team' if not specified */
+  author?: string;
   headerImage: string;
   ctaText: string;
   content: () => React.ReactNode;
 }
+
+/** The default author byline used across all Horizons blog posts */
+export const DEFAULT_AUTHOR = 'Horizons Team';
 
 // ─── Shared inline styles for blog post body ────────────────────────────────
 const s = {

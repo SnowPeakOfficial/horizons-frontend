@@ -111,6 +111,14 @@ export const BlogPage: React.FC = () => {
           }}>
             Guides, ideas, and reflections on what it means to preserve the moments that matter.
           </p>
+          <p style={{
+            fontSize: '13px',
+            color: '#A899A6',
+            marginTop: '16px',
+            letterSpacing: '0.03em',
+          }}>
+            Written by the <span style={{ fontWeight: 600, color: '#8C7D8A' }}>Horizons Team</span>
+          </p>
         </div>
 
         {/* ── Card Grid ── */}
