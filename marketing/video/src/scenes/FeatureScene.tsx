@@ -38,10 +38,16 @@ export const FeatureScene: React.FC<FeatureSceneProps> = ({
   glowColor,
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
 
   // ── Scene fade-in ──────────────────────────────────────────────
   const sceneIn = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: 'clamp' });
+
+  // ── Scene fade-out — last 15 frames, consistent across all feature scenes ──
+  const sceneOut = interpolate(frame, [durationInFrames - 15, durationInFrames], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
 
   // ── Flower: rises slowly from bottom, blooms in ────────────────
   const flowerRise = interpolate(frame, [0, 90], [60, 0], { extrapolateRight: 'clamp' });
@@ -94,7 +100,7 @@ export const FeatureScene: React.FC<FeatureSceneProps> = ({
     <AbsoluteFill
       style={{
         overflow: 'hidden',
-        opacity: sceneIn,
+        opacity: sceneIn * sceneOut,
       }}
     >
       {/* ── Background: cream gradient + warm atmospheric tint ── */}
