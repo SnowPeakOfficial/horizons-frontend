@@ -1,7 +1,7 @@
 /**
- * Scene 1: The Problem (0–3.5s / 105 frames)
- * Dark warm plum background. Three problem lines appear one by one.
- * No logo, no brand — pure emotional hook before Horizons is revealed.
+ * Scene 1: The Problem (0–5.5s / 165 frames)
+ * Dark warm plum background. Three problem lines appear one by one,
+ * hold for a beat, then ALL dissolve simultaneously — a complete loss.
  *
  * Transition out: does NOT self-fade — HorizonsPromo overlaps the next scene
  * on top so we get a true cross-dissolve rather than a dip to dark.
@@ -40,6 +40,12 @@ export const ProblemScene: React.FC = () => {
       extrapolateRight: 'clamp',
     });
     return interpolate(progress, [0, 1], [18, 0]);
+  });
+
+  // All lines dissolve simultaneously — a complete loss — starting at frame 108
+  const textGroupOpacity = interpolate(frame, [108, 133], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
 
   return (
@@ -95,6 +101,7 @@ export const ProblemScene: React.FC = () => {
           padding: '0 80px',
           textAlign: 'center',
           maxWidth: 900,
+          opacity: textGroupOpacity,
         }}
       >
         {LINES.map((line, i) => (

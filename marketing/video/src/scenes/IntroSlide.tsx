@@ -17,8 +17,6 @@ export const IntroSlide: React.FC = () => {
   // Fade IN — dissolves over Problem scene (both are dark plum, seamless)
   const sceneIn = interpolate(frame, [0, 18], [0, 1], { extrapolateRight: 'clamp' });
 
-  // Warm glow grows slightly during this bridge
-  const bgProgress = interpolate(frame, [0, 75], [0, 1], { extrapolateRight: 'clamp' });
 
   // Main text springs in
   const textSp = spring({ frame: Math.max(0, frame - 8), fps, config: { damping: 20, stiffness: 65 } });
@@ -47,12 +45,30 @@ export const IntroSlide: React.FC = () => {
         gap: 24,
       }}
     >
-      {/* Warm glow — hinting at what's coming */}
+      {/* Same blurred hydrangea as ProblemScene — identical bg */}
+      <div
+        style={{
+          position: 'absolute',
+          right: -100,
+          bottom: -120,
+          opacity: 0.06,
+          filter: 'blur(24px)',
+          pointerEvents: 'none',
+        }}
+      >
+        <img
+          src={staticFile(ASSETS.hydrangea)}
+          alt=""
+          style={{ width: 800, height: 'auto' }}
+        />
+      </div>
+
+      {/* Same vignette as ProblemScene */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background: `radial-gradient(ellipse at 50% 60%, rgba(232, 180, 188, ${0.04 + bgProgress * 0.08}) 0%, transparent 65%)`,
+          background: 'radial-gradient(ellipse at center, transparent 40%, rgba(10,6,14,0.6) 100%)',
           pointerEvents: 'none',
         }}
       />

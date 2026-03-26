@@ -49,8 +49,8 @@ export const FeatureScene: React.FC<FeatureSceneProps> = ({
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  // Subtle continuous float
-  const floatY = Math.sin(frame * 0.03) * 9;
+  // No float — flower rises into position and holds still
+  const floatY = 0;
 
   // ── Glow bloom: expands as flower rises ───────────────────────
   const bloomScale = interpolate(frame, [0, 80], [0.6, 1], { extrapolateRight: 'clamp' });
