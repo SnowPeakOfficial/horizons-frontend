@@ -121,6 +121,16 @@ export const router = createBrowserRouter([
         element: <Navigate to="/my-gardens" replace />,
       },
 
+      // Settings → Profile redirect
+      {
+        path: '/settings',
+        element: <Navigate to="/profile" replace />,
+      },
+      {
+        path: '/settings/notifications',
+        element: <Navigate to="/profile" replace />,
+      },
+
       // Catch-all redirect
       {
         path: '*',

@@ -11,7 +11,6 @@ import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import subscriptionService from '../../services/subscriptionService';
 import Person from '@mui/icons-material/Person';
-import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import BugReport from '@mui/icons-material/BugReport';
 import MenuOutlined from '@mui/icons-material/MenuOutlined';
@@ -402,22 +401,6 @@ export const Navbar: React.FC = () => {
                   >
                     <Person sx={{ fontSize: 18 }} />
                     Profile
-                  </div>
-                  <div
-                    style={dropdownItemStyle}
-                    onClick={() => {
-                      setIsUserMenuOpen(false);
-                      navigate('/settings');
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = theme.colors.rose[50];
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = 'transparent';
-                    }}
-                  >
-                    <Settings sx={{ fontSize: 18 }} />
-                    Settings
                   </div>
                   <div style={{ height: '1px', background: theme.border.light, margin: `${theme.spacing.xs} 0` }} />
                   <div

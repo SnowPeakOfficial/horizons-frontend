@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -7,39 +7,45 @@ import authService from '../services/authService';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import PersonOutline from '@mui/icons-material/PersonOutline';
 import CheckCircle from '@mui/icons-material/CheckCircle';
+import NotificationsNoneOutlined from '@mui/icons-material/NotificationsNoneOutlined';
 
-// Common timezones for dropdown
-const TIMEZONES = [
-  'America/Vancouver','America/Edmonton','America/Winnipeg','America/Toronto',
-  'America/Halifax','America/St_Johns','America/New_York','America/Chicago',
-  'America/Denver','America/Los_Angeles','America/Anchorage','Pacific/Honolulu',
-  'Europe/London','Europe/Paris','Europe/Berlin','Europe/Rome','Europe/Madrid',
-  'Europe/Amsterdam','Europe/Stockholm','Europe/Warsaw','Europe/Helsinki',
-  'Asia/Tokyo','Asia/Seoul','Asia/Shanghai','Asia/Singapore','Asia/Dubai',
-  'Asia/Kolkata','Asia/Bangkok','Australia/Sydney','Australia/Melbourne',
-  'Pacific/Auckland','UTC',
-];
+interface EmailPrefs {
+  bloomNotifications: boolean;
+  invitations: boolean;
+  accountUpdates: boolean;
+  marketing: boolean;
+}
 
 export const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, loadUser } = useAuthStore();
   const [name, setName] = useState('');
-  const [timezone, setTimezone] = useState('');
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Email preferences state
+  const [prefs, setPrefs] = useState<EmailPrefs>({
+    bloomNotifications: true,
+    invitations: true,
+    accountUpdates: true,
+    marketing: false,
+  });
+  const [prefsSaving, setPrefsSaving] = useState(false);
+  const [prefsSuccess, setPrefsSuccess] = useState(false);
+  const [prefsError, setPrefsError] = useState<string | null>(null);
 
   // Populate form from user
   useEffect(() => {
     if (user) {
       setName(user.name || '');
-      setTimezone(user.timezone || 'UTC');
     }
   }, [user]);
 
-  // Load fresh profile on mount
+  // Load fresh profile + email prefs on mount
   useEffect(() => {
     loadUser();
+    authService.getEmailPreferences().then(setPrefs).catch(() => {});
   }, [loadUser]);
 
   const handleSave = async () => {
@@ -47,7 +53,7 @@ export const ProfilePage: React.FC = () => {
     setError(null);
     setSaveSuccess(false);
     try {
-      await authService.updateProfile({ name: name.trim(), timezone });
+      await authService.updateProfile({ name: name.trim() });
       await loadUser();
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
@@ -60,6 +66,25 @@ export const ProfilePage: React.FC = () => {
       setSaving(false);
     }
   };
+
+  const handleTogglePref = useCallback(async (key: keyof EmailPrefs) => {
+    const updated = { ...prefs, [key]: !prefs[key] };
+    setPrefs(updated);
+    setPrefsSaving(true);
+    setPrefsError(null);
+    setPrefsSuccess(false);
+    try {
+      await authService.updateEmailPreferences({ [key]: updated[key] });
+      setPrefsSuccess(true);
+      setTimeout(() => setPrefsSuccess(false), 2000);
+    } catch {
+      // Revert on failure
+      setPrefs(prefs);
+      setPrefsError('Failed to save. Please try again.');
+    } finally {
+      setPrefsSaving(false);
+    }
+  }, [prefs]);
 
   const getInitials = (n: string) =>
     n.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'U';
@@ -181,19 +206,6 @@ export const ProfilePage: React.FC = () => {
             </p>
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={labelStyle}>Timezone</label>
-            <select
-              style={{ ...inputStyle, cursor: 'pointer', appearance: 'auto' }}
-              value={timezone}
-              onChange={e => setTimezone(e.target.value)}
-            >
-              {TIMEZONES.map(tz => (
-                <option key={tz} value={tz}>{tz}</option>
-              ))}
-            </select>
-          </div>
-
           {error && (
             <p style={{ color: '#D4909A', fontSize: '13px', marginBottom: '12px' }}>{error}</p>
           )}
@@ -218,6 +230,66 @@ export const ProfilePage: React.FC = () => {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Email Notifications */}
+        <div style={sectionStyle}>
+          <div style={{ ...sectionTitleStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <NotificationsNoneOutlined sx={{ fontSize: 20, color: '#D4909A' }} />
+            Email Notifications
+            {prefsSuccess && (
+              <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px', color: '#6B8E6B', fontSize: '13px', fontWeight: 400 }}>
+                <CheckCircle sx={{ fontSize: 16 }} /> Saved
+              </span>
+            )}
+          </div>
+
+          {prefsError && (
+            <p style={{ color: '#D4909A', fontSize: '13px', marginBottom: '12px' }}>{prefsError}</p>
+          )}
+
+          {([ 
+            { key: 'bloomNotifications' as const, label: 'Bloom & flower notifications', desc: 'Get notified when flowers are planted or bloom in your gardens' },
+            { key: 'invitations' as const, label: 'Garden invitations', desc: 'When someone adds you to a garden' },
+            { key: 'accountUpdates' as const, label: 'Account updates', desc: 'Important emails about your account' },
+            { key: 'marketing' as const, label: 'News & updates', desc: 'Occasional product news from Horizons' },
+          ]).map(({ key, label, desc }) => (
+            <div
+              key={key}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '14px 0',
+                borderBottom: key !== 'marketing' ? '1px solid rgba(232, 180, 184, 0.15)' : 'none',
+              }}
+            >
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D3340', marginBottom: '2px' }}>{label}</div>
+                <div style={{ fontSize: '12px', color: '#B0A4AC' }}>{desc}</div>
+              </div>
+              {/* Toggle switch */}
+              <button
+                onClick={() => !prefsSaving && handleTogglePref(key)}
+                disabled={prefsSaving}
+                aria-pressed={prefs[key]}
+                style={{
+                  position: 'relative', flexShrink: 0, width: '44px', height: '24px',
+                  borderRadius: '999px', border: 'none', cursor: prefsSaving ? 'default' : 'pointer',
+                  background: prefs[key] ? 'linear-gradient(135deg, #E8B4B8 0%, #D4909A 100%)' : 'rgba(0,0,0,0.12)',
+                  transition: 'background 200ms ease',
+                  opacity: prefsSaving ? 0.7 : 1,
+                }}
+              >
+                <span style={{
+                  position: 'absolute', top: '3px',
+                  left: prefs[key] ? '23px' : '3px',
+                  width: '18px', height: '18px', borderRadius: '50%',
+                  background: '#FFFFFF',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                  transition: 'left 200ms ease',
+                }} />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
       <Footer />
