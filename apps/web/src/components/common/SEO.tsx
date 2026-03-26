@@ -116,7 +116,7 @@ export default function SEO({
         <meta property="article:section" content={articleSection} />
       )}
       {ogType === 'article' && (
-        <meta property="article:author" content="https://horizons-garden.com" />
+        <meta property="article:author" content="Horizons Team" />
       )}
 
       {/* ── Twitter Card ──────────────────────────────────────────── */}
