@@ -591,6 +591,42 @@ ul, ol {
   }
 }
 
+/* ── Blog pages — responsive ── */
+@media (max-width: 768px) {
+  /* Blog index — single column card grid */
+  .blog-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Blog hero — tighter padding on mobile */
+  .blog-hero {
+    padding: 48px 20px 32px !important;
+  }
+
+  /* Blog post back button — side padding */
+  .blog-post-back {
+    padding: 20px 20px 0 !important;
+  }
+
+  /* Blog post header — side padding */
+  .blog-post-header {
+    padding: 20px 20px 0 !important;
+  }
+
+  /* Blog post body — side padding */
+  .blog-post-content {
+    padding: 0 20px 56px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screens — tighter still */
+  .blog-card-grid {
+    gap: 12px !important;
+  }
+}
+
 /* Print Styles */
 @media print {
   * {

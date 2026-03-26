@@ -169,6 +169,7 @@ export const Footer: React.FC = () => {
                 <div style={columnTitleStyle}>Product</div>
                 <span style={linkStyle} onClick={() => navigate('/my-gardens')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>My Gardens</span>
                 <span style={linkStyle} onClick={() => navigate('/pricing')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Pricing</span>
+                <span style={linkStyle} onClick={() => navigate('/blog')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Blog</span>
               </div>
               {/* Col 2: Legal */}
               <div>
@@ -189,6 +190,7 @@ export const Footer: React.FC = () => {
                 <div style={columnTitleStyle}>Product</div>
                 <span style={linkStyle} onClick={() => navigate('/my-gardens')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>My Gardens</span>
                 <span style={linkStyle} onClick={() => navigate('/pricing')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Pricing</span>
+                <span style={linkStyle} onClick={() => navigate('/blog')} onMouseEnter={(e) => handleLinkHover(e, true)} onMouseLeave={(e) => handleLinkHover(e, false)}>Blog</span>
               </div>
 
               {/* Legal */}
