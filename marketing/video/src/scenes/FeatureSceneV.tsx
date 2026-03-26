@@ -118,11 +118,11 @@ export const FeatureSceneV: React.FC<FeatureSceneProps> = ({
       <div
         style={{
           position: 'absolute',
-          bottom: -120,
+          bottom: -160,
           left: '50%',
           transform: `translateX(-50%) scale(${bloomScale})`,
-          width: 900,
-          height: 900,
+          width: 1200,
+          height: 1200,
           borderRadius: '50%',
           background: `radial-gradient(ellipse, ${glowColor.replace(/[\d.]+\)$/, '0.45)')} 0%, ${glowColor.replace(/[\d.]+\)$/, '0.15)')} 35%, transparent 70%)`,
           filter: 'blur(50px)',
@@ -132,11 +132,11 @@ export const FeatureSceneV: React.FC<FeatureSceneProps> = ({
         }}
       />
 
-      {/* Flower — fills the portrait width perfectly */}
+      {/* Flower — wider than frame, bleeds off edges like landscape */}
       <div
         style={{
           position: 'absolute',
-          bottom: -80,
+          bottom: -85,
           left: '50%',
           transform: `translateX(-50%) translateY(${flowerRise}px)`,
           opacity: flowerOpacity,
@@ -148,7 +148,7 @@ export const FeatureSceneV: React.FC<FeatureSceneProps> = ({
           src={staticFile(flowerSrc)}
           alt=""
           style={{
-            width: 1080,
+            width: 1400,
             height: 'auto',
             filter: `drop-shadow(0 0 60px ${glowColor.replace(/[\d.]+\)$/, '0.50)')}) drop-shadow(0 20px 40px ${glowColor.replace(/[\d.]+\)$/, '0.30)')})`,
             userSelect: 'none',
@@ -190,7 +190,7 @@ export const FeatureSceneV: React.FC<FeatureSceneProps> = ({
           <span
             style={{
               fontFamily: FONT.sans,
-              fontSize: 22,
+              fontSize: 26,
               fontWeight: 600,
               letterSpacing: '0.18em',
               textTransform: 'uppercase' as const,
@@ -213,7 +213,7 @@ export const FeatureSceneV: React.FC<FeatureSceneProps> = ({
         <h2
           style={{
             fontFamily: FONT.serif,
-            fontSize: 68,
+            fontSize: 88,
             fontWeight: 300,
             color: COLOR.textPrimary,
             lineHeight: 1.12,
@@ -237,7 +237,7 @@ export const FeatureSceneV: React.FC<FeatureSceneProps> = ({
         <p
           style={{
             fontFamily: FONT.sans,
-            fontSize: 28,
+            fontSize: 34,
             fontWeight: 300,
             color: COLOR.textSecondary,
             lineHeight: 1.75,
