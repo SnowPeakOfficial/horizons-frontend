@@ -5,6 +5,9 @@
  * - Shows a shimmer skeleton placeholder while the image loads
  * - Smoothly fades in once the image is ready
  * - All standard <img> props are passed through
+ *
+ * When noSkeleton=true, renders a plain <img> with no wrapper so that CSS
+ * effects like drop-shadow / filters are never clipped by overflow:hidden.
  */
 
 import React, { useState } from 'react';
@@ -13,7 +16,7 @@ import type { CSSProperties } from 'react';
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   /** Optional background color for the placeholder skeleton. Defaults to a warm neutral. */
   placeholderColor?: string;
-  /** Optional: disable the skeleton/fade-in (e.g. for already-in-memory blob URLs) */
+  /** Optional: disable the skeleton/fade-in (e.g. for already-in-memory blob URLs or images with drop-shadow filters) */
   noSkeleton?: boolean;
 }
 
@@ -28,9 +31,25 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 }) => {
   const [loaded, setLoaded] = useState(false);
 
+  // When noSkeleton is true, skip the wrapper entirely so overflow:hidden
+  // doesn't clip drop-shadow / filter effects applied via the style prop.
+  if (noSkeleton) {
+    return (
+      <img
+        src={src}
+        alt={alt ?? ''}
+        loading="lazy"
+        decoding="async"
+        style={{ display: 'block', ...style }}
+        className={className}
+        {...rest}
+      />
+    );
+  }
+
   const wrapperStyle: CSSProperties = {
     position: 'relative',
-    display: 'inline-block',
+    display: 'block',
     overflow: 'hidden',
     // Inherit sizing from the passed style if it controls layout
     width: style?.width,
@@ -51,8 +70,8 @@ export const LazyImage: React.FC<LazyImageProps> = ({
       ${placeholderColor} 100%
     )`,
     backgroundSize: '200% 100%',
-    animation: loaded || noSkeleton ? 'none' : 'lazyimage-shimmer 1.6s ease-in-out infinite',
-    opacity: loaded || noSkeleton ? 0 : 1,
+    animation: loaded ? 'none' : 'lazyimage-shimmer 1.6s ease-in-out infinite',
+    opacity: loaded ? 0 : 1,
     transition: 'opacity 300ms ease',
     borderRadius: 'inherit',
     pointerEvents: 'none',
@@ -60,7 +79,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 
   const imgStyle: CSSProperties = {
     ...style,
-    opacity: loaded || noSkeleton ? 1 : 0,
+    opacity: loaded ? 1 : 0,
     transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1)',
     display: 'block',
     // Reset positioning props that are now on the wrapper
@@ -80,7 +99,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 
       <span style={wrapperStyle} className={className}>
         {/* Skeleton shimmer */}
-        {!noSkeleton && <span style={skeletonStyle} aria-hidden="true" />}
+        <span style={skeletonStyle} aria-hidden="true" />
 
         <img
           src={src}
