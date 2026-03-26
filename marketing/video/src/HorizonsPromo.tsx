@@ -16,7 +16,7 @@
  *   0:24.2–0:27.7 CTAFinaleScene → fade to white
  */
 import React from 'react';
-import { AbsoluteFill, Sequence } from 'remotion';
+import { AbsoluteFill, Audio, Sequence, staticFile } from 'remotion';
 import { ASSETS, COLOR, SCENE } from './constants';
 import { ProblemScene } from './scenes/ProblemScene';
 import { IntroSlide } from './scenes/IntroSlide';
@@ -30,6 +30,9 @@ const XFADE = 15;
 export const HorizonsPromo: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: COLOR.bgDark }}>
+
+      {/* ── MUSIC ── StockTune "Ascent Of Ambitions" — royalty-free commercial use */}
+      <Audio src={staticFile('videos/StockTune-Ascent Of Ambitions_1774493201.mp3')} volume={1.0} />
 
       {/* ── SCENE 1: The Problem ── clean cut into IntroSlide */}
       <Sequence from={SCENE.problem.start} durationInFrames={SCENE.problem.dur}>
