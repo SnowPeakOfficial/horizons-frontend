@@ -13,6 +13,7 @@ import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { Garden, GardenMember, GardenDefinition } from '../../types/api.types';
 import gardenService from '../../services/gardenService';
+import { useGardenStore } from '../../stores/gardenStore';
 import Edit from '@mui/icons-material/Edit';
 import People from '@mui/icons-material/People';
 import Settings from '@mui/icons-material/Settings';
@@ -47,6 +48,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
   onGardenDeleted,
 }) => {
   const navigate = useNavigate();
+  const { deleteGarden } = useGardenStore();
   const [activeTab, setActiveTab] = useState<TabType>('details');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -189,7 +191,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
     
     setIsLoading(true);
     try {
-      await gardenService.deleteGarden(garden.id);
+      await deleteGarden(garden.id);
       setShowDeleteConfirm(false);
       onGardenDeleted();
       onClose();

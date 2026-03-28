@@ -96,6 +96,29 @@ export function createPreviewUrl(file: File): string {
 }
 
 /**
+ * Parses the Firebase Storage object path from a full HTTPS download URL.
+ *
+ * Firebase download URLs look like:
+ *   https://firebasestorage.googleapis.com/v0/b/{bucket}/o/{encoded-path}?alt=media&token=...
+ *
+ * `ref(storage, url)` does NOT reliably accept these full HTTPS URLs — it needs
+ * either a `gs://` URI or a plain storage path. We extract and decode the path
+ * from the `/o/` segment so we can build a valid ref.
+ *
+ * Returns null for any URL that doesn't match the expected Firebase format.
+ */
+function getStorageRefFromDownloadUrl(url: string) {
+  try {
+    const match = url.match(/\/o\/(.+?)(\?|$)/);
+    if (!match) return null;
+    const storagePath = decodeURIComponent(match[1]);
+    return ref(storage, storagePath);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Deletes a list of Firebase Storage files by their download URLs.
  * Fails silently per file — a missing or already-deleted file won't block the rest.
  * Safe to call fire-and-forget (no need to await at call site).
@@ -107,8 +130,11 @@ export async function deleteMediaFiles(
   await Promise.allSettled(
     validUrls.map(async (url) => {
       try {
-        // Firebase accepts full download URLs — it parses the storage path internally
-        const fileRef = ref(storage, url);
+        const fileRef = getStorageRefFromDownloadUrl(url);
+        if (!fileRef) {
+          console.warn("Could not parse Firebase storage path from URL:", url);
+          return;
+        }
         await deleteObject(fileRef);
       } catch (e) {
         // File may already be deleted or not exist — log and continue

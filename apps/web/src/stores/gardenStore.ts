@@ -5,6 +5,8 @@
 
 import { create } from 'zustand';
 import gardenService from '../services/gardenService';
+import flowerService from '../services/flowerService';
+import { deleteMediaFiles } from '../services/uploadService';
 import type { Garden, CreateGardenRequest, UpdateGardenRequest } from '../types/api.types';
 
 interface GardenState {
@@ -126,7 +128,21 @@ export const useGardenStore = create<GardenState>((set) => ({
   deleteGarden: async (id: string) => {
     set({ isLoading: true, error: null });
     try {
+      // Fetch all flowers with content BEFORE deleting the garden, so we can
+      // collect the Firebase Storage URLs and clean them up afterwards.
+      // If this fails (e.g. network issue), we still proceed — media cleanup
+      // is fire-and-forget and should never block the delete itself.
+      const flowers = await flowerService.getGardenFlowers(id, true).catch(() => []);
+      const mediaUrls = flowers.flatMap((f) =>
+        (f.content ?? []).flatMap((c) => [c.imageUrl, c.voiceUrl, c.videoUrl])
+      );
+
+      // Delete garden from DB first (source of truth — cascades to flowers/content in DB)
       await gardenService.deleteGarden(id);
+
+      // Clean up Firebase Storage files fire-and-forget (non-blocking)
+      deleteMediaFiles(mediaUrls);
+
       set((state) => ({
         gardens: state.gardens.filter((g) => g.id !== id),
         currentGarden: state.currentGarden?.id === id ? null : state.currentGarden,
