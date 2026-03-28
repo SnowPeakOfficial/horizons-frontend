@@ -7,7 +7,9 @@ import React, { useEffect, useState } from 'react';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import LocalFloristRoundedIcon from '@mui/icons-material/LocalFloristRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import { useNavigate } from 'react-router-dom';
+import LockOutlined from '@mui/icons-material/LockOutlined';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -20,13 +22,24 @@ import type { Garden } from '../types/api.types';
 
 export const MyGardensPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuthStore();
   const { gardens, isLoading, fetchGardens, createGarden } = useGardenStore();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [showAccessDenied, setShowAccessDenied] = useState(
+    !!(location.state as { accessDenied?: boolean } | null)?.accessDenied
+  );
 
   useEffect(() => {
     fetchGardens();
   }, [fetchGardens]);
+
+  // Clear the navigation state so refreshing doesn't re-show the banner
+  useEffect(() => {
+    if (showAccessDenied) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [showAccessDenied]);
 
   const handleCreateGarden = async (title: string) => {
     await createGarden({ title });
@@ -207,6 +220,91 @@ export const MyGardensPage: React.FC = () => {
   return (
     <div style={containerStyle}>
       <Navbar />
+
+      {/* Access Denied Banner — shown when redirected from an unauthorized garden */}
+      {showAccessDenied && (
+        <div
+          style={{
+            margin: '0 auto',
+            marginTop: '16px',
+            maxWidth: theme.maxWidth.containerWide,
+            width: '100%',
+            padding: '0 24px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '14px 18px',
+              borderRadius: '14px',
+              background: 'rgba(255,255,255,0.92)',
+              border: '1px solid rgba(212, 144, 154, 0.35)',
+              boxShadow: '0 4px 16px rgba(212, 144, 154, 0.12)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+            }}
+          >
+            {/* Icon */}
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #FFF0F3 0%, #FFE0E8 100%)',
+              border: '1px solid rgba(212, 144, 154, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              <LockOutlined sx={{ fontSize: 18, color: '#D4909A' }} />
+            </div>
+
+            {/* Text */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontFamily: '"Inter", sans-serif',
+                fontSize: '14px',
+                fontWeight: 600,
+                color: '#3D3340',
+                marginBottom: '2px',
+              }}>
+                Access denied
+              </div>
+              <div style={{
+                fontFamily: '"Inter", sans-serif',
+                fontSize: '13px',
+                color: '#9D8F99',
+                lineHeight: 1.4,
+              }}>
+                You don't have access to that garden. It may be private or belong to someone else.
+              </div>
+            </div>
+
+            {/* Dismiss */}
+            <button
+              onClick={() => setShowAccessDenied(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#9D8F99',
+                borderRadius: '6px',
+                flexShrink: 0,
+              }}
+              aria-label="Dismiss"
+            >
+              <CloseRounded sx={{ fontSize: 18 }} />
+            </button>
+          </div>
+        </div>
+      )}
 
       <main style={{ ...contentStyle, flex: 1, width: '100%', boxSizing: 'border-box' }}>
         {/* Page Header */}

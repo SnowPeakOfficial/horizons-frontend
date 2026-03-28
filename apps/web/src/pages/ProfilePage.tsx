@@ -58,9 +58,15 @@ export const ProfilePage: React.FC = () => {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err: unknown) {
-      const msg = err && typeof err === 'object' && 'message' in err
-        ? String((err as { message: string }).message)
-        : 'Failed to save. Please try again.';
+      const e = err as { message?: string; statusCode?: number; error?: string };
+      let msg = 'Unable to save your changes. Please try again.';
+      if (e.error === 'NETWORK_ERROR' || e.statusCode === 0) {
+        msg = "We're having trouble reaching our servers. Please check your internet connection.";
+      } else if (e.statusCode && e.statusCode >= 500) {
+        msg = 'Something went wrong on our end. Please try again in a moment.';
+      } else if (e.message) {
+        msg = e.message;
+      }
       setError(msg);
     } finally {
       setSaving(false);

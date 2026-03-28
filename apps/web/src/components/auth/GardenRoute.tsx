@@ -20,7 +20,9 @@ export const GardenRoute: React.FC<GardenRouteProps> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const hasGuestToken = !!searchParams.get('token');
+  const tokenParam = searchParams.get('token');
+  // Token must be a non-empty string (not just '?token=')
+  const hasGuestToken = typeof tokenParam === 'string' && tokenParam.trim().length > 0;
 
   // Allow through: authenticated users OR guests with a valid token
   if (isAuthenticated || hasGuestToken) {

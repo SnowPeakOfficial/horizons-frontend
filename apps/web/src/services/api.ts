@@ -64,7 +64,7 @@ api.interceptors.response.use(
       console.error('❌ Network error:', error.message);
       return Promise.reject({
         statusCode: 0,
-        message: 'Cannot connect to server. Please ensure the backend is running at ' + API_BASE_URL,
+        message: 'We\'re having trouble reaching our servers. Please check your internet connection and try again.',
         error: 'NETWORK_ERROR',
         timestamp: new Date().toISOString(),
         path: error.config?.url || '',

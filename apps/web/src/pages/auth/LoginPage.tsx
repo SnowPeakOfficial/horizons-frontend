@@ -11,7 +11,6 @@ import { useAuthStore } from '../../stores/authStore';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { ApiError } from '../../types/api.types';
-import toast from 'react-hot-toast';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -56,24 +55,25 @@ export const LoginPage: React.FC = () => {
     try {
       console.log('🔐 Attempting login for:', formData.email);
       await login({ email: formData.email.trim(), password: formData.password });
-      toast.success('Welcome back!');
       const redirectTo = searchParams.get('redirect');
       navigate(redirectTo ? decodeURIComponent(redirectTo) : '/my-gardens');
     } catch (error: unknown) {
       console.error('❌ Login error:', error);
       
-      // Handle specific error cases
+      // Handle specific error cases inline (no toast)
       const err = error as ApiError;
       if (err.statusCode === 401) {
-        setFormError('Invalid email or password. Please try again.');
+        setFormError('Incorrect email or password. Please double-check and try again.');
       } else if (err.statusCode === 429) {
-        toast.error('Too many login attempts. Please try again later.');
+        setFormError('Too many sign-in attempts. Please wait a few minutes before trying again.');
       } else if (err.statusCode === 0 || err.error === 'NETWORK_ERROR') {
-        toast.error('Cannot connect to server. Please check if backend is running.');
+        setFormError("We're having trouble reaching our servers. Please check your internet connection and try again.");
+      } else if (err.statusCode && err.statusCode >= 500) {
+        setFormError('Something went wrong on our end. Please try again in a moment.');
       } else if (err.message) {
-        toast.error(err.message);
+        setFormError(err.message);
       } else {
-        toast.error('Login failed. Please try again.');
+        setFormError('Unable to sign in. Please try again.');
       }
     } finally {
       setIsLoading(false);

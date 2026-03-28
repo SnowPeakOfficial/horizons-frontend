@@ -362,7 +362,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     // Trigger form validation
     const isValid = await trigger();
     if (!isValid) {
-      setError('Something needs a little attention');
+      setError('Please fill in the required fields above before continuing.');
       return;
     }
 
@@ -481,7 +481,8 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       
       handleClose();
     } catch (err) {
-      setError((err as Error).message || 'Failed to plant flower');
+      // flowerStore already maps errors to user-friendly messages and re-throws as Error
+      setError((err as Error).message || 'Unable to plant this flower. Please try again.');
     } finally {
       setIsLoading(false);
     }

@@ -11,7 +11,6 @@ import { useAuthStore } from '../../stores/authStore';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { ApiError } from '../../types/api.types';
-import toast from 'react-hot-toast';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,6 +30,7 @@ export const RegisterPage: React.FC = () => {
     password?: string;
     confirmPassword?: string;
   }>({});
+  const [formError, setFormError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +75,7 @@ export const RegisterPage: React.FC = () => {
 
     setIsLoading(true);
     setErrors({});
+    setFormError('');
 
     try {
       console.log('📝 Attempting registration for:', formData.email);
@@ -83,24 +84,25 @@ export const RegisterPage: React.FC = () => {
         email: formData.email.trim(),
         password: formData.password,
       });
-      toast.success('Welcome to Horizons!');
       navigate('/my-gardens');
     } catch (error: unknown) {
       console.error('❌ Registration error:', error);
       
-      // Handle specific error cases
+      // Handle specific error cases inline (no toast)
       const err = error as ApiError;
       if (err.statusCode === 409) {
-        toast.error('An account with this email already exists');
-        setErrors({ email: 'Email already in use' });
+        setErrors({ email: 'An account with this email already exists' });
+        setFormError('An account with this email already exists. Try signing in instead.');
       } else if (err.statusCode === 400) {
-        toast.error('Invalid registration data. Please check your inputs.');
+        setFormError('Some of your information looks incorrect. Please review the form and try again.');
       } else if (err.statusCode === 0 || err.error === 'NETWORK_ERROR') {
-        toast.error('Cannot connect to server. Please check if backend is running.');
+        setFormError("We're having trouble reaching our servers. Please check your internet connection and try again.");
+      } else if (err.statusCode && err.statusCode >= 500) {
+        setFormError('Something went wrong on our end. Please try again in a moment.');
       } else if (err.message) {
-        toast.error(err.message);
+        setFormError(err.message);
       } else {
-        toast.error('Registration failed. Please try again.');
+        setFormError('Unable to create your account. Please try again.');
       }
     } finally {
       setIsLoading(false);
@@ -211,6 +213,12 @@ export const RegisterPage: React.FC = () => {
               fullWidth
               autoComplete="new-password"
             />
+
+            {formError && (
+              <p style={{ color: '#DC2626', fontSize: '14px', textAlign: 'center', margin: 0 }}>
+                {formError}
+              </p>
+            )}
 
             <Button
               type="submit"

@@ -6,13 +6,13 @@
 import { create } from 'zustand';
 import gardenService from '../services/gardenService';
 import type { Garden, CreateGardenRequest, UpdateGardenRequest } from '../types/api.types';
-import toast from 'react-hot-toast';
 
 interface GardenState {
   gardens: Garden[];
   currentGarden: Garden | null;
   isLoading: boolean;
   error: string | null;
+  successMessage: string | null;
 
   // Actions
   fetchGardens: () => Promise<void>;
@@ -22,6 +22,7 @@ interface GardenState {
   deleteGarden: (id: string) => Promise<void>;
   setCurrentGarden: (garden: Garden | null) => void;
   clearError: () => void;
+  clearSuccess: () => void;
 }
 
 export const useGardenStore = create<GardenState>((set) => ({
@@ -29,6 +30,7 @@ export const useGardenStore = create<GardenState>((set) => ({
   currentGarden: null,
   isLoading: false,
   error: null,
+  successMessage: null,
 
   fetchGardens: async () => {
     set({ isLoading: true, error: null });
@@ -36,9 +38,12 @@ export const useGardenStore = create<GardenState>((set) => ({
       const gardens = await gardenService.getMyGardens();
       set({ gardens, isLoading: false });
     } catch (error) {
-      const errorMsg = (error as Error).message || 'Failed to fetch gardens';
+      const err = error as { message?: string; statusCode?: number; error?: string };
+      let errorMsg = 'Unable to load your gardens. Please try again.';
+      if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
+        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+      }
       set({ error: errorMsg, isLoading: false });
-      toast.error(errorMsg);
     }
   },
 
@@ -48,9 +53,21 @@ export const useGardenStore = create<GardenState>((set) => ({
       const garden = await gardenService.getGarden(id);
       set({ currentGarden: garden, isLoading: false });
     } catch (error) {
-      const errorMsg = (error as Error).message || 'Failed to fetch garden';
+      const err = error as { message?: string; status?: number; statusCode?: number; response?: { status?: number }; error?: string };
+      const status = err.status ?? err.response?.status ?? err.statusCode;
+      let errorMsg = 'Unable to load this garden. Please try again.';
+      if (err.error === 'NETWORK_ERROR' || status === 0) {
+        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+      } else if (status === 403 || status === 401) {
+        errorMsg = "You don't have access to this garden.";
+      } else if (status === 404) {
+        errorMsg = "This garden doesn't exist or may have been deleted.";
+      }
       set({ error: errorMsg, isLoading: false, currentGarden: null });
-      toast.error(errorMsg);
+      // Re-throw so GardenPage can handle 403 with a redirect (no toast)
+      const enhanced = new Error(errorMsg) as Error & { status?: number };
+      enhanced.status = status;
+      throw enhanced;
     }
   },
 
@@ -61,14 +78,22 @@ export const useGardenStore = create<GardenState>((set) => ({
       set((state) => ({
         gardens: [...state.gardens, newGarden],
         isLoading: false,
+        successMessage: 'Garden created! 🌸',
       }));
-      toast.success('Garden created successfully! 🌸');
       return newGarden;
     } catch (error) {
-      const errorMsg = (error as Error).message || 'Failed to create garden';
+      const err = error as { message?: string; statusCode?: number; error?: string };
+      let errorMsg = 'Unable to create your garden. Please try again.';
+      if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
+        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+      } else if (err.statusCode === 403) {
+        // Pass through tier limit messages as-is — they're already user-friendly
+        errorMsg = err.message || "You've reached your garden limit. Upgrade your plan to create more gardens.";
+      } else if (err.statusCode && err.statusCode >= 500) {
+        errorMsg = 'Something went wrong on our end. Please try again in a moment.';
+      }
       set({ error: errorMsg, isLoading: false });
-      toast.error(errorMsg);
-      throw error;
+      throw new Error(errorMsg);
     }
   },
 
@@ -80,14 +105,21 @@ export const useGardenStore = create<GardenState>((set) => ({
         gardens: state.gardens.map((g) => (g.id === id ? updatedGarden : g)),
         currentGarden: state.currentGarden?.id === id ? updatedGarden : state.currentGarden,
         isLoading: false,
+        successMessage: 'Garden updated!',
       }));
-      toast.success('Garden updated successfully!');
       return updatedGarden;
     } catch (error) {
-      const errorMsg = (error as Error).message || 'Failed to update garden';
+      const err = error as { message?: string; statusCode?: number; error?: string };
+      let errorMsg = 'Unable to update this garden. Please try again.';
+      if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
+        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+      } else if (err.statusCode === 403) {
+        errorMsg = err.message || "You don't have permission to update this garden.";
+      } else if (err.statusCode && err.statusCode >= 500) {
+        errorMsg = 'Something went wrong on our end. Please try again in a moment.';
+      }
       set({ error: errorMsg, isLoading: false });
-      toast.error(errorMsg);
-      throw error;
+      throw new Error(errorMsg);
     }
   },
 
@@ -99,13 +131,20 @@ export const useGardenStore = create<GardenState>((set) => ({
         gardens: state.gardens.filter((g) => g.id !== id),
         currentGarden: state.currentGarden?.id === id ? null : state.currentGarden,
         isLoading: false,
+        successMessage: 'Garden deleted',
       }));
-      toast.success('Garden deleted');
     } catch (error) {
-      const errorMsg = (error as Error).message || 'Failed to delete garden';
+      const err = error as { message?: string; statusCode?: number; error?: string };
+      let errorMsg = 'Unable to delete this garden. Please try again.';
+      if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
+        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+      } else if (err.statusCode === 403) {
+        errorMsg = 'Only the garden owner can delete this garden.';
+      } else if (err.statusCode && err.statusCode >= 500) {
+        errorMsg = 'Something went wrong on our end. Please try again in a moment.';
+      }
       set({ error: errorMsg, isLoading: false });
-      toast.error(errorMsg);
-      throw error;
+      throw new Error(errorMsg);
     }
   },
 
@@ -115,5 +154,9 @@ export const useGardenStore = create<GardenState>((set) => ({
 
   clearError: () => {
     set({ error: null });
+  },
+
+  clearSuccess: () => {
+    set({ successMessage: null });
   },
 }));
