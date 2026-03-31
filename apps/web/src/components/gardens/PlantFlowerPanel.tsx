@@ -99,6 +99,8 @@ interface PlantFlowerPanelProps {
   placedPosition: { x: number; y: number; z: number } | null;
   /** Registration fn: parent passes a setter; panel calls it with its cancel handler */
   onCancelPlacementStep?: (registerFn: () => void) => void;
+  /** Called when the background planting process starts/finishes — parent can show a spinner */
+  onPlantingStateChange?: (isPlanting: boolean) => void;
   /** Called when user picks a letter template — parent renders the preview modal at the top level */
   onLetterPreview?: (params: {
     templateKey: LetterTemplateKey;
@@ -125,11 +127,12 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onClearPosition,
   placedPosition,
   onCancelPlacementStep,
+  onPlantingStateChange,
   onLetterPreview,
 }) => {
   const isViewer = userRole === 'VIEWER';
   const { user } = useAuthStore();
-  const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
+  const { flowerDefinitions, plantFlower, pushFlower, fetchFlowerDefinitions } = useFlowerStore();
   const [step, setStep] = useState(1);
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
   const [flowerType, setFlowerType] = useState<FlowerType>('STANDARD');
@@ -369,6 +372,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     // Close the panel immediately so it doesn't sit open while the request processes
     handleClose();
 
+    // Show the planting spinner overlay in GardenPage
+    onPlantingStateChange?.(true);
+
     try {
       // Step 0: Add garden member BEFORE planting the flower.
       // The backend uses a job to match flowers to garden members and send notification emails.
@@ -475,12 +481,21 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }
       }
       
+      // Now that all uploads and addContent calls are done, fetch the fully-populated
+      // flower from the backend and add it to the store. This ensures the flower appears
+      // in the garden with all its content (text + media URLs) already attached.
+      const finalFlower = await flowerService.getFlower(plantedFlower.id);
+      pushFlower(finalFlower);
+
       if (onPlantSuccess) {
         onPlantSuccess();
       }
     } catch (err) {
       // Panel is already closed — show error as a toast instead
       toast.error((err as Error).message || 'Unable to plant this flower. Please try again.');
+    } finally {
+      // Always hide the spinner, whether we succeeded or failed
+      onPlantingStateChange?.(false);
     }
   };
 

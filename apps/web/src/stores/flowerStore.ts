@@ -21,6 +21,7 @@ interface FlowerState {
   fetchFlowersByGarden: (gardenId: string) => Promise<void>;
   fetchFlowerDefinitions: () => Promise<void>;
   plantFlower: (gardenId: string, data: Omit<PlantFlowerRequest, 'gardenId'>) => Promise<Flower>;
+  pushFlower: (flower: Flower) => void;
   deleteFlower: (flowerId: string) => Promise<void>;
   setSelectedFlower: (flower: Flower | null) => void;
   clearError: () => void;
@@ -73,11 +74,11 @@ export const useFlowerStore = create<FlowerState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const newFlower = await flowerService.plantFlower(gardenId, data);
-      set((state) => ({
-        flowers: [...state.flowers, newFlower],
-        isLoading: false,
-        successMessage: 'Flower planted! 🌸',
-      }));
+      // NOTE: We intentionally do NOT add the flower to state.flowers here.
+      // The caller (PlantFlowerPanel) is responsible for uploading media,
+      // calling addContent, and then calling pushFlower() once everything
+      // is ready — so the flower appears in the garden fully populated.
+      set({ isLoading: false });
       return newFlower;
     } catch (error) {
       const err = error as { message?: string; statusCode?: number; error?: string; code?: string };
@@ -97,6 +98,18 @@ export const useFlowerStore = create<FlowerState>((set, get) => ({
       toast.error(errorMsg);
       throw new Error(errorMsg);
     }
+  },
+
+  /**
+   * Adds a fully-populated flower to the garden view.
+   * Called by PlantFlowerPanel after all uploads and addContent calls are done,
+   * so the flower appears in the garden with its media already attached.
+   */
+  pushFlower: (flower: Flower) => {
+    set((state) => ({
+      flowers: [...state.flowers, flower],
+      successMessage: 'Flower planted! 🌸',
+    }));
   },
 
   deleteFlower: async (flowerId: string) => {

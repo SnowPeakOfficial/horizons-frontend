@@ -163,6 +163,9 @@ export const GardenPage: React.FC = () => {
   // Loading screen: starts true on first render, dismissed once the first fetch resolves
   const [showFlowerLoading, setShowFlowerLoading] = useState(true);
 
+  // Planting overlay: shown while uploads + addContent are processing in the background
+  const [isPlanting, setIsPlanting] = useState(false);
+
   // Ref guard: prevents the deep-link flower from opening more than once
   const deepLinkOpenedRef = useRef(false);
   const orbitRef = useRef<OrbitControlsImpl>(null);
@@ -756,6 +759,7 @@ export const GardenPage: React.FC = () => {
         onClearPosition={() => setPlacedPosition(null)}
         placedPosition={placedPosition}
         onCancelPlacementStep={(fn: () => void) => { cancelPlacementStepRef.current = fn; }}
+        onPlantingStateChange={setIsPlanting}
         onLetterPreview={(params) => setLetterPreviewParams(params)}
       />
 
@@ -869,6 +873,61 @@ export const GardenPage: React.FC = () => {
             {flowerSuccess || gardenSuccess}
           </span>
         </div>
+      )}
+
+      {/* Planting overlay — shown while uploads + addContent finish in the background */}
+      {isPlanting && (
+        <>
+          <style>{`
+            @keyframes plant-spin {
+              to { transform: rotate(360deg); }
+            }
+            @keyframes plant-fadein {
+              from { opacity: 0; }
+              to   { opacity: 1; }
+            }
+          `}</style>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9997,
+              background: 'rgba(253, 252, 250, 0.82)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '20px',
+              animation: 'plant-fadein 0.25s ease',
+              pointerEvents: 'all',
+            }}
+          >
+            {/* Spinner ring */}
+            <div
+              style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                border: '4px solid rgba(212,144,154,0.2)',
+                borderTopColor: '#D4909A',
+                animation: 'plant-spin 0.9s linear infinite',
+              }}
+            />
+            {/* Label */}
+            <div
+              style={{
+                fontFamily: 'Georgia, serif',
+                fontSize: '15px',
+                color: '#9D8F99',
+                letterSpacing: '0.06em',
+              }}
+            >
+              Planting your memory…
+            </div>
+          </div>
+        </>
       )}
 
       {/* Garden flower loading screen — shown on first load until flowers arrive */}
