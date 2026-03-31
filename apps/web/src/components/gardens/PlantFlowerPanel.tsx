@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useForm } from 'react-hook-form';
@@ -133,7 +134,6 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
   const [flowerType, setFlowerType] = useState<FlowerType>('STANDARD');
   const [letterTemplate, setLetterTemplate] = useState<LetterTemplateKey | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   // Media file state — files selected by user, not yet uploaded
@@ -366,8 +366,8 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       return;
     }
 
-    setIsLoading(true);
-    setError('');
+    // Close the panel immediately so it doesn't sit open while the request processes
+    handleClose();
 
     try {
       // Step 0: Add garden member BEFORE planting the flower.
@@ -478,13 +478,9 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       if (onPlantSuccess) {
         onPlantSuccess();
       }
-      
-      handleClose();
     } catch (err) {
-      // flowerStore already maps errors to user-friendly messages and re-throws as Error
-      setError((err as Error).message || 'Unable to plant this flower. Please try again.');
-    } finally {
-      setIsLoading(false);
+      // Panel is already closed — show error as a toast instead
+      toast.error((err as Error).message || 'Unable to plant this flower. Please try again.');
     }
   };
 
@@ -1613,7 +1609,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               <Button variant="ghost" onClick={() => setStep(4)} style={{ flex: 1 }}>
                 Back
               </Button>
-              <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>
+              <Button variant="primary" onClick={handlePlant} style={{ flex: 1 }}>
                 Plant
               </Button>
             </>
