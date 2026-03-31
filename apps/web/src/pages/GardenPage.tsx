@@ -205,6 +205,9 @@ export const GardenPage: React.FC = () => {
   }, []);
 
   // --- Authenticated fetch ---
+  // Runs once per gardenId. Store actions (fetchGardenById, fetchFlowersByGarden) and
+  // navigate are stable references — omitting them from deps avoids spurious re-fetches
+  // that would otherwise fire on every navigation event (e.g. flower click URL change).
   useEffect(() => {
     if (isGuestMode || !gardenId) return;
 
@@ -225,7 +228,8 @@ export const GardenPage: React.FC = () => {
       // Flower fetch errors are swallowed here — garden-level redirect already handles 403
       setShowFlowerLoading(false);
     });
-  }, [gardenId, isGuestMode, fetchGardenById, fetchFlowersByGarden, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gardenId, isGuestMode]);
 
   // --- Guest fetch (no auth header) ---
   useEffect(() => {
@@ -276,8 +280,9 @@ export const GardenPage: React.FC = () => {
 
   const handlePlantSuccess = () => {
     if (gardenId) {
-      fetchFlowersByGarden(gardenId);
-      fetchGardenById(gardenId); // refresh member count + members list
+      // Refresh garden metadata (member count may have changed if a recipient was invited).
+      // Flowers are already up-to-date via pushFlower() — no need to re-fetch them here.
+      fetchGardenById(gardenId);
     }
   };
 
