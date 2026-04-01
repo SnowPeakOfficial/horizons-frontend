@@ -606,6 +606,12 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
           flex: 1,
           overflow: 'auto',
           padding: theme.spacing.xl,
+          // Tell the browser that this container handles vertical panning.
+          // Without this, touch-scroll gestures on the panel can be mis-interpreted
+          // as gestures on the WebGL canvas underneath, causing the page scrollbar
+          // indicator to appear (shrinking scrollbar) and occasionally leaking
+          // pointer events through to the Three.js scene.
+          touchAction: 'pan-y',
         }}
       >
         {/* Viewer blocked screen */}

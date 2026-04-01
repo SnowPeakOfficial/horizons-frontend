@@ -204,6 +204,29 @@ export const GardenPage: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Lock the document body so the mobile browser cannot scroll or bounce the page.
+  // The garden is a full-screen 3D canvas — any page-level scroll (e.g. dragging the
+  // header on iOS Safari) looks broken. position:fixed + overflow:hidden is the most
+  // reliable cross-browser approach, including iOS Safari's rubber-band overscroll.
+  useEffect(() => {
+    const prev = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      width: document.body.style.width,
+      height: document.body.style.height,
+    };
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+    return () => {
+      document.body.style.overflow = prev.overflow;
+      document.body.style.position = prev.position;
+      document.body.style.width = prev.width;
+      document.body.style.height = prev.height;
+    };
+  }, []);
+
   // --- Authenticated fetch ---
   // Runs once per gardenId. Store actions (fetchGardenById, fetchFlowersByGarden) and
   // navigate are stable references — omitting them from deps avoids spurious re-fetches
@@ -348,6 +371,10 @@ export const GardenPage: React.FC = () => {
     WebkitBackdropFilter: 'blur(24px)',
     borderBottom: '1px solid rgba(232, 180, 184, 0.25)',
     boxShadow: '0 4px 16px rgba(212, 144, 154, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04)',
+    // Prevent touch-drag on the header from triggering a page-level scroll/bounce.
+    // Even with body locked, some browsers still dispatch the gesture if the element
+    // doesn't explicitly opt out of all touch panning.
+    touchAction: 'none',
   };
 
   const headerLeftStyle: React.CSSProperties = {
@@ -405,6 +432,13 @@ export const GardenPage: React.FC = () => {
   const canvasContainerStyle: React.CSSProperties = {
     width: '100%',
     height: '100%',
+    // Block all pointer/touch input to the WebGL canvas whenever the plant panel is open
+    // but NOT in placement mode (steps 1, 3, 4, 5). During placement mode (step 2) the
+    // user must be able to tap the garden to choose a position, so we leave it interactive.
+    // Without this, touch/scroll gestures on the panel can leak through to the canvas,
+    // causing the browser to think the canvas is being scrolled (shrinking scrollbar) or
+    // even firing terrain-click events underneath the panel.
+    pointerEvents: (isPlantPanelOpen && !isPlacementMode) ? 'none' : 'auto',
   };
 
   return (
