@@ -7,12 +7,13 @@
  */
 
 import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Input } from '../common';
+import { Button, Input, DateTimePicker, LazyImage } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import { useFlowerStore } from '../../stores/flowerStore';
@@ -98,6 +99,8 @@ interface PlantFlowerPanelProps {
   placedPosition: { x: number; y: number; z: number } | null;
   /** Registration fn: parent passes a setter; panel calls it with its cancel handler */
   onCancelPlacementStep?: (registerFn: () => void) => void;
+  /** Called when the background planting process starts/finishes — parent can show a spinner */
+  onPlantingStateChange?: (isPlanting: boolean) => void;
   /** Called when user picks a letter template — parent renders the preview modal at the top level */
   onLetterPreview?: (params: {
     templateKey: LetterTemplateKey;
@@ -124,16 +127,16 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   onClearPosition,
   placedPosition,
   onCancelPlacementStep,
+  onPlantingStateChange,
   onLetterPreview,
 }) => {
   const isViewer = userRole === 'VIEWER';
   const { user } = useAuthStore();
-  const { flowerDefinitions, plantFlower, fetchFlowerDefinitions } = useFlowerStore();
+  const { flowerDefinitions, plantFlower, pushFlower, fetchFlowerDefinitions } = useFlowerStore();
   const [step, setStep] = useState(1);
   const [selectedDefinition, setSelectedDefinition] = useState<FlowerDefinition | null>(null);
   const [flowerType, setFlowerType] = useState<FlowerType>('STANDARD');
   const [letterTemplate, setLetterTemplate] = useState<LetterTemplateKey | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   // Media file state — files selected by user, not yet uploaded
@@ -177,6 +180,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
   // React Hook Form with Zod validation
   const {
     register,
+    setValue,
     formState: { errors },
     watch,
     reset: resetForm,
@@ -361,12 +365,15 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
     // Trigger form validation
     const isValid = await trigger();
     if (!isValid) {
-      setError('Something needs a little attention');
+      setError('Please fill in the required fields above before continuing.');
       return;
     }
 
-    setIsLoading(true);
-    setError('');
+    // Close the panel immediately so it doesn't sit open while the request processes
+    handleClose();
+
+    // Show the planting spinner overlay in GardenPage
+    onPlantingStateChange?.(true);
 
     try {
       // Step 0: Add garden member BEFORE planting the flower.
@@ -474,15 +481,21 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
         }
       }
       
+      // Now that all uploads and addContent calls are done, fetch the fully-populated
+      // flower from the backend and add it to the store. This ensures the flower appears
+      // in the garden with all its content (text + media URLs) already attached.
+      const finalFlower = await flowerService.getFlower(plantedFlower.id);
+      pushFlower(finalFlower);
+
       if (onPlantSuccess) {
         onPlantSuccess();
       }
-      
-      handleClose();
     } catch (err) {
-      setError((err as Error).message || 'Failed to plant flower');
+      // Panel is already closed — show error as a toast instead
+      toast.error((err as Error).message || 'Unable to plant this flower. Please try again.');
     } finally {
-      setIsLoading(false);
+      // Always hide the spinner, whether we succeeded or failed
+      onPlantingStateChange?.(false);
     }
   };
 
@@ -1081,12 +1094,11 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
 
             {/* Bloom Date (if BLOOMING selected) */}
             {flowerType === 'BLOOMING' && (
-              <Input
-                {...register('bloomAt')}
-                type="datetime-local"
+              <DateTimePicker
                 label="Bloom Date"
+                value={watch('bloomAt')}
+                onChange={(iso) => setValue('bloomAt', iso, { shouldValidate: true })}
                 error={errors.bloomAt?.message}
-                fullWidth
               />
             )}
 
@@ -1151,7 +1163,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                     </div>
                   </div>
                   {/* Full-width image preview */}
-                  <img src={imageFile.previewUrl} alt="preview" style={{ width: '100%', borderRadius: theme.radius.md, maxHeight: 160, objectFit: 'contain', display: 'block' }} />
+                  <LazyImage src={imageFile.previewUrl} alt="preview" noSkeleton style={{ width: '100%', borderRadius: theme.radius.md, maxHeight: 160, objectFit: 'contain' }} />
                   {imageProgress !== null && <div style={{ marginTop: 8, height: 4, background: '#eee', borderRadius: 2 }}><div style={{ width: `${imageProgress}%`, height: '100%', background: theme.colors.rose[400], borderRadius: 2, transition: 'width 0.2s' }} /></div>}
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: theme.spacing.sm }}>
                     <button onClick={() => clearFile('image')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.text.secondary, padding: 4, fontSize: 18, lineHeight: 1 }}>✕</button>
@@ -1474,7 +1486,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               {imageFile && (
                 <div style={{ padding: theme.spacing.md, background: theme.colors.rose[50], borderRadius: theme.radius.md }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md }}>
-                    <img src={imageFile.previewUrl} alt="preview" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: theme.radius.md }} />
+                    <LazyImage src={imageFile.previewUrl} alt="preview" noSkeleton style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: theme.radius.md }} />
                     <div>
                       <div style={{ ...typography.styles.body, fontWeight: 600 }}>📷 Photo attached</div>
                       <div style={{ ...typography.styles.caption, color: theme.text.secondary }}>{imageFile.file.name}</div>
@@ -1612,7 +1624,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               <Button variant="ghost" onClick={() => setStep(4)} style={{ flex: 1 }}>
                 Back
               </Button>
-              <Button variant="primary" onClick={handlePlant} isLoading={isLoading} style={{ flex: 1 }}>
+              <Button variant="primary" onClick={handlePlant} style={{ flex: 1 }}>
                 Plant
               </Button>
             </>

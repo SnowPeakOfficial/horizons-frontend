@@ -12,3 +12,7 @@ export { Modal } from './Modal';
 export { Card } from './Card';
 
 export { ConfirmationDialog } from './ConfirmationDialog';
+
+export { LazyImage } from './LazyImage';
+
+export { DateTimePicker } from './DateTimePicker';

@@ -6,7 +6,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../common';
+import { Button, LazyImage } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 
@@ -327,9 +327,10 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               animation: 'heroContentFade 8s ease forwards',
             }}
           >
-            <img
+            <LazyImage
               src="/images/Default_A_delicate_intricately_detailed_3D_hydrangea_blooms_ag_1_5608c5bf-c46a-46b8-b9a4-6f3a3aeb05dc_0.png"
               alt=""
+              noSkeleton
               style={{
                 width: 'clamp(700px, 80vw, 1100px)',
                 height: 'auto',

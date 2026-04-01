@@ -9,6 +9,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Modal } from '../common/Modal';
 import { ConfirmationDialog } from '../common/ConfirmationDialog';
+import { LazyImage } from '../common';
 import { theme } from '../../styles/theme';
 import { typography } from '../../styles/typography';
 import type { Flower } from '../../types/api.types';
@@ -514,7 +515,7 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                           <Photo sx={{ fontSize: 18, verticalAlign: 'middle', marginRight: '6px', color: tmpl.accentColor }} />
                           Photo
                         </div>
-                        <img
+                        <LazyImage
                           src={imageUrl}
                           alt="Memory"
                           style={mediaImageStyle}

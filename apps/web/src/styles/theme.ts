@@ -80,7 +80,7 @@ export const theme = {
   semantic: {
     success: '#6B9B7A',
     warning: '#E8C47A',
-    error: '#D4909A',
+    error: '#DC2626',
     info: '#9BB5D4',
   },
 

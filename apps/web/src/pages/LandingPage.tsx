@@ -15,7 +15,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import LocalFloristOutlinedIcon from '@mui/icons-material/LocalFloristOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Button } from '../components/common';
+import { Button, LazyImage } from '../components/common';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { UseCasesSection } from '../components/landing/UseCasesSection';
@@ -434,9 +434,10 @@ export const LandingPage: React.FC = () => {
             marginBottom: '0px',
           }}
         >
-          <img
+          <LazyImage
             src="/images/Default_A_delicate_intricately_detailed_3D_hydrangea_blooms_ag_1_5608c5bf-c46a-46b8-b9a4-6f3a3aeb05dc_0.png"
             alt=""
+            placeholderColor="#FFF9F7"
             style={{
               width: 'clamp(300px, 90vw, 1100px)',
               height: 'auto',
@@ -477,6 +478,8 @@ export const LandingPage: React.FC = () => {
               <img
                 src="/images/flower-field1.jpg"
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -487,13 +490,19 @@ export const LandingPage: React.FC = () => {
                   filter: 'saturate(1.9) brightness(1.08) contrast(1.06)',
                   userSelect: 'none',
                   pointerEvents: 'none',
+                  animation: 'lazyimage-shimmer 0s', // ensures keyframe is referenced
+                  transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
+                onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = '1'; }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = '1'; }}
               />
 
               {/* Layer 2 — Blurred bokeh edges, masked to show only at periphery */}
               <img
                 src="/images/flower-field1.jpg"
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -507,7 +516,10 @@ export const LandingPage: React.FC = () => {
                   maskImage: 'radial-gradient(ellipse 62% 72% at 58% 48%, transparent 0%, transparent 25%, black 65%)',
                   userSelect: 'none',
                   pointerEvents: 'none',
+                  transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
+                onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = '1'; }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = '1'; }}
               />
 
               {/* Brand pink tint — warm rose wash, multiply blend */}
@@ -728,14 +740,13 @@ export const LandingPage: React.FC = () => {
                   minHeight: '320px',
                   position: 'relative',
                 }}>
-                  <img
+                  <LazyImage
                     src={step.image}
                     alt={step.imageAlt}
+                    placeholderColor="#FFF9F7"
                     style={{
                       width: 'clamp(240px, 35vw, 420px)',
                       height: 'auto',
-                      position: 'relative',
-                      zIndex: 1,
                       userSelect: 'none',
                       pointerEvents: 'none',
                       filter: 'drop-shadow(0 8px 32px rgba(212, 144, 154, 0.15))',
@@ -849,16 +860,16 @@ export const LandingPage: React.FC = () => {
                 alignItems: 'flex-end',
                 justifyContent: 'center',
               }}>
-                <img
+                <LazyImage
                   src="/images/Default_A_mesmerizing_3D_illustration_of_a_delicate_cornflower_0_19deed4c-65ec-411d-8afd-76a72577a397_0.png"
                   alt=""
+                  placeholderColor="#F5ECE8"
                   style={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain',
                     userSelect: 'none',
                     pointerEvents: 'none',
-                    display: 'block',
                   }}
                 />
               </div>
@@ -1178,9 +1189,10 @@ export const LandingPage: React.FC = () => {
               marginBottom: '0',
             }}
           >
-            <img
+            <LazyImage
               src="/images/Default_A_delicately_rendered_3D_glassmorphism_flower_radiates_1_700f987d-038b-4bb7-bdff-feeaa85be7dc_0 1.png"
               alt=""
+              placeholderColor="#FFF9F7"
               style={{
                 width: 'clamp(340px, 45vw, 600px)',
                 height: 'auto',
@@ -1231,8 +1243,8 @@ export const LandingPage: React.FC = () => {
               onClick={() => setShowLetterModal(false)}
               style={{
                 position: 'absolute',
-                top: '24px',
-                right: '24px',
+                top: '12px',
+                right: '12px',
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
@@ -1252,15 +1264,6 @@ export const LandingPage: React.FC = () => {
             >
               ×
             </button>
-
-            {/* Subtle paper lines */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(139, 115, 85, 0.03) 30px, rgba(139, 115, 85, 0.03) 31px)',
-              borderRadius: '24px',
-              pointerEvents: 'none',
-            }} />
 
             {/* Letter header */}
             <h2

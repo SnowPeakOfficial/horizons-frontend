@@ -101,14 +101,45 @@ class AuthService {
   }
 
   /**
-   * Update current user profile (name, timezone)
+   * Update current user profile (name)
    */
-  async updateProfile(data: { name?: string; timezone?: string }): Promise<User> {
+  async updateProfile(data: { name?: string }): Promise<User> {
     const response = await api.put<User>('/users/me', data);
     
     // Update stored user data
     localStorage.setItem('horizons_user', JSON.stringify(response.data));
     
+    return response.data;
+  }
+
+  /**
+   * Get email notification preferences
+   */
+  async getEmailPreferences(): Promise<{
+    bloomNotifications: boolean;
+    invitations: boolean;
+    accountUpdates: boolean;
+    marketing: boolean;
+  }> {
+    const response = await api.get('/users/me/email-preferences');
+    return response.data;
+  }
+
+  /**
+   * Update email notification preferences
+   */
+  async updateEmailPreferences(prefs: {
+    bloomNotifications?: boolean;
+    invitations?: boolean;
+    accountUpdates?: boolean;
+    marketing?: boolean;
+  }): Promise<{
+    bloomNotifications: boolean;
+    invitations: boolean;
+    accountUpdates: boolean;
+    marketing: boolean;
+  }> {
+    const response = await api.put('/users/me/email-preferences', prefs);
     return response.data;
   }
 
