@@ -7,8 +7,12 @@
  * HorizonsPromo overlaps FeatureScene on top for the out-dissolve (dark→cream).
  */
 import React from 'react';
-import { AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, Video } from 'remotion';
+import { AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { ASSETS, COLOR, FONT } from '../constants';
+
+// Sakura video frame sequence — 200 frames @ 25 fps (8 s source)
+const SAKURA_TOTAL_FRAMES = 200;
+const SAKURA_SOURCE_FPS   = 25;
 
 export const SakuraOpenerScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -35,6 +39,15 @@ export const SakuraOpenerScene: React.FC = () => {
   // Thin separator line
   const lineOpacity = interpolate(frame, [38, 55], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
+  // Map composition frame → source image frame (25fps source, 30fps comp)
+  const sourceFrame = Math.min(
+    Math.round((frame * SAKURA_SOURCE_FPS) / fps),
+    SAKURA_TOTAL_FRAMES - 1
+  );
+  const sakuraFrameSrc = staticFile(
+    `videos/sakura-frames/frame_${String(sourceFrame + 1).padStart(4, '0')}.png`
+  );
+
   // Sakura video dims as content comes in
   const videoOpacity = interpolate(
     frame,
@@ -52,10 +65,10 @@ export const SakuraOpenerScene: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      {/* Sakura video */}
+      {/* Sakura frame sequence — perfectly accurate, zero seek jitter */}
       <AbsoluteFill style={{ opacity: videoOpacity }}>
-        <Video
-          src={staticFile(ASSETS.sakuraVideo)}
+        <Img
+          src={sakuraFrameSrc}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </AbsoluteFill>

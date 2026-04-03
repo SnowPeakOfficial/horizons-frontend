@@ -1,15 +1,15 @@
-// ── Timing (frames @ 30fps) — ~35.5s total = 1065 frames ────────────────────
+// ── Timing (frames @ 30fps) — ~36.0s total = 1080 frames ────────────────────
 export const FPS = 30;
-export const TOTAL_FRAMES = 1065;
+export const TOTAL_FRAMES = 1080;
 
 export const SCENE = {
-  problem:  { start: 0,   dur: 145 },  // 0:00–0:04.8   dark problem hook (text dissolves at 133, brief breath)
-  intro:    { start: 145, dur: 83  },  // 0:04.8–0:07.6 "There's a better way." bridge
-  sakura:   { start: 213, dur: 132 },  // 0:07.1–0:11.5 sakura logo bloom + tagline
-  feat1:    { start: 345, dur: 195 },  // 0:11.5–0:18.0 send a memory (extended for reading time)
-  feat2:    { start: 525, dur: 195 },  // 0:17.5–0:24.0 private garden (15f XFADE with feat1 end)
-  feat3:    { start: 705, dur: 195 },  // 0:23.5–0:30.0 time capsule
-  cta:      { start: 885, dur: 180 },  // 0:29.5–0:35.5 CTA finale → white fade (6s)
+  problem:  { start: 0,   dur: 160 },  // 0:00–0:05.3   dark problem hook (+0.5s for readability)
+  intro:    { start: 160, dur: 83  },  // 0:05.3–0:08.1 "There's a better way." bridge
+  sakura:   { start: 228, dur: 132 },  // 0:07.6–0:12.0 sakura logo bloom + tagline
+  feat1:    { start: 360, dur: 195 },  // 0:12.0–0:18.5 send a memory (extended for reading time)
+  feat2:    { start: 540, dur: 195 },  // 0:18.0–0:24.5 private garden (15f XFADE with feat1 end)
+  feat3:    { start: 720, dur: 195 },  // 0:24.0–0:30.5 time capsule
+  cta:      { start: 900, dur: 180 },  // 0:30.0–0:36.0 CTA finale → white fade (6s)
 } as const;
 
 // ── Exact Horizons design-system colours (from theme.ts) ─────────────────────
