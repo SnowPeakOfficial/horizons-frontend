@@ -38,15 +38,20 @@ import TouchApp from '@mui/icons-material/TouchApp';
 
 // ─── Garden Loading Screen ──────────────────────────────────────────────────
 function GardenLoadingScreen({ visible }: { visible: boolean }) {
-  const [mounted, setMounted] = React.useState(true);
+  const [mounted, setMounted] = React.useState(visible);
 
-  // Keep mounted briefly after visible=false so the fade-out plays
+  // Keep mounted briefly after visible=false so the fade-out plays.
+  // When visible goes true→false, delay unmount by 500ms for the CSS fade.
+  // When visible goes false→true, update mounted immediately via a layout effect
+  // (avoids calling setState synchronously in a regular effect body).
+  React.useLayoutEffect(() => {
+    if (visible) setMounted(true);
+  }, [visible]);
   useEffect(() => {
     if (!visible) {
       const t = setTimeout(() => setMounted(false), 500);
       return () => clearTimeout(t);
     }
-    // visible=true: re-mount immediately (no setState needed — initial value is true)
   }, [visible]);
 
   if (!mounted) return null;
