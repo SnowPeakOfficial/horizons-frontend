@@ -288,7 +288,7 @@ export const GardenPage: React.FC = () => {
     const target = activeFlowers.find((f) => f.id === flowerId);
     if (target) {
       deepLinkOpenedRef.current = true;
-      setTimeout(() => setSelectedFlower(target), 0);
+      setSelectedFlower(target);
 
       // Fix B: animation already finished but overlay is still up waiting for flowers
       if (overlayDoneRef.current && showRevealOverlay) {
