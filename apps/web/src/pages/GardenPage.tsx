@@ -3,7 +3,7 @@
  * Beautiful 3D garden view with professional UI
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { LetterRevealOverlay } from '../components/gardens/LetterRevealOverlay';
 import { LetterPreviewModal } from '../components/gardens/LetterPreviewModal';
@@ -628,10 +628,12 @@ export const GardenPage: React.FC = () => {
         </div>
       )}
 
-      {/* 3D Garden Scene — Fix D: Canvas is deferred until the overlay is gone so
-          Three.js startup doesn't compete with the overlay's CSS phase animations. */}
+      {/* 3D Garden Scene — always mounted so GLBs preload during the cinematic overlay.
+          GardenScene is wrapped in a local Suspense boundary so useGLTF Suspense throws
+          are caught here (garden renders empty) rather than bubbling to the route-level
+          <Suspense fallback={<PageLoader />}> which would blank the entire page. */}
       <div style={canvasContainerStyle}>
-        {!showRevealOverlay && <Canvas
+        <Canvas
           shadows
           camera={{ position: [0, 25, 35], fov: 50 }}
           gl={{
@@ -642,41 +644,43 @@ export const GardenPage: React.FC = () => {
             antialias: true,
           }}
         >
-          <GardenScene 
-            config={GARDEN_CONFIGS.test_garden}
-            flowers={activeFlowers}
-            isPlacementMode={isPlacementMode}
-            onTerrainClick={(position) => {
-              if (isPlacementMode) {
-                setPlacedPosition(position);
-              }
-            }}
-            onFlowerDragEnd={handleFlowerDragEnd}
-            onFlowerDragStateChange={(isDragging) => {
-              setIsDraggingFlower(isDragging);
-              if (isDragging) setHoveredFlowerTooltip(null);
-            }}
-            onFlowerClick={(flower: Flower) => {
-              setSelectedFlower(flower);
-              // Preserve ?token= for guests so the URL stays valid
-              const params = guestToken ? `?token=${guestToken}` : '';
-              navigate(`/garden/${gardenId}/flower/${flower.id}${params}`, { replace: false });
-            }}
-            onFlowerHover={(info) => {
-              // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
-              if (isMobile) return;
-              if (info) {
-                setHoveredFlowerTooltip({
-                  flower: info.flower,
-                  definition: info.definition,
-                  screenX: info.screenX ?? 0,
-                  screenY: info.screenY ?? 0,
-                });
-              } else {
-                setHoveredFlowerTooltip(null);
-              }
-            }}
-          />
+          <Suspense fallback={null}>
+            <GardenScene
+              config={GARDEN_CONFIGS.test_garden}
+              flowers={activeFlowers}
+              isPlacementMode={isPlacementMode}
+              onTerrainClick={(position) => {
+                if (isPlacementMode) {
+                  setPlacedPosition(position);
+                }
+              }}
+              onFlowerDragEnd={handleFlowerDragEnd}
+              onFlowerDragStateChange={(isDragging) => {
+                setIsDraggingFlower(isDragging);
+                if (isDragging) setHoveredFlowerTooltip(null);
+              }}
+              onFlowerClick={(flower: Flower) => {
+                setSelectedFlower(flower);
+                // Preserve ?token= for guests so the URL stays valid
+                const params = guestToken ? `?token=${guestToken}` : '';
+                navigate(`/garden/${gardenId}/flower/${flower.id}${params}`, { replace: false });
+              }}
+              onFlowerHover={(info) => {
+                // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
+                if (isMobile) return;
+                if (info) {
+                  setHoveredFlowerTooltip({
+                    flower: info.flower,
+                    definition: info.definition,
+                    screenX: info.screenX ?? 0,
+                    screenY: info.screenY ?? 0,
+                  });
+                } else {
+                  setHoveredFlowerTooltip(null);
+                }
+              }}
+            />
+          </Suspense>
           <CameraLimiter controlsRef={orbitRef} />
           <OrbitControls
             ref={orbitRef}
@@ -698,8 +702,7 @@ export const GardenPage: React.FC = () => {
             minAzimuthAngle={-Infinity}
             target={[0, 0, 0]}
           />
-          {/* Clamp pan target every frame to keep camera inside the garden */}
-        </Canvas>}
+        </Canvas>
       </div>
 
       {/* Mobile Placement Hint — compact card shown when step 2 is active on mobile */}
