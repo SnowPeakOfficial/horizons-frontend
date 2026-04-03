@@ -72,7 +72,7 @@ function GardenLoadingScreen({ visible }: { visible: boolean }) {
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 9998,
+          zIndex: 150,
           background: 'linear-gradient(180deg, #FDFCFA 0%, #FFF9F7 50%, #FFFFFF 100%)',
           display: 'flex',
           flexDirection: 'column',
