@@ -159,6 +159,8 @@ export const GardenPage: React.FC = () => {
   const [showRevealOverlay, setShowRevealOverlay] = useState(fromEmail && !!flowerId);
   // Confetti fires only AFTER the overlay animation completes (onDone), not at mount time.
   const [showConfetti, setShowConfetti] = useState(false);
+  // Fix B: track whether onDone fired before flowers loaded; if so, dismiss once they arrive
+  const overlayDoneRef = useRef(false);
 
   // Loading screen: starts true on first render, dismissed once the first fetch resolves
   const [showFlowerLoading, setShowFlowerLoading] = useState(true);
@@ -272,21 +274,23 @@ export const GardenPage: React.FC = () => {
   // For email deep-links: pre-set selectedFlower immediately so the FlowerDetailsModal
   // is fully mounted and rendered DURING the overlay animation. When onDone() fires
   // the overlay just lifts — the modal appears instantly with no visible delay.
+  //
+  // Fix B: if onDone() fired before flowers arrived (slow data connection), dismiss
+  // the overlay now that we finally have the flower data.
   useEffect(() => {
     if (!flowerId || deepLinkOpenedRef.current || activeFlowers.length === 0) return;
     const target = activeFlowers.find((f) => f.id === flowerId);
     if (target) {
       deepLinkOpenedRef.current = true;
-      if (fromEmail) {
-        // Pre-load: defer to next tick (satisfies ESLint) but still fires immediately —
-        // well before the 4.35s animation ends, so the modal is fully rendered when onDone() fires.
-        setTimeout(() => setSelectedFlower(target), 0);
-      } else {
-        // Defer to avoid synchronous setState inside effect
-        setTimeout(() => setSelectedFlower(target), 0);
+      setTimeout(() => setSelectedFlower(target), 0);
+
+      // Fix B: animation already finished but overlay is still up waiting for flowers
+      if (overlayDoneRef.current && showRevealOverlay) {
+        setShowRevealOverlay(false);
+        setShowConfetti(true);
       }
     }
-  }, [flowerId, activeFlowers, fromEmail]);
+  }, [flowerId, activeFlowers, showRevealOverlay]);
 
   // Auto-dismiss success banners after 3 seconds
   useEffect(() => {
@@ -618,9 +622,10 @@ export const GardenPage: React.FC = () => {
         </div>
       )}
 
-      {/* 3D Garden Scene */}
+      {/* 3D Garden Scene — Fix D: Canvas is deferred until the overlay is gone so
+          Three.js startup doesn't compete with the overlay's CSS phase animations. */}
       <div style={canvasContainerStyle}>
-        <Canvas
+        {!showRevealOverlay && <Canvas
           shadows
           camera={{ position: [0, 25, 35], fov: 50 }}
           gl={{
@@ -688,7 +693,7 @@ export const GardenPage: React.FC = () => {
             target={[0, 0, 0]}
           />
           {/* Clamp pan target every frame to keep camera inside the garden */}
-        </Canvas>
+        </Canvas>}
       </div>
 
       {/* Mobile Placement Hint — compact card shown when step 2 is active on mobile */}
@@ -979,6 +984,13 @@ export const GardenPage: React.FC = () => {
       {showRevealOverlay && (
         <LetterRevealOverlay
           onDone={() => {
+            // Fix B: if flowers haven't arrived yet, mark the intent and keep the overlay
+            // visible. The flower effect above will dismiss it as soon as data lands.
+            if (!deepLinkOpenedRef.current) {
+              overlayDoneRef.current = true;
+              // Don't dismiss yet — wait for flowers
+              return;
+            }
             setShowRevealOverlay(false);
             // Fire confetti AFTER the overlay lifts so it plays over the visible letter
             setShowConfetti(true);
