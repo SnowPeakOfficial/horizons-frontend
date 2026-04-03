@@ -162,8 +162,9 @@ export const GardenPage: React.FC = () => {
   // Fix B: track whether onDone fired before flowers loaded; if so, dismiss once they arrive
   const overlayDoneRef = useRef(false);
 
-  // Loading screen: starts true on first render, dismissed once the first fetch resolves
-  const [showFlowerLoading, setShowFlowerLoading] = useState(true);
+  // Loading screen: starts true on first render, dismissed once the first fetch resolves.
+  // For email deep-link flows, LetterRevealOverlay already covers the load — skip it.
+  const [showFlowerLoading, setShowFlowerLoading] = useState(!(fromEmail && !!flowerId));
 
   // Planting overlay: shown while uploads + addContent are processing in the background
   const [isPlanting, setIsPlanting] = useState(false);
