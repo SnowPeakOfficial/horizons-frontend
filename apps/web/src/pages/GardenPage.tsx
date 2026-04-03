@@ -290,9 +290,9 @@ export const GardenPage: React.FC = () => {
       deepLinkOpenedRef.current = true;
       setSelectedFlower(target);
 
-      // Fix B: animation already finished but overlay is still up waiting for flowers
-      if (overlayDoneRef.current && showRevealOverlay) {
-        setShowRevealOverlay(false);
+      // Fix B: overlay was already dismissed (slow data path) — just hide loading + fire confetti
+      if (overlayDoneRef.current && !showRevealOverlay) {
+        setShowFlowerLoading(false);
         setShowConfetti(true);
       }
     }
@@ -990,11 +990,14 @@ export const GardenPage: React.FC = () => {
       {showRevealOverlay && (
         <LetterRevealOverlay
           onDone={() => {
-            // Fix B: if flowers haven't arrived yet, mark the intent and keep the overlay
-            // visible. The flower effect above will dismiss it as soon as data lands.
+            // Fix B: flowers haven't arrived yet (slow cellular) — dismiss the overlay
+            // immediately and show the loading screen so the user sees honest progress
+            // rather than a frozen transparent overlay. The flower effect will dismiss
+            // the loading screen and fire confetti when data finally lands.
             if (!deepLinkOpenedRef.current) {
               overlayDoneRef.current = true;
-              // Don't dismiss yet — wait for flowers
+              setShowRevealOverlay(false);   // unmount overlay (mounts Canvas)
+              setShowFlowerLoading(true);    // show "Growing your garden…" while we wait
               return;
             }
             setShowRevealOverlay(false);
