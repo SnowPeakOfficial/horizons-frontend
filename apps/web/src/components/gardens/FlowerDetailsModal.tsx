@@ -315,19 +315,6 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
   // Only use tap-to-reveal for BUD state — where the surprise is still intact.
   const showMediaDirectly = !isBud;
   
-  // Fallback message if no seed message
-  const getDefaultMessage = (flowerName: string): string => {
-    const messages: Record<string, string> = {
-      'rose': 'A symbol of care, planted to remind you that you matter.',
-      'daisy': 'Simple beauty, like the moments we cherish most.',
-      'sunflower': 'Warmth and light, planted to brighten your days.',
-    };
-    
-    const key = flowerName.toLowerCase();
-    return messages[key] || 'A quiet moment, preserved in petals. This flower holds a memory meant just for you.';
-  };
-
-  const displayMessage = seedMessage || getDefaultMessage(definition.name);
 
   // Sender & Recipient
   const senderName = flower.plantedBy?.name || "A friend";
@@ -449,11 +436,13 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
             </div>
             
             {/* Seed Message - Simplified for elegance */}
-            <div style={enhancedMessageStyle}>
-              <div style={messageTextStyle}>
-                {displayMessage}
+            {seedMessage && (
+              <div style={enhancedMessageStyle}>
+                <div style={messageTextStyle}>
+                  {seedMessage}
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Media Section */}
             {hasMedia && (

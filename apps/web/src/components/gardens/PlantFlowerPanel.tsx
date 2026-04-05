@@ -73,7 +73,7 @@ const plantFlowerFormSchema = z.object({
   recipientEmail: z.string().refine((val) => !val || z.string().email().safeParse(val).success, {
     message: 'Please enter a valid email address'
   }),
-  seedMessage: z.string().max(500, 'Message must be 500 characters or less').optional().or(z.literal('')),
+  seedMessage: z.string().min(1, 'A message is required').max(500, 'Message must be 500 characters or less'),
   bloomMessage: z.string().max(500, 'Message must be 500 characters or less').optional().or(z.literal('')),
   bloomAt: z.string().optional(),
 });
@@ -1071,7 +1071,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               marginBottom: theme.spacing.lg 
             }}>
               <label style={{ ...typography.styles.label, color: theme.text.primary }}>
-                {flowerType === 'BLOOMING' ? 'Before it blooms (optional)' : 'Message (optional)'}
+                {flowerType === 'BLOOMING' ? 'Before it blooms' : 'Message'}
               </label>
               <textarea
                 {...register('seedMessage')}
