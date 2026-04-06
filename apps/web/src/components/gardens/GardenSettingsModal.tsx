@@ -59,7 +59,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
   
   // Members tab state
   const [newMemberEmail, setNewMemberEmail] = useState('');
-  const [newMemberRole, setNewMemberRole] = useState<'VIEWER' | 'CONTRIBUTOR'>('VIEWER');
+  const [newMemberRole, setNewMemberRole] = useState<'VIEWER' | 'CONTRIBUTOR'>('CONTRIBUTOR');
   const [inviteError, setInviteError] = useState('');
   
   // Confirmation dialogs
@@ -125,7 +125,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
         role: newMemberRole,
       });
       setNewMemberEmail('');
-      setNewMemberRole('VIEWER');
+      setNewMemberRole('CONTRIBUTOR');
       setInviteError('');
       onGardenUpdated();
     } catch (error: unknown) {

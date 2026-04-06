@@ -5,6 +5,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { LetterRevealOverlay } from '../components/gardens/LetterRevealOverlay';
 import { LetterPreviewModal } from '../components/gardens/LetterPreviewModal';
 import type { LetterTemplateKey } from '../flowers/letterTemplates';
@@ -147,6 +148,69 @@ export const GardenPage: React.FC = () => {
   const activeFlowers = isGuestMode ? guestFlowers : flowers;
 
   const [isPlantPanelOpen, setIsPlantPanelOpen] = useState(false);
+
+  // Tier flower limits — must match backend enforcement
+  const TIER_FLOWER_LIMITS: Record<string, number> = { FREE: 1, PRO: 50, PREMIUM: 100 };
+
+  const handlePlantClick = () => {
+    const tier = user?.tier || 'FREE';
+    const limit = TIER_FLOWER_LIMITS[tier] ?? 1;
+    if (activeFlowers.length >= limit) {
+      const nextTier = tier === 'FREE' ? 'PRO' : 'PREMIUM';
+      const nextLabel = tier === 'FREE' ? 'PRO' : 'PREMIUM';
+      toast.custom(
+        (t) => (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+              background: '#FFFFFF',
+              border: '1px solid rgba(0,0,0,0.06)',
+              borderRadius: '12px',
+              padding: '16px 18px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+              maxWidth: '320px',
+              opacity: t.visible ? 1 : 0,
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              <span style={{ fontSize: '20px', lineHeight: 1 }}>🌸</span>
+              <div>
+                <div style={{ fontWeight: 600, fontSize: '14px', color: '#2F2F2F', marginBottom: '4px' }}>
+                  {tier} plan flower limit reached
+                </div>
+                <div style={{ fontSize: '13px', color: '#6B6B6B', lineHeight: 1.5 }}>
+                  You've used all {limit} flower{limit === 1 ? '' : 's'} on the {tier} plan.
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => { toast.dismiss(t.id); navigate('/pricing'); }}
+              style={{
+                alignSelf: 'flex-end',
+                padding: '7px 16px',
+                borderRadius: '20px',
+                background: 'linear-gradient(135deg, #D4909A 0%, #E8A4A4 100%)',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#FFFFFF',
+                letterSpacing: '0.2px',
+              }}
+            >
+              Upgrade to {nextTier === 'PREMIUM' ? '' : ''}{nextLabel} →
+            </button>
+          </div>
+        ),
+        { duration: 6000 },
+      );
+      return;
+    }
+    setIsPlantPanelOpen(true);
+  };
   const [isPlacementMode, setIsPlacementMode] = useState(false);
   // Write-only — value is not read directly; placement is driven by isPlacementMode
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -516,7 +580,7 @@ export const GardenPage: React.FC = () => {
                     <SettingsOutlined sx={{ fontSize: 22, color: '#FFFFFF' }} />
                   </button>
                   <button
-                    onClick={() => setIsPlantPanelOpen(true)}
+                    onClick={handlePlantClick}
                     title="Plant Flower"
                     style={{
                       width: '40px',
@@ -553,7 +617,7 @@ export const GardenPage: React.FC = () => {
                   <Button
                     variant="primary"
                     size="medium"
-                    onClick={() => setIsPlantPanelOpen(true)}
+                    onClick={handlePlantClick}
                     style={{
                       display: 'flex',
                       alignItems: 'center',

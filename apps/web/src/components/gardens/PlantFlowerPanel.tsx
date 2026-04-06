@@ -7,7 +7,6 @@
  */
 
 import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
-import toast from 'react-hot-toast';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useForm } from 'react-hook-form';
@@ -490,9 +489,8 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
       if (onPlantSuccess) {
         onPlantSuccess();
       }
-    } catch (err) {
-      // Panel is already closed — show error as a toast instead
-      toast.error((err as Error).message || 'Unable to plant this flower. Please try again.');
+    } catch {
+      // Error toast is already fired by flowerStore — no duplicate needed here
     } finally {
       // Always hide the spinner, whether we succeeded or failed
       onPlantingStateChange?.(false);
