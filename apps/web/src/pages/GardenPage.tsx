@@ -484,7 +484,7 @@ export const GardenPage: React.FC = () => {
               {!isGuestMode && (
                 <div style={statItemStyle}>
                   <People sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
-                  <span>{activeGarden.members?.length || 0} members</span>
+                  <span>{(activeGarden.members?.length || 0) + 1} members</span>
                 </div>
               )}
               {!isCompact && (

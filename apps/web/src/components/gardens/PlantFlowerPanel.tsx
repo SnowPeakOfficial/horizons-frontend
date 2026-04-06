@@ -1059,7 +1059,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginTop: '-10px', marginBottom: theme.spacing.lg }}>
               <LightbulbOutlined sx={{ fontSize: 15, color: '#D4909A', marginTop: '1px', flexShrink: 0 }} />
               <span style={{ ...typography.styles.caption, color: theme.text.secondary }}>
-                If provided, we'll invite them as a contributor to view this garden
+                They'll receive an email invitation with a link to access this garden. Manage all garden members anytime from Garden Settings.
               </span>
             </div>
 
@@ -1465,7 +1465,7 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                     {recipientEmail}
                   </div>
                   <div style={{ ...typography.styles.caption, color: theme.text.secondary, marginTop: '4px' }}>
-                    ✅ Will be invited as contributor
+                    ✅ An email invitation will be sent to this address
                   </div>
                 </div>
               )}
