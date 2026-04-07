@@ -5,6 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
@@ -85,7 +86,113 @@ export const LandingPage: React.FC = () => {
     <div style={{ background: '#FDFCFA', minHeight: '100vh' }}>
       <SEO
         canonical="/"
+        description="Plant memories that bloom forever. Horizons is a private 3D memory garden where you plant digital flowers to preserve your most meaningful moments, send timed messages to loved ones, and keep memories that actually last."
+        ogImageAlt="Horizons — A private 3D memory garden app"
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is Horizons?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Horizons is a private 3D garden where you plant digital flowers to keep the moments that matter. Each flower holds a memory — a written message, a photo, a voice note, or a video. Some flowers open right away, sharing something with the people you care about immediately. Others can be set to bloom on a date you choose, so a moment arrives exactly when it's meant to."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is a blooming flower?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A blooming flower is a memory you save for a specific moment in the future. While it's still waiting to open, you can leave a small note for the recipient — a hint, a few words, something for them to hold onto while they wait. On the day it blooms, the flower opens and reveals everything inside: your full message, a photo, a voice note, or a video."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What can I put inside a flower?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can add a written message, a photo, a voice note, or a short video — or any combination. If the flower opens right away, everything is visible the moment it's opened. If you've set a bloom date, you can leave a small note that appears while the flower is still waiting, and then the full message and media come through when it blooms. You can also choose a letter theme: Romantic, Friendship, Family, Gratitude, Celebration, or Encouragement."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does sharing work? Does the recipient need an account?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You invite people into your garden by email. They'll get a link and can join for free. Once they're in, they can explore the garden and open any flowers planted for them. No paid plan is required to receive or view a flower."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I see a flower before it blooms?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No — and that's the point. Once you set a bloom date, the flower stays sealed until that day arrives. Even you won't be able to see what's inside until it opens. This is what gives the moment its weight — the waiting is part of it."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who is Horizons for?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Couples who want to share something more meaningful than a text. Parents capturing milestones as their children grow. Grandparents planting letters for grandchildren to open years from now. Friends who want to say something real. People going through grief who need a quiet place to remember. Anyone who has ever wanted to write to their future self — or leave something behind for someone they love."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I plant a flower for a milestone that is years away?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — there's no limit on how far in the future you can set a bloom date. Some people plant flowers set to open on a child's 18th birthday, on an anniversary a decade away, or on a date tied to someone who may not be around to deliver the message in person. The flower will wait as long as it needs to."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is Horizons free to start?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — no credit card required. The free plan gives you one private garden and lets you plant one flower per year, with all flower types and media options available. Pro unlocks up to 3 gardens, 50 flowers per year, 7 exclusive flower types, letter themes, and the ability to send a gift card with a flower. Premium (coming soon) expands to 30 gardens, 100 flowers per year, 3 rare flower types, and seasonal garden themes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the difference between Pro and Premium?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Pro is built for people who want to grow multiple gardens and plant more frequently — up to 3 gardens, 50 flowers a year, 7 exclusive flower types, all 6 letter themes, and the ability to send a gift card alongside a flower. Premium (coming soon) is the full experience: up to 30 gardens, 100 flowers a year, 3 additional rare flower varieties, and seasonal garden themes that change throughout the year."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I cancel my subscription at any time?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — cancel anytime from your profile, no questions asked. You keep full access until the end of your billing period."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who can see my garden and my memories?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Only the people you personally invite. Your garden is completely private by default — nothing is visible to the public, nothing is searchable, and no one can find or enter it without an invitation from you. You decide who gets in."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my data encrypted and safe?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Everything you store in Horizons is encrypted while it travels and while it rests. We never sell your data, never use your memories to train AI, and never share anything with third parties. What you plant here stays yours."
+              }
+            }
+          ]
+        })}</script>
+      </Helmet>
       {/* Navbar */}
       <Navbar />
       
@@ -263,7 +370,7 @@ export const LandingPage: React.FC = () => {
           >
             Plant memories as flowers.
             <br />
-            Return to them when you're ready.
+            Return to them whenever you want.
           </p>
 
           {/* CTA Buttons */}
@@ -580,7 +687,7 @@ export const LandingPage: React.FC = () => {
               number: '01',
               label: 'STEP 01',
               title: 'Plant a memory',
-              description: 'Write a thought, attach a photo, record a voice note — anything worth keeping. The moment becomes a flower in your garden.',
+              description: 'Write a thought, attach a photo, record a voice note, or capture a video — anything worth keeping. The moment becomes a flower in your garden.',
               image: '/images/Moment to remember-rafiki.png',
               imageAlt: 'A person capturing a moment to remember',
               imageRight: false,
@@ -589,7 +696,7 @@ export const LandingPage: React.FC = () => {
               number: '02',
               label: 'STEP 02',
               title: 'Choose when it blooms',
-              description: 'Set it to open now, or seal it for later — a week, a year, or a lifetime. Some things are sweeter with time.',
+              description: 'Set it to open now, or seal it for later — a week, a month, a year. Build the anticipation. Let the moment unfold when it\'s meant to.',
               image: '/images/Flowers-rafiki.png',
               imageAlt: 'Flowers blooming — a memory coming to life',
               imageRight: true,
@@ -598,7 +705,7 @@ export const LandingPage: React.FC = () => {
               number: '03',
               label: 'STEP 03',
               title: 'Grow your garden',
-              description: "Every memory you plant adds to your private garden — a quiet, growing space that's entirely yours.",
+              description: "Every memory you plant adds to your private garden — a quiet, growing space that's entirely yours, or shared with the people you choose to invite.",
               image: '/images/Flowers-amico.png',
               imageAlt: 'A garden growing — a collection of memories',
               imageRight: false,
@@ -607,7 +714,7 @@ export const LandingPage: React.FC = () => {
               number: '04',
               label: 'STEP 04',
               title: 'Send it as a flower',
-              description: "When the moment is right, send a memory to someone you love. No wrapping needed — just a flower, and a letter.",
+              description: "Send it to someone who matters — a memory, delivered as a flower, waiting to be opened.",
               image: "/images/Valentine's bouquet with a card-bro.png",
               imageAlt: "A bouquet with a card — a memory sent with love",
               imageRight: true,
@@ -729,7 +836,7 @@ export const LandingPage: React.FC = () => {
               letterSpacing: '-0.01em',
               lineHeight: 1.15,
             }}>
-              Where moments are kept with care
+              A place where moments are kept with care
             </h2>
           </RevealOnScroll>
 
@@ -823,7 +930,7 @@ export const LandingPage: React.FC = () => {
               }}>
                 {[
                   { icon: LockOutlinedIcon, headline: 'Your garden is private', body: 'No one enters unless you invite them.' },
-                  { icon: VisibilityOffOutlinedIcon, headline: 'Nothing is indexed', body: "Your memories aren't searchable or public." },
+                  { icon: VisibilityOffOutlinedIcon, headline: 'Yours, permanently', body: "No expiry. No algorithm. What you plant here stays here, exactly as you left it." },
                   { icon: SendOutlinedIcon, headline: 'Sharing is intentional', body: 'Nothing leaves without your choice.' },
                 ].map((item, i) => (
                   <div key={i} style={{
@@ -892,36 +999,71 @@ export const LandingPage: React.FC = () => {
 
           <RevealOnScroll delay={80}>
             <div>
-              {[
+                {[
+                /* Phase 1 — What is this? */
                 {
-                  Icon: CreditCardOutlinedIcon,
-                  question: 'Is Horizons free?',
-                  answer: 'Yes — Horizons has a free tier that lets you plant memories and grow your garden. Pro and Premium plans unlock additional gardens, larger storage, and more customization options.',
-                },
-                {
-                  Icon: VisibilityOffOutlinedIcon,
-                  question: 'Who can see my memories?',
-                  answer: 'Only you — unless you deliberately invite someone. Your garden is private by default. Nothing is public, nothing is indexed, and no one can stumble in uninvited.',
-                },
-                {
-                  Icon: SaveOutlinedIcon,
-                  question: 'What happens to my memories if I cancel?',
-                  answer: "They're yours. You can export everything before you leave, and we keep your data for 30 days after cancellation so nothing is lost accidentally.",
-                },
-                {
-                  Icon: IosShareOutlinedIcon,
-                  question: 'Can I share with someone who doesn\'t have Horizons?',
-                  answer: 'Yes. You can send a memory as a flower via a private link — the recipient can open and read it without an account. Sharing is always a deliberate choice.',
-                },
-                {
-                  Icon: LockOutlinedIcon,
-                  question: 'Is my data encrypted?',
-                  answer: 'End-to-end. Your memories are encrypted in transit and at rest. We never index your content, never sell your data, and never use your memories to train anything.',
+                  Icon: LocalFloristOutlinedIcon,
+                  question: 'What is Horizons?',
+                  answer: 'Horizons is a private 3D garden where you plant digital flowers to keep the moments that matter. Each flower holds a memory — a written message, a photo, a voice note, or a video. Some flowers open right away, sharing something with the people you care about immediately. Others can be set to bloom on a date you choose, so a moment arrives exactly when it\'s meant to. It\'s a quiet, personal space to preserve what\'s worth keeping, share something real with the people you love, and give memories a place to actually live.',
                 },
                 {
                   Icon: LocalFloristOutlinedIcon,
-                  question: "What's the difference between a garden and a memory?",
-                  answer: "A garden is a space — like a journal or an album. A memory is a single flower within that garden. You can have multiple gardens for different parts of your life, each with their own collection of flowers.",
+                  question: 'What is a blooming flower?',
+                  answer: 'A blooming flower is a memory you save for a specific moment in the future. While it\'s still waiting to open, you can leave a small note for the recipient — a hint, a few words, something for them to hold onto while they wait. On the day it blooms, the flower opens and reveals everything inside: your full message, a photo, a voice note, or a video. They tap it to open it, and the moment arrives exactly when you intended.',
+                },
+                /* Phase 2 — How it works */
+                {
+                  Icon: IosShareOutlinedIcon,
+                  question: 'What can I put inside a flower?',
+                  answer: 'You can add a written message, a photo, a voice note, or a short video — or any combination of them. If the flower opens right away, everything inside is visible the moment it\'s opened. If you\'ve set a bloom date, you can also leave a small note that appears while the flower is still waiting — something for them to see in the meantime — and then the full message and any media you\'ve attached come through when it blooms. You can also choose a letter theme that wraps everything in a beautiful design: Romantic, Friendship, Family, Gratitude, Celebration, or Encouragement.',
+                },
+                {
+                  Icon: IosShareOutlinedIcon,
+                  question: 'How does sharing work? Does the recipient need an account?',
+                  answer: "You invite people into your garden by email. They'll get a link and can join for free. Once they're in, they can explore the garden and open any flowers planted for them. No paid plan is required to receive or view a flower.",
+                },
+                {
+                  Icon: IosShareOutlinedIcon,
+                  question: 'Can I see a flower before it blooms?',
+                  answer: "No — and that's the point. Once you set a bloom date, the flower stays sealed until that day arrives. Even you won't be able to see what's inside until it opens. This is what gives the moment its weight — the waiting is part of it.",
+                },
+                /* Phase 3 — Use cases */
+                {
+                  Icon: VisibilityOffOutlinedIcon,
+                  question: 'Who is Horizons for?',
+                  answer: 'Couples who want to share something more meaningful than a text. Parents capturing milestones as their children grow. Grandparents planting letters for grandchildren to open years from now. Friends who want to say something real. People going through grief who need a quiet place to remember. Anyone who has ever wanted to write to their future self — or leave something behind for someone they love.',
+                },
+                {
+                  Icon: VisibilityOffOutlinedIcon,
+                  question: 'Can I plant a flower for a milestone that is years away?',
+                  answer: "Yes — there's no limit on how far in the future you can set a bloom date. Some people plant flowers set to open on a child's 18th birthday, on an anniversary a decade away, or on a date tied to someone who may not be around to deliver the message in person. The flower will wait as long as it needs to.",
+                },
+                /* Phase 4 — Pricing */
+                {
+                  Icon: CreditCardOutlinedIcon,
+                  question: 'Is Horizons free to start?',
+                  answer: 'Yes — no credit card required. The free plan gives you one private garden and lets you plant one flower per year, with all flower types and media options available. Pro unlocks up to 3 gardens, 50 flowers per year, 7 exclusive flower types, letter themes, and the ability to send a gift card with a flower. Premium (coming soon) expands to 30 gardens, 100 flowers per year, 3 rare flower types, and seasonal garden themes.',
+                },
+                {
+                  Icon: CreditCardOutlinedIcon,
+                  question: 'What is the difference between Pro and Premium?',
+                  answer: 'Pro is built for people who want to grow multiple gardens and plant more frequently — up to 3 gardens, 50 flowers a year, 7 exclusive flower types, all 6 letter themes, and the ability to send a gift card alongside a flower. Premium (coming soon) is the full experience: up to 30 gardens, 100 flowers a year, 3 additional rare flower varieties, and seasonal garden themes that change throughout the year.',
+                },
+                {
+                  Icon: CreditCardOutlinedIcon,
+                  question: 'Can I cancel my subscription at any time?',
+                  answer: 'Yes — cancel anytime from your profile, no questions asked. You keep full access until the end of your billing period.',
+                },
+                /* Phase 5 — Trust & privacy */
+                {
+                  Icon: LockOutlinedIcon,
+                  question: 'Who can see my garden and my memories?',
+                  answer: 'Only the people you personally invite. Your garden is completely private by default — nothing is visible to the public, nothing is searchable, and no one can find or enter it without an invitation from you. You decide who gets in.',
+                },
+                {
+                  Icon: SaveOutlinedIcon,
+                  question: 'Is my data encrypted and safe?',
+                  answer: 'Yes. Everything you store in Horizons is encrypted while it travels and while it rests. We never sell your data, never use your memories to train AI, and never share anything with third parties. What you plant here stays yours.',
                 },
               ].map(({ Icon, question, answer }, i) => {
                 const isOpen = openFaqs.has(i);
@@ -930,7 +1072,7 @@ export const LandingPage: React.FC = () => {
                     key={i}
                     style={{
                       borderTop: `1px solid ${theme.border.light}`,
-                      ...(i === 5 ? { borderBottom: `1px solid ${theme.border.light}` } : {}),
+                      ...(i === 11 ? { borderBottom: `1px solid ${theme.border.light}` } : {}),
                     }}
                   >
                     <button
@@ -969,9 +1111,9 @@ export const LandingPage: React.FC = () => {
 
                     <div style={{
                       overflow: 'hidden',
-                      maxHeight: isOpen ? '300px' : '0px',
+                      maxHeight: isOpen ? '600px' : '0px',
                       opacity: isOpen ? 1 : 0,
-                      transition: 'max-height 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
+                      transition: 'max-height 500ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease',
                     }}>
                       <p style={{
                         fontFamily: typography.fontFamily.serif,
@@ -1169,7 +1311,7 @@ export const LandingPage: React.FC = () => {
               </p>
               <p style={{ marginBottom: '28px' }}>
                 A private garden where memories grow as flowers. Plant them.
-                Watch them bloom. Return when you need to.
+                Watch them bloom. Keep them forever.
               </p>
               <p
                 style={{

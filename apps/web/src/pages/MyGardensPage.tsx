@@ -463,7 +463,7 @@ export const MyGardensPage: React.FC = () => {
                       </span>
                       <span style={{ ...gardenStatStyle, display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <PeopleRoundedIcon style={{ fontSize: '15px', color: '#D4909A' }} />
-                        {garden._count?.members || 1} gardeners
+                        {(garden._count?.members || 0) + 1} gardeners
                       </span>
                     </div>
                   </div>

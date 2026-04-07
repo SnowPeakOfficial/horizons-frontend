@@ -1,23 +1,38 @@
 /**
  * Application Routes
+ *
+ * All pages are lazy-loaded so each route gets its own JS chunk.
+ * This keeps the initial bundle small — landing page visitors never
+ * download Three.js, garden code, or any other page-specific libraries.
  */
 
+import React, { Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { LandingPage } from '../pages/LandingPage';
-import { LoginPage } from '../pages/auth/LoginPage';
-import { RegisterPage } from '../pages/auth/RegisterPage';
-import { MyGardensPage } from '../pages/MyGardensPage';
-import { GardenPage } from '../pages/GardenPage';
-import { PricingPage } from '../pages/PricingPage';
-import { PricingSuccessPage } from '../pages/PricingSuccessPage';
-import { ProfilePage } from '../pages/ProfilePage';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import { GuestRoute } from '../components/auth/GuestRoute';
 import { GardenRoute } from '../components/auth/GardenRoute';
-import { PrivacyPage } from '../pages/PrivacyPage';
-import { TermsPage } from '../pages/TermsPage';
-import { ContactPage } from '../pages/ContactPage';
 import { RootLayout } from '../components/layout/RootLayout';
+import { PageLoader } from '../components/common/PageLoader';
+
+// ── Lazy page imports ────────────────────────────────────────────────────────
+const LandingPage        = React.lazy(() => import('../pages/LandingPage').then(m => ({ default: m.LandingPage })));
+const LoginPage          = React.lazy(() => import('../pages/auth/LoginPage').then(m => ({ default: m.LoginPage })));
+const RegisterPage       = React.lazy(() => import('../pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })));
+const MyGardensPage      = React.lazy(() => import('../pages/MyGardensPage').then(m => ({ default: m.MyGardensPage })));
+const GardenPage         = React.lazy(() => import('../pages/GardenPage').then(m => ({ default: m.GardenPage })));
+const PricingPage        = React.lazy(() => import('../pages/PricingPage').then(m => ({ default: m.PricingPage })));
+const PricingSuccessPage = React.lazy(() => import('../pages/PricingSuccessPage').then(m => ({ default: m.PricingSuccessPage })));
+const ProfilePage        = React.lazy(() => import('../pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
+const PrivacyPage        = React.lazy(() => import('../pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
+const TermsPage          = React.lazy(() => import('../pages/TermsPage').then(m => ({ default: m.TermsPage })));
+const ContactPage        = React.lazy(() => import('../pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const BlogPage           = React.lazy(() => import('../pages/BlogPage').then(m => ({ default: m.BlogPage })));
+const BlogPostPage       = React.lazy(() => import('../pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })));
+
+// ── Wrap a lazy element with Suspense ────────────────────────────────────────
+function withSuspense(element: React.ReactNode) {
+  return <Suspense fallback={<PageLoader />}>{element}</Suspense>;
+}
 
 export const router = createBrowserRouter([
   {
@@ -26,13 +41,13 @@ export const router = createBrowserRouter([
       // Public routes
       {
         path: '/',
-        element: <LandingPage />,
+        element: withSuspense(<LandingPage />),
       },
 
       // Auth routes (only accessible when logged out)
       {
         path: '/auth/login',
-        element: (
+        element: withSuspense(
           <GuestRoute>
             <LoginPage />
           </GuestRoute>
@@ -40,7 +55,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/auth/register',
-        element: (
+        element: withSuspense(
           <GuestRoute>
             <RegisterPage />
           </GuestRoute>
@@ -50,7 +65,7 @@ export const router = createBrowserRouter([
       // Protected routes (require authentication)
       {
         path: '/my-gardens',
-        element: (
+        element: withSuspense(
           <ProtectedRoute>
             <MyGardensPage />
           </ProtectedRoute>
@@ -58,7 +73,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/garden/:gardenId',
-        element: (
+        element: withSuspense(
           <GardenRoute>
             <GardenPage />
           </GardenRoute>
@@ -66,7 +81,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/garden/:gardenId/flower/:flowerId',
-        element: (
+        element: withSuspense(
           <GardenRoute>
             <GardenPage />
           </GardenRoute>
@@ -76,43 +91,53 @@ export const router = createBrowserRouter([
       // Pricing (public)
       {
         path: '/pricing',
-        element: <PricingPage />,
+        element: withSuspense(<PricingPage />),
       },
 
       // Pricing success (after Stripe checkout) — public so Stripe redirect always lands
       {
         path: '/pricing/success',
-        element: <PricingSuccessPage />,
+        element: withSuspense(<PricingSuccessPage />),
       },
 
       // Alias: backend redirects to /subscription/success
       {
         path: '/subscription/success',
-        element: <PricingSuccessPage />,
+        element: withSuspense(<PricingSuccessPage />),
       },
 
       // Profile (protected)
       {
         path: '/profile',
-        element: (
+        element: withSuspense(
           <ProtectedRoute>
             <ProfilePage />
           </ProtectedRoute>
         ),
       },
 
+      // Blog (public)
+      {
+        path: '/blog',
+        element: withSuspense(<BlogPage />),
+      },
+      {
+        path: '/blog/:slug',
+        element: withSuspense(<BlogPostPage />),
+      },
+
       // Legal & contact (public)
       {
         path: '/privacy',
-        element: <PrivacyPage />,
+        element: withSuspense(<PrivacyPage />),
       },
       {
         path: '/terms',
-        element: <TermsPage />,
+        element: withSuspense(<TermsPage />),
       },
       {
         path: '/contact',
-        element: <ContactPage />,
+        element: withSuspense(<ContactPage />),
       },
 
       // Legacy route redirect

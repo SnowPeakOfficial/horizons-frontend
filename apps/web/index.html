@@ -11,8 +11,7 @@
 
     <!-- Primary Meta -->
     <title>Horizons - Memory Garden</title>
-    <meta name="description" content="Plant Memories That Bloom Forever. Horizons is a 3D memory garden where you plant digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start." />
-    <meta name="keywords" content="memory garden, digital flowers, plant memories, 3D garden app, meaningful moments, blooming memories, memory keepsake, Horizons, memory app, virtual garden, digital time capsule, time capsule app, send message to the future, schedule a letter, digital memory keeper, personal memory journal, private diary app, save memories online, keepsake app, unique gift ideas, thoughtful digital gift, personalized gift app, anniversary gift idea, birthday gift app, virtual flower gift, send flowers online with message, meaningful gift for long distance relationship, gift for girlfriend, gift for boyfriend, employee recognition gift, farewell gift for coworker, thank you gift, write a heartfelt letter online, send a love letter digitally, digital letter to a friend, digital gift for loved ones, memory journal app, private memory app" />
+    <meta name="description" content="Plant memories that bloom forever. Horizons is a 3D memory garden where you plant digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start." />
     <meta name="author" content="Horizons" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
@@ -25,49 +24,78 @@
     <meta property="og:url" content="https://horizons-garden.com" />
     <meta property="og:site_name" content="Horizons - Memory Garden" />
     <meta property="og:title" content="Horizons - Memory Garden" />
-    <meta property="og:description" content="Plant Memories That Bloom Forever. Plant 3D digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start." />
-    <meta property="og:image" content="https://horizons-garden.com/images/horizons-logo.svg" />
+    <meta property="og:description" content="Plant memories that bloom forever. Plant 3D digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones — free to start." />
+    <meta property="og:image" content="https://horizons-garden.com/images/og-social-card.jpg" />
+    <meta property="og:image:secure_url" content="https://horizons-garden.com/images/og-social-card.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:alt" content="Horizons — A 3D Memory Garden App" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@HorizonsGarden" />
     <meta name="twitter:title" content="Horizons - Memory Garden" />
-    <meta name="twitter:description" content="Plant Memories That Bloom Forever. Plant 3D digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones." />
-    <meta name="twitter:image" content="https://horizons-garden.com/images/horizons-logo.svg" />
+    <meta name="twitter:description" content="Plant memories that bloom forever. Plant 3D digital flowers to preserve your most meaningful moments. Send blooming memories to loved ones." />
+    <meta name="twitter:image" content="https://horizons-garden.com/images/og-social-card.jpg" />
+    <meta name="twitter:image:alt" content="Horizons — A 3D Memory Garden App" />
+
+    <!-- Structured Data: WebSite + SearchAction (enables Sitelinks search box) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Horizons — Memory Garden",
+      "url": "https://horizons-garden.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://horizons-garden.com/blog?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
     <!-- Structured Data: SoftwareApplication -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
-      "name": "Horizons - Memory Garden",
+      "name": "Horizons — Memory Garden",
       "url": "https://horizons-garden.com",
       "logo": "https://horizons-garden.com/images/horizons-logo.svg",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Web, iOS, Android",
       "inLanguage": "en",
-      "description": "Plant Memories That Bloom Forever. A 3D memory garden where you plant digital flowers to preserve your most meaningful moments and send blooming memories to loved ones.",
+      "description": "A private 3D memory garden where you plant digital flowers to preserve your most meaningful moments, send timed messages to loved ones, and keep memories that actually last.",
+      "featureList": [
+        "Plant digital flowers to hold memories, photos, voice notes, and videos",
+        "Set a future bloom date — seal memories to open on a date you choose",
+        "Private gardens shared only with people you invite",
+        "Send blooming flowers to loved ones",
+        "No feeds, no algorithms, no public profiles"
+      ],
       "offers": [
         {
           "@type": "Offer",
           "name": "Free",
           "price": "0",
           "priceCurrency": "CAD",
-          "description": "Plant 1 flower per year, 1 garden"
+          "description": "Plant 1 flower per year in 1 private garden. No credit card required — start keeping memories today."
         },
         {
           "@type": "Offer",
           "name": "Pro",
           "priceCurrency": "CAD",
-          "description": "Plant up to 50 flowers per year, up to 3 gardens"
+          "description": "Plant up to 50 flowers per year across up to 3 gardens. More space for the moments that matter."
         },
         {
           "@type": "Offer",
           "name": "Premium",
           "priceCurrency": "CAD",
-          "description": "Plant up to 100 flowers per year, up to 30 gardens"
+          "description": "Plant up to 100 flowers per year across up to 30 gardens. Room for every memory, every relationship, every chapter."
         }
       ]
     }
@@ -81,10 +109,12 @@
       "name": "Horizons",
       "url": "https://horizons-garden.com",
       "logo": "https://horizons-garden.com/images/horizons-logo.svg",
-      "description": "A 3D digital memory garden platform for preserving meaningful moments as blooming flowers.",
-      "areaServed": "Worldwide"
+      "description": "A private 3D digital memory garden platform for preserving meaningful moments as blooming flowers.",
+      "areaServed": "Worldwide",
+      "sameAs": []
     }
     </script>
+
   </head>
   <body>
     <div id="root"></div>

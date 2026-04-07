@@ -23,6 +23,7 @@ import PersonRemove from '@mui/icons-material/PersonRemove';
 import ExitToApp from '@mui/icons-material/ExitToApp';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import Star from '@mui/icons-material/Star';
+import MailOutline from '@mui/icons-material/MailOutline';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import LocalFlorist from '@mui/icons-material/LocalFlorist';
 
@@ -328,7 +329,7 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                   <div style={infoItemStyle}>
                     <People sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
                     <span style={infoLabelStyle}>Total Members</span>
-                    <span style={infoValueStyle}>{garden.members?.length || 0}</span>
+                    <span style={infoValueStyle}>{(garden.members?.length || 0) + 1}</span>
                   </div>
                 </div>
 
@@ -370,8 +371,41 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
               <div style={tabPanelStyle}>
                 <h3 style={sectionTitleStyle}>Garden Members</h3>
                 
-                {/* Member List */}
+                {/* Member List — owner row always first, then invited members */}
                 <div style={memberListStyle}>
+                  {/* Owner row — synthesised from garden.owner / garden.ownerId */}
+                  {(() => {
+                    const ownerName = garden.owner?.name;
+                    const ownerEmail = garden.owner?.email;
+                    const avatarLetter = (ownerName?.[0] || ownerEmail?.[0] || '?').toUpperCase();
+                    return (
+                      <div style={memberItemStyle} className="member-item">
+                        <div style={memberInfoStyle} className="member-info">
+                          <div style={memberAvatarStyle}>{avatarLetter}</div>
+                          <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                            <div style={memberNameStyle} className="member-name">
+                              {ownerName || ownerEmail || 'Garden Owner'}
+                              {garden.ownerId === currentUserId && (
+                                <span style={{ marginLeft: '6px', fontSize: '11px', color: theme.text.secondary, fontWeight: 400 }}>
+                                  (you)
+                                </span>
+                              )}
+                            </div>
+                            {ownerEmail && (
+                              <div style={memberEmailStyle} className="member-email">{ownerEmail}</div>
+                            )}
+                          </div>
+                        </div>
+                        <div style={memberRoleContainerStyle}>
+                          <span style={{ ...memberRoleBadgeStyle, ...ownerBadgeStyle }}>
+                            <Star sx={{ fontSize: 14 }} />
+                            OWNER
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   {garden.members?.map((member) => (
                     <div key={member.id} style={memberItemStyle} className="member-item">
                       <div style={memberInfoStyle} className="member-info">
@@ -484,6 +518,10 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                     >
                       {isLoading ? 'Sending...' : 'Send Invitation'}
                     </Button>
+                    <p style={{ margin: '10px 0 0', fontSize: '12px', color: theme.text.secondary, textAlign: 'center', lineHeight: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                      <MailOutline sx={{ fontSize: 15, color: theme.colors.rose[400] }} />
+                      They'll receive an email with a link to access this garden, and a notification whenever a flower is planted for them.
+                    </p>
                   </div>
                 )}
 

@@ -3,7 +3,7 @@
  * Beautiful 3D garden view with professional UI
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { LetterRevealOverlay } from '../components/gardens/LetterRevealOverlay';
@@ -39,15 +39,20 @@ import TouchApp from '@mui/icons-material/TouchApp';
 
 // ─── Garden Loading Screen ──────────────────────────────────────────────────
 function GardenLoadingScreen({ visible }: { visible: boolean }) {
-  const [mounted, setMounted] = React.useState(true);
+  const [mounted, setMounted] = React.useState(visible);
 
-  // Keep mounted briefly after visible=false so the fade-out plays
+  // Keep mounted briefly after visible=false so the fade-out plays.
+  // When visible goes true→false, delay unmount by 500ms for the CSS fade.
+  // When visible goes false→true, update mounted immediately via a layout effect
+  // (avoids calling setState synchronously in a regular effect body).
+  React.useLayoutEffect(() => {
+    if (visible) setMounted(true);
+  }, [visible]);
   useEffect(() => {
     if (!visible) {
       const t = setTimeout(() => setMounted(false), 500);
       return () => clearTimeout(t);
     }
-    // visible=true: re-mount immediately (no setState needed — initial value is true)
   }, [visible]);
 
   if (!mounted) return null;
@@ -68,7 +73,7 @@ function GardenLoadingScreen({ visible }: { visible: boolean }) {
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 9998,
+          zIndex: 150,
           background: 'linear-gradient(180deg, #FDFCFA 0%, #FFF9F7 50%, #FFFFFF 100%)',
           display: 'flex',
           flexDirection: 'column',
@@ -223,9 +228,12 @@ export const GardenPage: React.FC = () => {
   const [showRevealOverlay, setShowRevealOverlay] = useState(fromEmail && !!flowerId);
   // Confetti fires only AFTER the overlay animation completes (onDone), not at mount time.
   const [showConfetti, setShowConfetti] = useState(false);
+  // Fix B: track whether onDone fired before flowers loaded; if so, dismiss once they arrive
+  const overlayDoneRef = useRef(false);
 
-  // Loading screen: starts true on first render, dismissed once the first fetch resolves
-  const [showFlowerLoading, setShowFlowerLoading] = useState(true);
+  // Loading screen: starts true on first render, dismissed once the first fetch resolves.
+  // For email deep-link flows, LetterRevealOverlay already covers the load — skip it.
+  const [showFlowerLoading, setShowFlowerLoading] = useState(!(fromEmail && !!flowerId));
 
   // Planting overlay: shown while uploads + addContent are processing in the background
   const [isPlanting, setIsPlanting] = useState(false);
@@ -336,21 +344,23 @@ export const GardenPage: React.FC = () => {
   // For email deep-links: pre-set selectedFlower immediately so the FlowerDetailsModal
   // is fully mounted and rendered DURING the overlay animation. When onDone() fires
   // the overlay just lifts — the modal appears instantly with no visible delay.
+  //
+  // Fix B: if onDone() fired before flowers arrived (slow data connection), dismiss
+  // the overlay now that we finally have the flower data.
   useEffect(() => {
     if (!flowerId || deepLinkOpenedRef.current || activeFlowers.length === 0) return;
     const target = activeFlowers.find((f) => f.id === flowerId);
     if (target) {
       deepLinkOpenedRef.current = true;
-      if (fromEmail) {
-        // Pre-load: defer to next tick (satisfies ESLint) but still fires immediately —
-        // well before the 4.35s animation ends, so the modal is fully rendered when onDone() fires.
-        setTimeout(() => setSelectedFlower(target), 0);
-      } else {
-        // Defer to avoid synchronous setState inside effect
-        setTimeout(() => setSelectedFlower(target), 0);
+      setSelectedFlower(target);
+
+      // Fix B: overlay was already dismissed (slow data path) — just hide loading + fire confetti
+      if (overlayDoneRef.current && !showRevealOverlay) {
+        setShowFlowerLoading(false);
+        setShowConfetti(true);
       }
     }
-  }, [flowerId, activeFlowers, fromEmail]);
+  }, [flowerId, activeFlowers, showRevealOverlay]);
 
   // Auto-dismiss success banners after 3 seconds
   useEffect(() => {
@@ -538,7 +548,7 @@ export const GardenPage: React.FC = () => {
               {!isGuestMode && (
                 <div style={statItemStyle}>
                   <People sx={{ fontSize: 16, color: theme.colors.rose[400] }} />
-                  <span>{activeGarden.members?.length || 0} members</span>
+                  <span>{(activeGarden.members?.length || 0) + 1} members</span>
                 </div>
               )}
               {!isCompact && (
@@ -682,7 +692,10 @@ export const GardenPage: React.FC = () => {
         </div>
       )}
 
-      {/* 3D Garden Scene */}
+      {/* 3D Garden Scene — always mounted so GLBs preload during the cinematic overlay.
+          GardenScene is wrapped in a local Suspense boundary so useGLTF Suspense throws
+          are caught here (garden renders empty) rather than bubbling to the route-level
+          <Suspense fallback={<PageLoader />}> which would blank the entire page. */}
       <div style={canvasContainerStyle}>
         <Canvas
           shadows
@@ -695,41 +708,43 @@ export const GardenPage: React.FC = () => {
             antialias: true,
           }}
         >
-          <GardenScene 
-            config={GARDEN_CONFIGS.test_garden}
-            flowers={activeFlowers}
-            isPlacementMode={isPlacementMode}
-            onTerrainClick={(position) => {
-              if (isPlacementMode) {
-                setPlacedPosition(position);
-              }
-            }}
-            onFlowerDragEnd={handleFlowerDragEnd}
-            onFlowerDragStateChange={(isDragging) => {
-              setIsDraggingFlower(isDragging);
-              if (isDragging) setHoveredFlowerTooltip(null);
-            }}
-            onFlowerClick={(flower: Flower) => {
-              setSelectedFlower(flower);
-              // Preserve ?token= for guests so the URL stays valid
-              const params = guestToken ? `?token=${guestToken}` : '';
-              navigate(`/garden/${gardenId}/flower/${flower.id}${params}`, { replace: false });
-            }}
-            onFlowerHover={(info) => {
-              // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
-              if (isMobile) return;
-              if (info) {
-                setHoveredFlowerTooltip({
-                  flower: info.flower,
-                  definition: info.definition,
-                  screenX: info.screenX ?? 0,
-                  screenY: info.screenY ?? 0,
-                });
-              } else {
-                setHoveredFlowerTooltip(null);
-              }
-            }}
-          />
+          <Suspense fallback={null}>
+            <GardenScene
+              config={GARDEN_CONFIGS.test_garden}
+              flowers={activeFlowers}
+              isPlacementMode={isPlacementMode}
+              onTerrainClick={(position) => {
+                if (isPlacementMode) {
+                  setPlacedPosition(position);
+                }
+              }}
+              onFlowerDragEnd={handleFlowerDragEnd}
+              onFlowerDragStateChange={(isDragging) => {
+                setIsDraggingFlower(isDragging);
+                if (isDragging) setHoveredFlowerTooltip(null);
+              }}
+              onFlowerClick={(flower: Flower) => {
+                setSelectedFlower(flower);
+                // Preserve ?token= for guests so the URL stays valid
+                const params = guestToken ? `?token=${guestToken}` : '';
+                navigate(`/garden/${gardenId}/flower/${flower.id}${params}`, { replace: false });
+              }}
+              onFlowerHover={(info) => {
+                // Hover tooltips are meaningless on touch-only devices — skip entirely to avoid lag
+                if (isMobile) return;
+                if (info) {
+                  setHoveredFlowerTooltip({
+                    flower: info.flower,
+                    definition: info.definition,
+                    screenX: info.screenX ?? 0,
+                    screenY: info.screenY ?? 0,
+                  });
+                } else {
+                  setHoveredFlowerTooltip(null);
+                }
+              }}
+            />
+          </Suspense>
           <CameraLimiter controlsRef={orbitRef} />
           <OrbitControls
             ref={orbitRef}
@@ -751,7 +766,6 @@ export const GardenPage: React.FC = () => {
             minAzimuthAngle={-Infinity}
             target={[0, 0, 0]}
           />
-          {/* Clamp pan target every frame to keep camera inside the garden */}
         </Canvas>
       </div>
 
@@ -1043,6 +1057,16 @@ export const GardenPage: React.FC = () => {
       {showRevealOverlay && (
         <LetterRevealOverlay
           onDone={() => {
+            // Fix B: flowers haven't arrived yet (slow cellular) — dismiss the overlay
+            // immediately and show the loading screen so the user sees honest progress
+            // rather than a frozen transparent overlay. The flower effect will dismiss
+            // the loading screen and fire confetti when data finally lands.
+            if (!deepLinkOpenedRef.current) {
+              overlayDoneRef.current = true;
+              setShowRevealOverlay(false);   // unmount overlay (mounts Canvas)
+              setShowFlowerLoading(true);    // show "Growing your garden…" while we wait
+              return;
+            }
             setShowRevealOverlay(false);
             // Fire confetti AFTER the overlay lifts so it plays over the visible letter
             setShowConfetti(true);

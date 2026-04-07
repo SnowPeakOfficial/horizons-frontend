@@ -24,11 +24,21 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
 
     video.playbackRate = 1.0;
 
+    // Safety net: if the video hasn't started playing within 1.5 s (buffering on
+    // mobile data, or autoplay silently blocked without throwing), skip the intro.
+    const safetyTimer = setTimeout(() => {
+      if (video.paused || video.readyState < 3 /* HAVE_FUTURE_DATA */) {
+        console.log('Video did not start in time — skipping intro');
+        onComplete();
+      }
+    }, 1500);
+
     const playVideo = async () => {
       try {
         await video.play();
       } catch (error) {
         console.log('Video autoplay blocked:', error);
+        clearTimeout(safetyTimer);
         onComplete();
       }
     };
@@ -272,7 +282,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             >
               Plant memories as flowers.
               <br />
-              Return to them when you're ready.
+              Return to them whenever you want.
             </p>
 
             {/* CTA Buttons */}
