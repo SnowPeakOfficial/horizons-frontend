@@ -46,7 +46,7 @@ export const useFlowerStore = create<FlowerState>((set, get) => ({
       const status = err.status ?? err.response?.status ?? err.statusCode;
       let errorMsg = 'Unable to load flowers. Please try again.';
       if (err.error === 'NETWORK_ERROR' || status === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (status === 403) {
         errorMsg = "You don't have access to this garden.";
       }
@@ -84,7 +84,7 @@ export const useFlowerStore = create<FlowerState>((set, get) => ({
       const err = error as { message?: string; statusCode?: number; error?: string; code?: string };
       let errorMsg = 'Unable to plant this flower. Please try again.';
       if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (err.statusCode === 403) {
         // Pass through tier limit / permission messages — they're already user-friendly
         errorMsg = err.message || "You don't have permission to plant flowers in this garden.";
@@ -139,7 +139,7 @@ export const useFlowerStore = create<FlowerState>((set, get) => ({
       const err = error as { message?: string; statusCode?: number; error?: string };
       let errorMsg = 'Unable to remove this flower. Please try again.';
       if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (err.statusCode === 403) {
         errorMsg = 'Only the person who planted this flower or the garden owner can remove it.';
       } else if (err.statusCode && err.statusCode >= 500) {

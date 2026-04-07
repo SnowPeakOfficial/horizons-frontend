@@ -43,7 +43,7 @@ export const useGardenStore = create<GardenState>((set) => ({
       const err = error as { message?: string; statusCode?: number; error?: string };
       let errorMsg = 'Unable to load your gardens. Please try again.';
       if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       }
       set({ error: errorMsg, isLoading: false });
     }
@@ -59,7 +59,7 @@ export const useGardenStore = create<GardenState>((set) => ({
       const status = err.status ?? err.response?.status ?? err.statusCode;
       let errorMsg = 'Unable to load this garden. Please try again.';
       if (err.error === 'NETWORK_ERROR' || status === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (status === 403 || status === 401) {
         errorMsg = "You don't have access to this garden.";
       } else if (status === 404) {
@@ -87,7 +87,7 @@ export const useGardenStore = create<GardenState>((set) => ({
       const err = error as { message?: string; statusCode?: number; error?: string };
       let errorMsg = 'Unable to create your garden. Please try again.';
       if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (err.statusCode === 403) {
         // Pass through tier limit messages as-is — they're already user-friendly
         errorMsg = err.message || "You've reached your garden limit. Upgrade your plan to create more gardens.";
@@ -114,7 +114,7 @@ export const useGardenStore = create<GardenState>((set) => ({
       const err = error as { message?: string; statusCode?: number; error?: string };
       let errorMsg = 'Unable to update this garden. Please try again.';
       if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (err.statusCode === 403) {
         errorMsg = err.message || "You don't have permission to update this garden.";
       } else if (err.statusCode && err.statusCode >= 500) {
@@ -153,7 +153,7 @@ export const useGardenStore = create<GardenState>((set) => ({
       const err = error as { message?: string; statusCode?: number; error?: string };
       let errorMsg = 'Unable to delete this garden. Please try again.';
       if (err.error === 'NETWORK_ERROR' || err.statusCode === 0) {
-        errorMsg = "We're having trouble reaching our servers. Please check your internet connection.";
+        errorMsg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (err.statusCode === 403) {
         errorMsg = 'Only the garden owner can delete this garden.';
       } else if (err.statusCode && err.statusCode >= 500) {
