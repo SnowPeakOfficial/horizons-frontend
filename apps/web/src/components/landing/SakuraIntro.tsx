@@ -45,15 +45,19 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
 
     playVideo();
 
-    const handleEnded = () => {
-      clearTimeout(safetyTimer);
-      onComplete();
-    };
+    // Fire onComplete when the hero card is nearly full screen (~6s into the 7s scale animation).
+    // This avoids waiting for the video to end — the transition to the landing page happens
+    // as the aperture reaches full screen, which feels much more intentional.
+    const completionTimer = setTimeout(() => onComplete(), 6000);
 
+    // Fallback: if autoplay was blocked (playVideo calls onComplete immediately),
+    // the timer above still runs — that's fine since onComplete is idempotent.
+    // Keep the 'ended' event only as a safety net for very slow devices.
+    const handleEnded = () => onComplete();
     video.addEventListener('ended', handleEnded);
 
     return () => {
-      clearTimeout(safetyTimer);
+      clearTimeout(completionTimer);
       video.removeEventListener('ended', handleEnded);
     };
   }, [onComplete]);
@@ -81,7 +85,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          animation: 'fadeOutVideo 8s ease-out forwards',
+          animation: 'fadeOutVideo 7s ease-out forwards',
         }}
       >
         <source src="/videos/sakura-blast.mp4" type="video/mp4" />
@@ -97,7 +101,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
           height: '100dvh',
           transform: 'translate(-50%, -50%)',
           transformOrigin: 'center center',
-          animation: 'scaleUp 8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          animation: 'scaleUp 7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
           borderRadius: '32px',
           overflow: 'hidden',
           boxShadow: '0 0 80px rgba(255, 255, 255, 0.4)',
@@ -140,7 +144,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             letterSpacing: '0.25em', textTransform: 'uppercase' as const,
             color: theme.text.tertiary, zIndex: 10,
             pointerEvents: 'none',
-            animation: 'heroContentFade 8s ease forwards',
+            animation: 'heroContentFade 7s ease forwards',
           }}>EST. 2026</div>
 
           <div className="sakura-label-desktop" style={{
@@ -149,7 +153,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             letterSpacing: '0.1em', color: theme.text.tertiary,
             zIndex: 10, pointerEvents: 'none',
             display: 'flex', alignItems: 'center', gap: '6px',
-            animation: 'heroContentFade 8s ease forwards',
+            animation: 'heroContentFade 7s ease forwards',
           }}>
             <span style={{ fontSize: '10px', color: theme.colors.rose[400] }}>✦</span>
             <span>Private by design</span>
@@ -163,7 +167,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             letterSpacing: '0.2em', textTransform: 'uppercase' as const,
             color: theme.text.tertiary, zIndex: 10,
             pointerEvents: 'none',
-            animation: 'heroContentFade 8s ease forwards',
+            animation: 'heroContentFade 7s ease forwards',
           }}>EST. 2026</div>
 
           <div className="sakura-label-mobile-right" style={{
@@ -173,7 +177,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             letterSpacing: '0.08em', color: theme.text.tertiary,
             zIndex: 10, pointerEvents: 'none',
             alignItems: 'center', gap: '5px',
-            animation: 'heroContentFade 8s ease forwards',
+            animation: 'heroContentFade 7s ease forwards',
           }}>
             <span style={{ fontSize: '8px', color: theme.colors.rose[400] }}>✦</span>
             <span>Private by design</span>
@@ -189,7 +193,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               alignItems: 'center',
               justifyContent: 'center',
               padding: '0 40px',
-              animation: 'logoFade 8s ease forwards',
+            animation: 'logoFade 7s ease forwards',
             }}
           >
             <div style={{ opacity: 0.7 }}>
@@ -218,7 +222,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               margin: '0 auto',
               padding: '0 40px',
               textAlign: 'center',
-              animation: 'heroContentFade 8s ease forwards',
+              animation: 'heroContentFade 7s ease forwards',
             }}
           >
             {/* Logo/Brand */}
@@ -336,7 +340,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
               justifyContent: 'center',
               marginTop: '-200px',
               marginBottom: '0px',
-              animation: 'heroContentFade 8s ease forwards',
+              animation: 'heroContentFade 7s ease forwards',
             }}
           >
             <LazyImage
@@ -356,7 +360,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
         </section>
       </div>
 
-      {/* Smooth 8-Second Animation Sequence */}
+      {/* Smooth 7-Second Animation Sequence */}
       <style>{`
         /* Rectangle: Hold at 15% for 2s, then expand to 100% */
         @keyframes scaleUp {
@@ -364,7 +368,7 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
             transform: translate(-50%, -50%) scale(0.15); 
             border-radius: 32px;
           }
-          25% { 
+          28.57% { 
             transform: translate(-50%, -50%) scale(0.15); 
             border-radius: 32px;
           }
@@ -377,16 +381,16 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
         /* Logo: Visible 0-2s, fade out 2-3s */
         @keyframes logoFade {
           0% { opacity: 1; }
-          25% { opacity: 1; }      /* Visible until 2s */
-          37.5% { opacity: 0; }    /* Fade out by 3s */
+          28.57% { opacity: 1; }   /* Visible until 2s */
+          42.86% { opacity: 0; }   /* Fade out by 3s */
           100% { opacity: 0; }
         }
 
         /* Hero Content: Hidden 0-2s, fade in 2-3.5s */
         @keyframes heroContentFade {
           0% { opacity: 0; }
-          25% { opacity: 0; }      /* Hidden until 2s */
-          43.75% { opacity: 1; }   /* Fade in by 3.5s */
+          28.57% { opacity: 0; }   /* Hidden until 2s */
+          50% { opacity: 1; }      /* Fade in by 3.5s */
           100% { opacity: 1; }
         }
 
@@ -403,8 +407,8 @@ export const SakuraIntro: React.FC<SakuraIntroProps> = ({ onComplete }) => {
         /* Video: Fade out gradually */
         @keyframes fadeOutVideo {
           0% { opacity: 1; }
-          75% { opacity: 0.5; }    /* 6s */
-          100% { opacity: 0; }     /* 8s */
+          85.71% { opacity: 0.5; } /* 6s */
+          100% { opacity: 0; }     /* 7s */
         }
       `}</style>
     </div>

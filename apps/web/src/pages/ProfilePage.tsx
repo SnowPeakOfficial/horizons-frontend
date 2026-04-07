@@ -61,7 +61,7 @@ export const ProfilePage: React.FC = () => {
       const e = err as { message?: string; statusCode?: number; error?: string };
       let msg = 'Unable to save your changes. Please try again.';
       if (e.error === 'NETWORK_ERROR' || e.statusCode === 0) {
-        msg = "We're having trouble reaching our servers. Please check your internet connection.";
+        msg = "Our servers are temporarily unavailable. Please try again in a moment.";
       } else if (e.statusCode && e.statusCode >= 500) {
         msg = 'Something went wrong on our end. Please try again in a moment.';
       } else if (e.message) {

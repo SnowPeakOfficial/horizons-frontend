@@ -96,7 +96,7 @@ export const RegisterPage: React.FC = () => {
       } else if (err.statusCode === 400) {
         setFormError('Some of your information looks incorrect. Please review the form and try again.');
       } else if (err.statusCode === 0 || err.error === 'NETWORK_ERROR') {
-        setFormError("We're having trouble reaching our servers. Please check your internet connection and try again.");
+        setFormError("Our servers are temporarily unavailable. Please try again in a moment.");
       } else if (err.statusCode && err.statusCode >= 500) {
         setFormError('Something went wrong on our end. Please try again in a moment.');
       } else if (err.message) {
