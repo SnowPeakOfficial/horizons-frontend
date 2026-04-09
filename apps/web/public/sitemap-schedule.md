@@ -38,7 +38,7 @@ Insert before the closing `</urlset>` tag. Also update the `/blog` lastmod each 
   </url>
 ```
 
-## Add on 2026-04-08 (two posts, same day)
+## Add on 2026-04-08
 
 ```xml
   <url>
@@ -47,70 +47,75 @@ Insert before the closing `</urlset>` tag. Also update the `/blog` lastmod each 
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  <url>
-    <loc>https://horizons-garden.com/blog/gifts-for-someone-grieving</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
 ```
 
-## Add on 2026-04-14
-
-```xml
-  <url>
-    <loc>https://horizons-garden.com/blog/problem-with-digital-time-capsules</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-```
-
-## Add on 2026-04-19
-
-```xml
-  <url>
-    <loc>https://horizons-garden.com/blog/what-to-write-letter-to-future-self</loc>
-    <lastmod>2026-04-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-```
-
-## Add on 2026-04-25
-
-```xml
-  <url>
-    <loc>https://horizons-garden.com/blog/how-to-make-a-gift-feel-personal</loc>
-    <lastmod>2026-04-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-```
-
-## Add on 2026-05-01 (two posts, same day)
+## Add on 2026-04-10 (two posts, same day)
 
 ```xml
   <url>
     <loc>https://horizons-garden.com/blog/gift-for-girlfriend</loc>
-    <lastmod>2026-05-01</lastmod>
+    <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://horizons-garden.com/blog/gift-for-boyfriend</loc>
-    <lastmod>2026-05-01</lastmod>
+    <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 ```
 
-## Add on 2026-05-08
+## Add on 2026-04-15
 
 ```xml
   <url>
     <loc>https://horizons-garden.com/blog/digital-scrapbook-ideas</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+```
+
+## Add on 2026-04-17
+
+```xml
+  <url>
+    <loc>https://horizons-garden.com/blog/gifts-for-someone-grieving</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+```
+
+## Add on 2026-04-22
+
+```xml
+  <url>
+    <loc>https://horizons-garden.com/blog/problem-with-digital-time-capsules</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+```
+
+## Add on 2026-04-27
+
+```xml
+  <url>
+    <loc>https://horizons-garden.com/blog/what-to-write-letter-to-future-self</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+```
+
+## Add on 2026-05-02
+
+```xml
+  <url>
+    <loc>https://horizons-garden.com/blog/how-to-make-a-gift-feel-personal</loc>
+    <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -199,19 +204,20 @@ Insert before the closing `</urlset>` tag. Also update the `/blog` lastmod each 
 
 ## Full release calendar at a glance
 
-| Date   | Post(s)                                                      |
-| ------ | ------------------------------------------------------------ |
-| Mar 26 | best-memory-keeping-app                                      |
-| Apr 2  | long-distance-relationship-gift-ideas                        |
-| Apr 8  | how-to-preserve-family-memories + gifts-for-someone-grieving |
-| Apr 14 | problem-with-digital-time-capsules                           |
-| Apr 19 | what-to-write-letter-to-future-self                          |
-| Apr 25 | how-to-make-a-gift-feel-personal                             |
-| May 1  | gift-for-girlfriend + gift-for-boyfriend                     |
-| May 8  | digital-scrapbook-ideas                                      |
-| May 14 | gift-and-a-memory                                            |
-| May 21 | how-to-remember-someone-who-passed-away                      |
-| May 28 | email-to-future-self                                         |
-| Jun 4  | what-is-a-memory-garden                                      |
-| Jun 11 | what-is-a-digital-time-capsule                               |
-| Jun 19 | what-is-a-blooming-flower                                    |
+| Date   | Post(s)                                  |
+| ------ | ---------------------------------------- |
+| Mar 26 | best-memory-keeping-app                  |
+| Apr 2  | long-distance-relationship-gift-ideas    |
+| Apr 8  | how-to-preserve-family-memories          |
+| Apr 10 | gift-for-girlfriend + gift-for-boyfriend |
+| Apr 15 | digital-scrapbook-ideas                  |
+| Apr 17 | gifts-for-someone-grieving               |
+| Apr 22 | problem-with-digital-time-capsules       |
+| Apr 27 | what-to-write-letter-to-future-self      |
+| May 2  | how-to-make-a-gift-feel-personal         |
+| May 14 | gift-and-a-memory                        |
+| May 21 | how-to-remember-someone-who-passed-away  |
+| May 28 | email-to-future-self                     |
+| Jun 4  | what-is-a-memory-garden                  |
+| Jun 11 | what-is-a-digital-time-capsule           |
+| Jun 19 | what-is-a-blooming-flower                |

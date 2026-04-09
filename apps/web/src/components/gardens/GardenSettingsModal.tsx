@@ -518,8 +518,8 @@ export const GardenSettingsModal: React.FC<GardenSettingsModalProps> = ({
                     >
                       {isLoading ? 'Sending...' : 'Send Invitation'}
                     </Button>
-                    <p style={{ margin: '10px 0 0', fontSize: '12px', color: theme.text.secondary, textAlign: 'center', lineHeight: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
-                      <MailOutline sx={{ fontSize: 15, color: theme.colors.rose[400] }} />
+                    <p style={{ margin: '10px 0 0', fontSize: '12px', color: theme.text.secondary, textAlign: 'center', lineHeight: 1.5, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '5px' }}>
+                      <MailOutline sx={{ fontSize: 15, color: theme.colors.rose[400], marginTop: '2px', flexShrink: 0 }} />
                       They'll receive an email with a link to access this garden, and a notification whenever a flower is planted for them.
                     </p>
                   </div>
