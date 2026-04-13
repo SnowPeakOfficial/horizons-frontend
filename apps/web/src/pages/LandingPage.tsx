@@ -681,6 +681,34 @@ export const LandingPage: React.FC = () => {
             </h2>
           </RevealOnScroll>
 
+          {/* Promo Video */}
+          <RevealOnScroll delay={80}>
+            <div style={{
+              width: '100%',
+              maxWidth: '800px',
+              margin: '0 auto 72px auto',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              boxShadow: '0 16px 48px rgba(0,0,0,0.10)',
+              aspectRatio: '16/9',
+              position: 'relative',
+            }}>
+              <iframe
+                src="https://www.youtube.com/embed/adL8hY4KHfc"
+                title="How Horizons works"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                }}
+              />
+            </div>
+          </RevealOnScroll>
+
           {/* Steps — vertical alternating layout */}
           {[
             {

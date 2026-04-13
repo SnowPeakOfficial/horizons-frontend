@@ -489,10 +489,10 @@ export const FlowerDetailsModal: React.FC<FlowerDetailsModalProps> = ({
                     {/* Bloom message (text that came with the BLOOM phase) */}
                     {bloomMessage && (
                       <div style={{ ...mediaItemStyle, border: `1px solid ${tmpl.accentColor}33` }}>
-                        <div style={{ ...mediaLabelStyle, color: tmpl.accentColor }}>
+                        <div style={{ ...mediaLabelStyle, color: tmpl.accentColor, textAlign: 'center' }}>
                           🌸 A message that waited for you
                         </div>
-                        <div style={{ ...messageTextStyle, textAlign: 'left' }}>
+                        <div style={{ ...messageTextStyle }}>
                           {bloomMessage}
                         </div>
                       </div>

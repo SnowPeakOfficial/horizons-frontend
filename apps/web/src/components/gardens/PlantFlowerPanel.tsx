@@ -1096,16 +1096,6 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
               )}
             </div>
 
-            {/* Bloom Date (if BLOOMING selected) */}
-            {flowerType === 'BLOOMING' && (
-              <DateTimePicker
-                label="Bloom Date"
-                value={watch('bloomAt')}
-                onChange={(iso) => setValue('bloomAt', iso, { shouldValidate: true })}
-                error={errors.bloomAt?.message}
-              />
-            )}
-
             {/* Bloom Message - only for BLOOMING flowers */}
             {flowerType === 'BLOOMING' && (
               <div style={{ 
@@ -1145,6 +1135,16 @@ export const PlantFlowerPanel: React.FC<PlantFlowerPanelProps> = ({
                   </span>
                 )}
               </div>
+            )}
+
+            {/* Bloom Date (if BLOOMING selected) */}
+            {flowerType === 'BLOOMING' && (
+              <DateTimePicker
+                label="Bloom Date"
+                value={watch('bloomAt')}
+                onChange={(iso) => setValue('bloomAt', iso, { shouldValidate: true })}
+                error={errors.bloomAt?.message}
+              />
             )}
 
             {/* Hidden file inputs */}
