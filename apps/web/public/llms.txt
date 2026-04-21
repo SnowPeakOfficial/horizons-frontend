@@ -1,0 +1,115 @@
+# Horizons — Memory Garden
+> A private 3D digital garden where you plant memories as flowers.
+
+## What is Horizons?
+
+Horizons is a private, beautifully designed web app where you preserve meaningful moments as 3D digital flowers in your own garden. Each flower holds a memory — a written message, a photo, a voice note, or a short video. You choose who can see it, and when it blooms.
+
+Some flowers open immediately, sharing a moment with the people you care about right away. Others can be sealed and set to bloom on a specific future date — a birthday, an anniversary, a milestone years away. The flower waits, sealed, until that day arrives.
+
+There are no public feeds. No algorithms. No public profiles. Only the people you personally invite can enter your garden.
+
+## Who is it for?
+
+- Couples who want to share something more meaningful than a text
+- Parents capturing milestones as their children grow
+- Grandparents planting letters for grandchildren to open years from now
+- Friends who want to say something real and lasting
+- People going through grief who need a quiet place to remember
+- Anyone who wants to write to their future self — or leave something behind for someone they love
+
+## Core Features
+
+- Plant digital flowers that hold written messages, photos, voice notes, and videos
+- Set a future bloom date — seal a memory to open on a date you choose (no limit on how far ahead)
+- Private gardens shared only with people you personally invite — nothing is public or searchable
+- Send a blooming flower to someone you love, delivered like a gift
+- Leave a hint note visible before a flower blooms, so recipients can anticipate it
+- Choose a letter theme: Romantic, Friendship, Family, Gratitude, Celebration, or Encouragement
+- No feeds, no algorithms, no public profiles — only the moments you choose to keep
+
+## Pricing
+
+### Free Plan
+- 1 private garden
+- 1 flower per year
+- 3 flower types
+- Images, voice notes, and video inside flowers
+- No credit card required
+
+### Pro Plan — $4.99 CAD/month or $49.99 CAD/year (~$4.17/mo)
+- Everything in Free
+- Up to 3 private gardens
+- Plant 50 flowers per year
+- 5 exclusive flower types
+- Multiple letter templates for flowers
+- Send a gift card with flowers
+
+### Premium Plan (Coming Soon) — $10.99 CAD/month or $109.99 CAD/year (~$9.17/mo)
+- Everything in Pro
+- Unlimited gardens
+- Plant 100 flowers per year
+- 3 premium flower types
+- Seasonal garden themes
+- Seasonal and yearly recap
+
+## Privacy & Trust
+
+- Your garden is completely private by default — no one can find or enter it without a personal invitation from you
+- Everything is encrypted in transit and at rest
+- We never sell your data, never use your memories to train AI, and never share anything with third parties
+- What you plant here stays yours, permanently — no expiry, no algorithm, no feed
+
+## Company
+
+- **Name:** Horizons (operated by SnowPeak)
+- **Website:** https://horizons-garden.com
+- **Founded:** 2026
+- **Headquarters:** Canada
+- **Category:** Memory keeping, digital journaling, meaningful gifting, relationship tech
+
+## Key Pages
+
+- Homepage: https://horizons-garden.com/
+- Pricing: https://horizons-garden.com/pricing
+- Blog: https://horizons-garden.com/blog
+- Contact: https://horizons-garden.com/contact
+- Privacy Policy: https://horizons-garden.com/privacy
+- Terms of Service: https://horizons-garden.com/terms
+
+## Blog — Selected Articles
+
+- Best Memory Keeping Apps: https://horizons-garden.com/blog/best-memory-keeping-app
+- Long Distance Relationship Gift Ideas: https://horizons-garden.com/blog/long-distance-relationship-gift-ideas
+- How to Preserve Family Memories: https://horizons-garden.com/blog/how-to-preserve-family-memories
+- Gift Ideas for Your Girlfriend: https://horizons-garden.com/blog/gift-for-girlfriend
+- Gift Ideas for Your Boyfriend: https://horizons-garden.com/blog/gift-for-boyfriend
+- Digital Scrapbook Ideas: https://horizons-garden.com/blog/digital-scrapbook-ideas
+- Gifts for Someone Grieving: https://horizons-garden.com/blog/gifts-for-someone-grieving
+
+## Social Media
+
+- Instagram: https://www.instagram.com/horizons.memory.garden/
+- TikTok: https://www.tiktok.com/@horizonsmemorygarden
+- X (Twitter): https://x.com/horizonsmemory
+- YouTube: https://www.youtube.com/@HorizonsMemoryGarden
+
+## Frequently Asked Questions
+
+**What is Horizons?**
+Horizons is a private 3D garden where you plant digital flowers to keep the moments that matter. Each flower holds a memory — a written message, a photo, a voice note, or a video. Some flowers open right away, sharing something immediately. Others can be set to bloom on a date you choose, so a moment arrives exactly when it's meant to.
+
+**What is a blooming flower?**
+A blooming flower is a memory you save for a specific moment in the future. While it's still waiting to open, you can leave a small note for the recipient — a hint, a few words, something to hold onto while they wait. On the day it blooms, the flower opens and reveals everything inside.
+
+**Who can see my garden and my memories?**
+Only the people you personally invite. Your garden is completely private by default — nothing is visible to the public, nothing is searchable, and no one can find or enter it without an invitation from you.
+
+**Is Horizons free to start?**
+Yes — no credit card required. The free plan gives you one private garden, lets you plant one flower per year, and includes 3 flower types with support for images, voice notes, and video inside flowers.
+
+**Can I plant a flower for a milestone that is years away?**
+Yes — there's no limit on how far in the future you can set a bloom date. The flower will wait as long as it needs to.
+
+**Is my data encrypted and safe?**
+Yes. Everything you store in Horizons is encrypted while it travels and while it rests. We never sell your data, never use your memories to train AI, and never share anything with third parties.

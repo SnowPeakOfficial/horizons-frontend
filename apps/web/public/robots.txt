@@ -1,3 +1,9 @@
+# ──────────────────────────────────────────────────────────────
+#  robots.txt — Horizons Memory Garden
+#  https://horizons-garden.com
+# ──────────────────────────────────────────────────────────────
+
+# ── Standard web crawlers ─────────────────────────────────────
 User-agent: *
 Allow: /
 Disallow: /garden/
@@ -7,5 +13,62 @@ Disallow: /auth/
 Disallow: /login
 Disallow: /register
 
+# ── Google (web + images + AI/Gemini via Google-Extended) ─────
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /images/
+
+User-agent: Google-Extended
+Allow: /
+
+# ── OpenAI / ChatGPT ──────────────────────────────────────────
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# ── Perplexity AI ─────────────────────────────────────────────
+User-agent: PerplexityBot
+Allow: /
+
+# ── Anthropic / Claude ────────────────────────────────────────
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# ── Common Crawl (training data for many LLMs) ────────────────
+User-agent: CCBot
+Allow: /
+
+# ── Apple (Siri, Spotlight, Apple Intelligence) ───────────────
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# ── Meta AI ───────────────────────────────────────────────────
+User-agent: FacebookBot
+Allow: /
+
+# ── Amazon / Alexa ────────────────────────────────────────────
+User-agent: ia_archiver
+Allow: /
+
+# ── Cohere ────────────────────────────────────────────────────
+User-agent: cohere-ai
+Allow: /
+
+# ── Bytedance / TikTok ────────────────────────────────────────
+User-agent: Bytespider
+Allow: /
+
+# ──────────────────────────────────────────────────────────────
 Host: https://horizons-garden.com
 Sitemap: https://horizons-garden.com/sitemap.xml
+Sitemap: https://horizons-garden.com/llms.txt
