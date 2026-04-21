@@ -121,7 +121,7 @@ export default function SEO({
 
       {/* ── Twitter Card ──────────────────────────────────────────── */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@HorizonsGarden" />
+      <meta name="twitter:site" content="@horizonsmemory" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={image} />

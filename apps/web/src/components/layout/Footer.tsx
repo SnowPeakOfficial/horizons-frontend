@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Instagram from '@mui/icons-material/Instagram';
 import X from '@mui/icons-material/X';
+import YouTube from '@mui/icons-material/YouTube';
 
 /** Small circular icon button for social media links */
 const SocialIconButton: React.FC<{ href: string; label: string; children: React.ReactNode }> = ({ href, label, children }) => {
@@ -153,10 +154,14 @@ export const Footer: React.FC = () => {
                 <X sx={{ fontSize: 20 }} />
               </SocialIconButton>
               {/* TikTok — inline SVG since MUI doesn't include it */}
-              <SocialIconButton href="#" label="TikTok">
+              <SocialIconButton href="https://www.tiktok.com/@horizonsmemorygarden" label="TikTok">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.82a8.18 8.18 0 0 0 4.78 1.52V6.89a4.85 4.85 0 0 1-1.01-.2z"/>
                 </svg>
+              </SocialIconButton>
+              {/* YouTube */}
+              <SocialIconButton href="https://www.youtube.com/@HorizonsMemoryGarden" label="YouTube">
+                <YouTube sx={{ fontSize: 20 }} />
               </SocialIconButton>
             </div>
           </div>
