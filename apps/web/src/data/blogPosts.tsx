@@ -667,5 +667,62 @@ const post16: BlogPost = {
   ),
 };
 
-export const blogPosts: BlogPost[] = [post1, post2, post3, post12, post13, post14, post4, post5, post6, post7, post8, post15, post16, post9, post10, post11];
+const post17: BlogPost = {
+  slug: 'mothers-day-gift-ideas',
+  title: "Mother's Day gift ideas she'll actually remember (not just another bouquet)",
+  description: "Everyone grabs the same flowers and calls it done. Here are the gift ideas that actually stick — from handmade to heartfelt — and how to make any of them mean more.",
+  publishedAt: '2026-05-01',
+  readTime: '6 min',
+  category: 'Gift Ideas',
+  headerImage: '/images/blog-post17-mother-day.jpg',
+  ctaText: "Plant a memory she'll carry all year",
+  content: () => (
+    <div>
+      <p style={s.p}>Mother's Day is one of those occasions where the pressure to find something meaningful runs directly into the reality that most gift options feel... identical. A candle. A robe. A bouquet that looks beautiful for four days and then quietly wilts on the counter.</p>
+      <p style={s.p}>The gift ideas below actually work — not because they're expensive, but because they take something that most gifts skip entirely: genuine thought. Some of them come from TikTok trends, and they're trending for a reason.</p>
+
+      <h2 style={s.h2}>1. Stuffed drink carrier</h2>
+      <p style={s.p}>Fill a reusable drink carrier with her actual favourites — her exact coffee order, her go-to snack, the drink she picks up when she needs a moment to herself. The carrier stays. More importantly, the fact that you knew her order — specifically — is the part she'll tell someone about.</p>
+      <p style={s.p}>Add a handwritten note tucked inside that says what you'd usually forget to say out loud.</p>
+
+      <h2 style={s.h2}>2. Pipe cleaner flower bouquet</h2>
+      <p style={s.p}>This one takes maybe 45 minutes and lasts forever. Pipe cleaner bouquets are having a moment on TikTok for a reason: they're clearly handmade, which means they're clearly intentional. No florist made this. You did.</p>
+      <p style={s.p}>The colours don't have to be perfect. The slightly uneven petals are the point. She'll keep it on her desk or her windowsill because it's yours, not because it's polished.</p>
+
+      <h2 style={s.h2}>3. Handmade card</h2>
+      <p style={s.p}>Not the Hallmark kind — made by hand, with actual writing inside it. The card itself matters less than what's written in it. Most people write "love you so much, hope you have a great day." That's fine. It's also forgettable.</p>
+      <p style={s.p}>Write the specific thing. The memory you keep coming back to. The thing she does that you've never actually told her you've noticed. The one sentence that would make her have to put the card down for a second.</p>
+      <p style={s.p}>That's the card she keeps.</p>
+
+      <h2 style={s.h2}>4. A message that arrives more than once</h2>
+      <p style={s.p}>Here's where most Mother's Day gifts stop at one moment — you give it, she receives it, the day moves on. What if the gift kept arriving?</p>
+      <p style={s.p}>In Horizons, you can plant a whole garden for her: a flower for Mother's Day with a message she opens in the morning, another one set for her birthday, one for a random Tuesday in August when nothing special is happening and she gets a notification that something bloomed for her. Each flower holds a message, a photo, a voice note — whatever you want to put inside it. Each one sealed until the date you choose.</p>
+      <p style={s.p}>The thing that makes this land differently than a card or a text is the timing. She's not reading something you wrote this morning. She's reading proof that you were already thinking about her weeks or months before the day arrived. That's a different kind of feeling.</p>
+      <blockquote style={s.blockquote}>"I planted one for my mom's birthday in July and one for the anniversary of when we had a really hard year together. She called me after the second one opened. She said she didn't expect it, which was exactly the point."</blockquote>
+      <p style={s.p}>Plant her first flower at <a href="/auth/register" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>horizons-garden.com</a> — it takes about five minutes, and it'll be the one she talks about.</p>
+
+      <h2 style={s.h2}>5. Framed photo collage</h2>
+      <p style={s.p}>A photo collage works when the photos are chosen, not just gathered. Don't print the most recent ones — print the ones that tell a story. The one from a trip that almost didn't happen. The one where she's laughing at something off-camera. The one that's slightly blurry but everyone loves.</p>
+      <p style={s.p}>Pair the frame with a handwritten list on the back of what each photo means to you. She'll read it every time she walks past it.</p>
+
+      <h2 style={s.h2}>6. Stuffed bouquet</h2>
+      <p style={s.p}>A bouquet made of small stuffed animals instead of flowers — this is another one that's doing well on TikTok because it's genuinely charming. It doesn't wilt. It sits on her bed or her desk and it's soft and a little ridiculous and she'll love it because it clearly took effort to assemble.</p>
+      <p style={s.p}>Make it hers: pick the animals based on something she likes, something from her childhood, an inside joke. A generic stuffed bouquet is sweet. One that's clearly for her is something else.</p>
+
+      <h2 style={s.h2}>7. Clay creations</h2>
+      <p style={s.p}>Air-dry clay is cheap, easy to find, and the output is something she'll actually keep. A small dish for her jewelry. A tiny planter. Something with a thumbprint pressed into it so she knows it's yours. You don't need to be good at it. You just need to have made it.</p>
+      <p style={s.p}>Handmade things carry a different weight than purchased things. She knows how long it took. She knows you sat down and made something specifically for her. That's the gift.</p>
+
+      <h2 style={s.h2}>8. Gift basket — but actually curated</h2>
+      <p style={s.p}>The generic gift basket problem is that it's full of things a mom might like, not things <em>your</em> mom likes. Fix that. Build it around her specifically: her favourite tea, the chocolate she buys herself as a treat, the hand cream she always runs out of, the book she mentioned once and never bought.</p>
+      <p style={s.p}>A basket of things she would have picked herself tells her you were paying attention. That's the whole gift.</p>
+
+      <h2 style={s.h2}>The honest takeaway</h2>
+      <p style={s.p}>All of these ideas work for the same reason: they prove you thought about her, specifically. Not "a mom." Her. The specificity is what she remembers. The effort is what she keeps.</p>
+      <p style={s.p}>If you want to give her something that keeps arriving long after the day is over — <a href="/auth/register" style={{ color: '#D4909A', textDecoration: 'none', fontWeight: 600 }}>plant a garden for her in Horizons</a>. One flower for today. One for later. One she won't be expecting at all.</p>
+    </div>
+  ),
+};
+
+export const blogPosts: BlogPost[] = [post1, post2, post3, post12, post13, post14, post4, post5, post6, post17, post7, post8, post15, post16, post9, post10, post11];
 

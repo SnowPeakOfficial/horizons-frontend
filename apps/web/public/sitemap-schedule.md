@@ -110,6 +110,17 @@ Insert before the closing `</urlset>` tag. Also update the `/blog` lastmod each 
   </url>
 ```
 
+## Add on 2026-05-01
+
+```xml
+  <url>
+    <loc>https://horizons-garden.com/blog/mothers-day-gift-ideas</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+```
+
 ## Add on 2026-05-02
 
 ```xml
@@ -214,6 +225,7 @@ Insert before the closing `</urlset>` tag. Also update the `/blog` lastmod each 
 | Apr 17 | gifts-for-someone-grieving               |
 | Apr 22 | problem-with-digital-time-capsules       |
 | Apr 27 | what-to-write-letter-to-future-self      |
+| May 1  | mothers-day-gift-ideas                   |
 | May 2  | how-to-make-a-gift-feel-personal         |
 | May 14 | gift-and-a-memory                        |
 | May 21 | how-to-remember-someone-who-passed-away  |
